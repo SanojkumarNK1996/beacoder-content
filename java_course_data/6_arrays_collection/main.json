@@ -1,0 +1,47 @@
+[
+    {
+        "subtopicId": 21,
+        "dataType": "youtube_video",
+        "displayOrder": 1,
+        "title": "Arrays and Collection",
+        "data": "https://www.youtube.com/watch?v=kqtD5dpn9C8",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 21,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Arrays and Collection",
+        "data": "arrays_and_collection.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 22,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Strings and String Methods",
+        "data": "strings.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 23,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Collections Framework",
+        "data": "collections_framework.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 24,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Iterating collections",
+        "data": "iterating_collections.html",
+        "verified": false,
+        "priority" : 1
+    }
+]

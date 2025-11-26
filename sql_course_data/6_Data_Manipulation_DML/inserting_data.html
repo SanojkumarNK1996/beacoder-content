@@ -1,0 +1,166 @@
+<h1>Inserting Data (INSERT)</h1>
+
+<p>Now that you’ve learned how to create tables, it’s time to fill them with data!  
+In SQL, the <strong>INSERT</strong> statement is used to add new records (rows) into a table.</p>
+
+<hr>
+
+<h2>1️⃣ What Is the INSERT Statement?</h2>
+
+<p>The <strong>INSERT</strong> command adds one or more new rows into a database table.</p>
+
+<p>General syntax:</p>
+
+<pre>
+INSERT INTO table_name (column1, column2, column3, ...)
+VALUES (value1, value2, value3, ...);
+</pre>
+
+<p>Example:</p>
+
+<pre>
+INSERT INTO Students (StudentID, Name, Age)
+VALUES (1, 'Alice', 18);
+</pre>
+
+<p>This adds a new row to the <code>Students</code> table with the given values.</p>
+
+<hr>
+
+<h2>2️⃣ Inserting Data into All Columns</h2>
+
+<p>If you’re inserting values for <strong>all columns</strong> in the table, you can skip the column names (but the order must match the table definition):</p>
+
+<pre>
+INSERT INTO Students
+VALUES (2, 'Bob', 20);
+</pre>
+
+<p>✅ Tip: Always include column names for clarity, especially in large tables.</p>
+
+<hr>
+
+<h2>3️⃣ Inserting Multiple Rows at Once</h2>
+
+<p>You can insert multiple records in a single statement to save time:</p>
+
+<pre>
+INSERT INTO Students (StudentID, Name, Age)
+VALUES 
+(3, 'Charlie', 19),
+(4, 'Diana', 21),
+(5, 'Ethan', 22);
+</pre>
+
+<p>This adds three new students in one go!</p>
+
+<hr>
+
+<h2>4️⃣ Handling DEFAULT Values</h2>
+
+<p>If a column has a <code>DEFAULT</code> value defined, you can omit it during insertion — it will automatically take the default.</p>
+
+<pre>
+CREATE TABLE Orders (
+  OrderID INT PRIMARY KEY,
+  Status VARCHAR(20) DEFAULT 'Pending'
+);
+
+INSERT INTO Orders (OrderID) VALUES (1);
+</pre>
+
+<p>The value for <code>Status</code> will automatically be set to <code>'Pending'</code>.</p>
+
+<hr>
+
+<h2>5️⃣ Inserting NULL Values</h2>
+
+<p>If a column allows <code>NULL</code>, you can insert an empty value.</p>
+
+<pre>
+INSERT INTO Students (StudentID, Name, Age)
+VALUES (6, 'Fiona', NULL);
+</pre>
+
+<p>Here, the <code>Age</code> value will be empty (NULL).</p>
+
+<hr>
+
+<h2>6️⃣ Common Mistakes to Avoid</h2>
+
+<ul>
+  <li>❌ Mismatching column count — number of values must match number of columns.</li>
+  <li>❌ Violating constraints (e.g., inserting duplicate PRIMARY KEY).</li>
+  <li>❌ Inserting wrong data type (e.g., text in numeric columns).</li>
+</ul>
+
+<hr>
+
+<h2>7️⃣ Using INSERT with SELECT</h2>
+
+<p>You can insert data from another table using the <code>SELECT</code> statement.</p>
+
+<pre>
+INSERT INTO Graduates (ID, Name)
+SELECT StudentID, Name FROM Students WHERE Age > 20;
+</pre>
+
+<p>This copies all students older than 20 into the <code>Graduates</code> table.</p>
+
+<hr>
+
+<h2>8️⃣ Viewing Inserted Data</h2>
+
+<p>After inserting, use the <code>SELECT</code> command to check what’s inside your table:</p>
+
+<pre>
+SELECT * FROM Students;
+</pre>
+
+<p>This displays all rows in the <code>Students</code> table.</p>
+
+<hr>
+
+<h2>9️⃣ Example: Putting It All Together</h2>
+
+<pre>
+CREATE TABLE Students (
+  StudentID INT PRIMARY KEY,
+  Name VARCHAR(50) NOT NULL,
+  Age INT
+);
+
+INSERT INTO Students (StudentID, Name, Age)
+VALUES 
+(1, 'Alice', 18),
+(2, 'Bob', 20),
+(3, 'Charlie', 19);
+
+SELECT * FROM Students;
+</pre>
+
+<p><strong>Output:</strong></p>
+
+<pre>
++-----------+---------+-----+
+| StudentID | Name    | Age |
++-----------+---------+-----+
+| 1         | Alice   | 18  |
+| 2         | Bob     | 20  |
+| 3         | Charlie | 19  |
++-----------+---------+-----+
+</pre>
+
+<hr>
+
+<h2>10️⃣ Summary</h2>
+
+<ul>
+  <li><code>INSERT INTO ... VALUES (...);</code> — adds new rows to a table.</li>
+  <li>Include column names for clarity.</li>
+  <li>Can insert multiple rows in one command.</li>
+  <li>Can use <code>DEFAULT</code> and <code>NULL</code> where applicable.</li>
+  <li>Use <code>SELECT</code> to verify inserted data.</li>
+</ul>
+
+<p>Next, let’s learn how to <strong>read data</strong> from the database using the <code>SELECT</code> command — one of the most powerful tools in SQL.</p>

@@ -1,0 +1,105 @@
+<h2>Variables in Java</h2>
+
+<p>In Java, a <strong>variable</strong> is a name given to a memory location that stores a value.  
+Think of it like a container where you can put data, use it, and even change it later in your program.</p>
+
+<hr>
+
+<h3>1. What Is a Variable?</h3>
+<p>Every program works with data — numbers, text, or other information.  
+A variable helps you store and manage this data while your program runs.</p>
+
+<p>In simple words, a variable is like a label for a value.  
+For example, if you want to store someone’s age, you can create a variable named <code>age</code> and assign it a value.</p>
+
+<pre><code>int age = 25;</code></pre>
+
+<p>Here:</p>
+<ul>
+  <li><code>int</code> → the data type (integer)</li>
+  <li><code>age</code> → the variable name</li>
+  <li><code>25</code> → the value stored</li>
+</ul>
+
+<hr>
+
+<h3>2. Declaration and Initialization</h3>
+
+<p>You must <strong>declare</strong> a variable before using it.  
+Declaration means telling Java what type of data the variable will hold.</p>
+
+<h4>Declaration Example:</h4>
+<pre><code>int number; // declares a variable named number of type int</code></pre>
+
+<p>To give the variable an initial value, you <strong>initialize</strong> it.</p>
+
+<h4>Initialization Example:</h4>
+<pre><code>number = 10; // assigns a value to the variable</code></pre>
+
+<p>You can also do both in a single line:</p>
+
+<pre><code>int number = 10; // declare and initialize together</code></pre>
+
+<h4>Multiple Variables:</h4>
+<p>You can declare and initialize multiple variables of the same type in one line:</p>
+
+<pre><code>int x = 5, y = 10, z = 15;</code></pre>
+
+<h4>Example Program:</h4>
+<pre><code>public class VariableExample {
+    public static void main(String[] args) {
+        int age = 25;
+        double salary = 55000.75;
+        String name = "John";
+
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Salary: " + salary);
+    }
+}</code></pre>
+
+<hr>
+
+<h3>3. Naming Conventions</h3>
+
+<p>Choosing good variable names makes your code easy to read and understand.  
+Java has some <strong>naming rules</strong> and <strong>best practices</strong> you should follow.</p>
+
+<h4>Rules (Must Follow):</h4>
+<ul>
+  <li>Variable names can contain letters, numbers, <code>_</code>, and <code>$</code>.</li>
+  <li>They cannot start with a number.</li>
+  <li>They are <strong>case-sensitive</strong> — <code>age</code> and <code>Age</code> are different.</li>
+  <li>No spaces or special characters are allowed.</li>
+  <li>They cannot be a Java keyword (like <code>class</code> or <code>public</code>).</li>
+</ul>
+
+<h4>Conventions (Good Practices):</h4>
+<ul>
+  <li>Use <strong>camelCase</strong> for variable names — e.g., <code>studentName</code>, <code>totalMarks</code>.</li>
+  <li>Use meaningful names that describe the data — not short or random letters.</li>
+  <li>Use <code>UPPER_CASE</code> for constants — e.g., <code>PI</code>, <code>MAX_SPEED</code>.</li>
+  <li>Avoid single-character names unless used for short loops (like <code>i</code>, <code>j</code>).</li>
+</ul>
+
+<h4>Examples:</h4>
+<pre><code>// Good variable names
+int studentAge = 20;
+double accountBalance = 1050.75;
+String fullName = "Alice Johnson";
+
+// Bad variable names
+int a = 20;
+double xyz = 10.5;
+String n = "Bob";</code></pre>
+
+<hr>
+
+<h3>4. Summary</h3>
+<ul>
+  <li>A variable stores data that can change during program execution.</li>
+  <li>You must declare it with a type before use.</li>
+  <li>Use clear and meaningful names following Java’s naming conventions.</li>
+</ul>
+
+<p>Understanding variables is a basic but very important step — every Java program you write will use them!</p>

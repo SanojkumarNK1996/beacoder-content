@@ -1,0 +1,47 @@
+[
+    {
+        "subtopicId": 53,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Aggregate Functions (COUNT, SUM, AVG, MAX, MIN)",
+        "data": "aggregate_functions.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 54,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Grouping Data (GROUP BY, HAVING)",
+        "data": "grouping_data.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 55,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Joins in SQL (INNER, LEFT, RIGHT, FULL, CROSS)",
+        "data": "joins.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 56,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Subqueries (Single-row and Multi-row)",
+        "data": "subqueries.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 57,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Set Operations (UNION, INTERSECT, EXCEPT)",
+        "data": "set_operations.html",
+        "verified": false,
+        "priority": 1
+    }
+]

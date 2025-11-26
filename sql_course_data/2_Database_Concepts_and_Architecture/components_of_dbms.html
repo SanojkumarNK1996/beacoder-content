@@ -1,0 +1,79 @@
+<h1>Components of a Database Management System (DBMS)</h1>
+
+<p>A Database Management System (DBMS) is not just a single program — it is made up of several
+interconnected components that work together to store, manage, and retrieve data efficiently.
+Understanding these components helps us see how a DBMS performs its operations behind the scenes.</p>
+
+<h2>Main Components of a DBMS</h2>
+
+<h3>1. Database Engine</h3>
+<p>The <strong>Database Engine</strong> is the core part of the DBMS that actually stores,
+processes, and secures the data. It handles tasks like reading and writing data to storage,
+managing memory, and executing queries from users or applications.</p>
+
+<p><strong>Example:</strong> When you search for a student’s name in a school database, 
+the engine finds and returns that record almost instantly.</p>
+
+<ul>
+  <li>Responsible for storing and retrieving data</li>
+  <li>Ensures data integrity and consistency</li>
+  <li>Executes queries and transactions</li>
+</ul>
+
+<h3>2. Database Schema</h3>
+<p>The <strong>Database Schema</strong> defines the structure or “blueprint” of the database.
+It describes how the data is organized into tables, columns, relationships, and constraints.</p>
+
+<p><strong>Think of it like:</strong> The layout of a building plan — it shows where each 
+room (table) and wall (relationship) should be, but it doesn’t contain the furniture (data) itself.</p>
+
+<ul>
+  <li>Defines tables, columns, and data types</li>
+  <li>Specifies relationships between tables</li>
+  <li>Ensures data follows defined rules and structure</li>
+</ul>
+
+<h3>3. Query Processor</h3>
+<p>The <strong>Query Processor</strong> is the brain of the DBMS that interprets and executes 
+the commands users give — usually written in SQL (Structured Query Language).</p>
+
+<p>It takes a query like “Find all customers from Delhi” and translates it into steps that 
+the database engine can perform to get the desired result efficiently.</p>
+
+<ul>
+  <li>Understands and checks SQL queries for errors</li>
+  <li>Optimizes queries for better performance</li>
+  <li>Coordinates with the database engine to execute operations</li>
+</ul>
+
+<h3>4. Storage Manager</h3>
+<p>The <strong>Storage Manager</strong> controls how data is physically stored and retrieved
+from storage devices like hard drives or SSDs. It manages files, indexes, and buffers to
+ensure that data can be accessed quickly and safely.</p>
+
+<p><strong>Example:</strong> When you update a record in the database, the storage manager
+handles how that change is saved on disk while ensuring no data is lost if a system crash occurs.</p>
+
+<ul>
+  <li>Manages physical data storage and access paths</li>
+  <li>Handles file organization and indexing</li>
+  <li>Ensures durability and efficient use of disk space</li>
+</ul>
+
+<h3>5. Other Supporting Components</h3>
+<ul>
+  <li><strong>Transaction Manager:</strong> Ensures that operations are completed fully
+  (no partial updates) and supports rollback in case of errors.</li>
+  <li><strong>Metadata Catalog:</strong> Stores information about the database’s structure — 
+  like a dictionary describing all tables and columns.</li>
+  <li><strong>Authorization Manager:</strong> Controls who can access which data,
+  ensuring security and privacy.</li>
+</ul>
+
+<h2>Summary</h2>
+<p>A DBMS is like a team where each member has a specific job:
+the <strong>database engine</strong> stores data,
+the <strong>schema</strong> defines its structure,
+the <strong>query processor</strong> interprets commands,
+and the <strong>storage manager</strong> handles how data is saved on disk.
+Together, these components make the DBMS efficient, secure, and reliable for managing data.</p>

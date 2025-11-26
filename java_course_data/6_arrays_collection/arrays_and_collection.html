@@ -1,0 +1,82 @@
+<main class="course-content">
+  <article id="arrays-collections">
+    <header>
+      <h1>6. Arrays and Collections</h1>
+      <p><strong>Goal:</strong> Handling multiple data efficiently.</p>
+    </header>
+
+    <section>
+      <h2>Arrays</h2>
+      <p>
+        An <em>array</em> is a collection of elements of the same type stored in contiguous memory locations. 
+        It allows fast access using an index and is useful when you need to store multiple values of the same kind.
+      </p>
+    </section>
+
+    <section>
+      <h3>Single-dimensional Arrays</h3>
+      <p>A single-dimensional array is a simple list of elements.</p>
+      <pre><code class="language-java">
+// Example: Single-dimensional array in Java
+public class SingleArrayExample {
+    public static void main(String[] args) {
+        int[] numbers = {10, 20, 30, 40};
+
+        // Access elements
+        System.out.println("First element: " + numbers[0]);
+
+        // Modify an element
+        numbers[2] = 35;
+
+        // Iterate through the array
+        for (int num : numbers) {
+            System.out.println(num);
+        }
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>Multi-dimensional Arrays</h3>
+      <p>A multi-dimensional array is an array of arrays, often used for tables or grids.</p>
+      <pre><code class="language-java">
+// Example: Multi-dimensional array in Java
+public class MultiArrayExample {
+    public static void main(String[] args) {
+        int[][] matrix = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+
+        // Access an element
+        System.out.println("Element at [1][2]: " + matrix[1][2]);
+
+        // Print all elements
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>Key Points</h3>
+      <ul>
+        <li>Arrays store multiple values of the same type.</li>
+        <li>Single-dimensional arrays represent lists.</li>
+        <li>Multi-dimensional arrays represent tables or grids.</li>
+        <li>Array indices start from 0.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p><strong>Next:</strong> Explore Collections like Lists, Sets, and Maps for more flexibility.</p>
+    </footer>
+  </article>
+</main>

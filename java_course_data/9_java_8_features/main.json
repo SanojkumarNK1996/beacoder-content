@@ -1,0 +1,11 @@
+[
+    {
+        "subtopicId": 27,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Java 8 Features",
+        "data": "java_8_features.html",
+        "verified": false,
+        "priority" : 1
+    }
+]

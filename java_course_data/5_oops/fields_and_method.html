@@ -1,0 +1,151 @@
+<h2>Fields and Methods in Java</h2>
+
+<p>In Java, <strong>fields</strong> and <strong>methods</strong> are the main parts of a class. 
+They define what an object <em>knows</em> (data) and what it <em>does</em> (behavior).</p>
+
+<hr>
+
+<h3>Fields</h3>
+<p>
+A <strong>field</strong> (also called a <em>member variable</em>) is a variable that belongs to a class or an object. 
+It stores data or state information about an object.
+</p>
+
+<p>Example:</p>
+<pre><code>class Car {
+    String color;  // field
+    int speed;     // field
+}</code></pre>
+
+<p>Here, <code>color</code> and <code>speed</code> are fields that describe the car.</p>
+
+<hr>
+
+<h3>Methods</h3>
+<p>
+A <strong>method</strong> is a block of code inside a class that performs a specific task. 
+Methods are used to define the behavior of objects.
+</p>
+
+<p>Example:</p>
+<pre><code>class Car {
+    String color;
+    int speed;
+
+    void drive() {
+        System.out.println("The car is moving at " + speed + " km/h");
+    }
+
+    void stop() {
+        System.out.println("The car has stopped");
+    }
+}</code></pre>
+
+<p>Here, <code>drive()</code> and <code>stop()</code> are methods that describe what the car can do.</p>
+
+<hr>
+
+<h3>Instance Members</h3>
+<p>
+An <strong>instance member</strong> belongs to an individual object of a class. 
+Every object has its own copy of instance fields and methods.
+</p>
+
+<p>Example:</p>
+<pre><code>class Car {
+    String color; // instance field
+
+    void showColor() { // instance method
+        System.out.println("Color: " + color);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car car1 = new Car();
+        Car car2 = new Car();
+
+        car1.color = "Red";
+        car2.color = "Blue";
+
+        car1.showColor(); // Output: Color: Red
+        car2.showColor(); // Output: Color: Blue
+    }
+}</code></pre>
+
+<p>Each car object has its own <code>color</code>. Changing one does not affect the other.</p>
+
+<hr>
+
+<h3>Static Members</h3>
+<p>
+A <strong>static member</strong> belongs to the class itself, not to any specific object. 
+It is shared by all objects of that class. 
+You can access static members using the class name directly.
+</p>
+
+<p>Example:</p>
+<pre><code>class Car {
+    static int wheels = 4; // static field
+    String color;
+
+    static void showWheels() { // static method
+        System.out.println("All cars have " + wheels + " wheels");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car.showWheels(); // Access static method directly
+
+        Car car1 = new Car();
+        car1.color = "Black";
+
+        System.out.println("Car color: " + car1.color);
+    }
+}</code></pre>
+
+<p>Here, <code>wheels</code> and <code>showWheels()</code> are static members shared across all car objects.</p>
+
+<hr>
+
+<h3>Key Differences</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Feature</th>
+        <th>Instance Member</th>
+        <th>Static Member</th>
+    </tr>
+    <tr>
+        <td>Belongs to</td>
+        <td>Individual object</td>
+        <td>Class itself</td>
+    </tr>
+    <tr>
+        <td>Memory</td>
+        <td>Separate copy for each object</td>
+        <td>One shared copy for all objects</td>
+    </tr>
+    <tr>
+        <td>Accessed by</td>
+        <td>Using object reference</td>
+        <td>Using class name</td>
+    </tr>
+    <tr>
+        <td>Use case</td>
+        <td>When data varies per object</td>
+        <td>When data is common for all objects</td>
+    </tr>
+</table>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li><strong>Fields</strong> store object data.</li>
+    <li><strong>Methods</strong> define object behavior.</li>
+    <li><strong>Instance members</strong> belong to each object separately.</li>
+    <li><strong>Static members</strong> are shared among all objects of a class.</li>
+</ul>
+
+<p>Understanding the difference between instance and static members helps you design cleaner and more efficient Java programs.</p>

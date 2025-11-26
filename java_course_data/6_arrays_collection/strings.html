@@ -1,0 +1,67 @@
+<main class="course-content">
+  <article id="strings">
+    <header>
+      <h1>7. Strings and String Methods</h1>
+      <p><strong>Goal:</strong> Learn how to create, manipulate, and use strings in Java.</p>
+    </header>
+
+    <section>
+      <h2>What is a String?</h2>
+      <p>
+        A <strong>String</strong> in Java is a sequence of characters used to store and manipulate text. 
+        Strings are objects in Java, not primitive data types.
+      </p>
+    </section>
+
+    <section>
+      <h3>Creating Strings</h3>
+      <pre><code class="language-java">
+// Example: Creating strings
+public class StringExample {
+    public static void main(String[] args) {
+        String name = "John";
+        String greeting = new String("Hello");
+
+        System.out.println(name);
+        System.out.println(greeting);
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>Common String Methods</h3>
+      <pre><code class="language-java">
+// Example: String methods in Java
+public class StringMethods {
+    public static void main(String[] args) {
+        String text = "Hello World";
+
+        System.out.println("Length: " + text.length());
+        System.out.println("Uppercase: " + text.toUpperCase());
+        System.out.println("Lowercase: " + text.toLowerCase());
+        System.out.println("Character at index 4: " + text.charAt(4));
+        System.out.println("Substring (0,5): " + text.substring(0, 5));
+        System.out.println("Contains 'World'? " + text.contains("World"));
+        System.out.println("Replace 'World' with 'Java': " + text.replace("World", "Java"));
+        System.out.println("Equals 'hello world'? " + text.equals("hello world"));
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>Key Points</h3>
+      <ul>
+        <li>Strings are immutable — once created, they cannot be changed.</li>
+        <li>Use methods like <code>substring()</code>, <code>toUpperCase()</code>, and <code>replace()</code> to manipulate text.</li>
+        <li>Use <code>equals()</code> instead of <code>==</code> to compare string values.</li>
+        <li>String operations are case-sensitive.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p><strong>Next:</strong> Learn about StringBuilder and StringBuffer for efficient string manipulation.</p>
+    </footer>
+  </article>
+</main>

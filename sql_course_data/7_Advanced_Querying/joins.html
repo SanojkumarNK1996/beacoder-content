@@ -1,0 +1,215 @@
+<h1>Joins in SQL (INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL OUTER JOIN, CROSS JOIN)</h1>
+
+<p>In a database, data is often spread across multiple tables to avoid duplication.  
+A <strong>JOIN</strong> combines data from two or more tables based on a related column between them — usually a <strong>key</strong>.</p>
+
+<hr>
+
+<h2>1️⃣ Why Do We Need Joins?</h2>
+
+<p>Instead of storing everything in a single table, we keep related data in different tables (for example, <code>Students</code> and <code>Courses</code>).  
+When you need a complete view — like which student is enrolled in which course — you use a <strong>JOIN</strong> to combine them.</p>
+
+<hr>
+
+<h2>2️⃣ Basic JOIN Syntax</h2>
+
+<pre>
+SELECT columns
+FROM table1
+JOIN table2
+ON table1.column_name = table2.column_name;
+</pre>
+
+<p>The <code>ON</code> condition tells SQL how the tables are related.</p>
+
+<hr>
+
+<h2>3️⃣ Example Tables</h2>
+
+<p><strong>Students</strong> table:</p>
+<table border="1" cellpadding="5">
+  <tr><th>StudentID</th><th>Name</th><th>CourseID</th></tr>
+  <tr><td>1</td><td>John</td><td>101</td></tr>
+  <tr><td>2</td><td>Mary</td><td>102</td></tr>
+  <tr><td>3</td><td>Alex</td><td>103</td></tr>
+</table>
+
+<p><strong>Courses</strong> table:</p>
+<table border="1" cellpadding="5">
+  <tr><th>CourseID</th><th>CourseName</th></tr>
+  <tr><td>101</td><td>Math</td></tr>
+  <tr><td>102</td><td>Science</td></tr>
+  <tr><td>104</td><td>English</td></tr>
+</table>
+
+<hr>
+
+<h2>4️⃣ INNER JOIN</h2>
+
+<p>The <strong>INNER JOIN</strong> returns only the rows where there is a match in both tables.</p>
+
+<pre>
+SELECT Students.Name, Courses.CourseName
+FROM Students
+INNER JOIN Courses
+ON Students.CourseID = Courses.CourseID;
+</pre>
+
+<p><strong>Result:</strong></p>
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>CourseName</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+</table>
+
+<p><strong>Explanation:</strong> Alex’s CourseID (103) doesn’t match any in the <code>Courses</code> table, so his record is not included.</p>
+
+<hr>
+
+<h2>5️⃣ LEFT JOIN</h2>
+
+<p>The <strong>LEFT JOIN</strong> returns all rows from the left table (Students), and the matched rows from the right table (Courses).  
+If there’s no match, you’ll see <code>NULL</code> values for columns from the right table.</p>
+
+<pre>
+SELECT Students.Name, Courses.CourseName
+FROM Students
+LEFT JOIN Courses
+ON Students.CourseID = Courses.CourseID;
+</pre>
+
+<p><strong>Result:</strong></p>
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>CourseName</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>NULL</td></tr>
+</table>
+
+<p>Alex’s course is missing, but his data is still shown.</p>
+
+<hr>
+
+<h2>6️⃣ RIGHT JOIN</h2>
+
+<p>The <strong>RIGHT JOIN</strong> returns all rows from the right table (Courses), and matched rows from the left table (Students).</p>
+
+<pre>
+SELECT Students.Name, Courses.CourseName
+FROM Students
+RIGHT JOIN Courses
+ON Students.CourseID = Courses.CourseID;
+</pre>
+
+<p><strong>Result:</strong></p>
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>CourseName</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>NULL</td><td>English</td></tr>
+</table>
+
+<p><strong>Explanation:</strong> The “English” course has no student enrolled, so <code>Name</code> is <code>NULL</code>.</p>
+
+<hr>
+
+<h2>7️⃣ FULL OUTER JOIN</h2>
+
+<p>The <strong>FULL OUTER JOIN</strong> combines the results of both LEFT and RIGHT joins.  
+It returns all records from both tables, with <code>NULL</code> where there is no match.</p>
+
+<pre>
+SELECT Students.Name, Courses.CourseName
+FROM Students
+FULL OUTER JOIN Courses
+ON Students.CourseID = Courses.CourseID;
+</pre>
+
+<p><strong>Result:</strong></p>
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>CourseName</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>NULL</td></tr>
+  <tr><td>NULL</td><td>English</td></tr>
+</table>
+
+<p><strong>Note:</strong> Not all databases support FULL OUTER JOIN directly (for example, MySQL requires a workaround using UNION).</p>
+
+<hr>
+
+<h2>8️⃣ CROSS JOIN</h2>
+
+<p>The <strong>CROSS JOIN</strong> returns all possible combinations of rows from both tables.  
+This is also known as the <strong>Cartesian Product</strong>.</p>
+
+<pre>
+SELECT Students.Name, Courses.CourseName
+FROM Students
+CROSS JOIN Courses;
+</pre>
+
+<p><strong>Result:</strong> Every student appears with every course.</p>
+
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>CourseName</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+  <tr><td>John</td><td>Science</td></tr>
+  <tr><td>John</td><td>English</td></tr>
+  <tr><td>Mary</td><td>Math</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Mary</td><td>English</td></tr>
+  <tr><td>Alex</td><td>Math</td></tr>
+  <tr><td>Alex</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>English</td></tr>
+</table>
+
+<p>Use CROSS JOIN carefully — it can generate a very large number of rows.</p>
+
+<hr>
+
+<h2>9️⃣ Visual Summary of Joins</h2>
+
+<ul>
+  <li><strong>INNER JOIN</strong> → Only matching rows from both tables.</li>
+  <li><strong>LEFT JOIN</strong> → All rows from left, matched rows from right.</li>
+  <li><strong>RIGHT JOIN</strong> → All rows from right, matched rows from left.</li>
+  <li><strong>FULL OUTER JOIN</strong> → All rows from both tables.</li>
+  <li><strong>CROSS JOIN</strong> → All possible combinations (Cartesian Product).</li>
+</ul>
+
+<hr>
+
+<h2>🔟 Example Use Cases</h2>
+
+<ul>
+  <li>Finding students with their enrolled courses (INNER JOIN)</li>
+  <li>Finding all students, including those not enrolled yet (LEFT JOIN)</li>
+  <li>Finding all courses, including those with no students (RIGHT JOIN)</li>
+  <li>Combining both studentless courses and unenrolled students (FULL JOIN)</li>
+</ul>
+
+<hr>
+
+<h2>11️⃣ Best Practices</h2>
+
+<ul>
+  <li>Always specify the join condition (<code>ON</code> clause) clearly.</li>
+  <li>Use table aliases (e.g., <code>S</code> for Students, <code>C</code> for Courses) to improve readability.</li>
+  <li>Limit results with <code>WHERE</code> or <code>LIMIT</code> when working with large datasets.</li>
+  <li>Understand the relationship between tables (primary and foreign keys) before joining.</li>
+</ul>
+
+<hr>
+
+<h2>12️⃣ Summary</h2>
+
+<ul>
+  <li>Joins combine related data from multiple tables.</li>
+  <li>Different join types control what data is included.</li>
+  <li>INNER JOIN returns only matches, LEFT/RIGHT JOINs include unmatched rows, FULL JOIN returns all, and CROSS JOIN makes combinations.</li>
+  <li>Understanding joins is key to advanced querying and report generation.</li>
+</ul>
+
+<p>Next, we’ll move on to <strong>Subqueries</strong> — how to use queries inside other queries for even more powerful data analysis.</p>

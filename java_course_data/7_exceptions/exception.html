@@ -1,0 +1,148 @@
+<main class="course-content">
+  <article id="exception-handling">
+    <header>
+      <h1>10. Exception Handling</h1>
+      <p><strong>Goal:</strong> Handling errors in Java effectively to make programs more reliable and user-friendly.</p>
+    </header>
+
+    <section>
+      <h2>What are Exceptions?</h2>
+      <p>
+        An <strong>exception</strong> is an event that occurs during the execution of a program that disrupts the normal flow of instructions.
+        In Java, exceptions are objects that represent errors or unexpected situations.
+      </p>
+      <pre><code class="language-java">
+// Example: Simple exception
+public class ExceptionExample {
+    public static void main(String[] args) {
+        int a = 10, b = 0;
+        System.out.println(a / b); // causes ArithmeticException
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Types of Exceptions</h2>
+      <ul>
+        <li><strong>Checked Exceptions:</strong> Checked at compile-time (e.g., IOException, SQLException).</li>
+        <li><strong>Unchecked Exceptions:</strong> Occur at runtime (e.g., NullPointerException, ArithmeticException).</li>
+      </ul>
+      <pre><code class="language-java">
+// Example: Checked vs Unchecked
+import java.io.FileReader;
+import java.io.IOException;
+
+public class ExceptionTypes {
+    public static void main(String[] args) {
+        try {
+            FileReader file = new FileReader("data.txt"); // Checked exception
+        } catch (IOException e) {
+            System.out.println("File not found: " + e.getMessage());
+        }
+
+        int x = 5 / 0; // Unchecked exception
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Try-Catch-Finally</h2>
+      <p>
+        The <strong>try-catch-finally</strong> block is used to handle exceptions gracefully.
+        The <code>finally</code> block executes whether or not an exception occurs.
+      </p>
+      <pre><code class="language-java">
+// Example: try-catch-finally
+public class TryCatchExample {
+    public static void main(String[] args) {
+        try {
+            int[] nums = {1, 2, 3};
+            System.out.println(nums[5]); // Throws exception
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            System.out.println("Execution complete.");
+        }
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>throw and throws</h2>
+      <p>
+        The <strong>throw</strong> keyword is used to manually throw an exception, 
+        while <strong>throws</strong> declares exceptions that a method might throw.
+      </p>
+      <pre><code class="language-java">
+// Example: throw and throws
+public class ThrowExample {
+    static void checkAge(int age) throws Exception {
+        if (age < 18) {
+            throw new Exception("Not eligible to vote");
+        } else {
+            System.out.println("Eligible to vote");
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            checkAge(16);
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Custom Exceptions</h2>
+      <p>
+        You can create your own exception classes by extending the <code>Exception</code> class or <code>RuntimeException</code> class.
+      </p>
+      <pre><code class="language-java">
+// Example: Custom exception
+class InvalidAgeException extends Exception {
+    public InvalidAgeException(String message) {
+        super(message);
+    }
+}
+
+public class CustomExceptionExample {
+    static void validate(int age) throws InvalidAgeException {
+        if (age < 18)
+            throw new InvalidAgeException("Age must be 18 or above");
+        else
+            System.out.println("Welcome!");
+    }
+
+    public static void main(String[] args) {
+        try {
+            validate(15);
+        } catch (InvalidAgeException e) {
+            System.out.println("Caught Exception: " + e.getMessage());
+        }
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Key Points</h2>
+      <ul>
+        <li>Exceptions prevent program crashes by handling errors gracefully.</li>
+        <li>Checked exceptions must be handled or declared using <code>throws</code>.</li>
+        <li>Unchecked exceptions occur during runtime.</li>
+        <li>Use <code>try-catch-finally</code> to handle errors safely.</li>
+        <li>Custom exceptions make code more meaningful and specific to your application.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p><strong>Next:</strong> Learn about Java’s <code>try-with-resources</code> for handling files and streams safely.</p>
+    </footer>
+  </article>
+</main>

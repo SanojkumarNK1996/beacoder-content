@@ -1,0 +1,85 @@
+<h2>Branching Statements in Java</h2>
+
+<p>
+Branching statements are used to change the normal flow of a program.  
+They allow the program to jump to a different part of the code based on certain conditions.
+</p>
+
+<p>
+In Java, the main branching statements are <b>break</b>, <b>continue</b>, and <b>return</b>.
+</p>
+
+<h3>1. break Statement</h3>
+<p>
+The <code>break</code> statement is used to stop a loop or a switch statement immediately.  
+When <code>break</code> executes, control comes out of the loop or switch block.
+</p>
+
+<pre><code class="language-java">
+// Example: using break in a loop
+for (int i = 1; i <= 10; i++) {
+    if (i == 5) {
+        break; // stop the loop when i is 5
+    }
+    System.out.println(i);
+}
+</code></pre>
+
+<p>
+This loop prints numbers 1 to 4, then stops when <code>i</code> becomes 5.
+</p>
+
+<h3>2. continue Statement</h3>
+<p>
+The <code>continue</code> statement skips the current iteration of a loop and jumps to the next one.  
+It does not stop the entire loop — only skips the rest of the code for that particular round.
+</p>
+
+<pre><code class="language-java">
+// Example: using continue in a loop
+for (int i = 1; i <= 5; i++) {
+    if (i == 3) {
+        continue; // skip when i is 3
+    }
+    System.out.println(i);
+}
+</code></pre>
+
+<p>
+This will print 1, 2, 4, and 5 — skipping 3 because of the <code>continue</code> statement.
+</p>
+
+<h3>3. return Statement</h3>
+<p>
+The <code>return</code> statement is used to exit from a method.  
+It can also send a value back to the method that called it.
+</p>
+
+<pre><code class="language-java">
+// Example: using return in a method
+public class Example {
+    static int add(int a, int b) {
+        return a + b; // sends the result back
+    }
+
+    public static void main(String[] args) {
+        int sum = add(5, 3);
+        System.out.println("Sum: " + sum);
+    }
+}
+</code></pre>
+
+<p>
+Here, the <code>add()</code> method uses <code>return</code> to send the sum back to the main method.
+</p>
+
+<h3>Summary</h3>
+<ul>
+  <li><b>break</b> – exits a loop or switch completely.</li>
+  <li><b>continue</b> – skips to the next iteration of a loop.</li>
+  <li><b>return</b> – exits a method, optionally sending a value back.</li>
+</ul>
+
+<p>
+Branching statements give you control over how your program flows, helping you manage loops and methods effectively.
+</p>

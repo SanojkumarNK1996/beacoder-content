@@ -1,0 +1,200 @@
+<h1>Grouping Data (GROUP BY, HAVING)</h1>
+
+<p>The <strong>GROUP BY</strong> clause is used to arrange identical data into groups, allowing you to perform <strong>aggregate calculations</strong> like totals, averages, or counts for each group.  
+The <strong>HAVING</strong> clause is used to filter those grouped results — just like <code>WHERE</code> filters individual rows.</p>
+
+<hr>
+
+<h2>1️⃣ Why Use GROUP BY?</h2>
+
+<p>When you want to calculate summaries for specific categories (like total sales per region or average marks per subject), <code>GROUP BY</code> helps you organize the data by those categories.</p>
+
+<hr>
+
+<h2>2️⃣ Basic Syntax</h2>
+
+<pre>
+SELECT column_name, AGGREGATE_FUNCTION(column_name)
+FROM table_name
+GROUP BY column_name;
+</pre>
+
+<p>The <code>GROUP BY</code> clause comes after the <code>WHERE</code> (if any) and before <code>ORDER BY</code>.</p>
+
+<hr>
+
+<h2>3️⃣ Example: Grouping Student Marks by Subject</h2>
+
+<pre>
+SELECT Subject, AVG(Marks) AS AverageMarks
+FROM Students
+GROUP BY Subject;
+</pre>
+
+<p>This groups students by their subject and calculates the average marks for each one.</p>
+
+<p>Example result:</p>
+
+<table border="1" cellpadding="5">
+  <tr><th>Subject</th><th>AverageMarks</th></tr>
+  <tr><td>Math</td><td>88.5</td></tr>
+  <tr><td>Science</td><td>78.0</td></tr>
+</table>
+
+<hr>
+
+<h2>4️⃣ Grouping with Multiple Columns</h2>
+
+<p>You can group by more than one column to get more detailed summaries.</p>
+
+<pre>
+SELECT Subject, Class, AVG(Marks) AS AvgMarks
+FROM Students
+GROUP BY Subject, Class;
+</pre>
+
+<p>This calculates the average marks for each combination of subject and class.</p>
+
+<hr>
+
+<h2>5️⃣ Using GROUP BY with WHERE</h2>
+
+<p>Use <code>WHERE</code> to filter rows <strong>before</strong> grouping.</p>
+
+<pre>
+SELECT Subject, COUNT(*) AS StudentCount
+FROM Students
+WHERE Marks > 50
+GROUP BY Subject;
+</pre>
+
+<p>This counts only students who scored more than 50 marks, grouped by subject.</p>
+
+<hr>
+
+<h2>6️⃣ Using HAVING to Filter Groups</h2>
+
+<p>The <code>HAVING</code> clause is used to filter the grouped results after the aggregation is done.</p>
+
+<pre>
+SELECT Subject, AVG(Marks) AS AverageMarks
+FROM Students
+GROUP BY Subject
+HAVING AVG(Marks) > 80;
+</pre>
+
+<p>This displays only subjects with an average mark above 80.</p>
+
+<p><strong>Difference between WHERE and HAVING:</strong></p>
+<ul>
+  <li><code>WHERE</code> filters rows <strong>before grouping</strong>.</li>
+  <li><code>HAVING</code> filters <strong>groups after aggregation</strong>.</li>
+</ul>
+
+<hr>
+
+<h2>7️⃣ Using GROUP BY with COUNT()</h2>
+
+<p>You can use <code>COUNT()</code> to find how many rows are in each group.</p>
+
+<pre>
+SELECT Subject, COUNT(*) AS TotalStudents
+FROM Students
+GROUP BY Subject;
+</pre>
+
+<p>This shows the number of students in each subject.</p>
+
+<hr>
+
+<h2>8️⃣ Combining GROUP BY with SUM()</h2>
+
+<p>Example with a <code>Sales</code> table:</p>
+
+<pre>
+SELECT Region, SUM(SalesAmount) AS TotalSales
+FROM Sales
+GROUP BY Region;
+</pre>
+
+<p>This gives total sales per region.</p>
+
+<p>Now, using HAVING to show only regions where total sales are above 10000:</p>
+
+<pre>
+SELECT Region, SUM(SalesAmount) AS TotalSales
+FROM Sales
+GROUP BY Region
+HAVING SUM(SalesAmount) > 10000;
+</pre>
+
+<hr>
+
+<h2>9️⃣ Ordering Grouped Results</h2>
+
+<p>You can sort grouped data using <code>ORDER BY</code>.</p>
+
+<pre>
+SELECT Subject, AVG(Marks) AS AvgMarks
+FROM Students
+GROUP BY Subject
+ORDER BY AvgMarks DESC;
+</pre>
+
+<p>This lists subjects by average marks in descending order (highest first).</p>
+
+<hr>
+
+<h2>🔟 Example Scenario</h2>
+
+<p>Consider this <code>Students</code> table:</p>
+
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>Subject</th><th>Marks</th></tr>
+  <tr><td>John</td><td>Math</td><td>85</td></tr>
+  <tr><td>Mary</td><td>Math</td><td>90</td></tr>
+  <tr><td>Alex</td><td>Science</td><td>75</td></tr>
+  <tr><td>Linda</td><td>Science</td><td>82</td></tr>
+</table>
+
+<p>Run this query:</p>
+
+<pre>
+SELECT Subject, AVG(Marks) AS AverageMarks
+FROM Students
+GROUP BY Subject
+HAVING AVG(Marks) > 80;
+</pre>
+
+<p>Result:</p>
+
+<table border="1" cellpadding="5">
+  <tr><th>Subject</th><th>AverageMarks</th></tr>
+  <tr><td>Math</td><td>87.5</td></tr>
+</table>
+
+<hr>
+
+<h2>11️⃣ Common Use Cases</h2>
+
+<ul>
+  <li>Total or average salary per department</li>
+  <li>Total sales per product or region</li>
+  <li>Number of customers per city</li>
+  <li>Average test score per subject</li>
+</ul>
+
+<hr>
+
+<h2>12️⃣ Summary</h2>
+
+<ul>
+  <li><code>GROUP BY</code> groups rows that have the same values.</li>
+  <li><code>HAVING</code> filters results after grouping.</li>
+  <li>Use aggregate functions like <code>SUM()</code>, <code>AVG()</code>, <code>COUNT()</code> with grouping.</li>
+  <li><code>ORDER BY</code> can be used to sort grouped data.</li>
+  <li><code>WHERE</code> filters before grouping, <code>HAVING</code> filters after grouping.</li>
+</ul>
+
+<p>Grouping and aggregation make SQL extremely powerful for analytics and reporting.  
+Next, we’ll explore <strong>Joins</strong> — how to combine data from multiple tables into one query result.</p>

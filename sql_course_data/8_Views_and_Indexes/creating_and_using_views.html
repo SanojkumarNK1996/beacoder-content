@@ -1,0 +1,182 @@
+<h1>Creating and Using Views in SQL</h1>
+
+<p>A <strong>view</strong> in SQL is a virtual table based on the result of a query. It doesn’t store data physically — instead, it provides a way to look at data stored in one or more tables as if it were a single table. Views make it easier to read, reuse, and secure data.</p>
+
+<hr>
+
+<h2>1️⃣ What is a View?</h2>
+
+<p>A <strong>view</strong> is like a saved SQL query that you can treat as a table. When you query a view, SQL runs the query defined in that view and returns the result.</p>
+
+<p><strong>Example:</strong> Suppose we have a table named <code>Employees</code>:</p>
+
+<pre>
++----+----------+----------+------------+-----------+
+| ID | Name     | Dept     | Salary     | Location  |
++----+----------+----------+------------+-----------+
+| 1  | Alice    | HR       | 50000      | London    |
+| 2  | Bob      | IT       | 70000      | New York  |
+| 3  | Charlie  | Finance  | 60000      | Toronto   |
++----+----------+----------+------------+-----------+
+</pre>
+
+<p>If you frequently want to see only employees from the IT department, you can create a view like this:</p>
+
+<pre>
+CREATE VIEW IT_Employees AS
+SELECT Name, Dept, Salary
+FROM Employees
+WHERE Dept = 'IT';
+</pre>
+
+<p>Now, instead of writing that query again, you can simply do:</p>
+
+<pre>
+SELECT * FROM IT_Employees;
+</pre>
+
+<p>This will show all employees from the IT department, using the saved query inside the view.</p>
+
+<hr>
+
+<h2>2️⃣ Why Use Views?</h2>
+
+<ul>
+  <li>To <strong>simplify complex queries</strong> — you can reuse them easily.</li>
+  <li>To <strong>restrict access</strong> to sensitive data (e.g., hide salary columns).</li>
+  <li>To <strong>improve readability</strong> — users can work with meaningful data instead of raw tables.</li>
+  <li>To <strong>provide abstraction</strong> — users can interact with data without knowing how it’s structured.</li>
+</ul>
+
+<hr>
+
+<h2>3️⃣ Syntax for Creating a View</h2>
+
+<pre>
+CREATE VIEW view_name AS
+SELECT columns
+FROM table_name
+WHERE condition;
+</pre>
+
+<p><strong>Example:</strong></p>
+<pre>
+CREATE VIEW HighSalary AS
+SELECT Name, Dept, Salary
+FROM Employees
+WHERE Salary > 60000;
+</pre>
+
+<p>Now you can use it like a table:</p>
+<pre>
+SELECT * FROM HighSalary;
+</pre>
+
+<hr>
+
+<h2>4️⃣ Updating Data Through a View</h2>
+
+<p>In some cases, you can also <strong>update data</strong> using a view. However, not all views are updatable — it depends on how they are created.</p>
+
+<p><strong>Example:</strong></p>
+<pre>
+UPDATE IT_Employees
+SET Salary = 75000
+WHERE Name = 'Bob';
+</pre>
+
+<p>This will update the underlying <code>Employees</code> table, since the view is based on it directly.</p>
+
+<p><strong>Note:</strong> A view is <strong>not updatable</strong> if it includes joins, aggregation, or <code>GROUP BY</code>.</p>
+
+<hr>
+
+<h2>5️⃣ Modifying and Deleting Views</h2>
+
+<ul>
+  <li><strong>To modify</strong> a view:</li>
+</ul>
+
+<pre>
+CREATE OR REPLACE VIEW IT_Employees AS
+SELECT Name, Dept, Salary, Location
+FROM Employees
+WHERE Dept = 'IT';
+</pre>
+
+<ul>
+  <li><strong>To delete</strong> a view:</li>
+</ul>
+
+<pre>
+DROP VIEW IT_Employees;
+</pre>
+
+<p>Deleting a view does not remove any data from the original table — only the saved query (view definition) is deleted.</p>
+
+<hr>
+
+<h2>6️⃣ Using Views for Data Security</h2>
+
+<p>Views can hide sensitive information from users. For example, if you don’t want regular users to see salaries:</p>
+
+<pre>
+CREATE VIEW PublicEmployees AS
+SELECT Name, Dept, Location
+FROM Employees;
+</pre>
+
+<p>Now users can query <code>PublicEmployees</code> safely, without accessing salary data.</p>
+
+<hr>
+
+<h2>7️⃣ Joining Tables in a View</h2>
+
+<p>You can create a view that joins multiple tables. For example:</p>
+
+<pre>
+CREATE VIEW EmployeeProjects AS
+SELECT e.Name, e.Dept, p.ProjectName
+FROM Employees e
+JOIN Projects p ON e.ID = p.EmployeeID;
+</pre>
+
+<p>This view combines employee and project data into one simple structure.</p>
+
+<hr>
+
+<h2>8️⃣ Renaming a View</h2>
+
+<p>SQL doesn’t have a direct <code>RENAME VIEW</code> command in all systems, but you can do it by recreating it:</p>
+
+<pre>
+CREATE VIEW NewViewName AS
+SELECT * FROM OldViewName;
+
+DROP VIEW OldViewName;
+</pre>
+
+<hr>
+
+<h2>9️⃣ Viewing Existing Views</h2>
+
+<p>In most databases, you can see all views by checking system tables.</p>
+
+<ul>
+  <li><strong>MySQL:</strong> <code>SHOW FULL TABLES WHERE TABLE_TYPE = 'VIEW';</code></li>
+  <li><strong>PostgreSQL:</strong> <code>\dv</code></li>
+  <li><strong>SQL Server:</strong> <code>SELECT * FROM INFORMATION_SCHEMA.VIEWS;</code></li>
+</ul>
+
+<hr>
+
+<h2>🔟 Summary</h2>
+
+<ul>
+  <li>A <strong>view</strong> is a virtual table based on a SQL query.</li>
+  <li>It simplifies complex queries and hides sensitive data.</li>
+  <li>You can <strong>create</strong>, <strong>modify</strong>, and <strong>delete</strong> views easily.</li>
+  <li>Views can be used for <strong>security</strong>, <strong>readability</strong>, and <strong>reusability</strong>.</li>
+</ul>
+
+<p>Next, we’ll learn about the <strong>advantages of views</strong> — why they’re so useful in real-world database systems.</p>

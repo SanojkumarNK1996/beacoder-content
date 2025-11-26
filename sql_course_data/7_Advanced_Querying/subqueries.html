@@ -1,0 +1,240 @@
+<h1>Subqueries in SQL (Single-row and Multi-row)</h1>
+
+<p>A <strong>subquery</strong> is a query nested inside another SQL query. It allows you to use the result of one query as input for another.  
+Subqueries help in filtering, comparing, or calculating values dynamically based on other data in the database.</p>
+
+<hr>
+
+<h2>1️⃣ What is a Subquery?</h2>
+
+<p>A <strong>subquery</strong> (also called an <em>inner query</em>) is enclosed in parentheses and used inside another SQL query (called the <em>outer query</em>).</p>
+
+<p><strong>Example:</strong></p>
+<pre>
+SELECT name
+FROM Students
+WHERE marks > (
+    SELECT AVG(marks)
+    FROM Students
+);
+</pre>
+
+<p>This finds all students who scored higher than the class average.  
+Here, the inner query calculates the average marks, and the outer query uses that value.</p>
+
+<hr>
+
+<h2>2️⃣ Types of Subqueries</h2>
+
+<ul>
+  <li><strong>Single-row Subquery</strong> — returns only one value (one row, one column).</li>
+  <li><strong>Multi-row Subquery</strong> — returns multiple values (one column, many rows).</li>
+  <li><strong>Multi-column Subquery</strong> — returns multiple columns (used rarely).</li>
+</ul>
+
+<hr>
+
+<h2>3️⃣ Single-row Subquery</h2>
+
+<p>A <strong>single-row subquery</strong> returns exactly one value and is often used with comparison operators like <code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, or <code>&lt;=</code>.</p>
+
+<p><strong>Example:</strong></p>
+<pre>
+SELECT name, marks
+FROM Students
+WHERE marks > (
+    SELECT AVG(marks)
+    FROM Students
+);
+</pre>
+
+<p>This query compares each student’s marks to a single average value returned by the subquery.</p>
+
+<hr>
+
+<h2>4️⃣ Example: Comparing Salaries</h2>
+
+<pre>
+SELECT name, salary
+FROM Employees
+WHERE salary > (
+    SELECT salary
+    FROM Employees
+    WHERE name = 'John'
+);
+</pre>
+
+<p>This shows all employees who earn more than John.  
+Here, the subquery returns one row — John’s salary.</p>
+
+<hr>
+
+<h2>5️⃣ Multi-row Subquery</h2>
+
+<p>A <strong>multi-row subquery</strong> returns multiple rows, and is used with operators like:</p>
+
+<ul>
+  <li><code>IN</code> — matches any of the values</li>
+  <li><code>ANY</code> or <code>SOME</code> — compares to any value</li>
+  <li><code>ALL</code> — compares to all returned values</li>
+</ul>
+
+<hr>
+
+<h2>6️⃣ Example with IN</h2>
+
+<pre>
+SELECT name
+FROM Students
+WHERE course_id IN (
+    SELECT course_id
+    FROM Courses
+    WHERE instructor = 'Dr. Smith'
+);
+</pre>
+
+<p>This finds all students who are enrolled in courses taught by Dr. Smith.</p>
+
+<hr>
+
+<h2>7️⃣ Example with ANY</h2>
+
+<pre>
+SELECT name, salary
+FROM Employees
+WHERE salary > ANY (
+    SELECT salary
+    FROM Employees
+    WHERE department = 'Sales'
+);
+</pre>
+
+<p>This returns employees whose salary is greater than at least one employee in the Sales department.</p>
+
+<hr>
+
+<h2>8️⃣ Example with ALL</h2>
+
+<pre>
+SELECT name, salary
+FROM Employees
+WHERE salary > ALL (
+    SELECT salary
+    FROM Employees
+    WHERE department = 'Sales'
+);
+</pre>
+
+<p>This shows employees whose salary is higher than <strong>all</strong> employees in the Sales department (i.e., higher than the maximum salary in Sales).</p>
+
+<hr>
+
+<h2>9️⃣ Subquery in FROM Clause</h2>
+
+<p>You can also use a subquery as a <strong>temporary table</strong> inside the <code>FROM</code> clause.  
+This is called a <strong>derived table</strong>.</p>
+
+<p><strong>Example:</strong></p>
+<pre>
+SELECT department, AVG(avg_salary) AS overall_average
+FROM (
+    SELECT department, AVG(salary) AS avg_salary
+    FROM Employees
+    GROUP BY department
+) AS dept_summary
+GROUP BY department;
+</pre>
+
+<p>Here, the inner query calculates the average salary per department, and the outer query performs another aggregation on that result.</p>
+
+<hr>
+
+<h2>🔟 Subquery in SELECT Clause</h2>
+
+<p>Subqueries can also appear inside the <code>SELECT</code> list — for example, to show calculated values for each row.</p>
+
+<pre>
+SELECT name,
+       salary,
+       (SELECT AVG(salary) FROM Employees) AS avg_salary
+FROM Employees;
+</pre>
+
+<p>This shows each employee’s salary along with the overall average salary.</p>
+
+<hr>
+
+<h2>11️⃣ Subquery in WHERE Clause (Most Common)</h2>
+
+<p>The most common use of a subquery is inside the <code>WHERE</code> clause to filter rows based on another query’s result.</p>
+
+<pre>
+SELECT name
+FROM Students
+WHERE course_id IN (
+    SELECT id
+    FROM Courses
+    WHERE level = 'Advanced'
+);
+</pre>
+
+<hr>
+
+<h2>12️⃣ Correlated Subqueries</h2>
+
+<p>A <strong>correlated subquery</strong> depends on the outer query for its values — it is executed once for each row of the outer query.</p>
+
+<p><strong>Example:</strong></p>
+<pre>
+SELECT name, marks
+FROM Students s
+WHERE marks > (
+    SELECT AVG(marks)
+    FROM Students
+    WHERE course_id = s.course_id
+);
+</pre>
+
+<p>This finds students who scored above the average in their specific course.</p>
+
+<hr>
+
+<h2>13️⃣ Performance Tips</h2>
+
+<ul>
+  <li>Use <code>EXISTS</code> instead of <code>IN</code> for better performance with large datasets.</li>
+  <li>Where possible, convert subqueries to <code>JOIN</code> for faster execution.</li>
+  <li>Always test subqueries separately to ensure they return expected results.</li>
+</ul>
+
+<hr>
+
+<h2>14️⃣ Example Using EXISTS</h2>
+
+<pre>
+SELECT name
+FROM Students s
+WHERE EXISTS (
+    SELECT 1
+    FROM Courses c
+    WHERE c.course_id = s.course_id
+    AND c.level = 'Beginner'
+);
+</pre>
+
+<p>This returns students enrolled in beginner-level courses.</p>
+
+<hr>
+
+<h2>15️⃣ Summary</h2>
+
+<ul>
+  <li><strong>Subqueries</strong> allow you to nest queries for dynamic filtering and calculations.</li>
+  <li><strong>Single-row subqueries</strong> return one value (use =, >, &lt;, etc.).</li>
+  <li><strong>Multi-row subqueries</strong> return multiple values (use IN, ANY, ALL).</li>
+  <li><strong>Correlated subqueries</strong> depend on the outer query.</li>
+  <li><code>EXISTS</code> and <code>IN</code> are commonly used for existence checks.</li>
+</ul>
+
+<p>Subqueries make SQL more powerful by enabling conditional logic and data comparisons that would be difficult to express otherwise.  
+Next, we’ll explore <strong>Set Operations</strong> — how to combine results from multiple queries.</p>

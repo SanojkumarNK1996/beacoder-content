@@ -1,0 +1,147 @@
+<h1>Dropping Tables and Databases</h1>
+
+<p>So far, we’ve learned how to create and modify tables.  
+But sometimes, you may need to <strong>delete</strong> (or <strong>drop</strong>) a table or even an entire database — for example, when redesigning your system or removing test data.</p>
+
+<p>In SQL, deleting the entire structure is done with the <code>DROP</code> command.</p>
+
+<hr>
+
+<h2>1️⃣ What Does “Drop” Mean?</h2>
+
+<p>The term <strong>DROP</strong> means <em>completely remove</em> a database object — like a table or database — from the system.</p>
+
+<p>⚠️ <strong>Warning:</strong> Once you drop a table or database, <u>all the data inside it is permanently deleted</u> and cannot be recovered unless you have a backup.</p>
+
+<hr>
+
+<h2>2️⃣ Dropping a Table</h2>
+
+<p>To delete an existing table, use the <code>DROP TABLE</code> command.</p>
+
+<pre>
+DROP TABLE Students;
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li><code>DROP TABLE</code> tells SQL to remove the table structure and its data.</li>
+  <li><code>Students</code> is the name of the table you want to delete.</li>
+</ul>
+
+<p>After running this, the <code>Students</code> table will no longer exist.</p>
+
+<hr>
+
+<h2>3️⃣ Checking if a Table Exists Before Dropping</h2>
+
+<p>Some databases allow you to drop a table only if it exists — to prevent errors.</p>
+
+<pre>
+DROP TABLE IF EXISTS Students;
+</pre>
+
+<p>This version checks if the table exists before trying to delete it.</p>
+
+<hr>
+
+<h2>4️⃣ Dropping Multiple Tables</h2>
+
+<p>You can drop more than one table at a time by listing them separated by commas:</p>
+
+<pre>
+DROP TABLE IF EXISTS Students, Courses, Enrollments;
+</pre>
+
+<p>This command removes all three tables in one go.</p>
+
+<hr>
+
+<h2>5️⃣ Dropping a Database</h2>
+
+<p>To delete a database (including all its tables and data), use the <code>DROP DATABASE</code> command.</p>
+
+<pre>
+DROP DATABASE SchoolDB;
+</pre>
+
+<p>This completely removes the database <code>SchoolDB</code> and everything inside it.</p>
+
+<p>⚠️ <strong>Important:</strong> Always double-check the database name before running this command.  
+It’s a permanent action — you can’t undo it!</p>
+
+<hr>
+
+<h2>6️⃣ Dropping a Database Safely</h2>
+
+<p>It’s a good habit to drop a database only if it exists (especially in scripts):</p>
+
+<pre>
+DROP DATABASE IF EXISTS SchoolDB;
+</pre>
+
+<p>This prevents errors if the database doesn’t exist.</p>
+
+<hr>
+
+<h2>7️⃣ Deleting Data Without Dropping the Table</h2>
+
+<p>Sometimes you may not want to remove the table structure, just its contents (records).</p>
+
+<p>For that, use the <code>DELETE</code> or <code>TRUNCATE</code> command instead of <code>DROP</code>.</p>
+
+<ul>
+  <li><code>DELETE FROM Students;</code> — removes all rows but keeps the table structure.</li>
+  <li><code>TRUNCATE TABLE Students;</code> — does the same but faster and resets auto-increment counters.</li>
+</ul>
+
+<p>These are safer options when you only want to clear the data, not the whole table.</p>
+
+<hr>
+
+<h2>8️⃣ Best Practices Before Dropping</h2>
+
+<ul>
+  <li>✅ Always <strong>make a backup</strong> before deleting anything.</li>
+  <li>✅ Use <code>IF EXISTS</code> to prevent errors in automated scripts.</li>
+  <li>✅ Drop only the objects you’re sure you no longer need.</li>
+  <li>🚫 Never use <code>DROP DATABASE</code> in production unless fully approved.</li>
+</ul>
+
+<hr>
+
+<h2>Example Scenario</h2>
+
+<p>Let’s say you created a test database during development:</p>
+
+<pre>
+CREATE DATABASE TestDB;
+USE TestDB;
+
+CREATE TABLE Sample (
+  ID INT PRIMARY KEY,
+  Name VARCHAR(50)
+);
+</pre>
+
+<p>Now you no longer need it. You can remove everything with:</p>
+
+<pre>
+DROP DATABASE TestDB;
+</pre>
+
+<p>This deletes the <code>TestDB</code> database and all its tables permanently.</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<ul>
+  <li><strong>DROP TABLE table_name;</strong> — deletes a specific table and its data.</li>
+  <li><strong>DROP DATABASE db_name;</strong> — deletes an entire database.</li>
+  <li>Use <strong>IF EXISTS</strong> to avoid errors when dropping non-existent objects.</li>
+  <li>Use <strong>DELETE</strong> or <strong>TRUNCATE</strong> instead if you only want to clear table data.</li>
+  <li><strong>Always back up important data</strong> before using DROP commands.</li>
+</ul>
+
+<p>Next, we’ll explore an essential topic — <strong>Constraints</strong> in SQL, which define rules that protect data integrity.</p>

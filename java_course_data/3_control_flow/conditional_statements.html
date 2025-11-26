@@ -1,0 +1,116 @@
+<h2>Conditional Statements in Java</h2>
+
+<p>
+Conditional statements are used to make decisions in a Java program. They help the program choose different actions based on certain conditions. A condition is usually a logical expression that can be <b>true</b> or <b>false</b>.
+</p>
+
+<p>
+Think of it like real life — if it’s raining, you take an umbrella. If it’s not, you don’t. In Java, we use conditional statements to express such choices.
+</p>
+
+<h3>1. if Statement</h3>
+<p>
+The <code>if</code> statement checks a condition. If the condition is true, the block of code inside <code>if</code> runs. If not, it is skipped.
+</p>
+
+<pre><code class="language-java">
+// Example
+int number = 10;
+
+if (number > 5) {
+    System.out.println("Number is greater than 5");
+}
+</code></pre>
+
+<p>
+Here, since <code>number > 5</code> is true, the message will be printed.
+</p>
+
+<h3>2. if-else Statement</h3>
+<p>
+The <code>if-else</code> statement gives two possible paths.  
+If the condition is true, one block runs; if false, the other block runs.
+</p>
+
+<pre><code class="language-java">
+// Example
+int number = 3;
+
+if (number > 5) {
+    System.out.println("Number is greater than 5");
+} else {
+    System.out.println("Number is less than or equal to 5");
+}
+</code></pre>
+
+<p>
+Here, the condition is false, so the <code>else</code> part executes.
+</p>
+
+<h3>3. if-else-if Ladder</h3>
+<p>
+Sometimes, you have multiple conditions to check.  
+In that case, you can use an <code>if-else-if</code> ladder.
+</p>
+
+<pre><code class="language-java">
+// Example
+int marks = 75;
+
+if (marks >= 90) {
+    System.out.println("Grade: A");
+} else if (marks >= 75) {
+    System.out.println("Grade: B");
+} else if (marks >= 50) {
+    System.out.println("Grade: C");
+} else {
+    System.out.println("Grade: Fail");
+}
+</code></pre>
+
+<p>
+The program checks each condition from top to bottom and runs the first true one.
+</p>
+
+<h3>4. switch-case Statement</h3>
+<p>
+The <code>switch</code> statement is used when you have many possible values for a variable.  
+It compares the variable against several <code>case</code> labels and runs the matching one.
+</p>
+
+<pre><code class="language-java">
+// Example
+int day = 3;
+
+switch (day) {
+    case 1:
+        System.out.println("Monday");
+        break;
+    case 2:
+        System.out.println("Tuesday");
+        break;
+    case 3:
+        System.out.println("Wednesday");
+        break;
+    default:
+        System.out.println("Invalid day");
+}
+</code></pre>
+
+<p>
+Here, since <code>day</code> is 3, it prints "Wednesday".  
+The <code>break</code> statement stops the switch from checking other cases.  
+If no case matches, the <code>default</code> block runs.
+</p>
+
+<h3>Summary</h3>
+<ul>
+  <li><b>if</b> – runs code if condition is true.</li>
+  <li><b>if-else</b> – runs one block for true, another for false.</li>
+  <li><b>if-else-if</b> – checks multiple conditions in sequence.</li>
+  <li><b>switch-case</b> – picks one block based on variable value.</li>
+</ul>
+
+<p>
+Conditional statements make programs intelligent by letting them make decisions.
+</p>

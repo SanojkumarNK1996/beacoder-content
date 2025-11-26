@@ -1,0 +1,79 @@
+<h1>Client-Server Architecture</h1>
+
+<p>Most modern databases use a <strong>Client-Server Architecture</strong>.
+This design separates the system into two main parts — the <strong>client</strong> and the <strong>server</strong> — each performing different roles.
+This separation helps systems handle multiple users efficiently and securely.</p>
+
+<h2>Understanding the Concept</h2>
+
+<p>Imagine you’re in a restaurant. You (the customer) place an order through a waiter (the client),
+and the chef in the kitchen (the server) prepares the food and sends it back through the waiter.
+The chef doesn’t deal directly with customers — this is exactly how client-server systems work!</p>
+
+<ul>
+  <li><strong>Client:</strong> Sends requests (like “get data” or “insert record”) to the server.</li>
+  <li><strong>Server:</strong> Processes those requests, interacts with the database, and sends back the results.</li>
+</ul>
+
+<h2>How It Works in a Database System</h2>
+
+<ol>
+  <li>The user interacts with an application on their computer or phone — this is the <strong>client</strong>.</li>
+  <li>The application sends a request to the <strong>database server</strong> (for example, to fetch data or save new information).</li>
+  <li>The <strong>server</strong> processes the request using the DBMS and sends the results back to the client.</li>
+</ol>
+
+<h2>Components in Client-Server Architecture</h2>
+
+<h3>1. Client</h3>
+<ul>
+  <li>Provides a user interface for interacting with the database (like a form, dashboard, or query editor).</li>
+  <li>Sends requests to the server using network protocols (like TCP/IP).</li>
+  <li>Receives and displays the results from the server.</li>
+</ul>
+
+<h3>2. Server</h3>
+<ul>
+  <li>Houses the database and DBMS software.</li>
+  <li>Processes incoming requests from clients.</li>
+  <li>Handles data storage, security, transactions, and backups.</li>
+</ul>
+
+<h2>Types of Client-Server Architectures</h2>
+
+<h3>1. Two-Tier Architecture</h3>
+<p>In a <strong>two-tier</strong> system, the client communicates directly with the database server.
+The application logic and the user interface are both on the client side.</p>
+
+<p><strong>Example:</strong> A desktop application like MS Access directly connecting to a local database.</p>
+
+<h3>2. Three-Tier Architecture</h3>
+<p>In a <strong>three-tier</strong> system, an additional layer (called the <strong>application server</strong>)
+sits between the client and the database server.</p>
+
+<p><strong>Layers:</strong></p>
+<ul>
+  <li><strong>Presentation Layer (Client):</strong> User interface — displays data and takes input.</li>
+  <li><strong>Application Layer (Middle Tier):</strong> Processes business logic — validates input, applies rules, etc.</li>
+  <li><strong>Data Layer (Server):</strong> Stores and retrieves data from the database.</li>
+</ul>
+
+<p>This model is more secure and scalable because clients do not directly access the database.</p>
+
+<h2>Advantages of Client-Server Architecture</h2>
+<ul>
+  <li>Multiple users can access the same data simultaneously.</li>
+  <li>Centralized management of data and security.</li>
+  <li>Improved performance through distribution of workload.</li>
+  <li>Scalability — servers can be upgraded or added as demand grows.</li>
+</ul>
+
+<h2>Real-World Examples</h2>
+<ul>
+  <li><strong>Online Banking Systems:</strong> The website or app is the client, while the bank’s server handles transactions.</li>
+  <li><strong>E-commerce Platforms:</strong> Customers use a browser (client) to browse items, and the web server fetches product data from the database server.</li>
+</ul>
+
+<h2>Summary</h2>
+<p>Client-Server Architecture divides tasks between clients (who request services) and servers (who provide them).
+This model ensures efficiency, security, and scalability — which is why it’s used in nearly all modern database-driven applications.</p>

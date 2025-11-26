@@ -1,0 +1,246 @@
+<h1>Relationships in Databases</h1>
+
+<p>In real life, data is connected — students join courses, teachers teach subjects, customers place orders, and so on.  
+A database must capture these connections to make sense of the data.  
+These connections are called <strong>Relationships</strong>.</p>
+
+<p>Understanding relationships helps you organize your data correctly, avoid duplication, and make your database more powerful.</p>
+
+<hr>
+
+<h2>What is a Relationship?</h2>
+
+<p>A <strong>Relationship</strong> defines how two or more tables in a database are connected using keys.  
+Usually, this is done through a <strong>Primary Key</strong> in one table and a <strong>Foreign Key</strong> in another.</p>
+
+<h3>Example:</h3>
+
+<p>Let’s say we have two tables:</p>
+
+<pre>
+Students Table
++-----------+-----------+
+| StudentID | Name      |
++-----------+-----------+
+| 1         | Riya      |
+| 2         | Arjun     |
++-----------+-----------+
+
+Courses Table
++-----------+--------------+
+| CourseID  | CourseName   |
++-----------+--------------+
+| 101       | Math         |
+| 102       | English      |
++-----------+--------------+
+</pre>
+
+<p>Now, we want to connect which student takes which course.  
+That connection forms a <strong>relationship</strong>.</p>
+
+<hr>
+
+<h2>Types of Relationships</h2>
+
+<p>There are three main types of relationships in databases:</p>
+
+<ol>
+  <li>One-to-One (1:1)</li>
+  <li>One-to-Many (1:N)</li>
+  <li>Many-to-Many (M:N)</li>
+</ol>
+
+---
+
+<h2>1️⃣ One-to-One (1:1) Relationship</h2>
+
+<p>Each record in one table is related to <strong>only one</strong> record in another table.</p>
+
+<h3>Example:</h3>
+<p>Each student has exactly one student ID card, and each ID card belongs to one student.</p>
+
+<pre>
+Students Table
++-----------+-----------+
+| StudentID | Name      |
++-----------+-----------+
+| 1         | Riya      |
+| 2         | Arjun     |
++-----------+-----------+
+
+StudentCards Table
++-----------+-------------+
+| CardID    | StudentID   |
++-----------+-------------+
+| 1001      | 1           |
+| 1002      | 2           |
++-----------+-------------+
+</pre>
+
+<p>Here, <code>StudentID</code> is the link between both tables.</p>
+
+<h4>How it works:</h4>
+<ul>
+  <li>One student → one card</li>
+  <li>One card → one student</li>
+</ul>
+
+<p>In this case, <strong>StudentID</strong> in the <em>StudentCards</em> table is a <strong>Foreign Key</strong> referencing the <em>Students</em> table.</p>
+
+<hr>
+
+<h2>2️⃣ One-to-Many (1:N) Relationship</h2>
+
+<p>This is the most common relationship in databases.  
+One record in one table can be linked to <strong>many</strong> records in another table.</p>
+
+<h3>Example:</h3>
+<p>One teacher teaches many courses, but each course is taught by only one teacher.</p>
+
+<pre>
+Teachers Table
++-----------+-----------+
+| TeacherID | Name      |
++-----------+-----------+
+| 1         | Ms. Anu   |
+| 2         | Mr. Ravi  |
++-----------+-----------+
+
+Courses Table
++-----------+---------------+------------+
+| CourseID  | CourseName    | TeacherID  |
++-----------+---------------+------------+
+| 101       | Math          | 1          |
+| 102       | English       | 1          |
+| 103       | Science       | 2          |
++-----------+---------------+------------+
+</pre>
+
+<p>Here, <strong>TeacherID</strong> is a <strong>Foreign Key</strong> in the <em>Courses</em> table that links each course to the teacher who teaches it.</p>
+
+<h4>How it works:</h4>
+<ul>
+  <li>One teacher → many courses</li>
+  <li>One course → one teacher</li>
+</ul>
+
+<hr>
+
+<h2>3️⃣ Many-to-Many (M:N) Relationship</h2>
+
+<p>In this type, many records in one table can be related to many records in another table.  
+This is common in situations like students enrolling in courses — one student can take many courses, and each course can have many students.</p>
+
+<h3>Example:</h3>
+
+<p>We need a third table (called a <strong>junction table</strong> or <strong>linking table</strong>) to connect them.</p>
+
+<pre>
+Students Table
++-----------+-----------+
+| StudentID | Name      |
++-----------+-----------+
+| 1         | Riya      |
+| 2         | Arjun     |
++-----------+-----------+
+
+Courses Table
++-----------+---------------+
+| CourseID  | CourseName    |
++-----------+---------------+
+| 101       | Math          |
+| 102       | English       |
++-----------+---------------+
+
+Enrollments Table (Junction Table)
++-----------+-----------+
+| StudentID | CourseID  |
++-----------+-----------+
+| 1         | 101       |
+| 1         | 102       |
+| 2         | 101       |
++-----------+-----------+
+</pre>
+
+<p>This <em>Enrollments</em> table creates a link between <em>Students</em> and <em>Courses</em>.</p>
+
+<h4>How it works:</h4>
+<ul>
+  <li>One student → many courses</li>
+  <li>One course → many students</li>
+</ul>
+
+<p>Without the junction table, you can’t represent this type of relationship properly in a relational database.</p>
+
+<hr>
+
+<h2>Relationship Summary</h2>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Meaning</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>One-to-One (1:1)</td>
+      <td>Each record in one table matches exactly one record in another.</td>
+      <td>Student ↔ StudentCard</td>
+    </tr>
+    <tr>
+      <td>One-to-Many (1:N)</td>
+      <td>One record in one table can match many records in another.</td>
+      <td>Teacher ↔ Courses</td>
+    </tr>
+    <tr>
+      <td>Many-to-Many (M:N)</td>
+      <td>Many records in one table can match many in another (via junction table).</td>
+      <td>Students ↔ Courses</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>Real-Life Analogies</h2>
+
+<ul>
+  <li><strong>One-to-One:</strong> Each person has one passport.</li>
+  <li><strong>One-to-Many:</strong> A mother has many children.</li>
+  <li><strong>Many-to-Many:</strong> Actors work in many movies; each movie has many actors.</li>
+</ul>
+
+<hr>
+
+<h2>Why Relationships Are Important</h2>
+
+<p>Relationships help:</p>
+<ul>
+  <li>Reduce data duplication</li>
+  <li>Ensure data consistency</li>
+  <li>Make data retrieval easier</li>
+  <li>Keep your database well-structured and efficient</li>
+</ul>
+
+<hr>
+
+<h2>Summary</h2>
+
+<ul>
+  <li>Relationships connect data across tables.</li>
+  <li>They are built using <strong>Primary Keys</strong> and <strong>Foreign Keys</strong>.</li>
+  <li>Three main types:
+    <ul>
+      <li>One-to-One (1:1)</li>
+      <li>One-to-Many (1:N)</li>
+      <li>Many-to-Many (M:N)</li>
+    </ul>
+  </li>
+  <li>Many-to-Many relationships need an extra “junction” table.</li>
+</ul>
+
+<p><strong>In short:</strong>  
+Relationships make your database come alive — they connect scattered data into meaningful information.</p>

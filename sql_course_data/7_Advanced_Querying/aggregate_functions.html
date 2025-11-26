@@ -1,0 +1,204 @@
+<h1>Aggregate Functions (COUNT, SUM, AVG, MAX, MIN)</h1>
+
+<p><strong>Aggregate functions</strong> are special SQL functions that perform calculations on a group of rows and return a single value.  
+They are widely used for reporting, analytics, and summarizing data in databases.</p>
+
+<hr>
+
+<h2>1️⃣ What Are Aggregate Functions?</h2>
+
+<p>Aggregate functions take multiple values (rows) as input and return one summarized result.  
+For example, you can calculate the total number of students, the average age, or the highest score in a class.</p>
+
+<p>Common aggregate functions in SQL are:</p>
+<ul>
+  <li><code>COUNT()</code> — counts the number of rows</li>
+  <li><code>SUM()</code> — adds up numeric values</li>
+  <li><code>AVG()</code> — calculates the average value</li>
+  <li><code>MAX()</code> — finds the highest value</li>
+  <li><code>MIN()</code> — finds the lowest value</li>
+</ul>
+
+<hr>
+
+<h2>2️⃣ COUNT()</h2>
+
+<p>The <code>COUNT()</code> function counts the number of rows in a table or the number of non-null values in a column.</p>
+
+<pre>
+SELECT COUNT(*) AS TotalStudents
+FROM Students;
+</pre>
+
+<p>This query returns the total number of students in the <code>Students</code> table.</p>
+
+<p>You can also count only specific rows using a condition:</p>
+
+<pre>
+SELECT COUNT(*) AS PassedStudents
+FROM Students
+WHERE Grade = 'A';
+</pre>
+
+<hr>
+
+<h2>3️⃣ SUM()</h2>
+
+<p>The <code>SUM()</code> function adds up all the numeric values in a column.</p>
+
+<pre>
+SELECT SUM(Marks) AS TotalMarks
+FROM Students;
+</pre>
+
+<p>This returns the sum of all students’ marks.</p>
+
+<p>You can combine it with conditions:</p>
+
+<pre>
+SELECT SUM(Marks) AS ScienceMarks
+FROM Students
+WHERE Subject = 'Science';
+</pre>
+
+<hr>
+
+<h2>4️⃣ AVG()</h2>
+
+<p>The <code>AVG()</code> function calculates the average (mean) value of a numeric column.</p>
+
+<pre>
+SELECT AVG(Marks) AS AverageMarks
+FROM Students;
+</pre>
+
+<p>This gives the average mark of all students.</p>
+
+<hr>
+
+<h2>5️⃣ MAX() and MIN()</h2>
+
+<p>The <code>MAX()</code> function returns the highest value, and the <code>MIN()</code> function returns the lowest value in a column.</p>
+
+<pre>
+SELECT MAX(Marks) AS HighestMark, MIN(Marks) AS LowestMark
+FROM Students;
+</pre>
+
+<p>This shows both the top and lowest scores in the class.</p>
+
+<hr>
+
+<h2>6️⃣ Using Aggregate Functions with WHERE</h2>
+
+<p>You can combine aggregate functions with <code>WHERE</code> to focus on specific groups of data.</p>
+
+<pre>
+SELECT AVG(Marks) AS AverageScience
+FROM Students
+WHERE Subject = 'Science';
+</pre>
+
+<p>This calculates the average marks for only Science students.</p>
+
+<hr>
+
+<h2>7️⃣ Combining Multiple Aggregate Functions</h2>
+
+<p>You can include several aggregate functions in one query:</p>
+
+<pre>
+SELECT COUNT(*) AS TotalStudents,
+       AVG(Marks) AS AverageMarks,
+       MAX(Marks) AS TopScore,
+       MIN(Marks) AS LowestScore
+FROM Students;
+</pre>
+
+<p>This produces a summary of the entire class in one row.</p>
+
+<hr>
+
+<h2>8️⃣ Ignoring NULL Values</h2>
+
+<p>Aggregate functions (except <code>COUNT(*)</code>) ignore <code>NULL</code> values automatically.</p>
+
+<pre>
+SELECT AVG(Salary) FROM Employees;
+</pre>
+
+<p>This will calculate the average salary using only non-null values.</p>
+
+<hr>
+
+<h2>9️⃣ Using Aggregate Functions with Aliases</h2>
+
+<p>Use <code>AS</code> to rename the output column for better readability.</p>
+
+<pre>
+SELECT COUNT(*) AS Total, AVG(Salary) AS AverageSalary
+FROM Employees;
+</pre>
+
+<p>This makes your result easier to understand in reports.</p>
+
+<hr>
+
+<h2>🔟 Example Summary Table</h2>
+
+<p>Suppose you have this <code>Students</code> table:</p>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Name</th><th>Subject</th><th>Marks</th>
+  </tr>
+  <tr><td>John</td><td>Math</td><td>85</td></tr>
+  <tr><td>Mary</td><td>Math</td><td>92</td></tr>
+  <tr><td>Alex</td><td>Science</td><td>78</td></tr>
+</table>
+
+<p>You can get summary information like this:</p>
+
+<pre>
+SELECT COUNT(*) AS TotalStudents,
+       AVG(Marks) AS AverageMarks,
+       MAX(Marks) AS HighestMarks,
+       MIN(Marks) AS LowestMarks
+FROM Students;
+</pre>
+
+<p>Result:</p>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>TotalStudents</th><th>AverageMarks</th><th>HighestMarks</th><th>LowestMarks</th>
+  </tr>
+  <tr><td>3</td><td>85.0</td><td>92</td><td>78</td></tr>
+</table>
+
+<hr>
+
+<h2>11️⃣ When to Use Aggregate Functions</h2>
+
+<p>Aggregate functions are typically used when you want summarized information instead of individual row data, such as:</p>
+<ul>
+  <li>Total number of customers</li>
+  <li>Average sales per month</li>
+  <li>Maximum and minimum salaries</li>
+  <li>Total revenue for a product</li>
+</ul>
+
+<hr>
+
+<h2>12️⃣ Summary</h2>
+
+<ul>
+  <li><code>COUNT()</code> → number of rows</li>
+  <li><code>SUM()</code> → total value</li>
+  <li><code>AVG()</code> → average value</li>
+  <li><code>MAX()</code> → highest value</li>
+  <li><code>MIN()</code> → lowest value</li>
+</ul>
+
+<p>These functions make it easy to analyze data and find patterns quickly.  
+In the next topic, we’ll learn how to <strong>group and filter aggregated results</strong> using <code>GROUP BY</code> and <code>HAVING</code> clauses.</p>

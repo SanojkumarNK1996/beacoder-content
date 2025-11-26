@@ -1,0 +1,106 @@
+<main class="course-content">
+  <article id="iterating-collections">
+    <header>
+      <h1>9. Iterating Collections (Loops, For-each)</h1>
+      <p><strong>Goal:</strong> Learn how to access and process each element in a collection using loops and the enhanced for-each loop.</p>
+    </header>
+
+    <section>
+      <h2>Why Iterate Collections?</h2>
+      <p>
+        Iteration allows you to perform operations (like printing, summing, or modifying) on each element of a collection.  
+        Java provides multiple ways to loop through collections such as <code>for</code> loops, <code>for-each</code> loops, and <code>Iterator</code>.
+      </p>
+    </section>
+
+    <section>
+      <h3>Using For Loop</h3>
+      <p>
+        The traditional <code>for</code> loop is used when you need index-based access, like with an <strong>ArrayList</strong>.
+      </p>
+      <pre><code class="language-java">
+// Example: Iterating with a for loop
+import java.util.ArrayList;
+
+public class ForLoopExample {
+    public static void main(String[] args) {
+        ArrayList<String> names = new ArrayList<>();
+        names.add("Alice");
+        names.add("Bob");
+        names.add("Charlie");
+
+        for (int i = 0; i < names.size(); i++) {
+            System.out.println("Name: " + names.get(i));
+        }
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>Using For-each Loop</h3>
+      <p>
+        The <strong>enhanced for-each loop</strong> simplifies iteration when you don’t need the index.  
+        It works with all collections and arrays.
+      </p>
+      <pre><code class="language-java">
+// Example: Iterating with for-each
+import java.util.HashSet;
+
+public class ForEachExample {
+    public static void main(String[] args) {
+        HashSet<String> fruits = new HashSet<>();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Mango");
+
+        for (String fruit : fruits) {
+            System.out.println("Fruit: " + fruit);
+        }
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>Using Iterator</h3>
+      <p>
+        The <strong>Iterator</strong> interface provides a safe way to traverse collections, especially when you need to remove elements during iteration.
+      </p>
+      <pre><code class="language-java">
+// Example: Iterating with Iterator
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class IteratorExample {
+    public static void main(String[] args) {
+        ArrayList<Integer> numbers = new ArrayList<>();
+        numbers.add(10);
+        numbers.add(20);
+        numbers.add(30);
+
+        Iterator<Integer> it = numbers.iterator();
+        while (it.hasNext()) {
+            int num = it.next();
+            System.out.println("Number: " + num);
+        }
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>Key Points</h3>
+      <ul>
+        <li><strong>For loop:</strong> Best when you need index-based access.</li>
+        <li><strong>For-each loop:</strong> Best for simple reading of elements.</li>
+        <li><strong>Iterator:</strong> Useful for safe element removal during iteration.</li>
+        <li>All these methods can be used with any class from the Java Collections Framework.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p><strong>Next:</strong> Explore Streams for functional-style iteration and data processing.</p>
+    </footer>
+  </article>
+</main>

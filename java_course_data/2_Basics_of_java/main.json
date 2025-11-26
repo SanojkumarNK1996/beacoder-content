@@ -1,0 +1,56 @@
+[
+    {
+        "subtopicId": 4,
+        "dataType": "youtube_video",
+        "displayOrder": 1,
+        "title": "Data Types",
+        "data": "https://www.youtube.com/watch?v=kqtD5dpn9C8",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 4,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Primitive Data Types",
+        "data": "primitive_data_types.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 4,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Non Primitive Data Types",
+        "data": "non_primitive_data_types.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 5,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Variables",
+        "data": "variables.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 6,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Operators",
+        "data": "Operators.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 7,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Comments",
+        "data": "comments.html",
+        "verified": false,
+        "priority" : 1
+    }
+]

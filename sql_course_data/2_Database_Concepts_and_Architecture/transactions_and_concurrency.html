@@ -1,0 +1,81 @@
+<h1>Transactions and Concurrency</h1>
+
+<p>When multiple users are accessing or modifying a database at the same time, it’s important 
+to ensure that the data remains correct, consistent, and reliable. This is handled through 
+<strong>transactions</strong> and <strong>concurrency control</strong> in a Database Management System (DBMS).</p>
+
+<h2>What is a Transaction?</h2>
+
+<p>A <strong>transaction</strong> is a single unit of work that performs one or more operations 
+(such as insert, update, or delete) on a database. A transaction must follow the 
+<strong>ACID properties</strong> — Atomicity, Consistency, Isolation, and Durability — 
+to ensure data reliability.</p>
+
+<p><strong>Example:</strong> In online banking, transferring ₹500 from Account A to Account B involves:
+<ol>
+  <li>Deducting ₹500 from Account A</li>
+  <li>Adding ₹500 to Account B</li>
+</ol>
+Both actions together make one transaction. If either fails, the whole transaction is canceled 
+to keep the data consistent.</p>
+
+<h2>States of a Transaction</h2>
+
+<p>During its execution, a transaction goes through several states:</p>
+<ul>
+  <li><strong>Active:</strong> The transaction is currently being executed.</li>
+  <li><strong>Partially Committed:</strong> The transaction has finished executing but is not yet permanently saved.</li>
+  <li><strong>Committed:</strong> The changes are successfully saved in the database.</li>
+  <li><strong>Failed:</strong> An error or crash occurred before completion.</li>
+  <li><strong>Aborted:</strong> The transaction is rolled back, undoing any partial changes.</li>
+</ul>
+
+<h2>Why Transactions Are Important</h2>
+<ul>
+  <li>Ensure data integrity and reliability</li>
+  <li>Allow safe recovery after system failures</li>
+  <li>Prevent partial updates that could corrupt data</li>
+</ul>
+
+<h2>What is Concurrency?</h2>
+
+<p><strong>Concurrency</strong> refers to multiple users or applications accessing the database 
+at the same time. For example, in an e-commerce website, many customers may place orders simultaneously.
+The DBMS must handle all these requests without conflicts or errors.</p>
+
+<p>Without proper concurrency control, problems like these can occur:</p>
+<ul>
+  <li><strong>Lost Update:</strong> When two transactions modify the same data, and one update overwrites the other.</li>
+  <li><strong>Dirty Read:</strong> Reading uncommitted changes from another transaction (which might later fail).</li>
+  <li><strong>Inconsistent Read:</strong> Getting different results when reading the same data multiple times during another transaction.</li>
+</ul>
+
+<h2>Concurrency Control</h2>
+
+<p><strong>Concurrency Control</strong> ensures that multiple transactions can occur together 
+without interfering with each other, maintaining data accuracy.</p>
+
+<h3>Common Techniques:</h3>
+<ul>
+  <li><strong>Locking:</strong> A transaction locks data while it’s being used so others can’t change it at the same time.</li>
+  <li><strong>Timestamp Ordering:</strong> Each transaction gets a timestamp; older transactions get priority to prevent conflicts.</li>
+  <li><strong>Multiversion Concurrency Control (MVCC):</strong> Instead of locking, it keeps multiple versions of data so different users can read/write safely at once (used in PostgreSQL, MySQL InnoDB, etc.).</li>
+</ul>
+
+<h2>Commit and Rollback</h2>
+<ul>
+  <li><strong>COMMIT:</strong> Saves all changes made by a transaction permanently.</li>
+  <li><strong>ROLLBACK:</strong> Cancels a transaction and restores the database to its previous state.</li>
+</ul>
+
+<p><strong>Example:</strong> If a payment process fails halfway, the system performs a ROLLBACK 
+to ensure no partial transaction is left behind.</p>
+
+<h2>Summary</h2>
+
+<p>Transactions ensure that operations on data happen safely and completely,
+while concurrency control makes sure that multiple users can access and modify data at the same time 
+without causing errors or inconsistencies.</p>
+
+<p>Together, they help databases handle real-world scenarios like banking, ticket booking, 
+and shopping applications smoothly and reliably.</p>

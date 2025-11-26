@@ -1,0 +1,283 @@
+<h1>ER Diagrams (Entity–Relationship Modeling)</h1>
+
+<p>When we create a database, we must first understand what kind of data we’ll store and how those pieces of data are connected.  
+This planning step is called <strong>Data Modeling</strong>.</p>
+
+<p>The most common way to do this is by drawing an <strong>ER Diagram (Entity–Relationship Diagram)</strong>.  
+It’s like a <strong>blueprint of your database</strong> — it shows what data you have and how different parts are related.</p>
+
+<hr>
+
+<h2>What is an Entity?</h2>
+
+<p>An <strong>Entity</strong> is something you want to store information about — a person, place, object, or event.</p>
+
+<h3>Examples:</h3>
+<ul>
+  <li><strong>Student</strong> — has Name, Age, and Roll Number</li>
+  <li><strong>Course</strong> — has Course Name and Duration</li>
+  <li><strong>Teacher</strong> — has Name and Subject</li>
+</ul>
+
+<p>In an ER diagram, an <strong>Entity</strong> is shown as a rectangle.</p>
+
+<pre>
++-----------+
+|  Student  |
++-----------+
+</pre>
+
+<hr>
+
+<h2>What is an Attribute?</h2>
+
+<p>Each Entity has <strong>Attributes</strong> — the specific details you store about it.</p>
+
+<h3>Example:</h3>
+<p>For the <strong>Student</strong> entity, attributes could be:</p>
+
+<ul>
+  <li>StudentID</li>
+  <li>Name</li>
+  <li>Age</li>
+  <li>Email</li>
+</ul>
+
+<p>In an ER diagram, <strong>Attributes</strong> are shown as ovals connected to their Entity.</p>
+
+<pre>
+          +-----------+
+          |  Student  |
+          +-----------+
+          /    |    \
+      Name   Age   Email
+</pre>
+
+<hr>
+
+<h2>What is a Relationship?</h2>
+
+<p>A <strong>Relationship</strong> describes how two entities are connected.</p>
+
+<h3>Example:</h3>
+<p>A <strong>Student</strong> <em>enrolls in</em> a <strong>Course</strong>.</p>
+
+<p>In an ER diagram, a Relationship is shown as a diamond shape connecting entities.</p>
+
+<pre>
++-----------+     enrolls in     +-----------+
+|  Student  |--------------------|  Course   |
++-----------+                    +-----------+
+</pre>
+
+<hr>
+
+<h2>Types of Relationships</h2>
+
+<p>There are three main types of relationships in database design:</p>
+
+<h3>1. One-to-One (1:1)</h3>
+
+<p>Each record in one entity is connected to <strong>only one</strong> record in another entity.</p>
+
+<h4>Example:</h4>
+<p>Each <strong>Student</strong> has exactly one <strong>Library Card</strong>.</p>
+
+<pre>
++-----------+      1:1      +---------------+
+|  Student  |----------------| Library Card |
++-----------+                +---------------+
+</pre>
+
+<hr>
+
+<h3>2. One-to-Many (1:N)</h3>
+
+<p>One record in an entity can be linked to <strong>many</strong> records in another entity.</p>
+
+<h4>Example:</h4>
+<p>One <strong>Teacher</strong> can teach many <strong>Courses</strong>.</p>
+
+<pre>
++-----------+      1:N      +-----------+
+|  Teacher  |----------------|  Course   |
++-----------+                +-----------+
+</pre>
+
+<p>But each course is taught by only one teacher.</p>
+
+<hr>
+
+<h3>3. Many-to-Many (M:N)</h3>
+
+<p>Multiple records in one entity can relate to multiple records in another entity.</p>
+
+<h4>Example:</h4>
+<p>Many <strong>Students</strong> can enroll in many <strong>Courses</strong>.</p>
+
+<pre>
++-----------+      M:N      +-----------+
+|  Student  |----------------|  Course   |
++-----------+                +-----------+
+</pre>
+
+<p>In databases, we handle this by creating a <strong>junction (link) table</strong> — for example, an <strong>Enrollment</strong> table:</p>
+
+<pre>
++-----------+-----------+
+| StudentID | CourseID  |
++-----------+-----------+
+| 1         | C101      |
+| 1         | C102      |
+| 2         | C101      |
++-----------+-----------+
+</pre>
+
+<hr>
+
+<h2>Keys in ER Diagrams</h2>
+
+<p>Keys help identify unique records and connect different tables.</p>
+
+<ul>
+  <li><strong>Primary Key:</strong> A unique identifier for each record (e.g., StudentID).</li>
+  <li><strong>Foreign Key:</strong> A column that refers to the Primary Key of another table (e.g., CourseID in Enrollment table).</li>
+</ul>
+
+<h3>Example with Keys:</h3>
+
+<pre>
+Students Table
++-----------+-----------+------+
+| StudentID | Name      | Age  |
++-----------+-----------+------+
+| 1         | Riya      | 21   |
+| 2         | Arjun     | 22   |
++-----------+-----------+------+
+
+Courses Table
++-----------+----------------+
+| CourseID  | CourseName     |
++-----------+----------------+
+| C101      | Math           |
+| C102      | English        |
++-----------+----------------+
+
+Enrollment Table
++-----------+-----------+
+| StudentID | CourseID  |
++-----------+-----------+
+| 1         | C101      |
+| 1         | C102      |
+| 2         | C101      |
++-----------+-----------+
+</pre>
+
+<hr>
+
+<h2>Cardinality</h2>
+
+<p><strong>Cardinality</strong> defines how many instances of one entity can be associated with another.</p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Meaning</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>One-to-One</td>
+      <td>One entity instance linked to one other</td>
+      <td>Student ↔ LibraryCard</td>
+    </tr>
+    <tr>
+      <td>One-to-Many</td>
+      <td>One entity instance linked to many others</td>
+      <td>Teacher ↔ Courses</td>
+    </tr>
+    <tr>
+      <td>Many-to-Many</td>
+      <td>Many entity instances linked to many others</td>
+      <td>Students ↔ Courses</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>Example: Full ER Diagram (Text Version)</h2>
+
+<pre>
++-----------+         +-------------+          +-----------+
+|  Student  |         | Enrollment  |          |  Course   |
++-----------+         +-------------+          +-----------+
+| StudentID |<------->| StudentID   |<-------->| CourseID  |
+| Name      |         | CourseID    |          | Name      |
+| Age       |         +-------------+          | Duration  |
++-----------+                                      +-----------+
+</pre>
+
+<p>This ER model shows that:</p>
+<ul>
+  <li>Each student can enroll in many courses.</li>
+  <li>Each course can have many students.</li>
+  <li>The <strong>Enrollment</strong> table links them together.</li>
+</ul>
+
+<hr>
+
+<h2>Real-Life Analogy</h2>
+
+<p>Think of ER modeling as <strong>planning a wedding</strong>:</p>
+<ul>
+  <li><strong>Entities:</strong> Guests, Tables, Dishes</li>
+  <li><strong>Attributes:</strong> Guest Name, Table Number, Dish Name</li>
+  <li><strong>Relationships:</strong> Guests sit at tables; tables serve dishes.</li>
+</ul>
+
+<p>Just as you plan who sits where and who eats what before the wedding,  
+you plan your data connections in an ER diagram before building the database!</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th>Symbol</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Entity</td>
+      <td>Rectangle</td>
+      <td>Represents an object or concept (like Student or Course)</td>
+    </tr>
+    <tr>
+      <td>Attribute</td>
+      <td>Oval</td>
+      <td>Represents properties of an entity</td>
+    </tr>
+    <tr>
+      <td>Relationship</td>
+      <td>Diamond</td>
+      <td>Shows how entities are related</td>
+    </tr>
+    <tr>
+      <td>Primary Key</td>
+      <td>Underlined attribute</td>
+      <td>Unique identifier for an entity</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<p><strong>In short:</strong>  
+ER diagrams help you plan your database clearly, just like a map helps you plan a journey.</p>

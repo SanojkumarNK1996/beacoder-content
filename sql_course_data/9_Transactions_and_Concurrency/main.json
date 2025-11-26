@@ -1,0 +1,47 @@
+[
+    {
+        "subtopicId": 61,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Transactions in SQL",
+        "data": "transactions_in_sql.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 61,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "BEGIN, COMMIT, ROLLBACK",
+        "data": "begin_commit_rollback.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 62,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Savepoints",
+        "data": "savepoints.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 63,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Locks and Concurrency Control",
+        "data": "locks_and_concurrency.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 64,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Isolation Levels",
+        "data": "isolation_levels.html",
+        "verified": false,
+        "priority": 1
+    }
+]

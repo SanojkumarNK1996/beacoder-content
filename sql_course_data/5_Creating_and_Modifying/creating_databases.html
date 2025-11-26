@@ -1,0 +1,174 @@
+<h1>Creating Databases and Tables</h1>
+
+<p>Before we can store any data, we need a <strong>database</strong> — a structured place to hold information.  
+Once a database exists, we can create <strong>tables</strong> inside it to organize data into rows and columns.</p>
+
+<hr>
+
+<h2>1️⃣ What is a Database?</h2>
+
+<p>A <strong>database</strong> is a container that holds tables, views, stored procedures, and other objects.  
+You can think of a database as a “folder” that stores all the related data for an application.</p>
+
+<p>For example, a <strong>School Database</strong> might include:</p>
+<ul>
+  <li>A table for students</li>
+  <li>A table for teachers</li>
+  <li>A table for courses</li>
+  <li>A table for grades</li>
+</ul>
+
+<hr>
+
+<h2>2️⃣ Creating a Database</h2>
+
+<p>To create a new database in SQL, use the <code>CREATE DATABASE</code> command.</p>
+
+<pre>
+CREATE DATABASE SchoolDB;
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li><code>CREATE DATABASE</code> — tells SQL you want to make a new database.</li>
+  <li><code>SchoolDB</code> — is the name of your database (you can choose any name).</li>
+</ul>
+
+<p><strong>After creating:</strong> You can start using the database with:</p>
+
+<pre>
+USE SchoolDB;
+</pre>
+
+<p>This tells SQL to start working inside that database.</p>
+
+<hr>
+
+<h2>3️⃣ What is a Table?</h2>
+
+<p>A <strong>table</strong> is like a spreadsheet — it stores information in <strong>rows</strong> and <strong>columns</strong>.</p>
+
+<p>Each <strong>column</strong> represents a data field (like name, age, or email),  
+and each <strong>row</strong> represents a record (a single person or item).</p>
+
+<p><strong>Example:</strong> A <code>Students</code> table might look like this:</p>
+
+<pre>
++-----------+-------------+-------+-----------------------+
+| StudentID | Name        | Age   | Email                 |
++-----------+-------------+-------+-----------------------+
+| 1         | Riya Singh  | 18    | riya@example.com      |
+| 2         | Arjun Mehta | 19    | arjun@example.com     |
+| 3         | Neha Patel  | 20    | neha@example.com      |
++-----------+-------------+-------+-----------------------+
+</pre>
+
+<hr>
+
+<h2>4️⃣ Creating a Table</h2>
+
+<p>Once you’re inside a database, you can create a table using the <code>CREATE TABLE</code> statement.</p>
+
+<pre>
+CREATE TABLE Students (
+  StudentID INT PRIMARY KEY,
+  Name VARCHAR(50),
+  Age INT,
+  Email VARCHAR(100)
+);
+</pre>
+
+<h3>Let’s break this down:</h3>
+<ul>
+  <li><code>CREATE TABLE Students</code> — creates a new table named “Students”.</li>
+  <li><code>StudentID INT PRIMARY KEY</code> — creates a column for a numeric student ID and marks it as the unique identifier.</li>
+  <li><code>Name VARCHAR(50)</code> — a text column for the student’s name (up to 50 characters).</li>
+  <li><code>Age INT</code> — stores the student’s age as a number.</li>
+  <li><code>Email VARCHAR(100)</code> — stores their email address.</li>
+</ul>
+
+<hr>
+
+<h2>5️⃣ Verifying the Table</h2>
+
+<p>You can see all the tables in your current database using:</p>
+
+<pre>
+SHOW TABLES;
+</pre>
+
+<p>To see the structure of a particular table:</p>
+
+<pre>
+DESCRIBE Students;
+</pre>
+
+<p>This will display each column, its data type, and whether it allows <code>NULL</code> (empty) values.</p>
+
+<hr>
+
+<h2>6️⃣ Inserting Some Data (Just as a Test)</h2>
+
+<p>After creating the table, you can add data using the <code>INSERT INTO</code> statement:</p>
+
+<pre>
+INSERT INTO Students (StudentID, Name, Age, Email)
+VALUES (1, 'Riya Singh', 18, 'riya@example.com');
+</pre>
+
+<p>To check if it worked, use:</p>
+
+<pre>
+SELECT * FROM Students;
+</pre>
+
+<p>This will show the data you just added.</p>
+
+<hr>
+
+<h2>7️⃣ Creating Multiple Tables with Relationships</h2>
+
+<p>You can also create multiple related tables.  
+For example, let’s create a <code>Courses</code> table and link it with <code>Students</code>.</p>
+
+<pre>
+CREATE TABLE Courses (
+  CourseID INT PRIMARY KEY,
+  CourseName VARCHAR(100)
+);
+
+CREATE TABLE Enrollments (
+  EnrollmentID INT PRIMARY KEY,
+  StudentID INT,
+  CourseID INT,
+  FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+  FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+);
+</pre>
+
+<p>This shows how you can build connections between tables using <strong>foreign keys</strong> — we’ll explain those in detail in the “Constraints” section later.</p>
+
+<hr>
+
+<h2>8️⃣ Tips for Beginners</h2>
+
+<ul>
+  <li>Always name your tables clearly — use plural forms (e.g., <code>Students</code>, <code>Courses</code>).</li>
+  <li>Choose the right data types for each column (e.g., <code>INT</code> for numbers, <code>VARCHAR</code> for text).</li>
+  <li>Use <code>PRIMARY KEY</code> to uniquely identify each record.</li>
+  <li>Keep backup copies before making big changes to your database.</li>
+</ul>
+
+<hr>
+
+<h2>Summary</h2>
+
+<ul>
+  <li><strong>CREATE DATABASE</strong> — makes a new database.</li>
+  <li><strong>USE database_name</strong> — selects which database to work in.</li>
+  <li><strong>CREATE TABLE</strong> — defines a new table with columns and data types.</li>
+  <li>Each table stores data in rows (records) and columns (fields).</li>
+  <li>You can link tables together using foreign keys to build relationships.</li>
+</ul>
+
+<p>In the next topic, we’ll learn how to <strong>modify existing tables</strong> — adding or removing columns, or changing their structure.</p>

@@ -1,0 +1,38 @@
+[
+    {
+        "subtopicId": 37,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "What is SQL?",
+        "data": "what_is_sql.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 37,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "SQL vs NoSQL",
+        "data": "sql_vs_nosql.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 38,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Types of SQL Commands",
+        "data": "types_of_sql_commands.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 39,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "SQL Syntax Basics",
+        "data": "sql_syntax_basics.html",
+        "verified": false,
+        "priority": 1
+    }
+]

@@ -1,0 +1,92 @@
+[
+    {
+        "subtopicId": 12,
+        "dataType": "youtube_video",
+        "displayOrder": 1,
+        "title": "Classes and Objects",
+        "data": "https://www.youtube.com/watch?v=kqtD5dpn9C8",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 12,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Classes and Objects",
+        "data": "classes_and_objects.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 13,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Fields and Methods",
+        "data": "fields_and_method.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 14,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Encapsulation",
+        "data": "encapsulation.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 15,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Inheritance",
+        "data": "inheritance.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 16,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Polymorphism",
+        "data": "polymorphism.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 17,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Abstraction",
+        "data": "abstraction.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 18,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Packages and Importing",
+        "data": "packages_and_importing.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 19,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "This Keyword",
+        "data": "this_keyword.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 20,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Final Keyword",
+        "data": "final_keyword.html",
+        "verified": false,
+        "priority" : 1
+    }
+]

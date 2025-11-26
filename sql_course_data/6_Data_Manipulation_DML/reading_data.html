@@ -1,0 +1,203 @@
+<h1>Reading Data (SELECT)</h1>
+
+<p>The <strong>SELECT</strong> statement is used to <strong>retrieve data</strong> from one or more tables in a database.  
+It’s the most commonly used SQL command and the foundation of all data analysis and reporting.</p>
+
+<hr>
+
+<h2>1️⃣ Basic SELECT Syntax</h2>
+
+<pre>
+SELECT column1, column2, ...
+FROM table_name;
+</pre>
+
+<p>This command fetches specific columns from a table.  
+To select all columns, use an asterisk (<code>*</code>).</p>
+
+<pre>
+SELECT * FROM Students;
+</pre>
+
+<p>This retrieves all columns and rows from the <code>Students</code> table.</p>
+
+<hr>
+
+<h2>2️⃣ Selecting Specific Columns</h2>
+
+<p>If you only need certain columns, specify them explicitly:</p>
+
+<pre>
+SELECT Name, Age FROM Students;
+</pre>
+
+<p>This will only show the <code>Name</code> and <code>Age</code> columns for all students.</p>
+
+<hr>
+
+<h2>3️⃣ Renaming Columns (Using AS)</h2>
+
+<p>You can rename a column in the result using the <code>AS</code> keyword — this is called an <strong>alias</strong>.</p>
+
+<pre>
+SELECT Name AS StudentName, Age AS StudentAge
+FROM Students;
+</pre>
+
+<p>This doesn’t change the actual table — it just changes the display name in your result.</p>
+
+<hr>
+
+<h2>4️⃣ Filtering Results with WHERE</h2>
+
+<p>The <code>WHERE</code> clause is used to filter rows that meet specific conditions.</p>
+
+<pre>
+SELECT * FROM Students
+WHERE Age > 18;
+</pre>
+
+<p>This shows only students older than 18.</p>
+
+<p>You can use various operators inside WHERE:</p>
+<ul>
+  <li><code>=</code> — equal to</li>
+  <li><code>&gt;</code> — greater than</li>
+  <li><code>&lt;</code> — less than</li>
+  <li><code>&gt;=</code>, <code>&lt;=</code> — greater or less than or equal to</li>
+  <li><code>!=</code> or <code>&lt;&gt;</code> — not equal</li>
+  <li><code>LIKE</code> — for pattern matching (e.g., names starting with “A”)</li>
+  <li><code>IN</code> — check if a value exists in a list</li>
+  <li><code>BETWEEN</code> — check if a value lies between two numbers</li>
+</ul>
+
+<pre>
+SELECT * FROM Students
+WHERE Name LIKE 'A%';
+</pre>
+
+<p>This returns all students whose names start with “A”.</p>
+
+<hr>
+
+<h2>5️⃣ Combining Conditions with AND / OR</h2>
+
+<p>You can use <code>AND</code> and <code>OR</code> to combine multiple conditions.</p>
+
+<pre>
+SELECT * FROM Students
+WHERE Age > 18 AND Name LIKE 'A%';
+</pre>
+
+<p>This shows students older than 18 whose names start with “A”.</p>
+
+<hr>
+
+<h2>6️⃣ Sorting Data with ORDER BY</h2>
+
+<p>To sort results, use <code>ORDER BY</code>.</p>
+
+<pre>
+SELECT * FROM Students
+ORDER BY Age;
+</pre>
+
+<p>This sorts students by <code>Age</code> in ascending order (smallest to largest).  
+To sort in descending order, use <code>DESC</code>:</p>
+
+<pre>
+SELECT * FROM Students
+ORDER BY Age DESC;
+</pre>
+
+<p>You can also sort by multiple columns:</p>
+
+<pre>
+SELECT * FROM Students
+ORDER BY Age DESC, Name ASC;
+</pre>
+
+<hr>
+
+<h2>7️⃣ Limiting Results (LIMIT and OFFSET)</h2>
+
+<p>When you have a large dataset, you might want to view only a small number of rows.</p>
+
+<pre>
+SELECT * FROM Students
+LIMIT 5;
+</pre>
+
+<p>This retrieves only the first 5 rows.</p>
+
+<p>To skip a few rows and then fetch the next few, use <code>OFFSET</code>:</p>
+
+<pre>
+SELECT * FROM Students
+LIMIT 5 OFFSET 5;
+</pre>
+
+<p>This skips the first 5 records and then shows the next 5.</p>
+
+<hr>
+
+<h2>8️⃣ Filtering Unique Values (DISTINCT)</h2>
+
+<p>To get only unique (non-duplicate) values, use <code>DISTINCT</code>.</p>
+
+<pre>
+SELECT DISTINCT Age FROM Students;
+</pre>
+
+<p>This shows all unique age values from the table.</p>
+
+<hr>
+
+<h2>9️⃣ Example: Combining SELECT Features</h2>
+
+<p>Let’s combine everything in one example:</p>
+
+<pre>
+SELECT DISTINCT Name, Age
+FROM Students
+WHERE Age BETWEEN 18 AND 25
+ORDER BY Age DESC
+LIMIT 3;
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li>Shows unique student names and ages.</li>
+  <li>Only includes students aged 18–25.</li>
+  <li>Sorts them from oldest to youngest.</li>
+  <li>Shows only the top 3 results.</li>
+</ul>
+
+<hr>
+
+<h2>10️⃣ Using SELECT with Calculations</h2>
+
+<p>You can perform simple calculations or combine columns directly in SELECT.</p>
+
+<pre>
+SELECT Name, Age + 1 AS "Age Next Year"
+FROM Students;
+</pre>
+
+<p>This shows each student’s name and what their age will be next year.</p>
+
+<hr>
+
+<h2>11️⃣ Summary</h2>
+
+<ul>
+  <li><code>SELECT * FROM table;</code> — view all data.</li>
+  <li><code>SELECT column1, column2;</code> — view specific columns.</li>
+  <li><code>WHERE</code> — filter data based on conditions.</li>
+  <li><code>ORDER BY</code> — sort results.</li>
+  <li><code>LIMIT</code> and <code>OFFSET</code> — control how many rows are shown.</li>
+  <li><code>DISTINCT</code> — remove duplicates.</li>
+</ul>
+
+<p>The <strong>SELECT</strong> statement is the heart of SQL — it allows you to view, analyze, and make sense of your data.  
+Next, we’ll learn how to <strong>update existing records</strong> in a table using the <code>UPDATE</code> command.</p>

@@ -1,0 +1,47 @@
+[
+    {
+        "subtopicId": 40,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Database Normalization",
+        "data": "database_normalization.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 41,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "ER Diagrams (Entity-Relationship Modeling)",
+        "data": "er_diagrams.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 42,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Relationships in Databases",
+        "data": "relationships_in_databases.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 43,
+        "dataType": "notes",
+        "displayOrder": 4,
+        "title": "Indexing Basics",
+        "data": "indexing_basics.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 44,
+        "dataType": "notes",
+        "displayOrder": 5,
+        "title": "Data Types in SQL",
+        "data": "data_types_in_sql.html",
+        "verified": false,
+        "priority": 1
+    }
+]

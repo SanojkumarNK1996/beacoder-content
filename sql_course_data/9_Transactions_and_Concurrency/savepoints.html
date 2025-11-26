@@ -1,0 +1,122 @@
+<h1>Savepoints in SQL</h1>
+
+<p>When working with transactions, sometimes you might want to undo only a <strong>part</strong> of your changes —  
+not the entire transaction.  
+That’s where <strong>Savepoints</strong> come in.</p>
+
+<p>A <strong>Savepoint</strong> is like a “checkpoint” inside a transaction.  
+It allows you to roll back to a specific point without canceling the entire transaction.</p>
+
+<hr>
+
+<h2>1️⃣ What Is a Savepoint?</h2>
+
+<p>Normally, when you use <code>ROLLBACK</code>, all the changes made in the transaction are undone.  
+But with <strong>Savepoints</strong>, you can mark a position in your transaction and roll back only to that point if needed.</p>
+
+<p>Think of it like a video game: you save your progress before facing a tough challenge.  
+If you fail, you can go back to the saved point — not start the whole game over!</p>
+
+<hr>
+
+<h2>2️⃣ Savepoint Commands</h2>
+
+<p>There are two main commands for working with savepoints:</p>
+
+<ul>
+  <li><code>SAVEPOINT</code> — creates a named checkpoint within a transaction.</li>
+  <li><code>ROLLBACK TO SAVEPOINT</code> — undoes the changes made after the specified savepoint.</li>
+</ul>
+
+<p>You can also use <code>RELEASE SAVEPOINT</code> in some databases to remove a savepoint once it’s no longer needed.</p>
+
+<hr>
+
+<h2>3️⃣ Syntax</h2>
+
+<pre>
+SAVEPOINT savepoint_name;
+
+ROLLBACK TO SAVEPOINT savepoint_name;
+
+RELEASE SAVEPOINT savepoint_name;
+</pre>
+
+<hr>
+
+<h2>4️⃣ Example of Using Savepoints</h2>
+
+<p>Let’s look at a practical example to understand how savepoints work:</p>
+
+<pre>
+BEGIN;
+
+INSERT INTO employees VALUES (1, 'Alice', 'HR');
+SAVEPOINT step1;
+
+INSERT INTO employees VALUES (2, 'Bob', 'Finance');
+SAVEPOINT step2;
+
+INSERT INTO employees VALUES (3, 'Charlie', 'IT');
+
+-- Suppose we realize the last insert was wrong
+ROLLBACK TO SAVEPOINT step2;
+
+COMMIT;
+</pre>
+
+<p><strong>What happens here:</strong></p>
+<ul>
+  <li><code>step1</code> marks a checkpoint after adding Alice.</li>
+  <li><code>step2</code> marks another checkpoint after adding Bob.</li>
+  <li>After inserting Charlie, an error occurs.</li>
+  <li><code>ROLLBACK TO SAVEPOINT step2</code> undoes Charlie’s insert but keeps Alice and Bob’s data.</li>
+  <li><code>COMMIT</code> permanently saves the remaining valid changes.</li>
+</ul>
+
+<hr>
+
+<h2>5️⃣ Real-World Analogy</h2>
+
+<p>Imagine writing a long document:</p>
+<ul>
+  <li>You save your work halfway (that’s a <strong>savepoint</strong>).</li>
+  <li>You continue writing but make a mistake.</li>
+  <li>You undo changes up to your last save (that’s <strong>ROLLBACK TO SAVEPOINT</strong>).</li>
+</ul>
+
+<p>This lets you correct errors without losing all your earlier progress.</p>
+
+<hr>
+
+<h2>6️⃣ Advantages of Using Savepoints</h2>
+
+<ul>
+  <li>They provide finer control within a transaction.</li>
+  <li>They help recover only a portion of work when errors occur.</li>
+  <li>They make complex transactions easier to manage and debug.</li>
+  <li>They improve reliability without restarting the whole process.</li>
+</ul>
+
+<hr>
+
+<h2>7️⃣ Important Notes</h2>
+
+<ul>
+  <li>Savepoints only work <strong>inside an active transaction</strong> (after <code>BEGIN</code>).</li>
+  <li>Using <code>ROLLBACK</code> without specifying a savepoint undoes the entire transaction.</li>
+  <li>Some databases automatically release savepoints after a <code>ROLLBACK TO</code> or <code>COMMIT</code>.</li>
+</ul>
+
+<hr>
+
+<h2>8️⃣ Summary</h2>
+
+<ul>
+  <li><strong>Savepoints</strong> let you create checkpoints in a transaction.</li>
+  <li><strong>ROLLBACK TO SAVEPOINT</strong> undoes only part of the transaction.</li>
+  <li>They are useful for handling partial errors gracefully.</li>
+</ul>
+
+<p>Next, let’s explore how databases manage multiple users and processes at once using  
+<strong>Locks and Concurrency Control</strong>.</p>

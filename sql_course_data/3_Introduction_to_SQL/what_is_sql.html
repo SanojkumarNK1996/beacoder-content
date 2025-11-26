@@ -1,0 +1,77 @@
+<h1>What is SQL?</h1>
+
+<p><strong>SQL</strong> stands for <strong>Structured Query Language</strong>.  
+It is a standard language used to communicate with and manage data in a <strong>relational database</strong>.  
+With SQL, you can create tables, insert data, update records, delete information, and retrieve data efficiently.</p>
+
+<p>Think of a <strong>database</strong> as a big electronic filing cabinet that stores information in an organized way.  
+And SQL is the language you use to ask questions or make changes inside that cabinet.</p>
+
+<h2>Why Do We Need SQL?</h2>
+
+<p>Almost every application — from social media platforms to online stores — stores and retrieves data.  
+SQL is what developers and systems use to talk to these databases.  
+It makes working with data simple, consistent, and reliable.</p>
+
+<h3>Examples of SQL in Everyday Life:</h3>
+<ul>
+  <li>When you search for a friend on Facebook — SQL retrieves their profile data.</li>
+  <li>When you buy something online — SQL stores your order details.</li>
+  <li>When a bank shows your transaction history — SQL fetches that information.</li>
+</ul>
+
+<h2>How SQL Works</h2>
+
+<p>SQL acts as a middleman between you and the database.  
+You write commands in SQL, and the database system understands and performs them.</p>
+
+<p><strong>Example:</strong></p>
+<pre>
+SELECT * FROM Students;
+</pre>
+<p>This SQL command tells the database: “Show me all the records from the table named <code>Students</code>.”</p>
+
+<h2>Key Features of SQL</h2>
+<ul>
+  <li><strong>Easy to Learn:</strong> SQL uses simple English-like commands such as SELECT, INSERT, and DELETE.</li>
+  <li><strong>Standardized:</strong> It’s used across almost all relational databases (MySQL, PostgreSQL, Oracle, SQL Server, etc.).</li>
+  <li><strong>Powerful:</strong> It can handle millions of records efficiently.</li>
+  <li><strong>Flexible:</strong> SQL works with different types of data and can combine information from multiple tables.</li>
+</ul>
+
+<h2>Common SQL Operations</h2>
+<p>SQL can be used to:</p>
+<ul>
+  <li><strong>Create</strong> new databases and tables</li>
+  <li><strong>Insert</strong> new data</li>
+  <li><strong>Update</strong> existing data</li>
+  <li><strong>Delete</strong> data</li>
+  <li><strong>Query</strong> data (fetch information based on conditions)</li>
+</ul>
+
+<h2>Example Scenario</h2>
+<p>Imagine a database called <strong>Library</strong>. It has a table called <strong>Books</strong>.</p>
+<pre>
+Books Table
++-----------+------------------------------+------------+
+| Book_ID   | Title                        | Author     |
++-----------+------------------------------+------------+
+| 1         | The Alchemist                | Paulo Coelho|
+| 2         | Wings of Fire                | A.P.J. Abdul Kalam|
+| 3         | Harry Potter and the Sorcerer’s Stone | J.K. Rowling|
++-----------+------------------------------+------------+
+</pre>
+
+<p>If you want to see all books written by <strong>Paulo Coelho</strong>, you could write this SQL command:</p>
+<pre>
+SELECT * FROM Books WHERE Author = 'Paulo Coelho';
+</pre>
+<p>The database will return only the matching row(s).</p>
+
+<h2>Summary</h2>
+<ul>
+  <li>SQL stands for Structured Query Language.</li>
+  <li>It is used to manage and interact with data stored in relational databases.</li>
+  <li>It allows you to create, read, update, and delete data (often called <strong>CRUD operations</strong>).</li>
+  <li>SQL is simple yet extremely powerful and forms the backbone of almost all data-driven applications.</li>
+</ul>

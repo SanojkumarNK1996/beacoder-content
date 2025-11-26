@@ -1,0 +1,29 @@
+[
+    {
+        "subtopicId": 28,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "What is a Database?",
+        "data": "what_is_database.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 29,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Types of Databases",
+        "data": "types_of_databases.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 30,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Database vs File System",
+        "data": "database_vs_file_system.html",
+        "verified": false,
+        "priority": 1
+    }
+]

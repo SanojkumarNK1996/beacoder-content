@@ -1,0 +1,128 @@
+<main class="course-content">
+  <article id="java8-features">
+    <header>
+      <h1>12. Java 8+ Features (Optional Advanced)</h1>
+      <p><strong>Goal:</strong> Learn modern Java features that make code concise, expressive, and functional.</p>
+    </header>
+
+    <section>
+      <h2>Lambda Expressions</h2>
+      <p>
+        <strong>Lambda expressions</strong> allow you to write short, functional-style code.
+        They are used to define anonymous methods in a concise way, often with functional interfaces.
+      </p>
+      <pre><code class="language-java">
+// Example: Lambda expression
+import java.util.*;
+
+public class LambdaExample {
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("John", "Alice", "Bob");
+
+        // Traditional loop
+        for (String name : names) {
+            System.out.println(name);
+        }
+
+        // Using lambda
+        names.forEach(n -> System.out.println("Hello, " + n));
+    }
+}
+      </code></pre>
+      <p><strong>Syntax:</strong> <code>(parameters) -> expression</code></p>
+    </section>
+
+    <section>
+      <h2>Streams API</h2>
+      <p>
+        The <strong>Streams API</strong> provides a powerful way to process collections using a functional approach.
+        You can filter, map, and reduce data in a clean, declarative style.
+      </p>
+      <pre><code class="language-java">
+// Example: Using Streams API
+import java.util.*;
+import java.util.stream.*;
+
+public class StreamsExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+
+        List<Integer> even = numbers.stream()
+                                    .filter(n -> n % 2 == 0)
+                                    .collect(Collectors.toList());
+
+        System.out.println("Even numbers: " + even);
+    }
+}
+      </code></pre>
+      <p><strong>Common Stream operations:</strong> <code>filter()</code>, <code>map()</code>, <code>forEach()</code>, <code>collect()</code>, <code>reduce()</code>.</p>
+    </section>
+
+    <section>
+      <h2>Optional Class</h2>
+      <p>
+        The <strong>Optional</strong> class helps prevent <code>NullPointerException</code> by representing values that might be missing.
+        It provides safe methods to access data that may or may not exist.
+      </p>
+      <pre><code class="language-java">
+// Example: Optional class
+import java.util.Optional;
+
+public class OptionalExample {
+    public static void main(String[] args) {
+        Optional<String> name = Optional.ofNullable(null);
+
+        // Using isPresent
+        if (name.isPresent()) {
+            System.out.println("Name: " + name.get());
+        } else {
+            System.out.println("Name not found.");
+        }
+
+        // Using orElse
+        System.out.println("Result: " + name.orElse("Guest"));
+    }
+}
+      </code></pre>
+      <p><strong>Useful methods:</strong> <code>of()</code>, <code>ofNullable()</code>, <code>isPresent()</code>, <code>orElse()</code>, <code>ifPresent()</code>.</p>
+    </section>
+
+    <section>
+      <h2>Functional Interfaces</h2>
+      <p>
+        A <strong>Functional Interface</strong> is an interface with exactly one abstract method.
+        Common examples include <code>Runnable</code>, <code>Callable</code>, <code>Comparator</code>, and <code>Consumer</code>.
+        They work naturally with lambda expressions.
+      </p>
+      <pre><code class="language-java">
+// Example: Functional interface and lambda
+@FunctionalInterface
+interface Greeting {
+    void sayHello(String name);
+}
+
+public class FunctionalInterfaceExample {
+    public static void main(String[] args) {
+        Greeting g = n -> System.out.println("Hello, " + n + "!");
+        g.sayHello("Alice");
+    }
+}
+      </code></pre>
+      <p><strong>Built-in functional interfaces:</strong> <code>Consumer</code>, <code>Supplier</code>, <code>Predicate</code>, <code>Function</code>.</p>
+    </section>
+
+    <section>
+      <h2>Key Points</h2>
+      <ul>
+        <li>Lambda expressions make code shorter and cleaner.</li>
+        <li>Streams API simplifies collection processing.</li>
+        <li>Optional reduces null-check errors.</li>
+        <li>Functional interfaces enable functional programming in Java.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p><strong>Next:</strong> Explore <code>java.time</code> API for modern date and time handling in Java 8+.</p>
+    </footer>
+  </article>
+</main>

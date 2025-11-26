@@ -1,0 +1,38 @@
+[
+    {
+        "subtopicId": 8,
+        "dataType": "youtube_video",
+        "displayOrder": 1,
+        "title": "Conditional Statements",
+        "data": "https://www.youtube.com/watch?v=kqtD5dpn9C8",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 8,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Conditional Statements",
+        "data": "conditional_statements.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 9,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Loops",
+        "data": "loops.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 10,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Branching Statements",
+        "data": "branching_statements.html",
+        "verified": false,
+        "priority" : 1
+    }
+]

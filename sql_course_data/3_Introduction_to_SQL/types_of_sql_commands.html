@@ -1,0 +1,179 @@
+<h1>Types of SQL Commands</h1>
+
+<p>SQL (Structured Query Language) provides different types of commands to perform various tasks 
+in a database — like creating tables, inserting data, updating records, or managing permissions.</p>
+
+<p>All SQL commands are grouped into four main categories:</p>
+<ul>
+  <li><strong>DDL</strong> – Data Definition Language</li>
+  <li><strong>DML</strong> – Data Manipulation Language</li>
+  <li><strong>DCL</strong> – Data Control Language</li>
+  <li><strong>TCL</strong> – Transaction Control Language</li>
+</ul>
+
+<p>Let’s explore each one in detail with examples.</p>
+
+<hr>
+
+<h2>1. DDL – Data Definition Language</h2>
+
+<p><strong>DDL commands</strong> are used to <strong>define or modify the structure</strong> of the database — 
+such as creating, altering, or deleting tables and other database objects.</p>
+
+<p><strong>Common DDL Commands:</strong></p>
+<ul>
+  <li><strong>CREATE</strong> – Creates a new table or database</li>
+  <li><strong>ALTER</strong> – Modifies an existing table (add/remove columns)</li>
+  <li><strong>DROP</strong> – Deletes a table or database permanently</li>
+  <li><strong>TRUNCATE</strong> – Removes all data from a table but keeps the structure</li>
+</ul>
+
+<p><strong>Example:</strong></p>
+<pre>
+CREATE TABLE Students (
+    StudentID INT,
+    Name VARCHAR(50),
+    Age INT
+);
+</pre>
+
+<p>This creates a new table named <code>Students</code> with three columns: StudentID, Name, and Age.</p>
+
+<p><strong>Analogy:</strong>  
+DDL is like designing or remodeling a building — you create or change the structure before people (data) move in.</p>
+
+<hr>
+
+<h2>2. DML – Data Manipulation Language</h2>
+
+<p><strong>DML commands</strong> are used to <strong>work with the actual data</strong> inside the database.
+Once the structure exists (thanks to DDL), DML helps you add, change, or remove information.</p>
+
+<p><strong>Common DML Commands:</strong></p>
+<ul>
+  <li><strong>INSERT</strong> – Add new data</li>
+  <li><strong>UPDATE</strong> – Modify existing data</li>
+  <li><strong>DELETE</strong> – Remove data</li>
+  <li><strong>SELECT</strong> – Retrieve data from one or more tables</li>
+</ul>
+
+<p><strong>Examples:</strong></p>
+<pre>
+-- Add a new student
+INSERT INTO Students (StudentID, Name, Age)
+VALUES (1, 'Riya', 20);
+
+-- Update an existing record
+UPDATE Students
+SET Age = 21
+WHERE StudentID = 1;
+
+-- Retrieve all students
+SELECT * FROM Students;
+</pre>
+
+<p><strong>Analogy:</strong>  
+If the database is a house, DML is how you manage what’s inside — adding furniture (data), rearranging it, or removing it.</p>
+
+<hr>
+
+<h2>3. DCL – Data Control Language</h2>
+
+<p><strong>DCL commands</strong> manage <strong>access and permissions</strong> to the database.  
+They control who can view, modify, or delete data.</p>
+
+<p><strong>Common DCL Commands:</strong></p>
+<ul>
+  <li><strong>GRANT</strong> – Give access or privileges to a user</li>
+  <li><strong>REVOKE</strong> – Remove previously given privileges</li>
+</ul>
+
+<p><strong>Example:</strong></p>
+<pre>
+-- Give permission to a user to view the Students table
+GRANT SELECT ON Students TO user1;
+
+-- Remove permission
+REVOKE SELECT ON Students FROM user1;
+</pre>
+
+<p><strong>Analogy:</strong>  
+DCL is like giving or taking away keys to a room — you decide who can enter, who can make changes, and who can’t.</p>
+
+<hr>
+
+<h2>4. TCL – Transaction Control Language</h2>
+
+<p><strong>TCL commands</strong> deal with the <strong>transactions</strong> in a database — ensuring data integrity 
+and allowing you to control how and when changes are permanently saved.</p>
+
+<p>A <strong>transaction</strong> is a group of one or more SQL operations that are treated as a single unit of work.  
+If any part fails, the entire transaction can be rolled back to keep the data consistent.</p>
+
+<p><strong>Common TCL Commands:</strong></p>
+<ul>
+  <li><strong>COMMIT</strong> – Save all changes permanently</li>
+  <li><strong>ROLLBACK</strong> – Undo changes made by the current transaction</li>
+  <li><strong>SAVEPOINT</strong> – Set a temporary save point within a transaction</li>
+</ul>
+
+<p><strong>Example:</strong></p>
+<pre>
+BEGIN TRANSACTION;
+
+UPDATE Students SET Age = 22 WHERE StudentID = 1;
+
+-- Oops! If something goes wrong:
+ROLLBACK;
+
+-- If all good:
+COMMIT;
+</pre>
+
+<p><strong>Analogy:</strong>  
+TCL is like “Save” and “Undo” in a document editor.  
+You can commit your changes to make them permanent, or rollback to revert them.</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Full Form</th>
+      <th>Purpose</th>
+      <th>Examples</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>DDL</strong></td>
+      <td>Data Definition Language</td>
+      <td>Defines database structure</td>
+      <td>CREATE, ALTER, DROP, TRUNCATE</td>
+    </tr>
+    <tr>
+      <td><strong>DML</strong></td>
+      <td>Data Manipulation Language</td>
+      <td>Works with actual data</td>
+      <td>SELECT, INSERT, UPDATE, DELETE</td>
+    </tr>
+    <tr>
+      <td><strong>DCL</strong></td>
+      <td>Data Control Language</td>
+      <td>Manages access and permissions</td>
+      <td>GRANT, REVOKE</td>
+    </tr>
+    <tr>
+      <td><strong>TCL</strong></td>
+      <td>Transaction Control Language</td>
+      <td>Manages transactions and saves/undoes changes</td>
+      <td>COMMIT, ROLLBACK, SAVEPOINT</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Together, these four command types cover everything you need to work with a database —
+from creating its structure to managing data, access, and safe transactions.</p>

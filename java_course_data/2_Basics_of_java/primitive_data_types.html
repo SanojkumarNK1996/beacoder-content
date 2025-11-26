@@ -1,0 +1,101 @@
+<h2>Data Types in Java</h2>
+
+<p>In Java, <strong>data types</strong> define the kind of values a variable can hold. For example, a number, a single character, or a piece of text.  
+Java is a <strong>strongly typed language</strong>, which means you must declare the type of every variable before using it.</p>
+
+<hr>
+
+<h3>1. What Are Data Types?</h3>
+<p>Every piece of data in Java has a specific type. This helps the compiler understand how much memory to allocate and what operations can be performed on the data.</p>
+
+<p>Java data types are divided into two main categories:</p>
+
+<ul>
+  <li><strong>Primitive Types</strong> — Basic, built-in data types.</li>
+  <li><strong>Non-Primitive Types</strong> — More complex types created using classes.</li>
+</ul>
+
+<hr>
+
+<h2>Primitive Data Types</h2>
+
+<p>Primitive types are the simplest and most commonly used data types in Java. They store simple values like numbers, characters, and true/false values.  
+There are <strong>8 primitive data types</strong> in Java:</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Size</th>
+      <th>Example</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>byte</code></td>
+      <td>1 byte</td>
+      <td><code>byte b = 10;</code></td>
+      <td>Stores small integers from -128 to 127.</td>
+    </tr>
+    <tr>
+      <td><code>short</code></td>
+      <td>2 bytes</td>
+      <td><code>short s = 3000;</code></td>
+      <td>Stores larger integers from -32,768 to 32,767.</td>
+    </tr>
+    <tr>
+      <td><code>int</code></td>
+      <td>4 bytes</td>
+      <td><code>int num = 100000;</code></td>
+      <td>Stores whole numbers (most common integer type).</td>
+    </tr>
+    <tr>
+      <td><code>long</code></td>
+      <td>8 bytes</td>
+      <td><code>long bigNum = 10000000000L;</code></td>
+      <td>Stores very large whole numbers. Use <code>L</code> at the end.</td>
+    </tr>
+    <tr>
+      <td><code>float</code></td>
+      <td>4 bytes</td>
+      <td><code>float price = 10.5f;</code></td>
+      <td>Stores decimal numbers (single precision). Use <code>f</code> at the end.</td>
+    </tr>
+    <tr>
+      <td><code>double</code></td>
+      <td>8 bytes</td>
+      <td><code>double pi = 3.14159;</code></td>
+      <td>Stores decimal numbers (double precision).</td>
+    </tr>
+    <tr>
+      <td><code>char</code></td>
+      <td>2 bytes</td>
+      <td><code>char letter = 'A';</code></td>
+      <td>Stores a single character, like a letter or digit.</td>
+    </tr>
+    <tr>
+      <td><code>boolean</code></td>
+      <td>1 bit</td>
+      <td><code>boolean isJavaFun = true;</code></td>
+      <td>Stores true or false values.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Example of Using Primitive Types:</h4>
+<pre><code>public class PrimitiveExample {
+    public static void main(String[] args) {
+        int age = 25;
+        double salary = 55000.75;
+        char grade = 'A';
+        boolean isActive = true;
+        
+        System.out.println("Age: " + age);
+        System.out.println("Salary: " + salary);
+        System.out.println("Grade: " + grade);
+        System.out.println("Active: " + isActive);
+    }
+}</code></pre>
+
+<hr>

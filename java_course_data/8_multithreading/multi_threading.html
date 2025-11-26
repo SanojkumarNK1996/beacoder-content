@@ -1,0 +1,159 @@
+<main class="course-content">
+  <article id="multithreading-concurrency">
+    <header>
+      <h1>11. Multithreading and Concurrency (Advanced)</h1>
+      <p><strong>Goal:</strong> Learn how to run multiple tasks simultaneously and manage concurrent operations in Java.</p>
+    </header>
+
+    <section>
+      <h2>What is Multithreading?</h2>
+      <p>
+        <strong>Multithreading</strong> allows a program to execute multiple parts (threads) simultaneously, improving performance and responsiveness.
+        Each thread runs independently but shares the same memory space.
+      </p>
+    </section>
+
+    <section>
+      <h2>Creating Threads</h2>
+      <p>
+        Threads in Java can be created in two main ways — by extending the <code>Thread</code> class or implementing the <code>Runnable</code> interface.
+      </p>
+      <pre><code class="language-java">
+// Example: Creating a thread by extending Thread
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread is running: " + Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) {
+        MyThread t1 = new MyThread();
+        t1.start(); // starts a new thread
+    }
+}
+      </code></pre>
+
+      <pre><code class="language-java">
+// Example: Creating a thread using Runnable interface
+class MyRunnable implements Runnable {
+    public void run() {
+        System.out.println("Runnable thread: " + Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new MyRunnable());
+        t1.start();
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Thread Lifecycle</h2>
+      <p>
+        A thread passes through several states during its lifetime:
+      </p>
+      <ul>
+        <li><strong>New:</strong> Thread is created but not yet started.</li>
+        <li><strong>Runnable:</strong> Thread is ready to run or running.</li>
+        <li><strong>Blocked / Waiting:</strong> Thread is paused, waiting for resources or another thread.</li>
+        <li><strong>Terminated:</strong> Thread has finished execution.</li>
+      </ul>
+      <pre><code class="language-java">
+// Example: Demonstrating thread states
+public class ThreadLifecycle {
+    public static void main(String[] args) throws InterruptedException {
+        Thread t = new Thread(() -> System.out.println("Thread running"));
+        System.out.println("State before start: " + t.getState());
+        t.start();
+        System.out.println("State after start: " + t.getState());
+        t.join();
+        System.out.println("State after completion: " + t.getState());
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Synchronization</h2>
+      <p>
+        When multiple threads share resources (like variables or objects), data inconsistency can occur. 
+        <strong>Synchronization</strong> ensures that only one thread accesses a shared resource at a time.
+      </p>
+      <pre><code class="language-java">
+// Example: Synchronized method
+class Counter {
+    private int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+public class SyncExample {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) counter.increment();
+        });
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) counter.increment();
+        });
+
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Runnable Interface</h2>
+      <p>
+        The <code>Runnable</code> interface is a functional interface that defines a single <code>run()</code> method. 
+        It’s preferred when you want to separate the task logic from the thread itself.
+      </p>
+      <pre><code class="language-java">
+// Example: Runnable with multiple threads
+public class RunnableExample {
+    public static void main(String[] args) {
+        Runnable task = () -> {
+            for (int i = 1; i <= 3; i++) {
+                System.out.println(Thread.currentThread().getName() + " - Count: " + i);
+                try { Thread.sleep(500); } catch (InterruptedException e) {}
+            }
+        };
+
+        Thread t1 = new Thread(task, "Worker-1");
+        Thread t2 = new Thread(task, "Worker-2");
+
+        t1.start();
+        t2.start();
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Key Points</h2>
+      <ul>
+        <li>Threads allow multiple tasks to run in parallel within a single program.</li>
+        <li><code>Thread</code> class and <code>Runnable</code> interface are two main ways to create threads.</li>
+        <li>Synchronization prevents data inconsistency when threads share resources.</li>
+        <li>Use <code>join()</code> to wait for a thread to finish execution.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p><strong>Next:</strong> Learn about <code>ExecutorService</code> and thread pools for managing multiple threads efficiently.</p>
+    </footer>
+  </article>
+</main>

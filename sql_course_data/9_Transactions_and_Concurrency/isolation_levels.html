@@ -1,0 +1,84 @@
+<body style="font-family:Arial, sans-serif; margin:30px; line-height:1.6;">
+  <h1>Isolation Levels in SQL</h1>
+  <p>
+    Isolation levels define how transaction integrity is maintained when multiple users access the same data concurrently.
+    They control the visibility of changes made by one transaction to others.
+  </p>
+
+  <h2>1. READ UNCOMMITTED</h2>
+  <p>
+    The lowest isolation level. Transactions can read uncommitted changes made by others — known as <strong>dirty reads</strong>.
+  </p>
+  <pre style="background:#f6f8fa; padding:10px; border:1px solid #ccc;">
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SELECT * FROM orders;
+  </pre>
+
+  <h2>2. READ COMMITTED</h2>
+  <p>
+    Prevents dirty reads by only allowing access to committed data.
+    However, <strong>non-repeatable reads</strong> and <strong>phantom reads</strong> may still occur.
+  </p>
+  <pre style="background:#f6f8fa; padding:10px; border:1px solid #ccc;">
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SELECT * FROM customers WHERE city = 'Delhi';
+  </pre>
+
+  <h2>3. REPEATABLE READ</h2>
+  <p>
+    Ensures that if a transaction reads a row twice, the data will not change in between.
+    Prevents dirty and non-repeatable reads, but <strong>phantom rows</strong> can still appear.
+  </p>
+  <pre style="background:#f6f8fa; padding:10px; border:1px solid #ccc;">
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SELECT * FROM accounts WHERE type = 'savings';
+  </pre>
+
+  <h2>4. SERIALIZABLE</h2>
+  <p>
+    The highest isolation level. Transactions are executed as if they were serialized one after another.
+    Prevents dirty, non-repeatable, and phantom reads — but reduces concurrency.
+  </p>
+  <pre style="background:#f6f8fa; padding:10px; border:1px solid #ccc;">
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+SELECT * FROM products WHERE category = 'Electronics';
+  </pre>
+
+  <h2>Summary</h2>
+  <table style="border-collapse:collapse; width:100%; max-width:600px;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #ccc; padding:8px;">Isolation Level</th>
+        <th style="border:1px solid #ccc; padding:8px;">Dirty Read</th>
+        <th style="border:1px solid #ccc; padding:8px;">Non-repeatable Read</th>
+        <th style="border:1px solid #ccc; padding:8px;">Phantom Read</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border:1px solid #ccc; padding:8px;">READ UNCOMMITTED</td>
+        <td style="border:1px solid #ccc; padding:8px;">✔️</td>
+        <td style="border:1px solid #ccc; padding:8px;">✔️</td>
+        <td style="border:1px solid #ccc; padding:8px;">✔️</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #ccc; padding:8px;">READ COMMITTED</td>
+        <td style="border:1px solid #ccc; padding:8px;">❌</td>
+        <td style="border:1px solid #ccc; padding:8px;">✔️</td>
+        <td style="border:1px solid #ccc; padding:8px;">✔️</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #ccc; padding:8px;">REPEATABLE READ</td>
+        <td style="border:1px solid #ccc; padding:8px;">❌</td>
+        <td style="border:1px solid #ccc; padding:8px;">❌</td>
+        <td style="border:1px solid #ccc; padding:8px;">✔️</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #ccc; padding:8px;">SERIALIZABLE</td>
+        <td style="border:1px solid #ccc; padding:8px;">❌</td>
+        <td style="border:1px solid #ccc; padding:8px;">❌</td>
+        <td style="border:1px solid #ccc; padding:8px;">❌</td>
+      </tr>
+    </tbody>
+  </table>
+</body>

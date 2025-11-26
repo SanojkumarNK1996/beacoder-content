@@ -1,0 +1,124 @@
+<main class="course-content">
+  <article id="collections-framework">
+    <header>
+      <h1>8. Collections Framework</h1>
+      <p><strong>Goal:</strong> Learn how to store and manipulate groups of objects efficiently using Java Collections.</p>
+    </header>
+
+    <section>
+      <h2>What is the Collections Framework?</h2>
+      <p>
+        The <strong>Collections Framework</strong> in Java provides classes and interfaces to handle groups of objects 
+        such as lists, sets, and maps. It helps manage data dynamically — unlike arrays, collections can grow or shrink as needed.
+      </p>
+    </section>
+
+    <section>
+      <h3>ArrayList</h3>
+      <p>
+        <strong>ArrayList</strong> is a dynamic array that can grow and shrink in size. 
+        It allows duplicate elements and maintains insertion order.
+      </p>
+      <pre><code class="language-java">
+// Example: Using ArrayList
+import java.util.ArrayList;
+
+public class ArrayListExample {
+    public static void main(String[] args) {
+        ArrayList<String> names = new ArrayList<>();
+        names.add("Alice");
+        names.add("Bob");
+        names.add("Charlie");
+
+        System.out.println("Names: " + names);
+        names.remove("Bob");
+        System.out.println("After removal: " + names);
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>LinkedList</h3>
+      <p>
+        <strong>LinkedList</strong> stores elements in nodes, where each node points to the next. 
+        It’s efficient for inserting and removing elements in the middle of the list.
+      </p>
+      <pre><code class="language-java">
+// Example: Using LinkedList
+import java.util.LinkedList;
+
+public class LinkedListExample {
+    public static void main(String[] args) {
+        LinkedList<Integer> numbers = new LinkedList<>();
+        numbers.add(10);
+        numbers.add(20);
+        numbers.addFirst(5);
+        numbers.addLast(30);
+
+        System.out.println("LinkedList: " + numbers);
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>HashMap</h3>
+      <p>
+        <strong>HashMap</strong> stores data in key-value pairs. Each key is unique, and it allows fast retrieval based on keys.
+      </p>
+      <pre><code class="language-java">
+// Example: Using HashMap
+import java.util.HashMap;
+
+public class HashMapExample {
+    public static void main(String[] args) {
+        HashMap<String, Integer> ages = new HashMap<>();
+        ages.put("Alice", 25);
+        ages.put("Bob", 30);
+        ages.put("Charlie", 28);
+
+        System.out.println("Age of Bob: " + ages.get("Bob"));
+        System.out.println("All entries: " + ages);
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>HashSet</h3>
+      <p>
+        <strong>HashSet</strong> stores unique elements and does not maintain insertion order.
+      </p>
+      <pre><code class="language-java">
+// Example: Using HashSet
+import java.util.HashSet;
+
+public class HashSetExample {
+    public static void main(String[] args) {
+        HashSet<String> fruits = new HashSet<>();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Apple"); // duplicate ignored
+
+        System.out.println("Fruits: " + fruits);
+    }
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <h3>Key Points</h3>
+      <ul>
+        <li><strong>ArrayList</strong> – Fast access, slower insertion/removal in the middle.</li>
+        <li><strong>LinkedList</strong> – Efficient insertion/removal, slower random access.</li>
+        <li><strong>HashMap</strong> – Key-value storage, keys are unique.</li>
+        <li><strong>HashSet</strong> – Stores unique elements, no duplicates allowed.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p><strong>Next:</strong> Learn about Iterators and how to loop through collections efficiently.</p>
+    </footer>
+  </article>
+</main>

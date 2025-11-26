@@ -1,0 +1,149 @@
+<h2>Encapsulation in Java</h2>
+
+<p>
+<strong>Encapsulation</strong> is one of the main principles of <em>Object-Oriented Programming (OOP)</em>. 
+It means <strong>wrapping data (fields)</strong> and <strong>methods (functions)</strong> together into a single unit — the <code>class</code> — and <strong>restricting direct access</strong> to the internal data.
+</p>
+
+<p>
+In simple words, encapsulation hides how things work internally and only exposes what is necessary. 
+It keeps data safe and controlled.
+</p>
+
+<hr>
+
+<h3>Why Encapsulation?</h3>
+<ul>
+    <li>To protect data from unauthorized access.</li>
+    <li>To make code easier to maintain and modify.</li>
+    <li>To control how fields are set or retrieved.</li>
+</ul>
+
+<hr>
+
+<h3>Access Modifiers</h3>
+
+<p>
+Access modifiers define <strong>who can access</strong> a class, method, or variable. 
+They are keywords that control the visibility of class members.
+</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Modifier</th>
+        <th>Access Level</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>private</strong></td>
+        <td>Within the same class only</td>
+        <td>Used to hide data. Other classes cannot access it directly.</td>
+    </tr>
+    <tr>
+        <td><strong>public</strong></td>
+        <td>Accessible from anywhere</td>
+        <td>Used for methods or classes that should be available globally.</td>
+    </tr>
+    <tr>
+        <td><strong>protected</strong></td>
+        <td>Accessible in the same package and by subclasses</td>
+        <td>Used when you want to share data with inherited classes but not with everyone.</td>
+    </tr>
+    <tr>
+        <td><strong>default</strong> (no keyword)</td>
+        <td>Accessible only within the same package</td>
+        <td>Used when you don’t need to expose data outside the package.</td>
+    </tr>
+</table>
+
+<hr>
+
+<h3>Example Without Encapsulation</h3>
+<pre><code>class Person {
+    String name;
+    int age;
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.name = "John";  // Direct access to fields
+        p.age = -5;       // Invalid data!
+        System.out.println(p.name + " is " + p.age + " years old.");
+    }
+}</code></pre>
+
+<p>
+Here, data is not protected — anyone can change it directly, even with invalid values.
+</p>
+
+<hr>
+
+<h3>Encapsulated Version (Using Getters and Setters)</h3>
+<p>
+To protect fields, we make them <strong>private</strong> and provide <strong>public</strong> methods to access or modify them — these are called <strong>getters</strong> and <strong>setters</strong>.
+</p>
+
+<pre><code>class Person {
+    private String name;
+    private int age;
+
+    // Setter method
+    public void setName(String n) {
+        name = n;
+    }
+
+    // Getter method
+    public String getName() {
+        return name;
+    }
+
+    // Setter with validation
+    public void setAge(int a) {
+        if (a > 0) {
+            age = a;
+        } else {
+            System.out.println("Age must be positive!");
+        }
+    }
+
+    // Getter
+    public int getAge() {
+        return age;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.setName("Alice");
+        p.setAge(25);
+
+        System.out.println(p.getName() + " is " + p.getAge() + " years old.");
+    }
+}</code></pre>
+
+<p>
+In this example, the data is protected. You can only access it through the methods, which can check or limit what data is allowed.
+</p>
+
+<hr>
+
+<h3>Key Points</h3>
+<ul>
+    <li>Use <code>private</code> to hide data fields.</li>
+    <li>Provide <code>public</code> <strong>getters</strong> and <strong>setters</strong> to access or modify data safely.</li>
+    <li>Add <strong>validation</strong> in setters to ensure correct data.</li>
+    <li>Encapsulation improves <strong>security, flexibility, and maintainability</strong> of your code.</li>
+</ul>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li><strong>Encapsulation</strong> hides internal details and exposes only what’s needed.</li>
+    <li><strong>Access modifiers</strong> control visibility of members.</li>
+    <li><strong>Getters and Setters</strong> provide controlled access to private fields.</li>
+</ul>
+
+<p>Encapsulation helps you write clean, secure, and reliable Java programs by protecting data from unwanted changes.</p>

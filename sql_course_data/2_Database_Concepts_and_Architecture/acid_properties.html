@@ -1,0 +1,109 @@
+<h1>ACID Properties (Atomicity, Consistency, Isolation, Durability)</h1>
+
+<p>When working with databases, it’s very important to make sure that data remains correct,
+reliable, and safe — even if something goes wrong, like a power failure or multiple people
+trying to update the same record at once. To guarantee this, databases follow four key rules 
+called the <strong>ACID properties</strong>.</p>
+
+<p><strong>ACID</strong> stands for:</p>
+<ul>
+  <li><strong>A</strong>tomicity</li>
+  <li><strong>C</strong>onsistency</li>
+  <li><strong>I</strong>solation</li>
+  <li><strong>D</strong>urability</li>
+</ul>
+
+<p>Let’s understand each of these in simple terms.</p>
+
+<h2>1. Atomicity – “All or Nothing”</h2>
+<p>Atomicity means that a transaction (a group of actions) must be completed entirely or not at all.
+If any part of the transaction fails, the entire operation is undone.</p>
+
+<p><strong>Example:</strong> Imagine transferring ₹1,000 from Account A to Account B.
+This involves two actions:
+<ol>
+  <li>Deduct ₹1,000 from Account A</li>
+  <li>Add ₹1,000 to Account B</li>
+</ol>
+If the system crashes after the deduction but before adding to Account B,
+Atomicity ensures both actions are rolled back, so no money is lost or duplicated.</p>
+
+<p><strong>In short:</strong> Either all parts of a transaction succeed, or none do.</p>
+
+<h2>2. Consistency – “Data Must Be Correct”</h2>
+<p>Consistency ensures that data always follows the rules defined in the database.
+After any transaction, the database must move from one valid state to another valid state.</p>
+
+<p><strong>Example:</strong> In a banking database, an account balance cannot be negative.
+If a transaction would make it negative, it is rejected to keep the data consistent.</p>
+
+<ul>
+  <li>Prevents invalid or corrupt data from being saved</li>
+  <li>Maintains logical correctness of data</li>
+</ul>
+
+<h2>3. Isolation – “Transactions Should Not Interfere”</h2>
+<p>Isolation means that when multiple users perform transactions at the same time,
+they don’t affect each other’s results. Each transaction acts as if it’s happening alone.</p>
+
+<p><strong>Example:</strong> Suppose two users try to buy the last available movie ticket at once.
+The database ensures that only one transaction succeeds — not both —
+even though both requests arrived at nearly the same time.</p>
+
+<p>This prevents problems like:
+<ul>
+  <li>Dirty reads (reading uncommitted data)</li>
+  <li>Lost updates (one transaction overwriting another)</li>
+  <li>Inconsistent reads (seeing partial changes)</li>
+</ul></p>
+
+<h2>4. Durability – “Changes Stay Saved”</h2>
+<p>Durability guarantees that once a transaction is successfully completed, 
+its changes are permanently saved — even if there’s a system crash or power failure afterward.</p>
+
+<p><strong>Example:</strong> If you complete a bank transfer and see the confirmation message,
+the data is safely written to storage. Even if the computer shuts down right after,
+your transaction remains recorded.</p>
+
+<ul>
+  <li>Ensures permanent data storage</li>
+  <li>Uses backups, logs, and recovery systems</li>
+</ul>
+
+<h2>Summary</h2>
+<p>The ACID properties ensure that databases handle data safely and reliably, especially in multi-user and high-volume environments:</p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Meaning</th>
+      <th>Guarantee</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Atomicity</strong></td>
+      <td>All actions in a transaction happen completely or not at all</td>
+      <td>No partial updates</td>
+    </tr>
+    <tr>
+      <td><strong>Consistency</strong></td>
+      <td>Data remains valid and follows all rules</td>
+      <td>No invalid data states</td>
+    </tr>
+    <tr>
+      <td><strong>Isolation</strong></td>
+      <td>Simultaneous transactions do not interfere</td>
+      <td>Accurate results under concurrency</td>
+    </tr>
+    <tr>
+      <td><strong>Durability</strong></td>
+      <td>Once committed, data changes stay saved</td>
+      <td>Survives crashes or failures</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Together, these four properties make databases dependable and trustworthy —
+ensuring data accuracy and stability even under unexpected conditions.</p>

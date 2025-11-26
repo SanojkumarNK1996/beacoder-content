@@ -1,0 +1,154 @@
+<h1>Keys in Databases</h1>
+
+<p>In a database, a <strong>key</strong> is a field (or a combination of fields) that helps identify 
+each record in a table uniquely. Keys are crucial for organizing data, ensuring accuracy,
+and establishing relationships between tables.</p>
+
+<p>Without keys, the database would not know how to differentiate between two records 
+that look similar — just like a school wouldn’t know which “Rahul Kumar” is which student 
+without a roll number!</p>
+
+<h2>Why Are Keys Important?</h2>
+<ul>
+  <li>They uniquely identify each record in a table.</li>
+  <li>They help establish relationships between tables.</li>
+  <li>They prevent duplicate or inconsistent data.</li>
+  <li>They make searching, sorting, and linking data faster and more efficient.</li>
+</ul>
+
+<hr>
+
+<h2>Types of Keys in Databases</h2>
+
+<h3>1. Primary Key</h3>
+<p>A <strong>Primary Key</strong> uniquely identifies each record in a table.  
+No two rows can have the same primary key, and it cannot be empty (NULL).</p>
+
+<p><strong>Example:</strong> In a <code>Students</code> table, the <code>Student_ID</code> can be the primary key 
+because each student has a unique ID.</p>
+
+<pre>
+Students Table
++-------------+-----------+--------+
+| Student_ID  | Name      | Class  |
++-------------+-----------+--------+
+| 101         | Rahul     | 10A    |
+| 102         | Asha      | 10A    |
+| 103         | Kiran     | 9B     |
++-------------+-----------+--------+
+</pre>
+
+<p><strong>Key point:</strong> Each <code>Student_ID</code> is unique — no duplicates allowed.</p>
+
+<hr>
+
+<h3>2. Foreign Key</h3>
+<p>A <strong>Foreign Key</strong> is used to link two tables together.  
+It refers to the <strong>Primary Key</strong> in another table, creating a relationship between the two.</p>
+
+<p><strong>Example:</strong> The <code>Student_ID</code> in the <code>Marks</code> table can be a foreign key 
+that connects to the <code>Student_ID</code> in the <code>Students</code> table.</p>
+
+<pre>
+Marks Table
++-------------+----------+
+| Student_ID  | Marks    |
++-------------+----------+
+| 101         | 85       |
+| 102         | 90       |
+| 103         | 78       |
++-------------+----------+
+</pre>
+
+<p>Now, both tables are related by the <code>Student_ID</code> field.</p>
+
+<p><strong>Key point:</strong> Foreign keys maintain data integrity — you can’t have marks for a student who doesn’t exist in the <code>Students</code> table.</p>
+
+<hr>
+
+<h3>3. Unique Key</h3>
+<p>A <strong>Unique Key</strong> ensures that all values in a column are different, 
+just like a primary key. However, unlike the primary key, a table can have multiple unique keys, 
+and they can contain NULL values (in some databases).</p>
+
+<p><strong>Example:</strong> In an <code>Employees</code> table, both <code>Employee_ID</code> and <code>Email</code> 
+can be unique, since no two employees can share the same email address.</p>
+
+<pre>
+Employees Table
++--------------+----------------------+
+| Employee_ID  | Email                |
++--------------+----------------------+
+| 201          | aisha@company.com    |
+| 202          | rahul@company.com    |
+| 203          | kiran@company.com    |
++--------------+----------------------+
+</pre>
+
+<hr>
+
+<h3>4. Composite Key</h3>
+<p>A <strong>Composite Key</strong> is created by combining two or more columns 
+to uniquely identify a record when one column alone is not enough.</p>
+
+<p><strong>Example:</strong> In a <code>Course_Enrollment</code> table, neither 
+<code>Student_ID</code> nor <code>Course_ID</code> is unique by itself, 
+but the combination of both uniquely identifies each enrollment.</p>
+
+<pre>
+Course_Enrollment Table
++-------------+------------+
+| Student_ID  | Course_ID  |
++-------------+------------+
+| 101         | C101       |
+| 101         | C102       |
+| 102         | C101       |
++-------------+------------+
+</pre>
+
+<p><strong>Key point:</strong> The pair (<code>Student_ID</code>, <code>Course_ID</code>) is unique for each record.</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Key Type</th>
+      <th>Purpose</th>
+      <th>Can be NULL?</th>
+      <th>Can have duplicates?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Primary Key</strong></td>
+      <td>Uniquely identifies each record</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>Foreign Key</strong></td>
+      <td>Creates a link between tables</td>
+      <td>Yes</td>
+      <td>Yes (if referencing table allows)</td>
+    </tr>
+    <tr>
+      <td><strong>Unique Key</strong></td>
+      <td>Ensures all values are unique</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>Composite Key</strong></td>
+      <td>Combination of columns used for unique identification</td>
+      <td>No (if any column is part of the key)</td>
+      <td>No (as a pair/group)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Keys play a critical role in organizing and linking data efficiently. 
+They ensure accuracy, consistency, and proper relationships between tables — 
+the foundation of a well-structured database.</p>

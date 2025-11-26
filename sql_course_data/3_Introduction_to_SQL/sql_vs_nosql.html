@@ -1,0 +1,121 @@
+<h1>SQL vs NoSQL</h1>
+
+<p>When learning about databases, you’ll often hear about two main types: 
+<strong>SQL databases</strong> and <strong>NoSQL databases</strong>.  
+Both are used to store and manage data, but they do it in different ways.</p>
+
+<p>Let’s understand what makes them different, when to use each, and why both exist.</p>
+
+<h2>What Are SQL Databases?</h2>
+<p><strong>SQL databases</strong> are also called <strong>relational databases</strong>.  
+They store data in structured tables made of rows and columns — like an Excel spreadsheet.  
+Each table has a specific structure, and tables can be linked together using keys.</p>
+
+<p><strong>Examples:</strong> MySQL, PostgreSQL, Oracle, Microsoft SQL Server</p>
+
+<p><strong>Example Table:</strong></p>
+<pre>
+Customers Table
++------------+------------+--------------------+
+| CustomerID | Name       | Email              |
++------------+------------+--------------------+
+| 1          | Riya Shah  | riya@gmail.com     |
+| 2          | Arjun Rao  | arjun@gmail.com    |
++------------+------------+--------------------+
+</pre>
+
+<p>This structure is <strong>fixed</strong>. Every record must follow the same column format (ID, Name, Email).</p>
+
+<h2>What Are NoSQL Databases?</h2>
+<p><strong>NoSQL databases</strong> are <strong>non-relational</strong>, meaning they don’t store data in tables.  
+They are more flexible and can handle unstructured or semi-structured data — like documents, key-value pairs, or graphs.</p>
+
+<p><strong>Examples:</strong> MongoDB, Cassandra, Redis, Neo4j</p>
+
+<p><strong>Example Document (MongoDB-style):</strong></p>
+<pre>
+{
+  "CustomerID": 1,
+  "Name": "Riya Shah",
+  "Email": "riya@gmail.com",
+  "Address": {
+      "City": "Mumbai",
+      "Pincode": "400001"
+  }
+}
+</pre>
+
+<p>Here, you can store nested data (like the Address) without needing multiple tables or strict structure.</p>
+
+<h2>Key Differences Between SQL and NoSQL</h2>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>SQL Databases</th>
+      <th>NoSQL Databases</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Structure</strong></td>
+      <td>Structured (tables with rows and columns)</td>
+      <td>Flexible (documents, key-value pairs, graphs, etc.)</td>
+    </tr>
+    <tr>
+      <td><strong>Schema</strong></td>
+      <td>Fixed — each table must follow a defined schema</td>
+      <td>Dynamic — data can have varying structures</td>
+    </tr>
+    <tr>
+      <td><strong>Language</strong></td>
+      <td>Uses SQL for defining and managing data</td>
+      <td>Uses APIs or query languages specific to each database</td>
+    </tr>
+    <tr>
+      <td><strong>Scalability</strong></td>
+      <td>Vertically scalable (add more power to one server)</td>
+      <td>Horizontally scalable (add more servers easily)</td>
+    </tr>
+    <tr>
+      <td><strong>Best For</strong></td>
+      <td>Structured data with fixed relationships (e.g., banking, ERP)</td>
+      <td>Unstructured or rapidly changing data (e.g., social media, IoT)</td>
+    </tr>
+    <tr>
+      <td><strong>Examples</strong></td>
+      <td>MySQL, PostgreSQL, Oracle</td>
+      <td>MongoDB, Redis, Cassandra, Neo4j</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>When to Use Which?</h2>
+<ul>
+  <li><strong>Choose SQL</strong> when:
+    <ul>
+      <li>Your data has clear relationships (like customers and orders).</li>
+      <li>You need strong consistency and accuracy.</li>
+      <li>You want to use standardized SQL queries.</li>
+    </ul>
+  </li>
+  <li><strong>Choose NoSQL</strong> when:
+    <ul>
+      <li>Your data structure changes frequently.</li>
+      <li>You handle large volumes of data (big data, social media).</li>
+      <li>You need flexibility or high performance across many servers.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Analogy</h2>
+<p>Imagine SQL as a well-organized office with fixed file drawers — every document has a place.  
+NoSQL, on the other hand, is like a flexible folder system — you can drop in documents of any type and shape.</p>
+
+<h2>Summary</h2>
+<ul>
+  <li><strong>SQL</strong> is structured, consistent, and ideal for data with clear relationships.</li>
+  <li><strong>NoSQL</strong> is flexible, fast, and great for complex or unstructured data.</li>
+  <li>Many modern systems use a mix of both depending on their needs.</li>
+</ul>

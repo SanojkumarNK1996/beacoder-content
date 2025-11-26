@@ -1,0 +1,232 @@
+<h2>Abstraction in Java</h2>
+
+<p>
+<strong>Abstraction</strong> is the process of hiding the internal details and showing only the essential features of an object.  
+It helps you focus on <em>what an object does</em> instead of <em>how it does it</em>.
+</p>
+
+<p>
+In Java, abstraction is achieved using <strong>abstract classes</strong> and <strong>interfaces</strong>.
+</p>
+
+<hr>
+
+<h3>Why Abstraction?</h3>
+<ul>
+    <li>To hide complex implementation details.</li>
+    <li>To improve code readability and maintainability.</li>
+    <li>To provide a clear and simple interface to users.</li>
+</ul>
+
+<hr>
+
+<h3>Abstract Classes</h3>
+
+<p>
+An <strong>abstract class</strong> is a class that cannot be instantiated directly.  
+It can contain both <strong>abstract methods</strong> (without implementation) and <strong>non-abstract methods</strong> (with implementation).
+</p>
+
+<p>
+It is used when you want to provide a common base for subclasses, while leaving some implementation details to them.
+</p>
+
+<p><strong>Syntax:</strong></p>
+<pre><code>abstract class ClassName {
+    abstract void methodName(); // abstract method
+    void normalMethod() {
+        // implementation
+    }
+}</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>abstract class Animal {
+    // Abstract method (no body)
+    abstract void makeSound();
+
+    // Regular method
+    void sleep() {
+        System.out.println("This animal is sleeping");
+    }
+}
+
+class Dog extends Animal {
+    // Providing implementation for abstract method
+    void makeSound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal a = new Dog();
+        a.makeSound();
+        a.sleep();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Dog barks
+This animal is sleeping</code></pre>
+
+<p>
+Here, <code>Animal</code> is an abstract class with an abstract method <code>makeSound()</code>.  
+The <code>Dog</code> class provides its own version of that method.
+</p>
+
+<hr>
+
+<h3>Abstract Methods</h3>
+
+<p>
+An <strong>abstract method</strong> is a method without a body — only a declaration.  
+Subclasses must <strong>override</strong> and provide their own implementation for these methods.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>abstract class Shape {
+    abstract void draw(); // abstract method
+}
+
+class Circle extends Shape {
+    void draw() {
+        System.out.println("Drawing a circle");
+    }
+}
+
+class Square extends Shape {
+    void draw() {
+        System.out.println("Drawing a square");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Shape s1 = new Circle();
+        Shape s2 = new Square();
+
+        s1.draw();
+        s2.draw();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Drawing a circle
+Drawing a square</code></pre>
+
+<p>
+Each subclass provides a specific version of the <code>draw()</code> method.  
+This allows common behavior to be defined in the parent class while keeping the specific behavior flexible.
+</p>
+
+<hr>
+
+<h3>Interfaces</h3>
+
+<p>
+An <strong>interface</strong> in Java is a collection of <strong>abstract methods</strong> (and constants) that define a contract or rule for classes.  
+Any class that <strong>implements</strong> an interface must provide implementations for all its methods.
+</p>
+
+<p>
+Interfaces are used to achieve <strong>100% abstraction</strong> and <strong>multiple inheritance</strong> (since a class can implement multiple interfaces).
+</p>
+
+<p><strong>Syntax:</strong></p>
+<pre><code>interface InterfaceName {
+    void methodName(); // abstract method
+}</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>interface Animal {
+    void eat();
+    void sleep();
+}
+
+class Dog implements Animal {
+    public void eat() {
+        System.out.println("Dog eats bones");
+    }
+
+    public void sleep() {
+        System.out.println("Dog sleeps in kennel");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.eat();
+        d.sleep();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Dog eats bones
+Dog sleeps in kennel</code></pre>
+
+<p>
+Here, <code>Dog</code> implements the <code>Animal</code> interface and provides the code for both methods.  
+Interfaces define <strong>what</strong> a class must do, not <strong>how</strong> it should do it.
+</p>
+
+<hr>
+
+<h3>Interface vs Abstract Class</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Feature</th>
+        <th>Abstract Class</th>
+        <th>Interface</th>
+    </tr>
+    <tr>
+        <td>Keyword</td>
+        <td><code>abstract</code></td>
+        <td><code>interface</code></td>
+    </tr>
+    <tr>
+        <td>Implementation</td>
+        <td>Can have both abstract and non-abstract methods</td>
+        <td>All methods are abstract (by default)</td>
+    </tr>
+    <tr>
+        <td>Variables</td>
+        <td>Can have instance variables</td>
+        <td>Can have only static final (constant) variables</td>
+    </tr>
+    <tr>
+        <td>Inheritance</td>
+        <td>Class can extend only one abstract class</td>
+        <td>Class can implement multiple interfaces</td>
+    </tr>
+    <tr>
+        <td>Usage</td>
+        <td>When classes share a common base and logic</td>
+        <td>When you want to define a contract for unrelated classes</td>
+    </tr>
+</table>
+
+<hr>
+
+<h3>Key Points</h3>
+<ul>
+    <li><strong>Abstraction</strong> hides implementation details and shows only essential features.</li>
+    <li><strong>Abstract classes</strong> can have both defined and undefined methods.</li>
+    <li><strong>Abstract methods</strong> must be implemented by subclasses.</li>
+    <li><strong>Interfaces</strong> define a contract that classes must follow.</li>
+    <li>Interfaces support <strong>multiple inheritance</strong> in Java.</li>
+</ul>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li><strong>Abstraction</strong> → Focus on what, not how.</li>
+    <li><strong>Abstract Class</strong> → Partially implemented class for inheritance.</li>
+    <li><strong>Abstract Method</strong> → Declared without a body, implemented by child classes.</li>
+    <li><strong>Interface</strong> → 100% abstract, defines a set of rules for implementing classes.</li>
+</ul>
+
+<p>
+Abstraction simplifies complex systems and makes Java programs cleaner, more secure, and easier to maintain.
+</p>

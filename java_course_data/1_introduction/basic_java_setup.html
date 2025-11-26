@@ -1,0 +1,73 @@
+<h2>Installing JDK and Setting up IDE</h2>
+
+<p>Now that you understand what JDK, JRE, and JVM are, let’s move to the practical part — installing the <strong>JDK</strong> and setting up an <strong>IDE</strong> (Integrated Development Environment). These are the tools you’ll use to write and run Java programs easily.</p>
+
+<hr>
+
+<h3>1. Installing JDK (Java Development Kit)</h3>
+<p>The JDK contains everything needed to write and run Java programs. Follow the steps below to install it:</p>
+
+<h4>Step-by-Step Installation:</h4>
+<ol>
+  <li><strong>Download the JDK:</strong>
+    <p>Go to the <a href="https://www.oracle.com/java/technologies/downloads/" target="_blank">Oracle JDK Downloads</a> page or use <a href="https://adoptium.net/" target="_blank">Eclipse Adoptium (OpenJDK)</a> for a free version.</p>
+  </li>
+  <li><strong>Install the JDK:</strong>
+    <p>Run the installer and follow the on-screen instructions. Keep the default options unless you know what you’re changing.</p>
+  </li>
+  <li><strong>Set Environment Variables:</strong>
+    <ul>
+      <li>Find your JDK installation path (for example, <code>C:\Program Files\Java\jdk-21</code>).</li>
+      <li>Add this path to your <strong>PATH</strong> variable and create a <strong>JAVA_HOME</strong> variable pointing to the same directory.</li>
+    </ul>
+  </li>
+  <li><strong>Verify Installation:</strong>
+    <p>Open a terminal or command prompt and type:</p>
+    <pre><code>java -version
+javac -version</code></pre>
+    <p>If both commands show a version number, your JDK is installed correctly!</p>
+  </li>
+</ol>
+
+<hr>
+
+<h3>2. Setting up an IDE</h3>
+<p>An IDE (Integrated Development Environment) helps you write, debug, and run Java programs easily. It provides a nice interface, code suggestions, and tools for faster development. Below are three popular IDEs for Java:</p>
+
+<h4>(a) Eclipse</h4>
+<ol>
+  <li>Download Eclipse from the <a href="https://www.eclipse.org/downloads/" target="_blank">official Eclipse website</a>.</li>
+  <li>Choose “Eclipse IDE for Java Developers.”</li>
+  <li>Install and launch Eclipse.</li>
+  <li>When prompted, select a workspace folder — this is where your Java projects will be stored.</li>
+</ol>
+<p>Now you can create a new Java project using <em>File → New → Java Project</em>.</p>
+
+<h4>(b) IntelliJ IDEA</h4>
+<ol>
+  <li>Download IntelliJ IDEA from the <a href="https://www.jetbrains.com/idea/download/" target="_blank">JetBrains website</a>.</li>
+  <li>Choose the <strong>Community Edition</strong> (free version) for learning and basic projects.</li>
+  <li>Install and open IntelliJ IDEA.</li>
+  <li>Go to <em>File → New Project → Java</em> and select your JDK.</li>
+</ol>
+<p>IntelliJ automatically detects the JDK and helps you manage dependencies easily.</p>
+
+<h4>(c) Visual Studio Code (VS Code)</h4>
+<ol>
+  <li>Download and install <a href="https://code.visualstudio.com/" target="_blank">VS Code</a>.</li>
+  <li>Open VS Code and go to the Extensions tab (left sidebar).</li>
+  <li>Search for and install <strong>“Extension Pack for Java”</strong> by Microsoft.</li>
+  <li>This will install all required tools — Java support, debugger, and project manager.</li>
+</ol>
+<p>After setup, you can create a new Java file, write code, and run it directly inside VS Code.</p>
+
+<hr>
+
+<h3>3. Summary</h3>
+<ul>
+  <li><strong>JDK</strong> is required to compile and run Java programs.</li>
+  <li><strong>IDEs</strong> make coding faster and easier with features like auto-completion and debugging.</li>
+  <li><strong>Eclipse</strong> is simple and lightweight, <strong>IntelliJ</strong> is powerful and smart, and <strong>VS Code</strong> is flexible and easy to customize.</li>
+</ul>
+
+<p>Once your JDK and IDE are ready, you’re all set to write your first Java program!</p>

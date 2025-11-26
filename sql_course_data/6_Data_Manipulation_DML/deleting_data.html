@@ -1,0 +1,157 @@
+<h1>Deleting Data (DELETE)</h1>
+
+<p>The <strong>DELETE</strong> statement is used to <strong>remove rows</strong> from a table in a database.  
+It’s a powerful command, so it must be used carefully — once data is deleted, it usually can’t be recovered unless you have a backup.</p>
+
+<hr>
+
+<h2>1️⃣ Basic DELETE Syntax</h2>
+
+<pre>
+DELETE FROM table_name
+WHERE condition;
+</pre>
+
+<p>This command deletes one or more rows from the table that match the given condition.</p>
+
+<hr>
+
+<h2>2️⃣ Example: Deleting a Specific Record</h2>
+
+<pre>
+DELETE FROM Students
+WHERE StudentID = 101;
+</pre>
+
+<p>This removes the record where the <code>StudentID</code> is <code>101</code>.</p>
+
+<hr>
+
+<h2>3️⃣ Important: Always Use WHERE!</h2>
+
+<p>If you forget the <code>WHERE</code> clause, <strong>all rows in the table will be deleted</strong>.</p>
+
+<pre>
+DELETE FROM Students;
+</pre>
+
+<p>⚠️ This command removes <strong>every record</strong> in the <code>Students</code> table.  
+Always double-check before running a DELETE command without a condition.</p>
+
+<hr>
+
+<h2>4️⃣ Deleting Multiple Rows with a Condition</h2>
+
+<pre>
+DELETE FROM Students
+WHERE Age < 18;
+</pre>
+
+<p>This deletes all students who are younger than 18 years old.</p>
+
+<hr>
+
+<h2>5️⃣ Using Logical Conditions</h2>
+
+<p>You can combine multiple conditions with <code>AND</code> or <code>OR</code>.</p>
+
+<pre>
+DELETE FROM Students
+WHERE Grade = 'F' OR Attendance < 60;
+</pre>
+
+<p>This deletes students who either failed (<code>Grade = 'F'</code>) or have attendance below 60%.</p>
+
+<hr>
+
+<h2>6️⃣ Deleting All Data (Truncating a Table)</h2>
+
+<p>If you want to remove all rows but keep the table structure, use <code>TRUNCATE</code> instead of DELETE.</p>
+
+<pre>
+TRUNCATE TABLE Students;
+</pre>
+
+<p>This quickly removes all records from the table and resets any auto-increment values.  
+However, unlike DELETE, you <strong>cannot use WHERE</strong> with TRUNCATE.</p>
+
+<hr>
+
+<h2>7️⃣ Viewing Remaining Data After Deletion</h2>
+
+<p>After deleting records, you can verify the remaining data:</p>
+
+<pre>
+SELECT * FROM Students;
+</pre>
+
+<p>This shows what’s left in the table after deletion.</p>
+
+<hr>
+
+<h2>8️⃣ Example Scenario</h2>
+
+<p>Imagine your <code>Students</code> table looks like this before deletion:</p>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>StudentID</th><th>Name</th><th>Age</th><th>Grade</th>
+  </tr>
+  <tr><td>101</td><td>John</td><td>19</td><td>A</td></tr>
+  <tr><td>102</td><td>Mary</td><td>18</td><td>B</td></tr>
+  <tr><td>103</td><td>Alex</td><td>17</td><td>F</td></tr>
+</table>
+
+<p>Now run this command:</p>
+
+<pre>
+DELETE FROM Students
+WHERE Grade = 'F';
+</pre>
+
+<p>After this, the table will look like:</p>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>StudentID</th><th>Name</th><th>Age</th><th>Grade</th>
+  </tr>
+  <tr><td>101</td><td>John</td><td>19</td><td>A</td></tr>
+  <tr><td>102</td><td>Mary</td><td>18</td><td>B</td></tr>
+</table>
+
+<hr>
+
+<h2>9️⃣ Deleting Data from Related Tables</h2>
+
+<p>When using foreign keys, deleting data from one table may affect related tables.</p>
+
+<p>Example: If you delete a student who has records in another table (like <code>Grades</code>), you may get an error due to <strong>foreign key constraints</strong>.</p>
+
+<p>To handle this, databases often use <code>ON DELETE CASCADE</code> in relationships — this means that deleting a record in one table automatically deletes related records in another.</p>
+
+<pre>
+CREATE TABLE Grades (
+  GradeID INT PRIMARY KEY,
+  StudentID INT,
+  FOREIGN KEY (StudentID) REFERENCES Students(StudentID) ON DELETE CASCADE
+);
+</pre>
+
+<p>With this setup, if a student is deleted from the <code>Students</code> table, their grades will be deleted too.</p>
+
+<hr>
+
+<h2>🔟 Summary</h2>
+
+<ul>
+  <li><code>DELETE FROM table WHERE condition;</code> — deletes specific rows.</li>
+  <li>Always include <code>WHERE</code> to avoid removing everything.</li>
+  <li><code>TRUNCATE TABLE</code> — deletes all rows quickly (no WHERE allowed).</li>
+  <li>Use <code>SELECT</code> to verify changes after deletion.</li>
+  <li>Be aware of relationships and foreign key constraints.</li>
+</ul>
+
+<p>The <strong>DELETE</strong> command helps you clean up or manage data safely when used carefully.  
+With this, you’ve learned all the basic <strong>Data Manipulation Language (DML)</strong> operations — <code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
+
+<p>In the next module, you’ll learn how to <strong>control access and manage transactions</strong> using advanced SQL features.</p>

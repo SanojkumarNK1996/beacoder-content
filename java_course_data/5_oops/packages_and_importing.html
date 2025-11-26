@@ -1,0 +1,186 @@
+<h2>Packages and Importing in Java</h2>
+
+<p>
+In Java, a <strong>package</strong> is a way to <strong>organize related classes and interfaces</strong> together.  
+It helps keep code neat, avoids naming conflicts, and makes large projects easier to manage.
+</p>
+
+<p>
+You can think of a package as a folder inside your project that contains related files.
+</p>
+
+<hr>
+
+<h3>What is a Package?</h3>
+
+<p>
+A <strong>package</strong> is a namespace that groups related Java classes, interfaces, and sub-packages.  
+It helps developers organize code logically, similar to how folders organize files on your computer.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>package myapp.models;
+
+public class Student {
+    public void displayInfo() {
+        System.out.println("This is a student class");
+    }
+}</code></pre>
+
+<p>
+Here, the class <code>Student</code> belongs to the package <code>myapp.models</code>.  
+The first line <code>package myapp.models;</code> defines the package name.
+</p>
+
+<hr>
+
+<h3>Types of Packages</h3>
+<ul>
+    <li><strong>Built-in Packages</strong> – These are provided by Java itself, such as <code>java.util</code>, <code>java.io</code>, <code>java.lang</code>, etc.</li>
+    <li><strong>User-defined Packages</strong> – These are created by programmers to organize their own classes.</li>
+</ul>
+
+<hr>
+
+<h3>Using Built-in Packages</h3>
+
+<p>
+Java provides many built-in packages that contain ready-to-use classes and methods.  
+You can use them by <strong>importing</strong> the required package.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);  // using class from java.util package
+        System.out.print("Enter your name: ");
+        String name = sc.nextLine();
+        System.out.println("Hello, " + name + "!");
+    }
+}</code></pre>
+
+<p>
+Here, we import the <code>Scanner</code> class from the <code>java.util</code> package to read user input.
+</p>
+
+<hr>
+
+<h3>Creating and Using User-defined Packages</h3>
+
+<p><strong>Step 1: Create a Package</strong></p>
+<pre><code>// File: mypack/Message.java
+package mypack;
+
+public class Message {
+    public void show() {
+        System.out.println("Hello from mypack package!");
+    }
+}</code></pre>
+
+<p><strong>Step 2: Use the Package in Another Class</strong></p>
+<pre><code>// File: Main.java
+import mypack.Message;
+
+public class Main {
+    public static void main(String[] args) {
+        Message msg = new Message();
+        msg.show();
+    }
+}</code></pre>
+
+<p>
+When you compile, make sure both files are in proper folder structure:
+</p>
+
+<pre><code>project-folder/
+├── mypack/
+│   └── Message.java
+└── Main.java
+</code></pre>
+
+<p>
+Compile and run commands:
+</p>
+<pre><code>javac mypack/Message.java
+javac Main.java
+java Main</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Hello from mypack package!</code></pre>
+
+<hr>
+
+<h3>Importing Packages</h3>
+
+<p>
+You can import classes or entire packages using the <code>import</code> keyword.
+</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Type</th>
+        <th>Syntax</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Single class import</td>
+        <td><code>import packageName.ClassName;</code></td>
+        <td>Imports one specific class.</td>
+    </tr>
+    <tr>
+        <td>Whole package import</td>
+        <td><code>import packageName.*;</code></td>
+        <td>Imports all classes in a package.</td>
+    </tr>
+    <tr>
+        <td>Static import</td>
+        <td><code>import static packageName.ClassName.member;</code></td>
+        <td>Allows access to static members without using the class name.</td>
+    </tr>
+</table>
+
+<hr>
+
+<h3>Example of Static Import</h3>
+<pre><code>import static java.lang.Math.*;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Square root of 25: " + sqrt(25));
+        System.out.println("Value of PI: " + PI);
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Square root of 25: 5.0
+Value of PI: 3.141592653589793</code></pre>
+
+<p>
+Here, <code>sqrt()</code> and <code>PI</code> are used directly without writing <code>Math.sqrt()</code> or <code>Math.PI</code> because of <strong>static import</strong>.
+</p>
+
+<hr>
+
+<h3>Key Points</h3>
+<ul>
+    <li><strong>Packages</strong> group related classes together.</li>
+    <li>They help in <strong>code organization</strong> and <strong>name conflict prevention</strong>.</li>
+    <li>Use the <code>package</code> keyword to define your own package.</li>
+    <li>Use the <code>import</code> keyword to access classes from other packages.</li>
+    <li><strong>Static import</strong> lets you access static members without prefixing class names.</li>
+</ul>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li><strong>Package</strong> → Container for classes and interfaces.</li>
+    <li><strong>Import</strong> → Used to access classes from other packages.</li>
+    <li><strong>Static Import</strong> → Allows direct access to static members.</li>
+</ul>
+
+<p>
+Packages keep your Java code <strong>organized, reusable, and easy to maintain</strong>.
+</p>

@@ -1,0 +1,208 @@
+<h1>Indexing in Databases</h1>
+
+<p>When databases grow large, searching for specific information can become slow.  
+To make searches faster, databases use something called an <strong>index</strong> — a special data structure that helps the system find data quickly without scanning every row.</p>
+
+<hr>
+
+<h2>1️⃣ What is an Index?</h2>
+
+<p>An <strong>index</strong> is like the index section in a book — it helps you jump directly to the page you need instead of reading the whole book.</p>
+
+<p>In databases, an index works the same way. It allows the database engine to find the required rows faster.</p>
+
+<p><strong>Example:</strong> Suppose you have a table named <code>Students</code>:</p>
+
+<pre>
++----+----------+----------+
+| ID | Name     | City     |
++----+----------+----------+
+| 1  | Alice    | London   |
+| 2  | Bob      | Paris    |
+| 3  | Charlie  | New York |
+| 4  | David    | Paris    |
++----+----------+----------+
+</pre>
+
+<p>If you frequently search by <code>City</code> — e.g. <code>SELECT * FROM Students WHERE City = 'Paris';</code> —  
+creating an index on <code>City</code> will make those searches much faster.</p>
+
+<pre>
+CREATE INDEX idx_city ON Students(City);
+</pre>
+
+<hr>
+
+<h2>2️⃣ How Indexes Work (In Simple Terms)</h2>
+
+<p>Indexes are usually implemented as special data structures such as <strong>B-trees</strong> or <strong>hash maps</strong>.  
+They store key values (like “City”) in sorted order with pointers to the actual rows in the table.</p>
+
+<p>So instead of scanning every row, the database looks through the sorted index — like using a dictionary — and jumps directly to the matching records.</p>
+
+<hr>
+
+<h2>3️⃣ Benefits of Indexing</h2>
+
+<ul>
+  <li>✅ <strong>Faster searches</strong> — quickly locate rows without scanning the entire table.</li>
+  <li>✅ <strong>Better sorting and filtering</strong> — queries with <code>ORDER BY</code> and <code>WHERE</code> run faster.</li>
+  <li>✅ <strong>Improved join performance</strong> — indexes help speed up joins between related tables.</li>
+</ul>
+
+<hr>
+
+<h2>4️⃣ Drawbacks of Indexing</h2>
+
+<ul>
+  <li>⚠️ <strong>Slower inserts and updates</strong> — when data changes, the index must also be updated.</li>
+  <li>⚠️ <strong>Extra storage space</strong> — indexes take up additional disk space.</li>
+  <li>⚠️ <strong>Too many indexes</strong> can slow down data modification operations.</li>
+</ul>
+
+<p><strong>Tip:</strong> Only create indexes on columns that are frequently used for searching or sorting.</p>
+
+<hr>
+
+<h2>5️⃣ Types of Indexes</h2>
+
+<h3>👉 Primary Index</h3>
+
+<p>A <strong>primary index</strong> is automatically created when you define a <code>PRIMARY KEY</code> in a table.  
+It ensures that each row can be uniquely identified.</p>
+
+<pre>
+CREATE TABLE Employees (
+    ID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Department VARCHAR(50)
+);
+</pre>
+
+<p>Here, an index is automatically created on the <code>ID</code> column.</p>
+
+<hr>
+
+<h3>👉 Unique Index</h3>
+
+<p>A <strong>unique index</strong> ensures that no two rows have the same value in the indexed column.</p>
+
+<pre>
+CREATE UNIQUE INDEX idx_email ON Users(Email);
+</pre>
+
+<p>This prevents duplicate email addresses in the <code>Users</code> table.</p>
+
+<hr>
+
+<h3>👉 Composite Index</h3>
+
+<p>A <strong>composite index</strong> is an index on two or more columns.  
+It’s useful when you often search using multiple conditions together.</p>
+
+<pre>
+CREATE INDEX idx_name_dept ON Employees(Name, Department);
+</pre>
+
+<p>This index is helpful for queries like:</p>
+<pre>
+SELECT * FROM Employees
+WHERE Name = 'Alice' AND Department = 'HR';
+</pre>
+
+<p>However, remember that the order of columns in a composite index matters.  
+The database can use it efficiently only when the query includes the <strong>first column</strong> in the index.</p>
+
+<hr>
+
+<h3>👉 Clustered vs Non-Clustered Indexes</h3>
+
+<h4>Clustered Index</h4>
+<p>A <strong>clustered index</strong> determines the physical order of data in the table.  
+The table data is stored on disk in the same order as the index.</p>
+
+<p>Since data can only be stored one way, a table can have only <strong>one clustered index</strong>.</p>
+
+<p><strong>Example:</strong> When you define a <code>PRIMARY KEY</code>, most databases automatically create a clustered index.</p>
+
+<h4>Non-Clustered Index</h4>
+<p>A <strong>non-clustered index</strong> stores the index separately from the actual data.  
+It contains pointers (addresses) to the location of data rows.</p>
+
+<p>You can create multiple non-clustered indexes on the same table.</p>
+
+<pre>
+CREATE NONCLUSTERED INDEX idx_dept ON Employees(Department);
+</pre>
+
+<p><strong>In short:</strong></p>
+
+<table border="1" cellpadding="6">
+  <tr>
+    <th>Feature</th>
+    <th>Clustered Index</th>
+    <th>Non-Clustered Index</th>
+  </tr>
+  <tr>
+    <td>Data storage</td>
+    <td>Stored in index order</td>
+    <td>Stored separately from index</td>
+  </tr>
+  <tr>
+    <td>Count per table</td>
+    <td>One only</td>
+    <td>Multiple allowed</td>
+  </tr>
+  <tr>
+    <td>Performance</td>
+    <td>Fast for range queries</td>
+    <td>Fast for lookups</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>6️⃣ When to Use Indexes</h2>
+
+<ul>
+  <li>On columns that are frequently used in <code>WHERE</code> clauses.</li>
+  <li>On columns used for <code>JOIN</code> operations.</li>
+  <li>On columns used for <code>ORDER BY</code> or <code>GROUP BY</code>.</li>
+</ul>
+
+<p>❌ Avoid indexing columns with very few distinct values (like “Gender”),  
+since indexes won’t improve performance much in those cases.</p>
+
+<hr>
+
+<h2>7️⃣ Managing Indexes</h2>
+
+<ul>
+  <li><strong>To see existing indexes:</strong>  
+  <pre>SHOW INDEX FROM table_name;</pre></li>
+  <li><strong>To delete an index:</strong>  
+  <pre>DROP INDEX index_name ON table_name;</pre></li>
+</ul>
+
+<p>Always monitor query performance to decide whether to keep or remove an index.</p>
+
+<hr>
+
+<h2>8️⃣ Summary</h2>
+
+<ul>
+  <li>Indexes make data retrieval faster by creating quick lookup structures.</li>
+  <li>Too many indexes can slow down inserts and updates.</li>
+  <li>Common types include:
+    <ul>
+      <li>Primary Index</li>
+      <li>Unique Index</li>
+      <li>Composite Index</li>
+      <li>Clustered and Non-clustered Indexes</li>
+    </ul>
+  </li>
+  <li>Use indexes wisely — only where frequent searching or joining occurs.</li>
+</ul>
+
+<p>Indexes are crucial for optimizing performance in large databases.  
+Understanding how and when to use them helps keep your system fast and efficient.</p>

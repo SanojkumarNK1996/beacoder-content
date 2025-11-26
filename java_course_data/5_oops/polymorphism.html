@@ -1,0 +1,181 @@
+<h2>Polymorphism in Java</h2>
+
+<p>
+The word <strong>Polymorphism</strong> comes from Greek, meaning <em>"many forms"</em>.  
+In Java, polymorphism allows a single action or method to behave differently based on the object or context.
+</p>
+
+<p>
+It is one of the main features of <strong>Object-Oriented Programming (OOP)</strong>, making code more flexible and reusable.
+</p>
+
+<hr>
+
+<h3>Types of Polymorphism in Java</h3>
+<ul>
+    <li><strong>Compile-time Polymorphism</strong> (Method Overloading)</li>
+    <li><strong>Runtime Polymorphism</strong> (Method Overriding)</li>
+</ul>
+
+<hr>
+
+<h3>1. Compile-time Polymorphism (Method Overloading)</h3>
+
+<p>
+<strong>Compile-time polymorphism</strong> happens when multiple methods in the same class have the <strong>same name</strong> but <strong>different parameters</strong> (type, number, or order).  
+This is known as <strong>method overloading</strong>.
+</p>
+
+<p>
+The compiler decides which method to call at <strong>compile time</strong> based on the arguments passed.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>class MathUtils {
+    // Method with one parameter
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    // Overloaded method with three parameters
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    // Overloaded method with different types
+    double add(double a, double b) {
+        return a + b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MathUtils math = new MathUtils();
+
+        System.out.println(math.add(5, 10));        // Calls 2-int version
+        System.out.println(math.add(5, 10, 15));    // Calls 3-int version
+        System.out.println(math.add(5.5, 4.5));     // Calls double version
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>15
+30
+10.0</code></pre>
+
+<p>
+Here, the <code>add()</code> method behaves differently based on the number and type of parameters.  
+This is <strong>compile-time polymorphism</strong> because the method call is resolved during compilation.
+</p>
+
+<hr>
+
+<h3>2. Runtime Polymorphism (Method Overriding)</h3>
+
+<p>
+<strong>Runtime polymorphism</strong> occurs when a <strong>child class overrides</strong> a method of its parent class.  
+The method that gets executed is determined at <strong>runtime</strong> based on the object’s actual type.
+</p>
+
+<p>
+This is achieved using <strong>method overriding</strong> and is the foundation of <strong>dynamic method dispatch</strong> in Java.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>class Animal {
+    void sound() {
+        System.out.println("Some generic animal sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+class Cat extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Cat meows");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal a1 = new Dog(); // Reference of parent, object of child
+        Animal a2 = new Cat();
+
+        a1.sound(); // Dog’s version called
+        a2.sound(); // Cat’s version called
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Dog barks
+Cat meows</code></pre>
+
+<p>
+Here, the parent reference variable (<code>Animal</code>) points to different child objects (<code>Dog</code> and <code>Cat</code>).
+At runtime, Java decides which method to execute based on the actual object type.
+</p>
+
+<hr>
+
+<h3>Key Differences</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Feature</th>
+        <th>Compile-time Polymorphism</th>
+        <th>Runtime Polymorphism</th>
+    </tr>
+    <tr>
+        <td>Definition</td>
+        <td>Same method name, different parameters</td>
+        <td>Same method name and parameters, but defined in child class</td>
+    </tr>
+    <tr>
+        <td>Method Type</td>
+        <td>Method Overloading</td>
+        <td>Method Overriding</td>
+    </tr>
+    <tr>
+        <td>Decision Time</td>
+        <td>During compile time</td>
+        <td>During runtime</td>
+    </tr>
+    <tr>
+        <td>Inheritance Required</td>
+        <td>No</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td>Performance</td>
+        <td>Faster</td>
+        <td>Slightly slower</td>
+    </tr>
+</table>
+
+<hr>
+
+<h3>Key Points</h3>
+<ul>
+    <li><strong>Polymorphism</strong> allows one method name to perform different actions.</li>
+    <li><strong>Overloading</strong> → Happens within the same class (compile time).</li>
+    <li><strong>Overriding</strong> → Happens across parent and child classes (runtime).</li>
+    <li>It improves <strong>code reusability</strong> and <strong>flexibility</strong>.</li>
+</ul>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li><strong>Compile-time Polymorphism</strong> → Achieved by method overloading.</li>
+    <li><strong>Runtime Polymorphism</strong> → Achieved by method overriding.</li>
+    <li>Polymorphism helps Java programs adapt behavior dynamically and handle objects more generically.</li>
+</ul>
+
+<p>
+By mastering polymorphism, you can write cleaner, more extensible, and more dynamic Java programs.
+</p>

@@ -1,0 +1,99 @@
+<h2>Classes and Objects in Java</h2>
+
+<p>Java is an <strong>object-oriented programming</strong> language, which means everything in Java revolves around <strong>classes</strong> and <strong>objects</strong>. They are the building blocks of any Java program.</p>
+
+<hr>
+
+<h3>Defining Classes</h3>
+<p>
+A <strong>class</strong> is a blueprint or template that defines the structure and behavior of objects. 
+It contains <em>fields</em> (variables) and <em>methods</em> (functions) that describe what an object knows and what it can do.
+</p>
+
+<p>Syntax:</p>
+<pre><code>class ClassName {
+    // fields (variables)
+    // methods
+}</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>class Car {
+    String color;
+    int speed;
+
+    void drive() {
+        System.out.println("The car is moving");
+    }
+}</code></pre>
+
+<p>Here, <code>Car</code> is a class that has two fields (<code>color</code>, <code>speed</code>) and one method (<code>drive()</code>).</p>
+
+<hr>
+
+<h3>Creating Objects</h3>
+<p>
+An <strong>object</strong> is an instance of a class. When you create an object, you are bringing the class to life in memory.
+You can create multiple objects from the same class, each having its own data.
+</p>
+
+<p>Syntax:</p>
+<pre><code>ClassName objectName = new ClassName();</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>Car myCar = new Car();
+myCar.color = "Red";
+myCar.speed = 120;
+myCar.drive();</code></pre>
+
+<p>Here, <code>myCar</code> is an object of the <code>Car</code> class with its own color and speed.</p>
+
+<hr>
+
+<h3>Constructors</h3>
+<p>
+A <strong>constructor</strong> is a special method used to initialize objects. It has the same name as the class and does not have a return type.
+Constructors are automatically called when an object is created using the <code>new</code> keyword.
+</p>
+
+<p>Syntax:</p>
+<pre><code>class ClassName {
+    ClassName() {
+        // initialization code
+    }
+}</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>class Car {
+    String color;
+    int speed;
+
+    // Constructor
+    Car(String c, int s) {
+        color = c;
+        speed = s;
+    }
+
+    void displayInfo() {
+        System.out.println("Color: " + color + ", Speed: " + speed);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car myCar = new Car("Blue", 150);
+        myCar.displayInfo();
+    }
+}</code></pre>
+
+<p>Here, the constructor <code>Car(String c, int s)</code> initializes the color and speed when the object is created.</p>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li><strong>Class</strong> – a blueprint or template.</li>
+    <li><strong>Object</strong> – an instance of a class.</li>
+    <li><strong>Constructor</strong> – initializes new objects.</li>
+</ul>
+
+<p>Understanding classes and objects is the first step toward mastering object-oriented programming in Java.</p>

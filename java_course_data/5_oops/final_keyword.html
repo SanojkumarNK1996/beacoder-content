@@ -1,0 +1,203 @@
+<h2>The <code>final</code> Keyword in Java</h2>
+
+<p>
+In Java, the <strong><code>final</code></strong> keyword is used to make something <strong>unchangeable</strong> or <strong>constant</strong>.  
+It can be applied to <strong>variables</strong>, <strong>methods</strong>, and <strong>classes</strong>.  
+Once something is declared as <code>final</code>, it cannot be modified in the way it normally would.
+</p>
+
+<hr>
+
+<h3>1. <code>final</code> Variable</h3>
+
+<p>
+When a variable is declared as <code>final</code>, its value <strong>cannot be changed</strong> once it has been assigned.  
+This makes it act like a constant.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>class Example {
+    final int SPEED_LIMIT = 100; // constant
+
+    void show() {
+        // SPEED_LIMIT = 120; // ❌ Error: cannot assign a value to final variable
+        System.out.println("Speed Limit: " + SPEED_LIMIT);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Example e = new Example();
+        e.show();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Speed Limit: 100</code></pre>
+
+<p>
+Once a final variable is assigned, you cannot reassign it.  
+Final variables are often written in <strong>uppercase letters</strong> to show they are constants (e.g., <code>MAX_SIZE</code>).
+</p>
+
+<hr>
+
+<h4>Blank Final Variables</h4>
+
+<p>
+A <strong>blank final variable</strong> is a final variable that is not initialized at the time of declaration.  
+It must be initialized in the <strong>constructor</strong>.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>class Student {
+    final String name; // blank final variable
+
+    Student(String n) {
+        name = n; // initialized in constructor
+    }
+
+    void display() {
+        System.out.println("Student name: " + name);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Student s1 = new Student("Alice");
+        s1.display();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Student name: Alice</code></pre>
+
+<p>
+A blank final variable allows each object to have its own final value.
+</p>
+
+<hr>
+
+<h4>Final Static Variables (Constants)</h4>
+
+<p>
+When a variable is declared as <code>final</code> and <code>static</code>, it becomes a <strong>constant for the entire class</strong>.  
+Such constants are usually defined in uppercase and shared by all objects.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>class MathUtils {
+    static final double PI = 3.14159;
+}
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Value of PI: " + MathUtils.PI);
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Value of PI: 3.14159</code></pre>
+
+<hr>
+
+<h3>2. <code>final</code> Method</h3>
+
+<p>
+When a method is declared as <code>final</code>, it <strong>cannot be overridden</strong> by subclasses.  
+This ensures that the behavior of that method remains the same for all inherited classes.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>class Vehicle {
+    final void displayType() {
+        System.out.println("This is a vehicle");
+    }
+}
+
+class Car extends Vehicle {
+    // void displayType() {  // ❌ Error: cannot override final method
+    //     System.out.println("This is a car");
+    // }
+}</code></pre>
+
+<p>
+Here, the <code>displayType()</code> method in <code>Vehicle</code> is <code>final</code>,  
+so it cannot be redefined in the <code>Car</code> class.
+</p>
+
+<hr>
+
+<h3>3. <code>final</code> Class</h3>
+
+<p>
+When a class is declared as <code>final</code>, it <strong>cannot be inherited</strong>.  
+No other class can extend it.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>final class Vehicle {
+    void display() {
+        System.out.println("This is a vehicle");
+    }
+}
+
+// class Car extends Vehicle {  // ❌ Error: cannot subclass a final class
+// }
+</code></pre>
+
+<p>
+Final classes are useful when you want to <strong>prevent inheritance</strong>  
+or ensure that a class’s behavior is not changed.
+</p>
+
+<p>
+For example, many core Java classes like <code>String</code> and <code>Math</code> are declared as <code>final</code>.
+</p>
+
+<hr>
+
+<h3>Summary of <code>final</code> Keyword</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Usage</th>
+        <th>Effect</th>
+    </tr>
+    <tr>
+        <td><strong>final variable</strong></td>
+        <td>Value cannot be changed once assigned.</td>
+    </tr>
+    <tr>
+        <td><strong>final method</strong></td>
+        <td>Cannot be overridden in subclasses.</td>
+    </tr>
+    <tr>
+        <td><strong>final class</strong></td>
+        <td>Cannot be extended or subclassed.</td>
+    </tr>
+</table>
+
+<hr>
+
+<h3>Key Points</h3>
+<ul>
+    <li><code>final</code> means “unchangeable.”</li>
+    <li>Used with variables, methods, and classes.</li>
+    <li><strong>final variable</strong> → constant value.</li>
+    <li><strong>final method</strong> → prevents overriding.</li>
+    <li><strong>final class</strong> → prevents inheritance.</li>
+    <li><code>final</code> and <code>abstract</code> cannot be used together (they conflict).</li>
+</ul>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li>Use <code>final</code> for constants, secure methods, and unextendable classes.</li>
+    <li>Helps make your code more reliable and predictable.</li>
+</ul>
+
+<p>
+The <code>final</code> keyword gives you control over how classes, methods, and variables behave —  
+ensuring that critical parts of your program stay safe and unchanged.
+</p>

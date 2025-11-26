@@ -1,0 +1,224 @@
+<h1>Set Operations in SQL (UNION, UNION ALL, INTERSECT, EXCEPT)</h1>
+
+<p>SQL <strong>set operations</strong> combine the results of two or more <code>SELECT</code> queries into a single result set.  
+They work just like mathematical sets — allowing you to find the union, intersection, or difference between query results.</p>
+
+<p>Each query in a set operation must:
+<ul>
+  <li>Return the same number of columns</li>
+  <li>Have compatible data types</li>
+  <li>Return columns in the same order</li>
+</ul>
+</p>
+
+<hr>
+
+<h2>1️⃣ What Are SQL Set Operations?</h2>
+
+<p>SQL supports these primary set operations:</p>
+
+<ul>
+  <li><strong>UNION</strong> — combines results and removes duplicates</li>
+  <li><strong>UNION ALL</strong> — combines results including duplicates</li>
+  <li><strong>INTERSECT</strong> — returns only common rows</li>
+  <li><strong>EXCEPT</strong> (or <strong>MINUS</strong> in some databases) — returns rows from the first query that don’t appear in the second</li>
+</ul>
+
+<hr>
+
+<h2>2️⃣ Example Tables</h2>
+
+<p><strong>Students2024</strong> table:</p>
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>Course</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>English</td></tr>
+</table>
+
+<p><strong>Students2025</strong> table:</p>
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>Course</th></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>English</td></tr>
+  <tr><td>Linda</td><td>History</td></tr>
+</table>
+
+<hr>
+
+<h2>3️⃣ UNION</h2>
+
+<p>The <strong>UNION</strong> operator combines the results of two queries and removes duplicates.</p>
+
+<pre>
+SELECT Name, Course FROM Students2024
+UNION
+SELECT Name, Course FROM Students2025;
+</pre>
+
+<p><strong>Result:</strong></p>
+
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>Course</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>English</td></tr>
+  <tr><td>Linda</td><td>History</td></tr>
+</table>
+
+<p><strong>Note:</strong> Duplicates (like Mary and Alex) appear only once.</p>
+
+<hr>
+
+<h2>4️⃣ UNION ALL</h2>
+
+<p>The <strong>UNION ALL</strong> operator combines results but <strong>keeps duplicates</strong>.</p>
+
+<pre>
+SELECT Name, Course FROM Students2024
+UNION ALL
+SELECT Name, Course FROM Students2025;
+</pre>
+
+<p><strong>Result:</strong></p>
+
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>Course</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>English</td></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>English</td></tr>
+  <tr><td>Linda</td><td>History</td></tr>
+</table>
+
+<p><strong>Difference:</strong> <code>UNION ALL</code> is faster than <code>UNION</code> because it skips duplicate checks.</p>
+
+<hr>
+
+<h2>5️⃣ INTERSECT</h2>
+
+<p>The <strong>INTERSECT</strong> operator returns only the rows that exist in both queries.</p>
+
+<pre>
+SELECT Name, Course FROM Students2024
+INTERSECT
+SELECT Name, Course FROM Students2025;
+</pre>
+
+<p><strong>Result:</strong></p>
+
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>Course</th></tr>
+  <tr><td>Mary</td><td>Science</td></tr>
+  <tr><td>Alex</td><td>English</td></tr>
+</table>
+
+<p><strong>Note:</strong> Only rows common to both tables are returned.</p>
+
+<hr>
+
+<h2>6️⃣ EXCEPT (or MINUS)</h2>
+
+<p>The <strong>EXCEPT</strong> (or <strong>MINUS</strong> in Oracle) operator returns rows from the first query that do not appear in the second query.</p>
+
+<pre>
+SELECT Name, Course FROM Students2024
+EXCEPT
+SELECT Name, Course FROM Students2025;
+</pre>
+
+<p><strong>Result:</strong></p>
+
+<table border="1" cellpadding="5">
+  <tr><th>Name</th><th>Course</th></tr>
+  <tr><td>John</td><td>Math</td></tr>
+</table>
+
+<p>Only John’s record appears because it exists only in Students2024.</p>
+
+<hr>
+
+<h2>7️⃣ Rules for Set Operations</h2>
+
+<ul>
+  <li>All SELECT queries must have the <strong>same number of columns</strong>.</li>
+  <li>Data types in corresponding columns must be <strong>compatible</strong>.</li>
+  <li>Column names in the final result come from the <strong>first query</strong>.</li>
+  <li>You can use <code>ORDER BY</code> at the very end of the last query.</li>
+</ul>
+
+<p><strong>Example:</strong></p>
+
+<pre>
+SELECT Name, Course FROM Students2024
+UNION
+SELECT Name, Course FROM Students2025
+ORDER BY Name;
+</pre>
+
+<hr>
+
+<h2>8️⃣ Real-World Examples</h2>
+
+<ul>
+  <li><strong>UNION</strong> — combining current and archived data (e.g., sales_2024 and sales_2025)</li>
+  <li><strong>INTERSECT</strong> — finding users present in both “subscribers” and “customers” lists</li>
+  <li><strong>EXCEPT</strong> — finding users who unsubscribed or were removed</li>
+  <li><strong>UNION ALL</strong> — merging logs or transactions from multiple systems without filtering duplicates</li>
+</ul>
+
+<hr>
+
+<h2>9️⃣ Combining Multiple Operations</h2>
+
+<p>You can combine more than two queries in sequence:</p>
+
+<pre>
+SELECT Name, Course FROM Students2024
+UNION
+SELECT Name, Course FROM Students2025
+EXCEPT
+SELECT Name, Course FROM ExpelledStudents;
+</pre>
+
+<p>This combines students from both years but removes those who are in the expelled list.</p>
+
+<hr>
+
+<h2>🔟 Performance Tips</h2>
+
+<ul>
+  <li><code>UNION ALL</code> is faster than <code>UNION</code> (no duplicate removal).</li>
+  <li>Use <code>INTERSECT</code> and <code>EXCEPT</code> carefully on large datasets — they may require sorting or hashing.</li>
+  <li>Always use <code>ORDER BY</code> only at the end of all set operations.</li>
+</ul>
+
+<hr>
+
+<h2>11️⃣ Supported Databases</h2>
+
+<table border="1" cellpadding="5">
+  <tr><th>Database</th><th>UNION</th><th>INTERSECT</th><th>EXCEPT/MINUS</th></tr>
+  <tr><td>MySQL</td><td>✅</td><td>✅ (MySQL 8+)</td><td>✅ (MySQL 8+)</td></tr>
+  <tr><td>PostgreSQL</td><td>✅</td><td>✅</td><td>✅</td></tr>
+  <tr><td>SQL Server</td><td>✅</td><td>✅</td><td>✅</td></tr>
+  <tr><td>Oracle</td><td>✅</td><td>✅</td><td>MINUS</td></tr>
+</table>
+
+<hr>
+
+<h2>12️⃣ Summary</h2>
+
+<ul>
+  <li><strong>UNION</strong> → Combines results, removes duplicates.</li>
+  <li><strong>UNION ALL</strong> → Combines results, keeps duplicates.</li>
+  <li><strong>INTERSECT</strong> → Returns only common rows.</li>
+  <li><strong>EXCEPT</strong> → Returns rows in the first query but not in the second.</li>
+  <li>All queries must have the same number of columns and compatible types.</li>
+</ul>
+
+<p>Set operations are powerful for comparing or merging datasets across multiple sources.  
+They’re often used in analytics, reporting, and data migration tasks.</p>
+
+<p>With this, you’ve completed the <strong>Advanced Querying</strong> section — mastering how to aggregate, join, filter, and combine data effectively!</p>

@@ -1,0 +1,128 @@
+<h2>Methods (Functions) in Java</h2>
+
+<p>
+Methods, also called functions, are blocks of code that perform a specific task.  
+They help make programs more organized, reusable, and easier to understand.  
+Using methods is part of <b>modular programming</b> — breaking a large program into smaller, manageable pieces.
+</p>
+
+<h3>1. Defining Methods</h3>
+<p>
+A method is defined using a specific structure that includes its return type, name, and parameters.  
+The general syntax looks like this:
+</p>
+
+<pre><code class="language-java">
+returnType methodName(parameters) {
+    // code to execute
+}
+</code></pre>
+
+<p>
+Example:
+</p>
+
+<pre><code class="language-java">
+// Example: a simple method
+public static void greet() {
+    System.out.println("Hello, welcome to Java!");
+}
+</code></pre>
+
+<p>
+Here, the method <code>greet()</code> has no parameters and no return value.  
+You can call it from the <code>main()</code> method like this:
+</p>
+
+<pre><code class="language-java">
+public static void main(String[] args) {
+    greet(); // method call
+}
+</code></pre>
+
+<h3>2. Method Parameters and Return Types</h3>
+<p>
+A method can take inputs (called <b>parameters</b>) and can send back an output (called a <b>return value</b>).
+</p>
+
+<pre><code class="language-java">
+// Example: method with parameters and return type
+public static int addNumbers(int a, int b) {
+    return a + b; // returns the sum
+}
+
+public static void main(String[] args) {
+    int result = addNumbers(5, 10);
+    System.out.println("Sum: " + result);
+}
+</code></pre>
+
+<p>
+Here, <code>addNumbers()</code> takes two integers and returns their sum.  
+The <code>int</code> before the method name means the method will return an integer value.
+</p>
+
+<h3>3. Method Overloading</h3>
+<p>
+Method overloading means having multiple methods with the same name but different parameters.  
+This helps you perform similar operations in different ways.
+</p>
+
+<pre><code class="language-java">
+// Example: method overloading
+public static int add(int a, int b) {
+    return a + b;
+}
+
+public static double add(double a, double b) {
+    return a + b;
+}
+
+public static void main(String[] args) {
+    System.out.println(add(5, 10));      // calls first method
+    System.out.println(add(5.5, 2.3));   // calls second method
+}
+</code></pre>
+
+<p>
+The compiler decides which method to call based on the arguments you pass.  
+This is called <b>compile-time polymorphism</b>.
+</p>
+
+<h3>4. Recursion Basics</h3>
+<p>
+Recursion is when a method calls itself to solve a smaller part of a problem.  
+It’s commonly used in tasks like calculating factorials or traversing trees.
+</p>
+
+<pre><code class="language-java">
+// Example: factorial using recursion
+public static int factorial(int n) {
+    if (n == 1) {
+        return 1; // base case
+    }
+    return n * factorial(n - 1); // recursive call
+}
+
+public static void main(String[] args) {
+    System.out.println("Factorial of 5: " + factorial(5));
+}
+</code></pre>
+
+<p>
+In this example, <code>factorial(5)</code> calls itself repeatedly until it reaches the base case (<code>n == 1</code>).  
+Recursion must always have a <b>base condition</b> to stop, or it will loop forever.
+</p>
+
+<h3>Summary</h3>
+<ul>
+  <li><b>Method</b> – a reusable block of code that performs a task.</li>
+  <li><b>Parameters</b> – values passed into methods.</li>
+  <li><b>Return type</b> – defines what a method sends back.</li>
+  <li><b>Overloading</b> – same method name, different parameter types.</li>
+  <li><b>Recursion</b> – a method calling itself to solve smaller problems.</li>
+</ul>
+
+<p>
+Using methods makes your Java programs cleaner, modular, and easier to maintain.
+</p>

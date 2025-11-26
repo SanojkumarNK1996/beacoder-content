@@ -1,0 +1,86 @@
+<h2>Loops in Java</h2>
+
+<p>
+Loops are used in Java to repeat a block of code multiple times.  
+Instead of writing the same code again and again, we can use a loop to run it automatically.
+</p>
+
+<p>
+For example, if you want to print numbers from 1 to 5, you can use a loop instead of writing 5 separate print statements.
+</p>
+
+<h3>1. for Loop</h3>
+<p>
+The <code>for</code> loop is used when you know exactly how many times you want to repeat something.  
+It has three parts inside the parentheses:
+</p>
+
+<ul>
+  <li><b>Initialization</b> – runs once before the loop starts.</li>
+  <li><b>Condition</b> – checked before each loop run.</li>
+  <li><b>Update</b> – runs after each iteration.</li>
+</ul>
+
+<pre><code class="language-java">
+// Example: print numbers from 1 to 5
+for (int i = 1; i <= 5; i++) {
+    System.out.println(i);
+}
+</code></pre>
+
+<p>
+Here, <code>i</code> starts at 1, the loop continues while <code>i &lt;= 5</code>, and after each run, <code>i</code> increases by 1.  
+This prints numbers 1 to 5.
+</p>
+
+<h3>2. while Loop</h3>
+<p>
+The <code>while</code> loop is used when you don’t know in advance how many times the code should repeat.  
+It keeps running as long as the condition is true.
+</p>
+
+<pre><code class="language-java">
+// Example: print numbers from 1 to 5
+int i = 1;
+
+while (i <= 5) {
+    System.out.println(i);
+    i++;
+}
+</code></pre>
+
+<p>
+The condition is checked first. If it’s true, the code inside runs.  
+If it’s false at the start, the loop won’t run even once.
+</p>
+
+<h3>3. do-while Loop</h3>
+<p>
+The <code>do-while</code> loop is similar to the <code>while</code> loop, but with one key difference — it runs the code at least once, even if the condition is false.
+</p>
+
+<pre><code class="language-java">
+// Example: print numbers from 1 to 5
+int i = 1;
+
+do {
+    System.out.println(i);
+    i++;
+} while (i <= 5);
+</code></pre>
+
+<p>
+Here, the code inside <code>do</code> runs first, then the condition is checked.  
+That’s why it always executes at least once.
+</p>
+
+<h3>Summary</h3>
+<ul>
+  <li><b>for loop</b> – use when you know how many times to repeat.</li>
+  <li><b>while loop</b> – use when the number of repeats is unknown.</li>
+  <li><b>do-while loop</b> – similar to while, but runs once before checking the condition.</li>
+</ul>
+
+<p>
+Loops make programs shorter and smarter by allowing repetition without manual effort.
+</p>

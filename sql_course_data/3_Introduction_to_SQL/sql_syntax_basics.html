@@ -1,0 +1,218 @@
+<h1>SQL Syntax Basics</h1>
+
+<p>Now that you know what SQL is and the types of SQL commands, let’s understand how to write SQL statements correctly.</p>
+
+<p>Just like English sentences follow grammar rules, SQL statements follow a particular <strong>syntax (structure)</strong>.  
+This ensures that the database understands your request and performs the right action.</p>
+
+<hr>
+
+<h2>1. SQL Statement Structure</h2>
+
+<p>Most SQL statements follow a simple pattern:</p>
+
+<pre>
+COMMAND columns
+FROM table_name
+WHERE condition;
+</pre>
+
+<p><strong>Example:</strong></p>
+<pre>
+SELECT Name, Age
+FROM Students
+WHERE Age > 18;
+</pre>
+
+<p>This statement means: “Select the name and age of all students whose age is greater than 18.”</p>
+
+<p><strong>Note:</strong> Each SQL statement ends with a semicolon (<code>;</code>).</p>
+
+<hr>
+
+<h2>2. SQL Keywords</h2>
+
+<p>SQL uses a set of predefined words called <strong>keywords</strong>.  
+These keywords are not case-sensitive, but it’s a good practice to write them in <strong>UPPERCASE</strong> for clarity.</p>
+
+<p><strong>Example:</strong>  
+The following two queries are identical:</p>
+<pre>
+select * from Students;
+SELECT * FROM Students;
+</pre>
+
+<p>Writing keywords in uppercase helps make your queries more readable.</p>
+
+<hr>
+
+<h2>3. Common SQL Clauses</h2>
+
+<p>SQL statements are built using smaller parts called <strong>clauses</strong>.  
+Each clause performs a specific function in the query.</p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Clause</th>
+      <th>Purpose</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>SELECT</strong></td>
+      <td>Specifies which columns to display</td>
+      <td><code>SELECT Name, Age</code></td>
+    </tr>
+    <tr>
+      <td><strong>FROM</strong></td>
+      <td>Specifies which table to get data from</td>
+      <td><code>FROM Students</code></td>
+    </tr>
+    <tr>
+      <td><strong>WHERE</strong></td>
+      <td>Filters data based on a condition</td>
+      <td><code>WHERE Age > 18</code></td>
+    </tr>
+    <tr>
+      <td><strong>ORDER BY</strong></td>
+      <td>Sorts the result (ascending or descending)</td>
+      <td><code>ORDER BY Name ASC</code></td>
+    </tr>
+    <tr>
+      <td><strong>GROUP BY</strong></td>
+      <td>Groups rows based on a column’s value</td>
+      <td><code>GROUP BY Department</code></td>
+    </tr>
+    <tr>
+      <td><strong>HAVING</strong></td>
+      <td>Applies a condition on grouped data</td>
+      <td><code>HAVING COUNT(StudentID) > 5</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>4. Writing a Complete Query</h2>
+
+<p>Let’s combine these clauses to form a complete SQL query:</p>
+
+<pre>
+SELECT Department, COUNT(StudentID) AS TotalStudents
+FROM Students
+WHERE Age > 18
+GROUP BY Department
+HAVING COUNT(StudentID) > 5
+ORDER BY Department ASC;
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li><strong>SELECT Department, COUNT(StudentID):</strong> We want to see each department and how many students are in it.</li>
+  <li><strong>FROM Students:</strong> The data comes from the Students table.</li>
+  <li><strong>WHERE Age > 18:</strong> Only include students older than 18.</li>
+  <li><strong>GROUP BY Department:</strong> Group all students by their department.</li>
+  <li><strong>HAVING COUNT(StudentID) > 5:</strong> Only show departments with more than 5 students.</li>
+  <li><strong>ORDER BY Department ASC:</strong> Sort the results alphabetically by department name.</li>
+</ul>
+
+<p>This is a typical example of how multiple SQL clauses work together to produce meaningful data.</p>
+
+<hr>
+
+<h2>5. Naming Conventions</h2>
+
+<ul>
+  <li>Table and column names are not case-sensitive, but consistency is recommended.</li>
+  <li>Use <code>snake_case</code> or <code>camelCase</code> for naming (e.g., <code>student_id</code> or <code>studentId</code>).</li>
+  <li>Use clear, meaningful names for tables and columns.</li>
+</ul>
+
+<hr>
+
+<h2>6. SQL Comments</h2>
+
+<p>Comments are used to explain parts of your SQL code. They help you or others understand what your query is doing later.</p>
+
+<p><strong>Single-line comment:</strong></p>
+<pre>
+-- This retrieves all students older than 18
+SELECT * FROM Students WHERE Age > 18;
+</pre>
+
+<p><strong>Multi-line comment:</strong></p>
+<pre>
+/*
+This query shows the number of students in each department
+who are older than 18.
+*/
+SELECT Department, COUNT(StudentID)
+FROM Students
+WHERE Age > 18
+GROUP BY Department;
+</pre>
+
+<hr>
+
+<h2>7. Best Practices for Writing SQL</h2>
+
+<ul>
+  <li>Use uppercase for SQL keywords (e.g., SELECT, WHERE, FROM).</li>
+  <li>End every statement with a semicolon <code>;</code>.</li>
+  <li>Indent your SQL for readability when using multiple clauses.</li>
+  <li>Use comments generously to describe your logic.</li>
+  <li>Always test your queries on a small dataset before applying them to production data.</li>
+</ul>
+
+<hr>
+
+<h2>8. Real-World Example</h2>
+
+<p>Imagine a small online store with a table called <strong>Orders</strong>:</p>
+<pre>
++----------+-------------+------------+----------+
+| Order_ID | Customer    | Product    | Amount   |
++----------+-------------+------------+----------+
+| 1        | Riya        | Laptop     | 50000    |
+| 2        | Arjun       | Keyboard   | 1500     |
+| 3        | Meera       | Mouse      | 800      |
+| 4        | Riya        | Monitor    | 7000     |
++----------+-------------+------------+----------+
+</pre>
+
+<p>If we want to know how much each customer spent in total, we could write:</p>
+
+<pre>
+SELECT Customer, SUM(Amount) AS Total_Spent
+FROM Orders
+GROUP BY Customer
+ORDER BY Total_Spent DESC;
+</pre>
+
+<p><strong>Output:</strong></p>
+<pre>
++----------+--------------+
+| Customer | Total_Spent  |
++----------+--------------+
+| Riya     | 57000        |
+| Arjun    | 1500         |
+| Meera    | 800          |
++----------+--------------+
+</pre>
+
+<p>SQL helps you find exactly what you need from large amounts of data — quickly and efficiently.</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<ul>
+  <li>SQL syntax defines how SQL commands are written and structured.</li>
+  <li>Clauses like <strong>SELECT</strong>, <strong>FROM</strong>, <strong>WHERE</strong>, and <strong>ORDER BY</strong> form the building blocks of SQL queries.</li>
+  <li>Use comments and naming conventions for clean, understandable code.</li>
+  <li>Always follow proper formatting for clarity and maintenance.</li>
+</ul>
+
+<p>By mastering SQL syntax, you can easily create, query, and manage any database — whether for a small app or a large enterprise system.</p>

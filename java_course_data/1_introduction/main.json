@@ -1,0 +1,83 @@
+[
+    {
+        "subtopicId": 1,
+        "dataType": "youtube_video",
+        "displayOrder": 1,
+        "title": "What is Programming?",
+        "data": "https://www.youtube.com/watch?v=RzjWJHwFL-E",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 1,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "",
+        "data": "what_is_programing.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 2,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "",
+        "data": "intro_to_java.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 3,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Setting up the Java Environment",
+        "data": "setting_up_env.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 3,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "☕ JVM (Java Virtual Machine) – The Translator of Java!",
+        "data": "jvm.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 3,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "JDK (Java Development Kit) – The Complete Toolkit for Java!",
+        "data": "jdk.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 3,
+        "dataType": "notes",
+        "displayOrder": 4,
+        "title": "JRE – The Serving Kitchen 🍽️🔥",
+        "data": "jre.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 3,
+        "dataType": "notes",
+        "displayOrder": 5,
+        "title": "Basic Setup",
+        "data": "basic_java_setup.html",
+        "verified": false,
+        "priority" : 1
+    },
+    {
+        "subtopicId": 3,
+        "dataType": "notes",
+        "displayOrder": 6,
+        "title": "First Java Code",
+        "data": "first_java_code.html",
+        "verified": false,
+        "priority" : 1
+    }
+]

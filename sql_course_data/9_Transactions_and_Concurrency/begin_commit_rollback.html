@@ -1,0 +1,152 @@
+<h1>BEGIN, COMMIT, and ROLLBACK in SQL</h1>
+
+<p>When working with databases, it’s common to make changes like adding, updating, or deleting data.  
+But sometimes, things don’t go as planned — maybe the system crashes or a query runs incorrectly.  
+That’s where <strong>transaction control commands</strong> — <code>BEGIN</code>, <code>COMMIT</code>, and <code>ROLLBACK</code> — help keep your data safe and consistent.</p>
+
+<hr>
+
+<h2>1️⃣ BEGIN (Start a Transaction)</h2>
+
+<p>The <code>BEGIN</code> command starts a new transaction.  
+It tells the database that a set of changes will be made as one single unit of work.</p>
+
+<p><strong>Syntax:</strong></p>
+<pre>
+BEGIN;
+-- SQL statements go here
+</pre>
+
+<p><strong>Example:</strong></p>
+<pre>
+BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+</pre>
+
+<p>Here, both updates happen within the same transaction.  
+No change will be made permanent until you use the <code>COMMIT</code> command.</p>
+
+<hr>
+
+<h2>2️⃣ COMMIT (Save Changes)</h2>
+
+<p>The <code>COMMIT</code> command is used to <strong>save all the changes</strong> made in the current transaction permanently to the database.</p>
+
+<p><strong>Syntax:</strong></p>
+<pre>
+COMMIT;
+</pre>
+
+<p><strong>Example:</strong></p>
+<pre>
+BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+COMMIT;
+</pre>
+
+<p>Once you execute <code>COMMIT</code>:</p>
+<ul>
+  <li>The database confirms that all changes are successful.</li>
+  <li>Data is permanently stored and cannot be undone using <code>ROLLBACK</code>.</li>
+  <li>Other users can now see the changes.</li>
+</ul>
+
+<p><strong>Real-world example:</strong>  
+When you complete an online money transfer and get a “Transaction Successful” message — that’s like the <code>COMMIT</code> step.  
+It means your transaction has been safely saved in the system.</p>
+
+<hr>
+
+<h2>3️⃣ ROLLBACK (Undo Changes)</h2>
+
+<p>The <code>ROLLBACK</code> command is used to <strong>cancel a transaction</strong> and undo all the changes made since the last <code>BEGIN</code>.</p>
+
+<p><strong>Syntax:</strong></p>
+<pre>
+ROLLBACK;
+</pre>
+
+<p><strong>Example:</strong></p>
+<pre>
+BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+
+-- Suppose there’s an error here
+ROLLBACK;
+</pre>
+
+<p>After executing <code>ROLLBACK</code>, all changes are undone.  
+It’s as if the transaction never happened.</p>
+
+<p><strong>Real-world example:</strong>  
+When your online payment fails midway, the deducted money is automatically reversed —  
+that’s similar to a <code>ROLLBACK</code> operation.</p>
+
+<hr>
+
+<h2>4️⃣ Transaction Flow Example</h2>
+
+<p>Here’s a full example showing how these commands work together:</p>
+
+<pre>
+BEGIN;
+
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+
+-- If both succeed:
+COMMIT;
+
+-- If an error occurs:
+ROLLBACK;
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li><code>BEGIN</code> starts the transaction.</li>
+  <li>Two updates are made.</li>
+  <li>If both updates succeed, <code>COMMIT</code> saves the changes.</li>
+  <li>If one fails, <code>ROLLBACK</code> cancels everything.</li>
+</ul>
+
+<hr>
+
+<h2>5️⃣ Important Points to Remember</h2>
+
+<ul>
+  <li>Use transactions to group multiple related changes together.</li>
+  <li>Always <strong>COMMIT</strong> when you’re sure the transaction is correct.</li>
+  <li>Use <strong>ROLLBACK</strong> when something goes wrong.</li>
+  <li>Without <code>BEGIN</code>, some databases automatically commit each statement (this is called <strong>autocommit mode</strong>).</li>
+</ul>
+
+<hr>
+
+<h2>6️⃣ Real-World Analogy</h2>
+
+<p>Imagine you are shopping online:</p>
+<ul>
+  <li>Adding items to your cart → <strong>BEGIN</strong></li>
+  <li>Clicking “Place Order” and payment succeeds → <strong>COMMIT</strong></li>
+  <li>Payment fails or order is cancelled → <strong>ROLLBACK</strong></li>
+</ul>
+
+<p>This ensures your data (money, order, inventory) always stays accurate.</p>
+
+<hr>
+
+<h2>7️⃣ Summary</h2>
+
+<ul>
+  <li><strong>BEGIN</strong> — Starts a transaction.</li>
+  <li><strong>COMMIT</strong> — Saves all changes permanently.</li>
+  <li><strong>ROLLBACK</strong> — Undoes all uncommitted changes.</li>
+</ul>
+
+<p>Together, these commands ensure that your database transactions are safe, consistent, and reliable.</p>
+
+<p>Next, we’ll learn about another important concept — <strong>Savepoints</strong> —  
+which allow partial rollbacks within a transaction.</p>

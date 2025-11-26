@@ -1,0 +1,38 @@
+[
+    {
+        "subtopicId": 49,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Inserting Data (INSERT)",
+        "data": "inserting_data.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 50,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Reading Data (SELECT)",
+        "data": "reading_data.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 51,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Updating Data (UPDATE)",
+        "data": "updating_data.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 52,
+        "dataType": "notes",
+        "displayOrder": 4,
+        "title": "Deleting Data (DELETE)",
+        "data": "deleting_data.html",
+        "verified": false,
+        "priority": 1
+    }
+]

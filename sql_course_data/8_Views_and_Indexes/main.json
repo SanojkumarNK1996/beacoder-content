@@ -1,0 +1,29 @@
+[
+  {
+    "subtopicId": 58,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Creating and Using Views",
+    "data": "creating_and_using_views.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 59,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Advantages of Views",
+    "data": "advantages_of_views.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 60,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Indexing",
+    "data": "indexing.html",
+    "verified": false,
+    "priority": 1
+  }
+]

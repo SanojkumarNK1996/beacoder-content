@@ -1,0 +1,175 @@
+<h1>Modifying Tables in SQL</h1>
+
+<p>Once a table is created, you might later realize that you need to make changes — for example, add a new column, rename an existing one, or delete a column you no longer need.</p>
+
+<p>SQL lets you do all these changes using the <strong>ALTER TABLE</strong> command.</p>
+
+<hr>
+
+<h2>1️⃣ What is ALTER TABLE?</h2>
+
+<p>The <code>ALTER TABLE</code> statement is used to modify an existing table’s structure without deleting the data inside it.</p>
+
+<p>You can use it to:</p>
+<ul>
+  <li>Add new columns</li>
+  <li>Delete (drop) columns</li>
+  <li>Rename columns</li>
+  <li>Change data types</li>
+  <li>Add or remove constraints</li>
+</ul>
+
+<hr>
+
+<h2>2️⃣ Adding a New Column</h2>
+
+<p>Suppose we have a <code>Students</code> table and now we want to store each student’s phone number.</p>
+
+<pre>
+ALTER TABLE Students
+ADD PhoneNumber VARCHAR(15);
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li><code>ALTER TABLE Students</code> — means we’re going to change the <code>Students</code> table.</li>
+  <li><code>ADD PhoneNumber VARCHAR(15)</code> — adds a new column named <code>PhoneNumber</code> that stores up to 15 characters.</li>
+</ul>
+
+<p>Now if you run <code>DESCRIBE Students;</code>, you’ll see the new column added at the end.</p>
+
+<hr>
+
+<h2>3️⃣ Adding Multiple Columns</h2>
+
+<p>You can add more than one column at a time:</p>
+
+<pre>
+ALTER TABLE Students
+ADD (Address VARCHAR(100), City VARCHAR(50));
+</pre>
+
+<p>This will add both <code>Address</code> and <code>City</code> columns in a single command.</p>
+
+<hr>
+
+<h2>4️⃣ Modifying a Column’s Data Type</h2>
+
+<p>If you want to change the data type of an existing column, use <code>MODIFY</code> (or <code>ALTER COLUMN</code> depending on the SQL version).</p>
+
+<p>Example: Suppose you initially set <code>Age</code> as <code>INT</code> but you want to make it <code>SMALLINT</code> to save space.</p>
+
+<pre>
+ALTER TABLE Students
+MODIFY Age SMALLINT;
+</pre>
+
+<p>This changes the column’s data type while keeping existing data intact (as long as it’s compatible).</p>
+
+<hr>
+
+<h2>5️⃣ Renaming a Column</h2>
+
+<p>To rename a column, use the <code>CHANGE</code> or <code>RENAME COLUMN</code> syntax (varies by database).</p>
+
+<p><strong>Example (MySQL):</strong></p>
+<pre>
+ALTER TABLE Students
+CHANGE Name FullName VARCHAR(50);
+</pre>
+
+<p>This renames the column <code>Name</code> to <code>FullName</code> and keeps the same data type.</p>
+
+<p><strong>Example (PostgreSQL / SQL Server):</strong></p>
+<pre>
+ALTER TABLE Students
+RENAME COLUMN Name TO FullName;
+</pre>
+
+<hr>
+
+<h2>6️⃣ Deleting (Dropping) a Column</h2>
+
+<p>If you no longer need a column, you can remove it with <code>DROP COLUMN</code>.</p>
+
+<pre>
+ALTER TABLE Students
+DROP COLUMN PhoneNumber;
+</pre>
+
+<p>This completely removes the column and its data.  
+⚠️ <strong>Warning:</strong> Once a column is dropped, you cannot recover its data unless you have a backup!</p>
+
+<hr>
+
+<h2>7️⃣ Renaming a Table</h2>
+
+<p>Sometimes, you may want to rename the table itself (for example, from <code>Students</code> to <code>StudentRecords</code>).</p>
+
+<pre>
+RENAME TABLE Students TO StudentRecords;
+</pre>
+
+<p>After this, all queries must use the new name.</p>
+
+<hr>
+
+<h2>8️⃣ Changing the Default Value of a Column</h2>
+
+<p>SQL allows you to modify the default value assigned to a column when new data is inserted.</p>
+
+<pre>
+ALTER TABLE Students
+ALTER COLUMN Age SET DEFAULT 18;
+</pre>
+
+<p>Now, if you insert a student without specifying an age, it will automatically use <code>18</code>.</p>
+
+<hr>
+
+<h2>9️⃣ Adding Constraints to an Existing Table</h2>
+
+<p>Constraints are rules that define what kind of data can go into a table.  
+We’ll cover them in detail in the <strong>“Constraints in SQL”</strong> topic, but here’s a quick look.</p>
+
+<p>Example: Add a <code>UNIQUE</code> constraint to the <code>Email</code> column:</p>
+
+<pre>
+ALTER TABLE Students
+ADD CONSTRAINT unique_email UNIQUE (Email);
+</pre>
+
+<p>This ensures no two students can have the same email address.</p>
+
+<hr>
+
+<h2>🔟 Dropping Constraints</h2>
+
+<p>If you need to remove a constraint, you can use:</p>
+
+<pre>
+ALTER TABLE Students
+DROP CONSTRAINT unique_email;
+</pre>
+
+<p>(Constraint names vary by database system — MySQL, PostgreSQL, SQL Server all have slightly different syntaxes.)</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<ul>
+  <li><strong>ALTER TABLE</strong> — used to modify existing table structure.</li>
+  <li><strong>ADD</strong> — to add new columns.</li>
+  <li><strong>MODIFY / ALTER COLUMN</strong> — to change column data types or defaults.</li>
+  <li><strong>CHANGE / RENAME COLUMN</strong> — to rename columns.</li>
+  <li><strong>DROP COLUMN</strong> — to delete a column.</li>
+  <li><strong>RENAME TABLE</strong> — to rename a table.</li>
+</ul>
+
+<p>Making structural changes to tables is common during database design.  
+Always make sure you have a backup before running <code>ALTER</code> commands on a live database.</p>
+
+<hr>
+
+<p>Next, we’ll learn how to <strong>drop tables and databases</strong> — the safe way!</p>

@@ -1,0 +1,214 @@
+<h2>Inheritance in Java</h2>
+
+<p>
+<strong>Inheritance</strong> is an important concept in <em>Object-Oriented Programming (OOP)</em> that allows one class to <strong>acquire the properties and behaviors</strong> of another class.
+It helps to reuse existing code and build new features easily.
+</p>
+
+<p>
+In Java, inheritance is implemented using the <code>extends</code> keyword.
+</p>
+
+<hr>
+
+<h3>What is Inheritance?</h3>
+
+<p>
+When a class (called the <strong>child class</strong> or <strong>subclass</strong>) inherits from another class (called the <strong>parent class</strong> or <strong>superclass</strong>), 
+it automatically gets access to all the <em>fields</em> and <em>methods</em> of the parent class.
+</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>class Animal {
+    void eat() {
+        System.out.println("This animal eats food");
+    }
+}
+
+// Dog inherits from Animal
+class Dog extends Animal {
+    void bark() {
+        System.out.println("The dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.eat();  // Inherited method
+        d.bark(); // Child class method
+    }
+}</code></pre>
+
+<p>
+Here, the <code>Dog</code> class inherits from the <code>Animal</code> class using <code>extends</code>. 
+This means the <code>Dog</code> class can use the <code>eat()</code> method defined in <code>Animal</code>.
+</p>
+
+<hr>
+
+<h3>The <code>extends</code> Keyword</h3>
+
+<p>
+The <strong><code>extends</code></strong> keyword is used to create a subclass from a superclass.  
+It establishes an “is-a” relationship between classes.
+</p>
+
+<p>Syntax:</p>
+<pre><code>class SubClass extends SuperClass {
+    // additional fields and methods
+}</code></pre>
+
+<p>Example:</p>
+<pre><code>class Vehicle {
+    void start() {
+        System.out.println("Vehicle started");
+    }
+}
+
+class Car extends Vehicle {
+    void playMusic() {
+        System.out.println("Music is playing");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car c = new Car();
+        c.start();     // Inherited from Vehicle
+        c.playMusic(); // Defined in Car
+    }
+}</code></pre>
+
+<hr>
+
+<h3>The <code>super</code> Keyword</h3>
+
+<p>
+The <strong><code>super</code></strong> keyword refers to the <strong>parent class</strong>.  
+It can be used in two ways:
+</p>
+
+<ol>
+    <li>To call the parent class constructor.</li>
+    <li>To access parent class methods or variables.</li>
+</ol>
+
+<p><strong>Example 1 – Calling Parent Constructor:</strong></p>
+<pre><code>class Animal {
+    Animal() {
+        System.out.println("Animal created");
+    }
+}
+
+class Dog extends Animal {
+    Dog() {
+        super();  // calls Animal constructor
+        System.out.println("Dog created");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Animal created
+Dog created</code></pre>
+
+<p><strong>Example 2 – Accessing Parent Method:</strong></p>
+<pre><code>class Animal {
+    void eat() {
+        System.out.println("Animal eats");
+    }
+}
+
+class Dog extends Animal {
+    void eat() {
+        System.out.println("Dog eats");
+    }
+
+    void showEating() {
+        super.eat(); // calls parent method
+        eat();       // calls child method
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.showEating();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Animal eats
+Dog eats</code></pre>
+
+<hr>
+
+<h3>Method Overriding</h3>
+
+<p>
+<strong>Method overriding</strong> means redefining a method in the child class that already exists in the parent class with the <strong>same name, parameters, and return type</strong>.
+</p>
+
+<p>It allows a subclass to provide its own version of a method to modify or extend the parent behavior.</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>class Animal {
+    void makeSound() {
+        System.out.println("Some generic animal sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void makeSound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal a = new Animal();
+        a.makeSound(); // Parent method
+
+        Dog d = new Dog();
+        d.makeSound(); // Overridden method
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Some generic animal sound
+Dog barks</code></pre>
+
+<p>
+Here, the <code>Dog</code> class overrides the <code>makeSound()</code> method from the <code>Animal</code> class. 
+The <code>@Override</code> annotation is used to indicate that the method is being overridden.
+</p>
+
+<hr>
+
+<h3>Key Points</h3>
+<ul>
+    <li><strong>Inheritance</strong> allows a class to reuse code from another class.</li>
+    <li><strong>extends</strong> is used to create a subclass from a superclass.</li>
+    <li><strong>super</strong> is used to call the parent class constructor or method.</li>
+    <li><strong>Method overriding</strong> lets the subclass change or improve parent class behavior.</li>
+</ul>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li><code>extends</code> → Establishes inheritance relationship.</li>
+    <li><code>super</code> → Refers to the parent class.</li>
+    <li>Overriding → Redefining parent class methods in the subclass.</li>
+</ul>
+
+<p>
+Inheritance promotes <strong>code reusability</strong>, <strong>extensibility</strong>, and a clear <strong>class hierarchy</strong> in Java programs.
+</p>

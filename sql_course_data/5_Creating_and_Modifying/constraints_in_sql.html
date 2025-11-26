@@ -1,0 +1,235 @@
+<h1>Constraints in SQL</h1>
+
+<p>When you create tables in a database, you often want to make sure that the data entered is valid and meaningful.  
+For example, you wouldn’t want a student record without a name, or two users with the same ID.  
+This is where <strong>constraints</strong> come in.</p>
+
+<hr>
+
+<h2>1️⃣ What Are Constraints?</h2>
+
+<p><strong>Constraints</strong> are rules that you apply to columns in a table to control what kind of data can be stored there.  
+They ensure that your data stays accurate and consistent over time.</p>
+
+<p>Think of them as “guardrails” for your database — they prevent mistakes before they happen.</p>
+
+<hr>
+
+<h2>2️⃣ Why Are Constraints Important?</h2>
+
+<ul>
+  <li>✅ They maintain data accuracy.</li>
+  <li>✅ They prevent invalid data from being inserted.</li>
+  <li>✅ They enforce relationships between tables.</li>
+  <li>✅ They protect data integrity and consistency.</li>
+</ul>
+
+<hr>
+
+<h2>3️⃣ Common Types of Constraints</h2>
+
+<p>SQL provides several types of constraints. Let’s explore each one with simple examples.</p>
+
+<hr>
+
+<h3>🔹 NOT NULL Constraint</h3>
+
+<p>This ensures that a column <strong>cannot have a NULL (empty) value</strong>.</p>
+
+<pre>
+CREATE TABLE Students (
+  StudentID INT,
+  Name VARCHAR(50) NOT NULL,
+  Age INT
+);
+</pre>
+
+<p>In this example, every student <strong>must have a name</strong>.  
+If you try to insert a record without a name, SQL will reject it.</p>
+
+<pre>
+INSERT INTO Students (StudentID, Age) VALUES (1, 18);
+-- ❌ Error: Column 'Name' cannot be null
+</pre>
+
+<hr>
+
+<h3>🔹 UNIQUE Constraint</h3>
+
+<p>The <strong>UNIQUE</strong> constraint makes sure that all values in a column are different.</p>
+
+<pre>
+CREATE TABLE Users (
+  UserID INT,
+  Email VARCHAR(100) UNIQUE
+);
+</pre>
+
+<p>This ensures that no two users can have the same email address.</p>
+
+<pre>
+INSERT INTO Users VALUES (1, 'john@example.com');
+INSERT INTO Users VALUES (2, 'john@example.com');
+-- ❌ Error: Duplicate entry 'john@example.com'
+</pre>
+
+<hr>
+
+<h3>🔹 PRIMARY KEY Constraint</h3>
+
+<p>The <strong>PRIMARY KEY</strong> uniquely identifies each record in a table.  
+It automatically combines the behavior of <strong>NOT NULL</strong> and <strong>UNIQUE</strong>.</p>
+
+<pre>
+CREATE TABLE Employees (
+  EmpID INT PRIMARY KEY,
+  Name VARCHAR(50)
+);
+</pre>
+
+<p>This ensures that:</p>
+<ul>
+  <li>Each employee has a unique ID.</li>
+  <li>No employee can have a NULL (empty) ID.</li>
+</ul>
+
+<hr>
+
+<h3>🔹 FOREIGN KEY Constraint</h3>
+
+<p>The <strong>FOREIGN KEY</strong> constraint is used to link two tables together.  
+It ensures that the value in one table matches a valid value in another table.</p>
+
+<pre>
+CREATE TABLE Departments (
+  DeptID INT PRIMARY KEY,
+  DeptName VARCHAR(50)
+);
+
+CREATE TABLE Employees (
+  EmpID INT PRIMARY KEY,
+  Name VARCHAR(50),
+  DeptID INT,
+  FOREIGN KEY (DeptID) REFERENCES Departments(DeptID)
+);
+</pre>
+
+<p>This ensures that every employee’s <code>DeptID</code> must exist in the <code>Departments</code> table.</p>
+
+<p>If you try to insert an employee with a non-existent department, SQL will block it.</p>
+
+<hr>
+
+<h3>🔹 CHECK Constraint</h3>
+
+<p>The <strong>CHECK</strong> constraint ensures that values in a column meet a specific condition.</p>
+
+<pre>
+CREATE TABLE Products (
+  ProductID INT PRIMARY KEY,
+  Price DECIMAL(10,2) CHECK (Price > 0)
+);
+</pre>
+
+<p>This ensures that the <code>Price</code> value must always be positive.</p>
+
+<pre>
+INSERT INTO Products VALUES (1, -10.00);
+-- ❌ Error: CHECK constraint failed
+</pre>
+
+<hr>
+
+<h3>🔹 DEFAULT Constraint</h3>
+
+<p>The <strong>DEFAULT</strong> constraint automatically assigns a value to a column if no value is provided.</p>
+
+<pre>
+CREATE TABLE Orders (
+  OrderID INT PRIMARY KEY,
+  Status VARCHAR(20) DEFAULT 'Pending'
+);
+</pre>
+
+<p>If you insert a record without specifying <code>Status</code>, it will automatically take the value <code>'Pending'</code>.</p>
+
+<pre>
+INSERT INTO Orders (OrderID) VALUES (1);
+
+-- Result:
+-- | OrderID | Status  |
+-- |    1    | Pending |
+</pre>
+
+<hr>
+
+<h2>4️⃣ Combining Multiple Constraints</h2>
+
+<p>You can apply multiple constraints to the same table for stronger validation.</p>
+
+<pre>
+CREATE TABLE Customers (
+  CustomerID INT PRIMARY KEY,
+  Name VARCHAR(50) NOT NULL,
+  Email VARCHAR(100) UNIQUE,
+  Age INT CHECK (Age >= 18),
+  Country VARCHAR(50) DEFAULT 'India'
+);
+</pre>
+
+<p>Here’s what happens:</p>
+<ul>
+  <li>Each customer must have an ID (<code>PRIMARY KEY</code>).</li>
+  <li>The name cannot be blank (<code>NOT NULL</code>).</li>
+  <li>Email must be unique (<code>UNIQUE</code>).</li>
+  <li>Age must be 18 or older (<code>CHECK</code>).</li>
+  <li>If no country is given, it defaults to “India” (<code>DEFAULT</code>).</li>
+</ul>
+
+<hr>
+
+<h2>5️⃣ Viewing Constraints in a Table</h2>
+
+<p>You can use SQL commands to check what constraints exist on a table.  
+For example, in MySQL:</p>
+
+<pre>
+SHOW CREATE TABLE Customers;
+</pre>
+
+<p>This will show the table structure including all constraints applied.</p>
+
+<hr>
+
+<h2>6️⃣ Modifying or Dropping Constraints</h2>
+
+<p>You can also add or remove constraints using the <code>ALTER TABLE</code> command.</p>
+
+<pre>
+-- Add a new constraint
+ALTER TABLE Employees
+ADD CONSTRAINT chk_age CHECK (Age >= 18);
+
+-- Drop an existing constraint (syntax may vary by database)
+ALTER TABLE Employees
+DROP CONSTRAINT chk_age;
+</pre>
+
+<p>Always be careful when dropping constraints, as it removes important data protections.</p>
+
+<hr>
+
+<h2>7️⃣ Summary</h2>
+
+<ul>
+  <li><strong>NOT NULL</strong> — Prevents empty values.</li>
+  <li><strong>UNIQUE</strong> — Prevents duplicate values.</li>
+  <li><strong>PRIMARY KEY</strong> — Uniquely identifies each row.</li>
+  <li><strong>FOREIGN KEY</strong> — Links tables together.</li>
+  <li><strong>CHECK</strong> — Ensures valid conditions.</li>
+  <li><strong>DEFAULT</strong> — Sets a default value if none is given.</li>
+</ul>
+
+<p>Constraints are like the “rules of the road” for your database — they keep your data clean, valid, and trustworthy.</p>
+
+<p>Next, you’ll learn how to work with the actual <strong>data inside tables</strong> — using <em>SQL queries</em> to insert, read, update, and delete records.</p>

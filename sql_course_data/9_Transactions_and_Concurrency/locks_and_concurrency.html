@@ -1,0 +1,37 @@
+<body style="font-family:Arial, sans-serif; margin:30px; line-height:1.6;">
+  <h1>Locks and Concurrency Control in SQL</h1>
+  <p>
+    Concurrency control ensures that multiple database transactions can occur simultaneously 
+    without causing data inconsistency. It uses <strong>locks</strong> to manage access to shared resources.
+  </p>
+
+  <h2>Types of Locks</h2>
+  <ul>
+    <li><strong>Shared Lock (S):</strong> Allows multiple transactions to read but not modify data.</li>
+    <li><strong>Exclusive Lock (X):</strong> Prevents other transactions from reading or writing the data.</li>
+    <li><strong>Intent Locks:</strong> Indicate intention to acquire specific locks at a finer level.</li>
+  </ul>
+
+  <h2>Isolation Levels</h2>
+  <ul>
+    <li><strong>Read Uncommitted:</strong> Allows dirty reads.</li>
+    <li><strong>Read Committed:</strong> Prevents dirty reads.</li>
+    <li><strong>Repeatable Read:</strong> Prevents dirty and non-repeatable reads.</li>
+    <li><strong>Serializable:</strong> Ensures full isolation; highest level.</li>
+  </ul>
+
+  <h2>Example</h2>
+  <pre style="background:#f6f8fa; padding:10px; border:1px solid #ccc;">
+BEGIN;
+SELECT * FROM accounts WHERE id = 1 FOR UPDATE;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+COMMIT;
+  </pre>
+
+  <h2>Best Practices</h2>
+  <ul>
+    <li>Keep transactions short.</li>
+    <li>Access resources in a consistent order.</li>
+    <li>Handle deadlocks by retrying transactions.</li>
+  </ul>
+</body>

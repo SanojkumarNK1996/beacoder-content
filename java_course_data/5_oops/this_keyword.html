@@ -1,0 +1,196 @@
+<h2>The <code>this</code> Keyword in Java</h2>
+
+<p>
+In Java, the <strong><code>this</code></strong> keyword is a special reference variable that refers to the <strong>current object</strong> of a class.  
+It is used inside methods or constructors to access the current object’s fields, methods, or constructors.
+</p>
+
+<p>
+In simple terms, <code>this</code> helps Java understand which variable or method you are referring to when there is confusion between local and instance variables.
+</p>
+
+<hr>
+
+<h3>Why Use <code>this</code>?</h3>
+
+<p>
+When method parameters or local variables have the same name as instance variables, <code>this</code> is used to tell Java which one belongs to the current object.
+</p>
+
+<p><strong>Example Without Using <code>this</code>:</strong></p>
+<pre><code>class Student {
+    String name;
+
+    Student(String name) {
+        name = name; // Problem: parameter hides instance variable
+    }
+
+    void display() {
+        System.out.println("Name: " + name);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Student s = new Student("Alice");
+        s.display();  // Output: Name: null
+    }
+}</code></pre>
+
+<p>
+Here, the instance variable <code>name</code> is hidden by the constructor parameter <code>name</code>.  
+Both have the same name, so Java assumes you are referring to the parameter only.
+</p>
+
+<hr>
+
+<h3>Using <code>this</code> to Resolve the Conflict</h3>
+
+<pre><code>class Student {
+    String name;
+
+    Student(String name) {
+        this.name = name; // 'this.name' refers to instance variable
+    }
+
+    void display() {
+        System.out.println("Name: " + this.name);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Student s = new Student("Alice");
+        s.display();  // Output: Name: Alice
+    }
+}</code></pre>
+
+<p>
+Now, <code>this.name</code> clearly refers to the instance variable, while <code>name</code> refers to the constructor parameter.
+</p>
+
+<hr>
+
+<h3>Common Uses of <code>this</code> Keyword</h3>
+
+<h4>1. To refer to the current class instance variable</h4>
+<p>
+Used when local and instance variables have the same name.
+</p>
+<pre><code>this.variableName</code></pre>
+
+<h4>2. To call another method in the same class</h4>
+<p>
+You can call one method from another method using <code>this</code>.
+</p>
+<pre><code>class Example {
+    void show() {
+        System.out.println("Show method called");
+    }
+
+    void display() {
+        this.show();  // Calls the show() method
+    }
+}</code></pre>
+
+<h4>3. To call another constructor (constructor chaining)</h4>
+<p>
+You can use <code>this()</code> to call another constructor in the same class.
+</p>
+<pre><code>class Box {
+    int length, width, height;
+
+    Box() {
+        this(10, 20, 30); // Calls parameterized constructor
+        System.out.println("Default constructor called");
+    }
+
+    Box(int l, int w, int h) {
+        length = l;
+        width = w;
+        height = h;
+        System.out.println("Parameterized constructor called");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Box b = new Box();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Parameterized constructor called
+Default constructor called</code></pre>
+
+<h4>4. To pass the current object as a parameter</h4>
+<p>
+<code>this</code> can be passed to another method or constructor as an argument.
+</p>
+<pre><code>class Printer {
+    void print(Student s) {
+        System.out.println("Printing student details...");
+    }
+}
+
+class Student {
+    void display() {
+        Printer p = new Printer();
+        p.print(this); // Passing current object
+    }
+}</code></pre>
+
+<h4>5. To return the current class instance</h4>
+<p>
+Sometimes, you may want to return the current object from a method (useful for method chaining).
+</p>
+<pre><code>class Calculator {
+    int value;
+
+    Calculator setValue(int value) {
+        this.value = value;
+        return this;
+    }
+
+    Calculator increment() {
+        this.value++;
+        return this;
+    }
+
+    void show() {
+        System.out.println("Value: " + value);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        new Calculator().setValue(10).increment().show();
+    }
+}</code></pre>
+
+<p><strong>Output:</strong></p>
+<pre><code>Value: 11</code></pre>
+
+<hr>
+
+<h3>Key Points</h3>
+<ul>
+    <li><code>this</code> refers to the current object of the class.</li>
+    <li>It helps resolve conflicts between local and instance variables.</li>
+    <li>Used for method and constructor chaining.</li>
+    <li>Can be passed as an argument or returned from a method.</li>
+    <li>Cannot be used in static methods (since static methods don’t belong to any object).</li>
+</ul>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+    <li><strong><code>this</code></strong> → Refers to the current object.</li>
+    <li>Used to access instance variables, call methods/constructors, or pass the current object.</li>
+    <li>Improves code clarity and avoids naming conflicts.</li>
+</ul>
+
+<p>
+The <code>this</code> keyword is simple but powerful—it makes your Java programs more readable, flexible, and object-oriented.
+</p>

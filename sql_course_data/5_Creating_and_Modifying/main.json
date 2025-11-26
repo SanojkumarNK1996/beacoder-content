@@ -1,0 +1,38 @@
+[
+    {
+        "subtopicId": 45,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Creating Databases and Tables",
+        "data": "creating_databases.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 46,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Modifying Tables",
+        "data": "modifying_tables.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 47,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Dropping Tables and Databases",
+        "data": "dropping_tables_and_databases.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 48,
+        "dataType": "notes",
+        "displayOrder": 4,
+        "title": "Constraints in SQL",
+        "data": "constraints_in_sql.html",
+        "verified": false,
+        "priority": 1
+    }
+]

@@ -1,0 +1,159 @@
+<h1>Updating Data (UPDATE)</h1>
+
+<p>The <strong>UPDATE</strong> statement is used to <strong>modify existing records</strong> in a table.  
+You can update one or more columns, and you can also control which rows are updated using a <code>WHERE</code> clause.</p>
+
+<hr>
+
+<h2>1️⃣ Basic UPDATE Syntax</h2>
+
+<pre>
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+</pre>
+
+<p>This command updates specific columns for the rows that match the given condition.</p>
+
+<hr>
+
+<h2>2️⃣ Example: Updating One Column</h2>
+
+<pre>
+UPDATE Students
+SET Age = 20
+WHERE Name = 'John';
+</pre>
+
+<p>This command changes John’s age to 20 — only for the record where <code>Name</code> equals <code>'John'</code>.</p>
+
+<hr>
+
+<h2>3️⃣ Example: Updating Multiple Columns</h2>
+
+<pre>
+UPDATE Students
+SET Age = 21, Grade = 'A'
+WHERE StudentID = 101;
+</pre>
+
+<p>This changes both the <code>Age</code> and <code>Grade</code> columns for the student whose ID is <code>101</code>.</p>
+
+<hr>
+
+<h2>4️⃣ Important: Always Use WHERE!</h2>
+
+<p>If you don’t include a <code>WHERE</code> clause, <strong>all rows in the table will be updated</strong>.</p>
+
+<pre>
+UPDATE Students
+SET Grade = 'B';
+</pre>
+
+<p>This will set the <code>Grade</code> to <code>'B'</code> for <strong>every student</strong> in the table.  
+Always double-check your <code>WHERE</code> condition before running an UPDATE!</p>
+
+<hr>
+
+<h2>5️⃣ Updating with Expressions</h2>
+
+<p>You can also use mathematical expressions when updating values.</p>
+
+<pre>
+UPDATE Students
+SET Age = Age + 1
+WHERE Class = '10A';
+</pre>
+
+<p>This increases the <code>Age</code> of all students in class 10A by 1.</p>
+
+<hr>
+
+<h2>6️⃣ Using UPDATE with Conditions</h2>
+
+<p>You can combine multiple conditions using <code>AND</code> and <code>OR</code>.</p>
+
+<pre>
+UPDATE Students
+SET Grade = 'A'
+WHERE Age > 18 AND Attendance > 90;
+</pre>
+
+<p>This updates the <code>Grade</code> to 'A' for students older than 18 who have over 90% attendance.</p>
+
+<hr>
+
+<h2>7️⃣ Updating from Another Table (Advanced)</h2>
+
+<p>Sometimes, you may need to update values based on another table’s data.  
+This is often done using a <code>JOIN</code> or a subquery.</p>
+
+<p>Example (MySQL style):</p>
+
+<pre>
+UPDATE Students s
+JOIN Classes c ON s.ClassID = c.ClassID
+SET s.TeacherName = c.ClassTeacher
+WHERE c.ClassName = '10B';
+</pre>
+
+<p>This updates each student’s <code>TeacherName</code> based on data from the <code>Classes</code> table.</p>
+
+<hr>
+
+<h2>8️⃣ Viewing Updated Data</h2>
+
+<p>After updating records, you can use the <code>SELECT</code> statement to confirm the changes:</p>
+
+<pre>
+SELECT * FROM Students WHERE StudentID = 101;
+</pre>
+
+<p>This helps you verify that your update worked as intended.</p>
+
+<hr>
+
+<h2>9️⃣ Example Scenario</h2>
+
+<p>Suppose you have a <code>Students</code> table like this:</p>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>StudentID</th><th>Name</th><th>Age</th><th>Grade</th>
+  </tr>
+  <tr><td>101</td><td>John</td><td>19</td><td>B</td></tr>
+  <tr><td>102</td><td>Mary</td><td>18</td><td>B</td></tr>
+</table>
+
+<p>You can update John’s grade like this:</p>
+
+<pre>
+UPDATE Students
+SET Grade = 'A'
+WHERE Name = 'John';
+</pre>
+
+<p>Now John’s record looks like this:</p>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>StudentID</th><th>Name</th><th>Age</th><th>Grade</th>
+  </tr>
+  <tr><td>101</td><td>John</td><td>19</td><td>A</td></tr>
+  <tr><td>102</td><td>Mary</td><td>18</td><td>B</td></tr>
+</table>
+
+<hr>
+
+<h2>🔟 Summary</h2>
+
+<ul>
+  <li><code>UPDATE table SET column=value WHERE condition;</code> — modify existing data.</li>
+  <li>Always use <code>WHERE</code> to prevent accidental updates to all rows.</li>
+  <li>You can update multiple columns at once.</li>
+  <li>Expressions can be used for calculations (e.g., <code>Age = Age + 1</code>).</li>
+  <li>Use <code>SELECT</code> after updating to verify your results.</li>
+</ul>
+
+<p>The <strong>UPDATE</strong> command lets you change your data safely and efficiently.  
+Next, we’ll explore how to <strong>delete records</strong> from a table using the <code>DELETE</code> command.</p>

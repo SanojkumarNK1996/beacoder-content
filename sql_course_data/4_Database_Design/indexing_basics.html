@@ -1,0 +1,221 @@
+<h1>Indexing Basics</h1>
+
+<p>As your database grows, it may store thousands or even millions of records.  
+Finding a specific record in such a large table can take time if the database has to check every single row.</p>
+
+<p>This is where <strong>Indexing</strong> comes in.  
+An <strong>Index</strong> makes data search faster — just like an index in the back of a book helps you quickly find a topic without reading every page.</p>
+
+<hr>
+
+<h2>What is an Index?</h2>
+
+<p>An <strong>Index</strong> is a special data structure that stores a small portion of your data in an organized way (usually sorted), so the database can locate information faster.</p>
+
+<h3>Example (Book Analogy):</h3>
+<p>Imagine a 500-page book. You want to find where “Database Normalization” is mentioned.</p>
+<ul>
+  <li>Without an index — you’d flip through every page (slow).</li>
+  <li>With an index — you look at the back of the book, find “Database Normalization → page 120” (fast).</li>
+</ul>
+
+<p>The same idea applies in databases. Instead of checking every record, the database uses an index to jump directly to the location where the data exists.</p>
+
+<hr>
+
+<h2>Why Indexing is Important</h2>
+
+<p>Indexes improve the <strong>speed of data retrieval</strong> (SELECT queries) dramatically, especially in large databases.</p>
+
+<p>However, indexes also take up extra storage space and can slightly slow down data modifications (INSERT, UPDATE, DELETE), because the index needs to be updated whenever data changes.</p>
+
+<h3>In short:</h3>
+<ul>
+  <li>✅ Speeds up searches</li>
+  <li>❌ Slightly slows down data updates</li>
+  <li>✅ Great for frequently searched columns</li>
+</ul>
+
+<hr>
+
+<h2>How Indexing Works (Simple Example)</h2>
+
+<p>Let’s say we have a table of students:</p>
+
+<pre>
+Students Table
++-----------+-----------+--------+
+| StudentID | Name      | Age    |
++-----------+-----------+--------+
+| 1         | Riya      | 21     |
+| 2         | Arjun     | 22     |
+| 3         | Meera     | 20     |
+| 4         | Ravi      | 23     |
++-----------+-----------+--------+
+</pre>
+
+<p>Without an index, if you run this query:</p>
+
+<pre>
+SELECT * FROM Students WHERE Name = 'Meera';
+</pre>
+
+<p>The database has to check every row until it finds “Meera.”  
+This process is called a <strong>full table scan</strong>.</p>
+
+<p>If we create an index on the <code>Name</code> column:</p>
+
+<pre>
+CREATE INDEX idx_name ON Students(Name);
+</pre>
+
+<p>The database now stores a separate, sorted list of names — something like this:</p>
+
+<pre>
+Index on Name
++-----------+-----------+
+| Name      | StudentID |
++-----------+-----------+
+| Arjun     | 2         |
+| Meera     | 3         |
+| Ravi      | 4         |
+| Riya      | 1         |
++-----------+-----------+
+</pre>
+
+<p>Now, when you search for <code>Name = 'Meera'</code>, the database looks in this small, sorted list — finds Meera immediately — and jumps to the corresponding record using <code>StudentID = 3</code>.</p>
+
+<hr>
+
+<h2>Types of Indexes</h2>
+
+<p>There are several types of indexes, depending on how they are used and stored:</p>
+
+<h3>1️⃣ Primary Index</h3>
+<p>Automatically created on the <strong>Primary Key</strong> column.  
+It ensures each record is unique and helps in fast retrieval.</p>
+
+<pre>
+CREATE TABLE Students (
+  StudentID INT PRIMARY KEY,
+  Name VARCHAR(50),
+  Age INT
+);
+</pre>
+
+<p>Here, a primary index is automatically created on <code>StudentID</code>.</p>
+
+<hr>
+
+<h3>2️⃣ Unique Index</h3>
+<p>Ensures that no two rows have the same value in the indexed column (useful for things like email or username).</p>
+
+<pre>
+CREATE UNIQUE INDEX idx_email ON Users(Email);
+</pre>
+
+<hr>
+
+<h3>3️⃣ Composite Index</h3>
+<p>An index on more than one column — used when queries often filter by multiple fields together.</p>
+
+<pre>
+CREATE INDEX idx_name_age ON Students(Name, Age);
+</pre>
+
+<p>This helps when queries use both columns:</p>
+
+<pre>
+SELECT * FROM Students WHERE Name = 'Riya' AND Age = 21;
+</pre>
+
+<hr>
+
+<h3>4️⃣ Full-Text Index</h3>
+<p>Used for searching within text fields (like searching keywords in articles or documents).</p>
+
+<pre>
+CREATE FULLTEXT INDEX idx_content ON Articles(Content);
+</pre>
+
+<hr>
+
+<h2>How Indexes Are Stored</h2>
+
+<p>Indexes are usually stored using special data structures like:</p>
+<ul>
+  <li><strong>B-Tree (Balanced Tree):</strong> The most common — helps with range-based lookups (like finding all ages between 20 and 25).</li>
+  <li><strong>Hash Index:</strong> Great for exact lookups (like finding a record with a specific ID).</li>
+</ul>
+
+<p>You don’t need to manage these structures yourself — the database handles it internally.</p>
+
+<hr>
+
+<h2>When to Use Indexes</h2>
+
+<ul>
+  <li>When the column is frequently used in <code>WHERE</code> conditions.</li>
+  <li>When the column appears often in <code>JOIN</code> operations.</li>
+  <li>When the column is used in <code>ORDER BY</code> or <code>GROUP BY</code>.</li>
+</ul>
+
+<p>But avoid creating too many indexes — each one adds storage cost and slows down updates slightly.</p>
+
+<hr>
+
+<h2>Real-Life Analogy</h2>
+
+<p>Think of a supermarket:</p>
+<ul>
+  <li>Without indexes: you walk every aisle looking for “pasta” (slow).</li>
+  <li>With indexes: signs tell you “Aisle 4 – Pasta” (fast).</li>
+</ul>
+
+<p>The signs (indexes) make searching faster, but every time the store adds a new item, someone must update the sign — just like how indexes need to be updated when data changes.</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Index</td>
+      <td>Structure that speeds up searches</td>
+      <td>Index on Name column</td>
+    </tr>
+    <tr>
+      <td>Primary Index</td>
+      <td>Automatically created on the Primary Key</td>
+      <td>PRIMARY KEY (StudentID)</td>
+    </tr>
+    <tr>
+      <td>Unique Index</td>
+      <td>Ensures no duplicate values</td>
+      <td>INDEX ON Email</td>
+    </tr>
+    <tr>
+      <td>Composite Index</td>
+      <td>Index on multiple columns</td>
+      <td>INDEX ON (Name, Age)</td>
+    </tr>
+    <tr>
+      <td>Full-Text Index</td>
+      <td>For searching text inside documents</td>
+      <td>INDEX ON Content</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<p><strong>In short:</strong>  
+An index is like a shortcut — it helps the database find information quickly, just like a book index or store sign helps you find what you need faster.</p>

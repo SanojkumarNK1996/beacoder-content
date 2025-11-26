@@ -1,0 +1,56 @@
+[
+    {
+        "subtopicId": 31,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Database Management System (DBMS) Overview",
+        "data": "dbms_overview.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 32,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Components of DBMS",
+        "data": "components_of_dbms.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 33,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Client-Server Architecture",
+        "data": "client_server_architecture.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 34,
+        "dataType": "notes",
+        "displayOrder": 4,
+        "title": "ACID Properties (Atomicity, Consistency, Isolation, Durability)",
+        "data": "acid_properties.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 35,
+        "dataType": "notes",
+        "displayOrder": 5,
+        "title": "Transactions and Concurrency",
+        "data": "transactions_and_concurrency.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 36,
+        "dataType": "notes",
+        "displayOrder": 6,
+        "title": "Keys in Databases",
+        "data": "keys_in_databases.html",
+        "verified": false,
+        "priority": 1
+    }
+]

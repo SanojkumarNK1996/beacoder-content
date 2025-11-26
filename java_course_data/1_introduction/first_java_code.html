@@ -1,0 +1,71 @@
+<h2>Writing Your First Java Program (Hello World)</h2>
+
+<p>Now that your Java environment and IDE are ready, it’s time to write your first Java program. The traditional first step in any programming language is creating a simple <strong>Hello World</strong> program. This helps you understand how Java code works and how to run it.</p>
+
+<hr>
+
+<h3>1. What the Program Does</h3>
+<p>The goal is simple: display the text <strong>Hello, World!</strong> on the screen. This small program teaches you the structure of a Java application.</p>
+
+<hr>
+
+<h3>2. Step-by-Step Guide</h3>
+
+<h4>Step 1: Create a New Java File</h4>
+<p>In your IDE (Eclipse, IntelliJ, or VS Code), create a new Java project and then create a file named <code>HelloWorld.java</code>.</p>
+
+<h4>Step 2: Write the Code</h4>
+<p>Type the following code inside the file:</p>
+
+<pre><code>public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}</code></pre>
+
+<h4>Step 3: Save the File</h4>
+<p>Make sure to save the file with the same name as the class — <code>HelloWorld.java</code>. In Java, the file name and public class name must match.</p>
+
+<h4>Step 4: Compile the Code</h4>
+<p>If you’re using the terminal or command prompt (instead of an IDE), go to the folder where your file is saved and run:</p>
+
+<pre><code>javac HelloWorld.java</code></pre>
+<p>This command compiles the Java code and creates a new file called <code>HelloWorld.class</code> (the bytecode).</p>
+
+<h4>Step 5: Run the Program</h4>
+<p>After compilation, type the following command to run your program:</p>
+
+<pre><code>java HelloWorld</code></pre>
+
+<p>You should see the output:</p>
+<pre><code>Hello, World!</code></pre>
+
+<hr>
+
+<h3>3. Understanding the Code</h3>
+<ul>
+  <li><strong>public class HelloWorld</strong>: Defines a class named <code>HelloWorld</code>. Every Java program must have at least one class.</li>
+  <li><strong>public static void main(String[] args)</strong>: This is the entry point of every Java program. The program starts running from this method.</li>
+  <li><strong>System.out.println()</strong>: Prints text to the screen. The text inside the quotation marks appears as output.</li>
+</ul>
+
+<hr>
+
+<h3>4. Common Mistakes to Avoid</h3>
+<ul>
+  <li>Make sure the file name and class name are the same (case-sensitive).</li>
+  <li>Don’t forget the semicolon (<code>;</code>) at the end of statements.</li>
+  <li>Always use double quotes (<code>" "</code>) for text inside <code>System.out.println()</code>.</li>
+</ul>
+
+<hr>
+
+<h3>5. Summary</h3>
+<p>Congratulations! 🎉 You’ve written your first Java program. This simple example teaches you how to:</p>
+<ul>
+  <li>Create a Java file.</li>
+  <li>Compile and run Java code.</li>
+  <li>Understand the basic structure of a Java application.</li>
+</ul>
+
+<p>From here, you can explore variables, data types, and other features to build more powerful Java programs.</p>

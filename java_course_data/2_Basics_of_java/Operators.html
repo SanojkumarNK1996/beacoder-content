@@ -1,0 +1,288 @@
+<h2>Operators in Java</h2>
+
+<p>In Java, <strong>operators</strong> are special symbols used to perform operations on variables and values.  
+They help you perform mathematical calculations, compare data, and make logical decisions in your program.</p>
+
+<hr>
+
+<h3>1. What Are Operators?</h3>
+
+<p>Operators are used to manipulate data and variables.  
+For example, you can add two numbers, compare them, or check if a condition is true or false.</p>
+
+<pre><code>int a = 10;
+int b = 5;
+int sum = a + b;  // '+' is an arithmetic operator
+</code></pre>
+
+<p>Java provides different categories of operators for different purposes.</p>
+
+<hr>
+
+<h2>Arithmetic Operators</h2>
+
+<p>Arithmetic operators are used to perform basic mathematical operations like addition, subtraction, multiplication, division, and finding the remainder.</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Name</th>
+      <th>Example</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>+</code></td>
+      <td>Addition</td>
+      <td><code>a + b</code></td>
+      <td>Sum of a and b</td>
+    </tr>
+    <tr>
+      <td><code>-</code></td>
+      <td>Subtraction</td>
+      <td><code>a - b</code></td>
+      <td>Difference of a and b</td>
+    </tr>
+    <tr>
+      <td><code>*</code></td>
+      <td>Multiplication</td>
+      <td><code>a * b</code></td>
+      <td>Product of a and b</td>
+    </tr>
+    <tr>
+      <td><code>/</code></td>
+      <td>Division</td>
+      <td><code>a / b</code></td>
+      <td>Quotient of a divided by b</td>
+    </tr>
+    <tr>
+      <td><code>%</code></td>
+      <td>Modulus</td>
+      <td><code>a % b</code></td>
+      <td>Remainder of a divided by b</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Example:</h4>
+<pre><code>int a = 10, b = 3;
+System.out.println("Addition: " + (a + b));
+System.out.println("Subtraction: " + (a - b));
+System.out.println("Multiplication: " + (a * b));
+System.out.println("Division: " + (a / b));
+System.out.println("Remainder: " + (a % b));</code></pre>
+
+<hr>
+
+<h2>Relational Operators</h2>
+
+<p>Relational operators are used to compare two values.  
+They always return a <strong>boolean</strong> value — either <code>true</code> or <code>false</code>.</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Name</th>
+      <th>Example</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>==</code></td>
+      <td>Equal to</td>
+      <td><code>a == b</code></td>
+      <td>true if a equals b</td>
+    </tr>
+    <tr>
+      <td><code>!=</code></td>
+      <td>Not equal to</td>
+      <td><code>a != b</code></td>
+      <td>true if a and b are different</td>
+    </tr>
+    <tr>
+      <td><code>&gt;</code></td>
+      <td>Greater than</td>
+      <td><code>a &gt; b</code></td>
+      <td>true if a is greater than b</td>
+    </tr>
+    <tr>
+      <td><code>&lt;</code></td>
+      <td>Less than</td>
+      <td><code>a &lt; b</code></td>
+      <td>true if a is less than b</td>
+    </tr>
+    <tr>
+      <td><code>&gt;=</code></td>
+      <td>Greater than or equal to</td>
+      <td><code>a &gt;= b</code></td>
+      <td>true if a is greater than or equal to b</td>
+    </tr>
+    <tr>
+      <td><code>&lt;=</code></td>
+      <td>Less than or equal to</td>
+      <td><code>a &lt;= b</code></td>
+      <td>true if a is less than or equal to b</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Example:</h4>
+<pre><code>int a = 10, b = 5;
+System.out.println(a > b);   // true
+System.out.println(a == b);  // false
+System.out.println(a != b);  // true</code></pre>
+
+<hr>
+
+<h2>Logical Operators</h2>
+
+<p>Logical operators are used to combine multiple conditions.  
+They are often used in <code>if</code> statements and loops to check multiple conditions together.</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Name</th>
+      <th>Example</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>&&</code></td>
+      <td>Logical AND</td>
+      <td><code>(a > b) && (a < 20)</code></td>
+      <td>true if both conditions are true</td>
+    </tr>
+    <tr>
+      <td><code>||</code></td>
+      <td>Logical OR</td>
+      <td><code>(a > b) || (a < 5)</code></td>
+      <td>true if at least one condition is true</td>
+    </tr>
+    <tr>
+      <td><code>!</code></td>
+      <td>Logical NOT</td>
+      <td><code>!(a > b)</code></td>
+      <td>true if condition is false</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Example:</h4>
+<pre><code>int a = 10, b = 5;
+System.out.println((a > b) && (a < 20)); // true
+System.out.println((a < b) || (b < 10)); // true
+System.out.println(!(a == b));           // true</code></pre>
+
+<hr>
+
+<h2>Assignment Operators</h2>
+
+<p>Assignment operators are used to assign values to variables.  
+The most common one is <code>=</code>, but Java also provides short forms to perform operations and assign the result in one step.</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Example</th>
+      <th>Same As</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>=</code></td>
+      <td><code>a = 10;</code></td>
+      <td>Assigns 10 to a</td>
+    </tr>
+    <tr>
+      <td><code>+=</code></td>
+      <td><code>a += 5;</code></td>
+      <td><code>a = a + 5;</code></td>
+    </tr>
+    <tr>
+      <td><code>-=</code></td>
+      <td><code>a -= 3;</code></td>
+      <td><code>a = a - 3;</code></td>
+    </tr>
+    <tr>
+      <td><code>*=</code></td>
+      <td><code>a *= 2;</code></td>
+      <td><code>a = a * 2;</code></td>
+    </tr>
+    <tr>
+      <td><code>/=</code></td>
+      <td><code>a /= 2;</code></td>
+      <td><code>a = a / 2;</code></td>
+    </tr>
+    <tr>
+      <td><code>%=</code></td>
+      <td><code>a %= 2;</code></td>
+      <td><code>a = a % 2;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Example:</h4>
+<pre><code>int a = 10;
+a += 5; // a = 15
+a *= 2; // a = 30
+System.out.println(a); // 30</code></pre>
+
+<hr>
+
+<h2>Increment and Decrement Operators</h2>
+
+<p>These operators are used to increase or decrease a value by one.  
+They are often used in loops or counting operations.</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Name</th>
+      <th>Example</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>++</code></td>
+      <td>Increment</td>
+      <td><code>a++</code> or <code>++a</code></td>
+      <td>Increases value by 1</td>
+    </tr>
+    <tr>
+      <td><code>--</code></td>
+      <td>Decrement</td>
+      <td><code>a--</code> or <code>--a</code></td>
+      <td>Decreases value by 1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Example:</h4>
+<pre><code>int a = 5;
+System.out.println(a++); // prints 5, then a becomes 6
+System.out.println(++a); // increases a first, then prints 7
+System.out.println(a--); // prints 7, then a becomes 6
+System.out.println(--a); // decreases first, then prints 5</code></pre>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+  <li><strong>Arithmetic operators</strong> perform math operations.</li>
+  <li><strong>Relational operators</strong> compare two values.</li>
+  <li><strong>Logical operators</strong> combine conditions.</li>
+  <li><strong>Assignment operators</strong> assign or update variable values.</li>
+  <li><strong>Increment/Decrement</strong> increase or decrease values by one.</li>
+</ul>
+
+<p>Operators are everywhere in Java — understanding them helps you control how your program calculates, compares, and makes decisions.</p>
