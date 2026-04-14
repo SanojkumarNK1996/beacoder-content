@@ -1,0 +1,30 @@
+<h1>🏗️ Building React Apps for Production</h1>
+<h2>🎯 Production Build</h2>
+<div class="code-example">
+  <pre>
+# Vite (recommended)
+npm run build        # Creates /dist folder with optimized assets
+npm run preview      # Preview the production build locally
+
+# Create React App
+npm run build        # Creates /build folder
+  </pre>
+</div>
+<h2>🔧 What the Build Process Does</h2>
+<ul>
+  <li><strong>Minification</strong>: Removes whitespace, shortens variable names</li>
+  <li><strong>Tree shaking</strong>: Removes unused code from bundles</li>
+  <li><strong>Code splitting</strong>: Splits into multiple chunks for parallel loading</li>
+  <li><strong>Asset hashing</strong>: <code>main.abc123.js</code> — enables long cache TTLs</li>
+  <li><strong>Source maps</strong>: Map minified code back to source for debugging</li>
+</ul>
+<h2>📋 Pre-Deploy Checklist</h2>
+<ul>
+  <li>All <code>.env</code> variables are set in deployment platform</li>
+  <li>API base URL points to production server</li>
+  <li>Console.log statements removed (or use a logger with levels)</li>
+  <li>Error boundary in place for the entire app</li>
+  <li>404 route configured for SPA (redirect all paths to index.html)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p><code>npm run build</code> creates an optimized production bundle. The output is static files (HTML, JS, CSS, assets) that can be hosted anywhere — CDN, S3, Vercel, Netlify.</p>

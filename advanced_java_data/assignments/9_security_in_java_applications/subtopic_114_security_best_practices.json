@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Input Sanitizer Against Injection",
+    "description": {
+      "task": "Create an InputSanitizer class that protects against common injection attacks. Implement sanitization for SQL injection (parameterized-query safe values), XSS (HTML entity encoding), and command injection (shell metacharacter removal). Return whether input is safe after sanitization.",
+      "language": "java",
+      "starterCode": "public class InputSanitizer {\n\n    public String sanitizeForHtml(String input) {\n        // Replace: & -> &amp;, < -> &lt;, > -> &gt;, \" -> &quot;, ' -> &#x27;\n        if (input == null) return \"\";\n        return input\n            .replace(\"&\", \"&amp;\")\n            .replace(\"<\", \"<\")\n            .replace(\">\", \">\")\n            .replace(\"\\\"\", \"&quot;\")\n            .replace(\"'\", \"&#x27;\");\n    }\n\n    public boolean isSafeForSql(String input) {\n        // Return false if input contains SQL injection patterns\n        // Check for: single quote, double dash, semicolon, block comments\n        if (input == null) return true;\n        String lower = input.toLowerCase();\n        return !lower.contains(\"'\") &&\n               !lower.contains(\"--\") &&\n               !lower.contains(\";\") &&\n               !lower.contains(\"/*\");\n    }\n\n    public String sanitizeForShell(String input) {\n        // Remove shell metacharacters: & | ; $ ` ( ) < > \" ' \\\n        if (input == null) return \"\";\n        return input.replaceAll(\"[&|;$`()<>\\\"'\\\\\\\\]\", \"\");\n    }\n\n    public static void main(String[] args) {\n        InputSanitizer sanitizer = new InputSanitizer();\n\n        System.out.println(sanitizer.sanitizeForHtml(\"<script>alert('xss')</script>\"));\n        System.out.println(sanitizer.isSafeForSql(\"admin' OR '1'='1\"));\n        System.out.println(sanitizer.isSafeForSql(\"validUsername\"));\n        System.out.println(sanitizer.sanitizeForShell(\"ls -la; rm -rf /\"));\n    }\n}",
+      "instructions": [
+        "sanitizeForHtml() must replace all 5 special characters with their HTML entity equivalents",
+        "The '&' replacement must happen FIRST to avoid double-encoding",
+        "isSafeForSql() returns false if any of the 4 SQL injection indicators are present (case-insensitive)",
+        "sanitizeForShell() strips all specified metacharacters using a regex character class",
+        "All methods must handle null input gracefully (return empty string or true as appropriate)"
+      ],
+      "hint": "Fix the sanitizeForHtml() method — the stubs use HTML entities without the proper escaping (e.g., '&lt;' should be the literal string '&lt;'). Check the replace calls carefully. For sanitizeForShell(), the regex character class needs proper Java escaping.",
+      "expectedOutput": "&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;\nfalse\ntrue\nls -la rm -rf /"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 114,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Sensitive Data Masking Utility",
+    "description": {
+      "task": "Implement a DataMasker class that prevents sensitive data exposure in logs, responses, and error messages. Mask credit card numbers, email addresses, and API keys in strings, replacing middle characters with asterisks while preserving enough context to identify the data type.",
+      "language": "java",
+      "starterCode": "import java.util.regex.*;\n\npublic class DataMasker {\n\n    public String maskCreditCard(String cardNumber) {\n        // Keep first 4 and last 4 digits, replace middle with ****\n        // Input format: 16 digits, may include spaces or dashes\n        if (cardNumber == null) return null;\n        String digits = cardNumber.replaceAll(\"[\\\\s-]\", \"\");\n        if (digits.length() != 16) return cardNumber;\n        return digits.substring(0, 4) + \"-****-****-\" + digits.substring(12);\n    }\n\n    public String maskEmail(String email) {\n        // Mask local part: keep first 2 chars, replace rest before @ with ***\n        if (email == null || !email.contains(\"@\")) return email;\n        int atIndex = email.indexOf('@');\n        String local = email.substring(0, atIndex);\n        String domain = email.substring(atIndex);\n        if (local.length() <= 2) return \"***\" + domain;\n        return local.substring(0, 2) + \"***\" + domain;\n    }\n\n    public String maskApiKey(String text) {\n        // Find patterns matching 'apikey=XXXX...' and mask the key value\n        // Replace each occurrence: keep first 4 chars of key, mask the rest with ****\n        if (text == null) return null;\n        return text.replaceAll(\n            \"(apikey=)([A-Za-z0-9]{4})([A-Za-z0-9]+)\",\n            \"$1$2****\"\n        );\n    }\n\n    public static void main(String[] args) {\n        DataMasker masker = new DataMasker();\n        System.out.println(masker.maskCreditCard(\"4111 1111 1111 1234\"));\n        System.out.println(masker.maskEmail(\"alice.smith@example.com\"));\n        System.out.println(masker.maskApiKey(\"Request with apikey=AbCd1234XyZ987 attached\"));\n    }\n}",
+      "instructions": [
+        "maskCreditCard() strips spaces and dashes, then formats as 'XXXX-****-****-XXXX' using first and last 4 digits",
+        "maskEmail() keeps the first 2 characters of the local part, replaces the rest with '***', and preserves the full domain",
+        "maskApiKey() uses a regex to find 'apikey=...' patterns and masks everything after the first 4 key characters",
+        "All methods return the original value unchanged if it does not match the expected format",
+        "All methods must handle null input without throwing exceptions"
+      ],
+      "hint": "maskApiKey() uses capturing groups in replaceAll: group 1 is 'apikey=', group 2 is first 4 chars ([A-Za-z0-9]{4}), group 3 matches the rest. Replacement is '$1$2****'.",
+      "expectedOutput": "4111-****-****-1234\nal***@example.com\nRequest with apikey=AbCd**** attached"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 114,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Security Audit Logger",
+    "description": {
+      "task": "Build a SecurityAuditLogger class that records security-relevant events (login attempts, permission denials, data access) for compliance and monitoring. Implement filtering by event type and time range, and produce an audit summary report.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class SecurityAuditLogger {\n\n    public enum EventType { LOGIN_SUCCESS, LOGIN_FAILURE, ACCESS_DENIED, DATA_ACCESS, CONFIG_CHANGE }\n\n    public record AuditEvent(long timestampMs, EventType type, String username, String details) {}\n\n    private final List<AuditEvent> events = new ArrayList<>();\n\n    public void log(long timestampMs, EventType type, String username, String details) {\n        events.add(new AuditEvent(timestampMs, type, username, details));\n    }\n\n    public List<AuditEvent> filterByType(EventType type) {\n        return events.stream().filter(e -> e.type() == type).collect(Collectors.toList());\n    }\n\n    public List<AuditEvent> filterByTimeRange(long fromMs, long toMs) {\n        // Return events where fromMs <= timestamp <= toMs\n        return new ArrayList<>();\n    }\n\n    public Map<EventType, Long> summarize() {\n        // Return count of events per EventType\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        SecurityAuditLogger logger = new SecurityAuditLogger();\n        logger.log(1000, EventType.LOGIN_SUCCESS, \"alice\", \"Logged in from 10.0.0.1\");\n        logger.log(2000, EventType.LOGIN_FAILURE, \"bob\", \"Bad credentials\");\n        logger.log(3000, EventType.ACCESS_DENIED, \"bob\", \"Tried /admin\");\n        logger.log(4000, EventType.LOGIN_FAILURE, \"bob\", \"Bad credentials again\");\n\n        System.out.println(\"Login failures: \" + logger.filterByType(EventType.LOGIN_FAILURE).size());\n        System.out.println(\"Between 1000-3000: \" + logger.filterByTimeRange(1000, 3000).size());\n        System.out.println(\"Summary: \" + logger.summarize());\n    }\n}",
+      "instructions": [
+        "log() creates and appends an AuditEvent to the events list",
+        "filterByType() returns all events matching the given EventType",
+        "filterByTimeRange() returns events where timestampMs is between fromMs and toMs (both inclusive)",
+        "summarize() returns a map of EventType to the count of matching events",
+        "All methods work correctly on an empty events list (return empty collections/maps)"
+      ],
+      "hint": "filterByTimeRange() uses stream filter with e.timestampMs() >= fromMs && e.timestampMs() <= toMs. For summarize(), use Collectors.groupingBy(AuditEvent::type, Collectors.counting()).",
+      "expectedOutput": "Login failures: 2\nBetween 1000-3000: 3\nSummary: {LOGIN_SUCCESS=1, LOGIN_FAILURE=2, ACCESS_DENIED=1}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 114,
+    "allowedSubmissionType": "TEXT"
+  }
+]

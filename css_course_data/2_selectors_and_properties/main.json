@@ -1,0 +1,20 @@
+[
+  {
+    "subtopicId": 332,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Color and Background",
+    "data": "color_and_background.html",
+    "verified": true,
+    "priority": 1
+  },
+  {
+    "subtopicId": 333,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Fonts and Text",
+    "data": "fonts_and_text.html",
+    "verified": true,
+    "priority": 1
+  }
+]

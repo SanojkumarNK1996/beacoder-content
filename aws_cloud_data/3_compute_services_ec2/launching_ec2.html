@@ -1,0 +1,26 @@
+<h1>🚀 Launching and Managing EC2</h1>
+<h2>🛠️ Launch Steps (Console)</h2>
+<ol>
+  <li>Navigate to EC2 → Launch Instance</li>
+  <li>Choose an <strong>AMI</strong> (Amazon Linux 2, Ubuntu, Windows)</li>
+  <li>Choose an <strong>instance type</strong> (t2.micro for free tier)</li>
+  <li>Configure instance details (VPC, subnet, IAM role)</li>
+  <li>Add <strong>storage</strong> (EBS volume)</li>
+  <li>Configure <strong>Security Group</strong> (firewall rules)</li>
+  <li>Review and launch with a <strong>key pair</strong> for SSH access</li>
+</ol>
+<h2>🔧 Managing Instances</h2>
+<ul>
+  <li><strong>Stop</strong>: Pause the instance (keep EBS, stop billing for compute)</li>
+  <li><strong>Start</strong>: Resume from stopped state</li>
+  <li><strong>Terminate</strong>: Delete instance and (optionally) its storage</li>
+  <li><strong>Reboot</strong>: Restart OS, instance ID stays the same</li>
+</ul>
+<div class="code-example">
+  <pre>
+# SSH into EC2
+ssh -i my-key.pem ec2-user@&lt;public-ip&gt;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Launching EC2 takes under 2 minutes. Remember: stop instances when not in use to save costs. Terminate when permanently done.</p>

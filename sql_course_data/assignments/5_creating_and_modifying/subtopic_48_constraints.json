@@ -1,0 +1,75 @@
+[
+  {
+    "title": "NOT NULL and CHECK Constraints",
+    "description": {
+      "task": "Create a table with NOT NULL and CHECK constraints, then test both valid and invalid data to observe constraint enforcement.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE employees (\n  emp_id     INT PRIMARY KEY,\n  first_name VARCHAR(50) NOT NULL,           -- cannot be NULL\n  last_name  VARCHAR(50) NOT NULL,           -- cannot be NULL\n  email      VARCHAR(80) NOT NULL,\n  age        INT CHECK (age >= 18 AND age <= 70),  -- valid working age\n  salary     DECIMAL(10,2) CHECK (salary > 0),     -- must be positive\n  department VARCHAR(40) NOT NULL DEFAULT 'General'\n);\n\n-- Valid inserts\nINSERT INTO employees VALUES (1,'Alice','Smith','alice@co.com',28,85000,'Engineering');\nINSERT INTO employees VALUES (2,'Bob',  'Jones','bob@co.com',  35,72000,'Marketing');\nINSERT INTO employees (emp_id,first_name,last_name,email,age,salary)\n  VALUES (3,'Carol','White','carol@co.com',22,65000);  -- department uses DEFAULT\n\nSELECT * FROM employees;\n\n-- This would violate NOT NULL:\n-- INSERT INTO employees VALUES (4,NULL,'Brown','dave@co.com',30,50000,'HR');\n\n-- This would violate CHECK age:\n-- INSERT INTO employees VALUES (5,'Eve','Davis','eve@co.com',16,30000,'HR');\n\n-- This would violate CHECK salary:\n-- INSERT INTO employees VALUES (6,'Frank','Lee','frank@co.com',25,-1000,'HR');\n",
+      "instructions": [
+        "Run the CREATE TABLE and all three valid INSERT statements.",
+        "Run the SELECT to confirm 3 rows — Carol's department should be 'General' (default).",
+        "Uncomment the NULL first_name insert — run it and read the error.",
+        "Re-comment and uncomment the age=16 insert — run and read the error.",
+        "Add a comment: why is NOT NULL different from an empty string ('')?"
+      ],
+      "hint": "NULL means 'no value / unknown'. An empty string '' is a valid value that happens to contain no characters. A NOT NULL column can still store ''.",
+      "expectedOutput": "3 valid rows: Carol's department = 'General'\nNULL insert: 'null value in column violates not-null constraint'\nAge=16 insert: 'new row violates check constraint'"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 48,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "UNIQUE and DEFAULT Constraints",
+    "description": {
+      "task": "Use UNIQUE constraints to prevent duplicate values and DEFAULT constraints to auto-fill standard values.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE users (\n  user_id       INT PRIMARY KEY,\n  username      VARCHAR(30) UNIQUE NOT NULL,   -- no two users with same username\n  email         VARCHAR(80) UNIQUE NOT NULL,   -- email must be unique\n  role          VARCHAR(20) DEFAULT 'viewer',  -- default role\n  is_active     BOOLEAN DEFAULT TRUE,\n  created_at    TIMESTAMP DEFAULT NOW(),\n  login_count   INT DEFAULT 0\n);\n\n-- Insert users using defaults\nINSERT INTO users (user_id, username, email) VALUES (1,'alice','alice@app.com');\nINSERT INTO users (user_id, username, email) VALUES (2,'bob','bob@app.com');\nINSERT INTO users VALUES (3,'admin_carol','carol@app.com','admin',TRUE,NOW(),0);\n\nSELECT * FROM users;\n\n-- Update login_count to simulate activity\nUPDATE users SET login_count = login_count + 1 WHERE user_id = 1;\nUPDATE users SET login_count = login_count + 5 WHERE user_id = 3;\n\nSELECT user_id, username, role, login_count FROM users;\n\n-- This would FAIL — duplicate username:\n-- INSERT INTO users (user_id,username,email) VALUES (4,'alice','alice2@app.com');\n\n-- This would FAIL — duplicate email:\n-- INSERT INTO users (user_id,username,email) VALUES (5,'dave','alice@app.com');\n",
+      "instructions": [
+        "Run CREATE TABLE and all INSERT statements.",
+        "Run the first SELECT — note that alice and bob got DEFAULT role='viewer', is_active=TRUE, login_count=0.",
+        "Run the UPDATE statements and second SELECT.",
+        "Uncomment the duplicate username insert — read the error message.",
+        "In a comment: can a table have multiple UNIQUE constraints? Multiple NOT NULL constraints?"
+      ],
+      "hint": "A table can have as many UNIQUE and NOT NULL constraints as needed — there's no limit. Only PRIMARY KEY is limited to one per table.",
+      "expectedOutput": "After inserts: alice/viewer, bob/viewer, carol/admin — all active with login_count=0\nAfter updates: alice login_count=1, carol=5\nDuplicate username error on 'alice'"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 48,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "FOREIGN KEY with ON DELETE Actions",
+    "description": {
+      "task": "Demonstrate the three FOREIGN KEY deletion behaviours: RESTRICT, CASCADE, and SET NULL.",
+      "language": "sql",
+      "context": "When a parent row is deleted, the FK constraint determines what happens to child rows. RESTRICT blocks the delete, CASCADE deletes children too, and SET NULL nullifies the FK column.",
+      "starterCode": "-- Parent table\nCREATE TABLE departments (\n  dept_id  INT PRIMARY KEY,\n  name     VARCHAR(50)\n);\n\n-- ON DELETE SET NULL: if department is deleted, employee's dept_id becomes NULL\nCREATE TABLE employees_setnull (\n  emp_id   INT PRIMARY KEY,\n  name     VARCHAR(50),\n  dept_id  INT,\n  FOREIGN KEY (dept_id) REFERENCES departments(dept_id) ON DELETE SET NULL\n);\n\n-- ON DELETE CASCADE: if department is deleted, all its employees are deleted too\nCREATE TABLE employees_cascade (\n  emp_id   INT PRIMARY KEY,\n  name     VARCHAR(50),\n  dept_id  INT,\n  FOREIGN KEY (dept_id) REFERENCES departments(dept_id) ON DELETE CASCADE\n);\n\nINSERT INTO departments VALUES (1,'Engineering'),(2,'Marketing'),(3,'HR');\nINSERT INTO employees_setnull VALUES (1,'Alice',1),(2,'Bob',2),(3,'Carol',1);\nINSERT INTO employees_cascade VALUES (1,'Dave',1),(2,'Eve', 2),(3,'Frank',1);\n\n-- Delete Engineering department (dept_id=1)\nDELETE FROM departments WHERE dept_id = 1;\n\n-- SET NULL result: Alice and Carol have dept_id = NULL\nSELECT * FROM employees_setnull ORDER BY emp_id;\n\n-- CASCADE result: Dave and Frank are deleted along with their department\nSELECT * FROM employees_cascade ORDER BY emp_id;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run DELETE of dept_id=1.",
+        "Run both SELECT queries.",
+        "Observe: employees_setnull shows Alice and Carol with NULL dept_id; employees_cascade shows only Eve.",
+        "Add a comment: when would you choose each deletion behaviour (SET NULL, CASCADE, RESTRICT)?"
+      ],
+      "hint": "SET NULL: useful when an employee might exist without a department. CASCADE: useful for a blog where deleting a post also deletes its comments. RESTRICT (default): safest — prevents accidental cascading deletes.",
+      "expectedOutput": "employees_setnull: Alice(dept_id=NULL), Bob(dept_id=2), Carol(dept_id=NULL)\nemployees_cascade: Eve(dept_id=2) only — Dave and Frank were cascade deleted"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 48,
+    "allowedSubmissionType": "TEXT"
+  }
+]

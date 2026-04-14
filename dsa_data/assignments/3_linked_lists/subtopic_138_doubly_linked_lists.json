@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Doubly Linked List Implementation",
+    "description": {
+      "task": "Implement a DoublyLinkedList class with Node having both next and prev pointers. Support insertFront, insertBack, deleteFront, deleteBack, and bidirectional traversal (printForward and printBackward).",
+      "language": "java",
+      "starterCode": "public class DoublyLinkedList {\n\n    static class Node {\n        int val;\n        Node next, prev;\n        Node(int v) { val = v; }\n    }\n\n    private Node head, tail;\n    private int size;\n\n    public void insertFront(int val) {\n        Node n = new Node(val);\n        if (head == null) { head = tail = n; }\n        else { n.next = head; head.prev = n; head = n; }\n        size++;\n    }\n\n    public void insertBack(int val) {\n        // TODO: add to tail, update tail.next and new node's prev\n    }\n\n    public int deleteFront() {\n        if (head == null) return -1;\n        int v = head.val;\n        // TODO: update head to head.next, clear prev pointer, handle single-element case\n        size--;\n        return v;\n    }\n\n    public int deleteBack() {\n        // TODO: remove tail, update tail to tail.prev, handle single-element case\n        return -1;\n    }\n\n    public void printForward() {\n        Node c = head;\n        StringBuilder sb = new StringBuilder();\n        while (c != null) { sb.append(c.val); if (c.next != null) sb.append(\" <-> \"); c = c.next; }\n        System.out.println(\"FWD: \" + sb);\n    }\n\n    public void printBackward() {\n        Node c = tail;\n        StringBuilder sb = new StringBuilder();\n        while (c != null) { sb.append(c.val); if (c.prev != null) sb.append(\" <-> \"); c = c.prev; }\n        System.out.println(\"BWD: \" + sb);\n    }\n\n    public static void main(String[] args) {\n        DoublyLinkedList dll = new DoublyLinkedList();\n        dll.insertBack(1);\n        dll.insertBack(2);\n        dll.insertBack(3);\n        dll.insertFront(0);\n        dll.printForward();\n        dll.printBackward();\n        System.out.println(\"DeleteFront: \" + dll.deleteFront());\n        System.out.println(\"DeleteBack: \" + dll.deleteBack());\n        dll.printForward();\n    }\n}",
+      "instructions": [
+        "insertBack(val): if tail==null set head=tail=new Node(val); else create Node, set tail.next=node, node.prev=tail, tail=node; size++",
+        "deleteFront(): save head.val; if head==tail set head=tail=null; else head=head.next; head.prev=null; size--; return val",
+        "deleteBack(): save tail.val; if head==tail set head=tail=null; else tail=tail.prev; tail.next=null; size--; return val",
+        "printForward/printBackward are provided — do not modify",
+        "After insertBack(1,2,3) and insertFront(0): FWD 0<->1<->2<->3, BWD 3<->2<->1<->0"
+      ],
+      "hint": "insertBack: Node n=new Node(val); if(tail==null){head=tail=n;}else{tail.next=n;n.prev=tail;tail=n;} size++;",
+      "expectedOutput": "FWD: 0 <-> 1 <-> 2 <-> 3\nBWD: 3 <-> 2 <-> 1 <-> 0\nDeleteFront: 0\nDeleteBack: 3\nFWD: 1 <-> 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 138,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "LRU Cache with Doubly Linked List",
+    "description": {
+      "task": "Implement a simplified LRUCache using a doubly linked list and a HashMap. The cache has a fixed capacity. On get(), move the accessed node to the front (most recently used). On put(), evict the tail (LRU) when over capacity.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class LRUCache {\n\n    private static class Node {\n        int key, val;\n        Node prev, next;\n        Node(int k, int v) { key = k; val = v; }\n    }\n\n    private final int capacity;\n    private final Map<Integer, Node> map = new HashMap<>();\n    private final Node head = new Node(0, 0); // dummy head (MRU side)\n    private final Node tail = new Node(0, 0); // dummy tail (LRU side)\n\n    public LRUCache(int capacity) {\n        this.capacity = capacity;\n        head.next = tail;\n        tail.prev = head;\n    }\n\n    private void remove(Node n) {\n        n.prev.next = n.next;\n        n.next.prev = n.prev;\n    }\n\n    private void addFront(Node n) {\n        n.next = head.next;\n        n.prev = head;\n        head.next.prev = n;\n        head.next = n;\n    }\n\n    public int get(int key) {\n        if (!map.containsKey(key)) return -1;\n        Node n = map.get(key);\n        // TODO: move n to front (remove then addFront)\n        return n.val;\n    }\n\n    public void put(int key, int value) {\n        // TODO: if key exists, update val and move to front\n        // If new key and at capacity, evict tail.prev\n        // Add new node to front and map\n    }\n\n    public static void main(String[] args) {\n        LRUCache cache = new LRUCache(2);\n        cache.put(1, 1);\n        cache.put(2, 2);\n        System.out.println(cache.get(1));\n        cache.put(3, 3);\n        System.out.println(cache.get(2));\n        System.out.println(cache.get(3));\n    }\n}",
+      "instructions": [
+        "get(key): if key not in map return -1; get node, call remove(n) then addFront(n); return n.val",
+        "put(key, value): if key in map, update node.val, remove then addFront; else if map.size()==capacity, remove tail.prev from map and DLL; create new Node(key,value), addFront, put in map",
+        "remove() and addFront() are provided — use them",
+        "Cache capacity=2: put(1,1), put(2,2), get(1)=1 makes key1 MRU; put(3,3) evicts key2 (LRU)",
+        "get(2) returns -1 (evicted), get(3) returns 3"
+      ],
+      "hint": "get: remove(n); addFront(n); return n.val. put new: if(map.size()==capacity){Node lru=tail.prev; remove(lru); map.remove(lru.key);} Node n=new Node(key,value); addFront(n); map.put(key,n);",
+      "expectedOutput": "1\n-1\n3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 138,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Browser History with Doubly Linked List",
+    "description": {
+      "task": "Implement a BrowserHistory class using a doubly linked list to support visit(url), back(), and forward() operations. Forward history is cleared when a new page is visited.",
+      "language": "java",
+      "starterCode": "public class BrowserHistory {\n\n    private static class Page {\n        String url;\n        Page prev, next;\n        Page(String url) { this.url = url; }\n    }\n\n    private Page current;\n\n    public BrowserHistory(String homepage) {\n        current = new Page(homepage);\n    }\n\n    public void visit(String url) {\n        // TODO: create new Page, link to current, forward history cleared (new.next=null)\n        // current = new page\n    }\n\n    public String back() {\n        // TODO: if current.prev exists, current=current.prev; return current.url\n        return current.url;\n    }\n\n    public String forward() {\n        // TODO: if current.next exists, current=current.next; return current.url\n        return current.url;\n    }\n\n    public static void main(String[] args) {\n        BrowserHistory bh = new BrowserHistory(\"home.com\");\n        bh.visit(\"a.com\");\n        bh.visit(\"b.com\");\n        System.out.println(\"Current: b.com\");\n        System.out.println(\"Back: \" + bh.back());\n        System.out.println(\"Back: \" + bh.back());\n        System.out.println(\"Forward: \" + bh.forward());\n        bh.visit(\"c.com\");\n        System.out.println(\"Forward after visit: \" + bh.forward());\n    }\n}",
+      "instructions": [
+        "visit(url): Page p = new Page(url); p.prev = current; current.next = p; current = p; (p.next is already null)",
+        "back(): if current.prev != null, current = current.prev; return current.url",
+        "forward(): if current.next != null, current = current.next; return current.url",
+        "When visiting a new page, the forward chain from current is lost (current.next gets overwritten)",
+        "After visit(c.com) from a.com, forward() stays at c.com (no next)"
+      ],
+      "hint": "visit: Page p=new Page(url); p.prev=current; current.next=p; current=p; back: if(current.prev!=null) current=current.prev; return current.url;",
+      "expectedOutput": "Current: b.com\nBack: a.com\nBack: home.com\nForward: a.com\nForward after visit: c.com"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 138,
+    "allowedSubmissionType": "TEXT"
+  }
+]

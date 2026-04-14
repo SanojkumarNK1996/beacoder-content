@@ -1,0 +1,19 @@
+<h1>💡 DP Problem Patterns</h1>
+<h2>📋 Common DP Patterns</h2>
+<ul>
+  <li><strong>Linear DP</strong>: dp[i] depends on dp[i-1] or dp[i-k] — Fibonacci, House Robber, Climbing Stairs</li>
+  <li><strong>2D DP</strong>: dp[i][j] — LCS, Edit Distance, Matrix Chain Multiplication</li>
+  <li><strong>Interval DP</strong>: dp[i][j] on subarrays — Matrix Chain, Burst Balloons</li>
+  <li><strong>Bitmask DP</strong>: dp[mask] for subset enumeration — TSP, covering problems</li>
+  <li><strong>Tree DP</strong>: DP on tree nodes — Diameter, Maximum Independent Set on Tree</li>
+</ul>
+<h2>🎯 Interview Strategy</h2>
+<ol>
+  <li>Identify if it has optimal substructure and overlapping subproblems</li>
+  <li>Define the state (what dp[i] or dp[i][j] represents)</li>
+  <li>Write the recurrence relation</li>
+  <li>Handle base cases</li>
+  <li>Optimize space if needed (often 1D array instead of 2D)</li>
+</ol>
+<h2>🎯 Summary</h2>
+<p>Most DP problems fit a known pattern. Identify the pattern, define the state clearly, and the rest follows.</p>

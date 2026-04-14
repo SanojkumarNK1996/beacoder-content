@@ -1,0 +1,218 @@
+<h1>📨 Request and Response Handling</h1>
+
+<h2>🎯 Goal</h2>
+<p>Understand how Spring handles HTTP requests and responses, including <strong>JSON mapping</strong>, <strong>validation</strong>, and <strong>response entities</strong>.</p>
+
+<h2>📥 Mapping Request Data</h2>
+
+<h3>1️⃣ Path Variables</h3>
+<p>Used to capture values from the URL path.</p>
+
+<div class="code-example">
+  <pre>
+// GET /api/orders/100
+@GetMapping("/orders/{id}")
+public Order getOrder(@PathVariable Long id) {
+    return orderService.getOrderById(id);
+}
+  </pre>
+</div>
+
+<h3>2️⃣ Query Parameters</h3>
+
+<div class="code-example">
+  <pre>
+// GET /api/orders?status=PAID&amp;page=0&amp;size=10
+@GetMapping("/orders")
+public List&lt;Order&gt; getOrders(@RequestParam String status,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "10") int size) {
+    return orderService.getOrdersByStatus(status, page, size);
+}
+  </pre>
+</div>
+
+<h3>3️⃣ Request Body (JSON → Java)</h3>
+<p><code>@RequestBody</code> maps the JSON body to a Java object using Jackson.</p>
+
+<div class="code-example">
+  <pre>
+// JSON request body
+{
+  "title": "Clean Code",
+  "author": "Robert C. Martin",
+  "price": 45.99
+}
+
+// Controller method
+@PostMapping("/books")
+public ResponseEntity&lt;Book&gt; createBook(@RequestBody Book book) {
+    Book saved = bookService.save(book);
+    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+}
+  </pre>
+</div>
+
+<h2>📤 Building Responses</h2>
+
+<h3>1️⃣ Simple Return Types</h3>
+<p>Returning an object from a <code>@RestController</code> method automatically produces JSON with status <strong>200 OK</strong>.</p>
+
+<div class="code-example">
+  <pre>
+@GetMapping("/profile")
+public UserProfile getProfile() {
+    return profileService.getCurrentUserProfile();
+}
+  </pre>
+</div>
+
+<h3>2️⃣ Using ResponseEntity</h3>
+<p><code>ResponseEntity&lt;T&gt;</code> gives full control over:</p>
+<ul>
+  <li>HTTP status code</li>
+  <li>Headers</li>
+  <li>Body</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+@GetMapping("/books/{id}")
+public ResponseEntity&lt;Book&gt; getBook(@PathVariable Long id) {
+    return bookService.findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+}
+
+@PostMapping("/books")
+public ResponseEntity&lt;Book&gt; createBook(@RequestBody Book book) {
+    Book created = bookService.save(book);
+    URI location = URI.create("/api/books/" + created.getId());
+    return ResponseEntity.created(location).body(created);
+}
+  </pre>
+</div>
+
+<h2>🧪 JSON Serialization and Deserialization</h2>
+
+<p>Spring Boot uses <strong>Jackson</strong> by default to convert between Java objects and JSON.</p>
+
+<h3>1️⃣ Controlling JSON with Annotations</h3>
+
+<div class="code-example">
+  <pre>
+public class User {
+
+    private Long id;
+
+    @JsonProperty("full_name")
+    private String name;
+
+    @JsonIgnore
+    private String password;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
+
+    // getters and setters
+}
+  </pre>
+</div>
+
+<ul>
+  <li><code>@JsonProperty</code> – rename field in JSON</li>
+  <li><code>@JsonIgnore</code> – exclude from JSON</li>
+  <li><code>@JsonFormat</code> – format dates</li>
+</ul>
+
+<h2>✅ Validation of Requests</h2>
+
+<h3>1️⃣ Add Validation Annotations</h3>
+<p>Use <strong>Jakarta Bean Validation</strong> annotations to enforce constraints.</p>
+
+<div class="code-example">
+  <pre>
+public class CreateUserRequest {
+
+    @NotBlank
+    private String name;
+
+    @Email
+    @NotBlank
+    private String email;
+
+    @Size(min = 8, message = "Password must be at least 8 characters")
+    private String password;
+
+    // getters and setters
+}
+  </pre>
+</div>
+
+<h3>2️⃣ Use @Valid in Controller</h3>
+
+<div class="code-example">
+  <pre>
+@PostMapping("/users")
+public ResponseEntity&lt;User&gt; createUser(@Valid @RequestBody CreateUserRequest request) {
+    User user = userService.createUser(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(user);
+}
+  </pre>
+</div>
+
+<p>On validation failure, Spring automatically returns a <strong>400 Bad Request</strong> response. You can customize the error format using a <strong>global exception handler</strong> (covered in the next subtopic).</p>
+
+<h2>🧾 Custom Response Models (DTOs)</h2>
+<p>It&apos;s a good practice to separate:</p>
+<ul>
+  <li>📥 Request DTOs (input)</li>
+  <li>📤 Response DTOs (output)</li>
+  <li>💾 Entity models (database)</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+public class BookResponse {
+    private Long id;
+    private String title;
+    private String author;
+    private Double price;
+    private String links;
+
+    // getters and setters
+}
+
+@GetMapping("/books/{id}")
+public ResponseEntity&lt;BookResponse&gt; getBook(@PathVariable Long id) {
+    Book book = bookService.getById(id);
+    BookResponse response = mapToResponse(book);
+    return ResponseEntity.ok(response);
+}
+  </pre>
+</div>
+
+<h2>📄 Setting Headers</h2>
+
+<div class="code-example">
+  <pre>
+@GetMapping("/reports/{id}")
+public ResponseEntity&lt;byte[]&gt; downloadReport(@PathVariable Long id) {
+    byte[] pdf = reportService.generatePdfReport(id);
+
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=report-" + id + ".pdf")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(pdf);
+}
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Spring maps request data using <strong>@PathVariable</strong>, <strong>@RequestParam</strong>, and <strong>@RequestBody</strong></li>
+  <li>Responses can be customized using <strong>ResponseEntity</strong> with status, headers, and body</li>
+  <li><strong>Jackson</strong> handles JSON mapping; <strong>Bean Validation</strong> ensures input correctness</li>
+</ul>
+
+<p>Next, you&apos;ll learn how to implement <strong>Exception Handling in REST APIs</strong> to return consistent error responses.</p>

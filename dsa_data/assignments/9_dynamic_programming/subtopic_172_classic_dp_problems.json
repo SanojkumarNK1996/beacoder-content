@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Coin Change Minimum Coins",
+    "description": {
+      "task": "Given coin denominations and a target amount, find the minimum number of coins needed to make that amount. If the amount cannot be made, return -1. Use bottom-up DP.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class CoinChange {\n\n    public int minCoins(int[] coins, int amount) {\n        int[] dp = new int[amount + 1];\n        Arrays.fill(dp, amount + 1); // initialize to a large value (\"infinity\")\n        dp[0] = 0;\n        // TODO: for each amount from 1 to amount:\n        //       for each coin: if coin <= amt and dp[amt-coin]+1 < dp[amt], update dp[amt]\n        return dp[amount] > amount ? -1 : dp[amount];\n    }\n\n    public static void main(String[] args) {\n        CoinChange cc = new CoinChange();\n        System.out.println(\"Coins [1,2,5], amount=11: \" + cc.minCoins(new int[]{1,2,5}, 11));\n        System.out.println(\"Coins [2],      amount=3:  \" + cc.minCoins(new int[]{2}, 3));\n        System.out.println(\"Coins [1,5,10], amount=18: \" + cc.minCoins(new int[]{1,5,10}, 18));\n        System.out.println(\"Coins [2,5,10], amount=3:  \" + cc.minCoins(new int[]{2,5,10}, 3));\n    }\n}",
+      "instructions": [
+        "for(int amt=1;amt<=amount;amt++) for(int coin:coins) if(coin<=amt&&dp[amt-coin]+1<dp[amt]) dp[amt]=dp[amt-coin]+1;",
+        "coins=[1,2,5], amount=11: 5+5+1=3 coins",
+        "coins=[2], amount=3: impossible → -1",
+        "coins=[1,5,10], amount=18: 10+5+1+1+1=5 coins",
+        "coins=[2,5,10], amount=3: impossible → -1"
+      ],
+      "hint": "for(int amt=1;amt<=amount;amt++) for(int coin:coins) if(coin<=amt&&dp[amt-coin]+1<dp[amt]) dp[amt]=dp[amt-coin]+1;",
+      "expectedOutput": "Coins [1,2,5], amount=11: 3\nCoins [2],      amount=3:  -1\nCoins [1,5,10], amount=18: 5\nCoins [2,5,10], amount=3:  -1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 172,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Longest Increasing Subsequence",
+    "description": {
+      "task": "Find the length of the Longest Increasing Subsequence (LIS) in an array. An increasing subsequence means each element is strictly greater than the previous. Use O(n²) DP where dp[i] = LIS ending at index i.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class LongestIncreasingSubseq {\n\n    public int lis(int[] arr) {\n        int n = arr.length;\n        int[] dp = new int[n];\n        Arrays.fill(dp, 1); // every element is a subsequence of length 1\n\n        for (int i = 1; i < n; i++) {\n            for (int j = 0; j < i; j++) {\n                if (arr[j] < arr[i]) {\n                    // TODO: dp[i] = Math.max(dp[i], dp[j] + 1)\n                }\n            }\n        }\n        int max = 1;\n        // TODO: find the maximum value in dp array\n        return max;\n    }\n\n    public static void main(String[] args) {\n        LongestIncreasingSubseq lis = new LongestIncreasingSubseq();\n        System.out.println(\"LIS [10,9,2,5,3,7,101,18]: \" + lis.lis(new int[]{10,9,2,5,3,7,101,18}));\n        System.out.println(\"LIS [0,1,0,3,2,3]:          \" + lis.lis(new int[]{0,1,0,3,2,3}));\n        System.out.println(\"LIS [7,7,7,7]:               \" + lis.lis(new int[]{7,7,7,7}));\n        System.out.println(\"LIS [1,3,2,4,5]:             \" + lis.lis(new int[]{1,3,2,4,5}));\n    }\n}",
+      "instructions": [
+        "dp[i]=Math.max(dp[i],dp[j]+1);",
+        "Find max: for(int x:dp) if(x>max) max=x;",
+        "[10,9,2,5,3,7,101,18]: LIS is [2,3,7,101] or [2,3,7,18] → length 4",
+        "[0,1,0,3,2,3]: LIS is [0,1,2,3] → length 4",
+        "[7,7,7,7]: no strictly increasing pair → LIS length 1"
+      ],
+      "hint": "dp[i]=Math.max(dp[i],dp[j]+1); then for(int x:dp) if(x>max) max=x;",
+      "expectedOutput": "LIS [10,9,2,5,3,7,101,18]: 4\nLIS [0,1,0,3,2,3]:          4\nLIS [7,7,7,7]:               1\nLIS [1,3,2,4,5]:             4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 172,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "House Robber Problem",
+    "description": {
+      "task": "You are a robber planning to rob houses along a street. Adjacent houses cannot be robbed on the same night. Given an array of non-negative integers representing the amount of money in each house, find the maximum amount you can rob without alerting the police.",
+      "language": "java",
+      "starterCode": "public class HouseRobber {\n\n    public int rob(int[] houses) {\n        int n = houses.length;\n        if (n == 0) return 0;\n        if (n == 1) return houses[0];\n\n        int[] dp = new int[n];\n        dp[0] = houses[0];\n        dp[1] = Math.max(houses[0], houses[1]);\n\n        for (int i = 2; i < n; i++) {\n            // TODO: dp[i] = Math.max(dp[i-1], houses[i] + dp[i-2])\n            // Either skip house i, or rob it and add dp two positions back\n        }\n        return dp[n-1];\n    }\n\n    public int robOptimized(int[] houses) {\n        // Space-optimized: only keep prev2 and prev1\n        int prev2 = 0, prev1 = 0;\n        for (int h : houses) {\n            // TODO: int curr = Math.max(prev1, h + prev2); prev2=prev1; prev1=curr;\n        }\n        return prev1;\n    }\n\n    public static void main(String[] args) {\n        HouseRobber hr = new HouseRobber();\n        System.out.println(\"[1,2,3,1]:       \" + hr.rob(new int[]{1,2,3,1}));\n        System.out.println(\"[2,7,9,3,1]:     \" + hr.rob(new int[]{2,7,9,3,1}));\n        System.out.println(\"Optimized [2,7,9,3,1]: \" + hr.robOptimized(new int[]{2,7,9,3,1}));\n    }\n}",
+      "instructions": [
+        "dp[i]=Math.max(dp[i-1],houses[i]+dp[i-2]);",
+        "robOptimized: int curr=Math.max(prev1,h+prev2);prev2=prev1;prev1=curr;",
+        "[1,2,3,1]: rob house 0(1) and house 2(3) = 4",
+        "[2,7,9,3,1]: rob house 0(2)+house 2(9)+house 4(1)=12",
+        "Both methods must return the same result"
+      ],
+      "hint": "dp[i]=Math.max(dp[i-1],houses[i]+dp[i-2]); robOptimized: int curr=Math.max(prev1,h+prev2);prev2=prev1;prev1=curr;",
+      "expectedOutput": "[1,2,3,1]:       4\n[2,7,9,3,1]:     12\nOptimized [2,7,9,3,1]: 12"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 172,
+    "allowedSubmissionType": "TEXT"
+  }
+]

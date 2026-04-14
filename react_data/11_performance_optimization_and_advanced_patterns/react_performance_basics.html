@@ -1,0 +1,25 @@
+<h1>⚡ React Performance Basics</h1>
+<h2>🎯 Understanding React Re-renders</h2>
+<p>React re-renders a component when: its state changes, its props change, or its parent re-renders. Most performance issues come from excessive re-renders.</p>
+<h2>🔍 When to Optimize</h2>
+<p>Don't optimize prematurely. First, measure with tools:</p>
+<ul>
+  <li><strong>React DevTools Profiler</strong>: See which components re-render and why</li>
+  <li><strong>Chrome Performance Tab</strong>: Full timeline of browser rendering</li>
+  <li><strong>Lighthouse</strong>: Core Web Vitals metrics</li>
+</ul>
+<h2>📋 Key Metrics (Core Web Vitals)</h2>
+<ul>
+  <li><strong>LCP</strong> (Largest Contentful Paint): How fast is the main content visible? Target &lt; 2.5s</li>
+  <li><strong>FID/INP</strong> (Interaction to Next Paint): Responsiveness. Target &lt; 200ms</li>
+  <li><strong>CLS</strong> (Cumulative Layout Shift): Visual stability. Target &lt; 0.1</li>
+</ul>
+<h2>🔧 Quick Wins</h2>
+<ul>
+  <li>Avoid creating objects/arrays in render (new reference every time = child re-renders)</li>
+  <li>Move expensive calculations to <code>useMemo</code></li>
+  <li>Use React.memo for pure components that re-render often</li>
+  <li>Virtualize long lists (react-window)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Measure before you optimize. The Profiler in React DevTools shows "why did this render?" — fix the root cause, not symptoms.</p>

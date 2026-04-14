@@ -1,0 +1,30 @@
+<h1>🌐 Fetch API and HTTP Requests</h1>
+<h2>🎯 Fetching Data in React</h2>
+<p>Data fetching typically happens in <code>useEffect</code> for initial loads, or in event handlers for user-triggered requests.</p>
+<div class="code-example">
+  <pre>
+function UserList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    const controller = new AbortController();  // Cleanup for navigation away
+    fetch('/api/users', { signal: controller.signal })
+      .then(res =&gt; {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data =&gt; { setUsers(data); setLoading(false); })
+      .catch(err =&gt; { if (err.name !== 'AbortError') setError(err.message); });
+    return () =&gt; controller.abort();  // Cleanup
+  }, []);
+
+  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error: {error}&lt;/p&gt;;
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>This pattern (loading + error + data states) is the foundation of all data fetching in React. Use <code>AbortController</code> to prevent state updates on unmounted components.</p>

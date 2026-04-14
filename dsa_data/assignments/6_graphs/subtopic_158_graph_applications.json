@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Topological Sort for Task Scheduling",
+    "description": {
+      "task": "Model a task dependency system using a directed acyclic graph (DAG). Implement Kahn's algorithm (BFS-based topological sort) to determine a valid execution order of tasks.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TaskScheduler {\n\n    public List<Integer> schedule(int tasks, int[][] deps) {\n        // deps[i] = {prerequisite, task} meaning prerequisite must come before task\n        int[] inDegree = new int[tasks];\n        List<List<Integer>> adj = new ArrayList<>();\n        for (int i = 0; i < tasks; i++) adj.add(new ArrayList<>());\n\n        for (int[] d : deps) {\n            adj.get(d[0]).add(d[1]);\n            inDegree[d[1]]++;\n        }\n\n        Queue<Integer> queue = new LinkedList<>();\n        // TODO: Enqueue all tasks with inDegree == 0\n\n        List<Integer> order = new ArrayList<>();\n        while (!queue.isEmpty()) {\n            int curr = queue.poll();\n            order.add(curr);\n            // TODO: For each neighbor, decrement inDegree; if it becomes 0, enqueue\n        }\n\n        if (order.size() != tasks) return Collections.emptyList(); // cycle detected\n        return order;\n    }\n\n    public static void main(String[] args) {\n        TaskScheduler ts = new TaskScheduler();\n        // 5 tasks: 0,1,2,3,4\n        // deps: 0->1, 0->2, 1->3, 2->3, 3->4\n        int[][] deps = {{0,1},{0,2},{1,3},{2,3},{3,4}};\n        List<Integer> order = ts.schedule(5, deps);\n        System.out.println(\"Execution order: \" + order);\n\n        // Cycle test\n        int[][] cycle = {{0,1},{1,2},{2,0}};\n        List<Integer> cycleResult = ts.schedule(3, cycle);\n        System.out.println(\"Cyclic deps order: \" + cycleResult);\n    }\n}",
+      "instructions": [
+        "Step 1: for(int i=0;i<tasks;i++) if(inDegree[i]==0) queue.add(i);",
+        "Step 2 inside while: for(int nb:adj.get(curr)){if(--inDegree[nb]==0) queue.add(nb);}",
+        "If order.size() != tasks, a cycle exists and an empty list is returned",
+        "One valid topological order for the given deps: [0, 1, 2, 3, 4] or [0, 2, 1, 3, 4]",
+        "The cyclic graph should return an empty list"
+      ],
+      "hint": "for(int i=0;i<tasks;i++) if(inDegree[i]==0) queue.add(i); Then in while: for(int nb:adj.get(curr)) if(--inDegree[nb]==0) queue.add(nb);",
+      "expectedOutput": "Execution order: [0, 1, 2, 3, 4]\nCyclic deps order: []"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 158,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Social Network: Friend Degree Finder",
+    "description": {
+      "task": "Model a social network as an undirected graph where nodes are users and edges are friendships. Implement methods to find the degree of separation (shortest friendship path) between two users using BFS.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SocialNetwork {\n    private Map<String, List<String>> graph = new HashMap<>();\n\n    public void addFriendship(String a, String b) {\n        graph.computeIfAbsent(a, k -> new ArrayList<>()).add(b);\n        graph.computeIfAbsent(b, k -> new ArrayList<>()).add(a);\n    }\n\n    public int degreesOfSeparation(String from, String to) {\n        if (!graph.containsKey(from) || !graph.containsKey(to)) return -1;\n        if (from.equals(to)) return 0;\n        Map<String, Integer> dist = new HashMap<>();\n        Queue<String> queue = new LinkedList<>();\n        dist.put(from, 0);\n        queue.add(from);\n        // TODO: BFS — for each neighbor not yet in dist, set dist[neighbor]=dist[current]+1,\n        //       add to queue; return dist[to] when found, or -1 if not reached\n        return -1;\n    }\n\n    public List<String> mutualFriends(String a, String b) {\n        // TODO: Return the intersection of a's friends and b's friends\n        List<String> result = new ArrayList<>();\n        return result;\n    }\n\n    public static void main(String[] args) {\n        SocialNetwork sn = new SocialNetwork();\n        sn.addFriendship(\"Alice\", \"Bob\");\n        sn.addFriendship(\"Bob\", \"Carol\");\n        sn.addFriendship(\"Carol\", \"Dave\");\n        sn.addFriendship(\"Alice\", \"Eve\");\n        sn.addFriendship(\"Eve\", \"Carol\");\n        System.out.println(\"Alice->Dave: \" + sn.degreesOfSeparation(\"Alice\", \"Dave\"));\n        System.out.println(\"Alice->Bob: \"  + sn.degreesOfSeparation(\"Alice\", \"Bob\"));\n        System.out.println(\"Mutual Alice&Carol: \" + sn.mutualFriends(\"Alice\", \"Carol\"));\n    }\n}",
+      "instructions": [
+        "BFS in degreesOfSeparation: while(!queue.isEmpty()){String cur=queue.poll(); for(String nb:graph.get(cur)){if(!dist.containsKey(nb)){dist.put(nb,dist.get(cur)+1); if(nb.equals(to)) return dist.get(nb); queue.add(nb);}}}",
+        "mutualFriends: get friends of a into a Set, then filter friends of b who are in that set",
+        "Alice→Dave: Alice-Bob-Carol-Dave (3) or Alice-Eve-Carol-Dave (3), so answer is 3",
+        "Alice→Bob: 1 (direct friendship)",
+        "Mutual friends of Alice and Carol: both know Eve and Bob — check intersections"
+      ],
+      "hint": "mutualFriends: Set<String> fa=new HashSet<>(graph.get(a)); for(String f:graph.get(b)) if(fa.contains(f)) result.add(f);",
+      "expectedOutput": "Alice->Dave: 3\nAlice->Bob: 1\nMutual Alice&Carol: [Bob, Eve]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 158,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Bipartite Graph Checker",
+    "description": {
+      "task": "Implement a bipartite graph checker that determines whether a graph can be 2-colored (useful for conflict-free scheduling, e.g., exam timetabling). Use BFS coloring: try to color the graph with 2 colors; if a conflict is found, the graph is not bipartite.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BipartiteChecker {\n\n    public boolean isBipartite(int V, List<Integer>[] adj) {\n        int[] color = new int[V];\n        Arrays.fill(color, -1); // -1 = uncolored\n\n        for (int start = 0; start < V; start++) {\n            if (color[start] != -1) continue; // already colored\n            // TODO: BFS from 'start', coloring with 0/1 alternately\n            //       If a neighbor has the same color as the current node, return false\n        }\n        return true;\n    }\n\n    @SuppressWarnings(\"unchecked\")\n    public static void main(String[] args) {\n        // Bipartite graph: even-odd cycle (square)\n        int V1 = 4;\n        List<Integer>[] g1 = new ArrayList[V1];\n        for (int i = 0; i < V1; i++) g1[i] = new ArrayList<>();\n        int[][] e1 = {{0,1},{1,2},{2,3},{3,0}};\n        for (int[] e : e1){ g1[e[0]].add(e[1]); g1[e[1]].add(e[0]); }\n\n        // Non-bipartite: odd cycle (triangle)\n        int V2 = 3;\n        List<Integer>[] g2 = new ArrayList[V2];\n        for (int i = 0; i < V2; i++) g2[i] = new ArrayList<>();\n        int[][] e2 = {{0,1},{1,2},{2,0}};\n        for (int[] e : e2){ g2[e[0]].add(e[1]); g2[e[1]].add(e[0]); }\n\n        BipartiteChecker bc = new BipartiteChecker();\n        System.out.println(\"Square is bipartite: \" + bc.isBipartite(V1, g1));\n        System.out.println(\"Triangle is bipartite: \" + bc.isBipartite(V2, g2));\n    }\n}",
+      "instructions": [
+        "BFS from start: color[start]=0; queue=new LinkedList<>(); queue.add(start);",
+        "While queue not empty: u=queue.poll(); for each nb in adj[u]: if color[nb]==-1, set color[nb]=1-color[u] and enqueue; else if color[nb]==color[u] return false;",
+        "The outer loop handles disconnected graphs",
+        "Square (0-1-2-3-0) is bipartite: {0,2} get color 0, {1,3} get color 1",
+        "Triangle (0-1-2-0) is an odd cycle — cannot be 2-colored → returns false"
+      ],
+      "hint": "color[start]=0; Queue<Integer> q=new LinkedList<>(); q.add(start); while(!q.isEmpty()){int u=q.poll(); for(int nb:adj[u]){if(color[nb]==-1){color[nb]=1-color[u];q.add(nb);}else if(color[nb]==color[u]) return false;}}",
+      "expectedOutput": "Square is bipartite: true\nTriangle is bipartite: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 158,
+    "allowedSubmissionType": "TEXT"
+  }
+]

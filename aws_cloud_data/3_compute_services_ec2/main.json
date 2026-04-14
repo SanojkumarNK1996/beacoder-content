@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 199, "title": "Introduction to EC2", "dataType": "notes", "data": "intro_to_ec2.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 200, "title": "EC2 Instance Types", "dataType": "notes", "data": "ec2_instance_types.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 201, "title": "Launching and Managing EC2", "dataType": "notes", "data": "launching_ec2.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 202, "title": "EC2 Security Groups and Key Pairs", "dataType": "notes", "data": "ec2_security_groups.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 203, "title": "Auto Scaling and Load Balancing", "dataType": "notes", "data": "auto_scaling_and_load_balancing.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 204, "title": "EC2 Pricing Models", "dataType": "notes", "data": "ec2_pricing_models.html", "displayOrder": 6, "verified": false}
+]

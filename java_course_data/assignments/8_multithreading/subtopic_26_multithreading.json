@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Create Thread by Extending Thread",
+    "description": {
+      "task": "Create a custom thread class by extending Thread and overriding run(). Start three thread instances and observe their execution.",
+      "language": "java",
+      "starterCode": "class CounterThread extends Thread {\n    String threadName;\n    int count;\n\n    CounterThread(String threadName, int count) {\n        this.threadName = threadName;\n        this.count = count;\n    }\n\n    @Override\n    public void run() {\n        for (int i = 1; i <= count; i++) {\n            System.out.println(threadName + \" - Step \" + i);\n        }\n    }\n}\n\npublic class ThreadDemo {\n    public static void main(String[] args) {\n        CounterThread t1 = new CounterThread(\"Thread-A\", 3);\n        CounterThread t2 = new CounterThread(\"Thread-B\", 3);\n\n        t1.start();\n        t2.start();\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is.",
+        "Observe that the output order of Thread-A and Thread-B steps may vary on each run (non-deterministic).",
+        "In a comment, explain why the output order is not guaranteed.",
+        "NOTE: the expected output below shows ONE possible ordering — your output may differ."
+      ],
+      "hint": "Threads are scheduled by the OS/JVM. Always call thread.start() (not thread.run()) — start() creates a new thread; run() would just execute in the current thread.",
+      "expectedOutput": "Thread-A - Step 1\nThread-A - Step 2\nThread-A - Step 3\nThread-B - Step 1\nThread-B - Step 2\nThread-B - Step 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 8,
+    "subtopicId": 26,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Implement Runnable Interface",
+    "description": {
+      "task": "Implement thread behaviour using the Runnable interface instead of extending Thread. Pass the Runnable to a Thread object.",
+      "language": "java",
+      "context": "Implementing Runnable is preferred over extending Thread because: (1) your class can still extend another class, and (2) it separates the task (Runnable) from the thread (Thread).",
+      "starterCode": "class PrintTask implements Runnable {\n    String message;\n    int times;\n\n    PrintTask(String message, int times) {\n        this.message = message;\n        this.times = times;\n    }\n\n    @Override\n    public void run() {\n        for (int i = 0; i < times; i++) {\n            System.out.println(message);\n        }\n    }\n}\n\npublic class RunnableDemo {\n    public static void main(String[] args) throws InterruptedException {\n        Runnable task1 = new PrintTask(\"Hello from Task 1\", 2);\n        Runnable task2 = new PrintTask(\"Hello from Task 2\", 2);\n\n        Thread t1 = new Thread(task1);\n        Thread t2 = new Thread(task2);\n\n        t1.start();\n        t1.join(); // wait for t1 to finish before starting t2\n        t2.start();\n        t2.join();\n\n        System.out.println(\"Both tasks done.\");\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is.",
+        "Note that join() makes the output deterministic — t2 starts only after t1 finishes.",
+        "In a comment, explain the difference between extending Thread vs implementing Runnable.",
+        "Submit the code with the comment."
+      ],
+      "hint": "join() blocks the calling thread until the joined thread completes. This ensures ordered output in this demo.",
+      "expectedOutput": "Hello from Task 1\nHello from Task 1\nHello from Task 2\nHello from Task 2\nBoth tasks done."
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 8,
+    "subtopicId": 26,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Synchronized Counter",
+    "description": {
+      "task": "Demonstrate a race condition on a shared counter, then fix it using the synchronized keyword.",
+      "language": "java",
+      "context": "When multiple threads modify shared data without synchronisation, the result is unpredictable (race condition). The synchronized keyword ensures only one thread at a time can execute the critical section.",
+      "starterCode": "class SharedCounter {\n    private int count = 0;\n\n    // Synchronized method: only one thread can execute this at a time\n    public synchronized void increment() {\n        count++;\n    }\n\n    public int getCount() {\n        return count;\n    }\n}\n\npublic class SyncDemo {\n    public static void main(String[] args) throws InterruptedException {\n        SharedCounter counter = new SharedCounter();\n\n        Runnable task = () -> {\n            for (int i = 0; i < 1000; i++) {\n                counter.increment();\n            }\n        };\n\n        Thread t1 = new Thread(task);\n        Thread t2 = new Thread(task);\n\n        t1.start();\n        t2.start();\n        t1.join();\n        t2.join();\n\n        System.out.println(\"Final count: \" + counter.getCount());\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is — note the synchronized keyword on increment().",
+        "Verify the output is always exactly 2000 (1000 increments × 2 threads).",
+        "In a comment, remove 'synchronized' from increment() temporarily, run several times, and note that the count is sometimes less than 2000.",
+        "Re-add 'synchronized' and submit the working code with your comment explaining the race condition."
+      ],
+      "hint": "Without synchronized, two threads can read the same count value simultaneously, both increment it, and write back — resulting in only one actual increment instead of two (lost update problem).",
+      "expectedOutput": "Final count: 2000"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 8,
+    "subtopicId": 26,
+    "allowedSubmissionType": "TEXT"
+  }
+]

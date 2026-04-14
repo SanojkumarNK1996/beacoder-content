@@ -1,0 +1,56 @@
+<h1>Media Queries</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>Users in India access websites from mobile phones, tablets, and desktops with very different screen sizes.</li>
+  <li>Media queries allow layouts to adapt to these devices.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>CSS media queries apply different styles based on device characteristics like width, height, or orientation.</li>
+</ul>
+
+<h2>Syntax / Basic usage</h2>
+<pre><code>/* Default styles */
+.container {
+  width: 800px;
+}
+
+/* Small screens */
+@media (max-width: 600px) {
+  .container {
+    width: 100%;
+  }
+}
+</code></pre>
+
+<h2>How it works</h2>
+<ol>
+  <li>Write base styles for general use.</li>
+  <li>Add @media rules to override styles when conditions (like max-width) are met.</li>
+</ol>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>Common breakpoints like 320px, 768px, 1024px are widely used but not mandatory.</li>
+  <li>Mobile-first approach: start with small screens and use min-width queries.</li>
+</ul>
+
+<h2>Common mistakes</h2>
+<ul>
+  <li>Writing too many specific breakpoints leading to hard-to-maintain code.</li>
+  <li>Designing only for desktop and ignoring mobile.</li>
+</ul>
+
+<h2>Interviewer perspective</h2>
+<ul>
+  <li>Explain mobile-first vs desktop-first approach.</li>
+  <li>How would you make a layout responsive without a framework?</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Build a simple two-column layout that stacks into one column on small screens.</li>
+  <li>Use media queries to change font sizes based on screen width.</li>
+</ol>

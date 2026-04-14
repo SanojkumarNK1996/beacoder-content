@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Numeric and String Data Types",
+    "description": {
+      "task": "Create a table using appropriate data types for different kinds of data, then query with type-aware comparisons.",
+      "language": "sql",
+      "context": "Choosing the right data type is critical for data integrity, storage efficiency, and query performance. SQL provides types for numbers (INT, DECIMAL), text (VARCHAR, CHAR, TEXT), dates (DATE, TIMESTAMP), and booleans.",
+      "starterCode": "CREATE TABLE products (\n  product_id    INT PRIMARY KEY,           -- whole numbers\n  sku           CHAR(8),                   -- fixed length (always 8 chars)\n  name          VARCHAR(100),              -- variable length (up to 100)\n  description   TEXT,                      -- unlimited text\n  price         DECIMAL(8,2),              -- exact decimal (8 digits, 2 after point)\n  weight_kg     FLOAT,                     -- approximate decimal (floating point)\n  stock         SMALLINT,                  -- small integer (-32768 to 32767)\n  is_active     BOOLEAN DEFAULT TRUE\n);\n\nINSERT INTO products VALUES\n  (1, 'LAP00001', 'Gaming Laptop',    'High performance laptop for gaming and development', 999.99,  2.1,  50, TRUE),\n  (2, 'MSE00002', 'Wireless Mouse',   'Ergonomic wireless mouse with 1-year battery life',   19.99,  0.15, 200, TRUE),\n  (3, 'KBD00003', 'Mechanical Keyboard','Full-size mechanical keyboard with RGB lighting',   59.99,  0.85, 120, TRUE),\n  (4, 'MON00004', 'Monitor 27\"',      'Ultra-wide curved monitor 144Hz',                   299.99,  6.8,  30, TRUE),\n  (5, 'HDP00005', 'Discontinued Headset','Old model, being phased out',                     9.99,  0.25,   0, FALSE);\n\n-- Query 1: Active products only with price range\nSELECT name, price, stock FROM products\nWHERE is_active = TRUE AND price BETWEEN 15 AND 500\nORDER BY price;\n\n-- Query 2: Products with SKU starting with 'MSE' (CHAR type, padded)\nSELECT sku, name FROM products WHERE sku LIKE 'MSE%';\n\n-- Query 3: Heavy products (weight > 1.0 kg)\nSELECT name, weight_kg FROM products WHERE weight_kg > 1.0 ORDER BY weight_kg DESC;\n",
+      "instructions": [
+        "Run all statements and all three queries.",
+        "Query 1: should return Mouse, Keyboard, Monitor (price 19.99–299.99, active).",
+        "Query 2: returns the Wireless Mouse.",
+        "Query 3: returns Laptop and Monitor.",
+        "Add a comment explaining: why use DECIMAL(8,2) for price instead of FLOAT?"
+      ],
+      "hint": "DECIMAL stores exact values — critical for money. FLOAT is approximate (binary floating point) and can produce results like 0.1 + 0.2 = 0.30000000000000004, which is unacceptable for financial data.",
+      "expectedOutput": "Q1: Mouse, Keyboard, Monitor (3 rows)\nQ2: 1 row (MSE00002)\nQ3: Monitor(6.8kg), Laptop(2.1kg)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 44,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Date and Time Data Types",
+    "description": {
+      "task": "Create a table using DATE, TIME, TIMESTAMP, and INTERVAL types, then perform date arithmetic queries.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE events (\n  event_id     INT PRIMARY KEY,\n  event_name   VARCHAR(100),\n  event_date   DATE,                        -- date only: YYYY-MM-DD\n  start_time   TIME,                        -- time only: HH:MM:SS\n  created_at   TIMESTAMP DEFAULT NOW(),     -- date + time\n  duration     INTERVAL                     -- e.g., '2 hours 30 minutes'\n);\n\nINSERT INTO events VALUES\n  (1, 'Database Workshop',   '2026-03-15', '09:00:00', '2026-02-01 10:00:00', '3 hours'),\n  (2, 'Web Dev Bootcamp',    '2026-03-20', '13:00:00', '2026-02-05 14:00:00', '6 hours'),\n  (3, 'SQL Advanced Class',  '2026-04-10', '10:00:00', '2026-02-10 09:00:00', '2 hours 30 minutes'),\n  (4, 'Cloud Seminar',       '2026-04-25', '15:00:00', '2026-02-12 16:00:00', '1 hour 45 minutes'),\n  (5, 'AI Workshop',         '2026-05-05', '09:30:00', '2026-02-20 11:00:00', '4 hours');\n\n-- Query 1: Events happening in March 2026\nSELECT event_name, event_date, start_time, duration\nFROM events\nWHERE event_date >= '2026-03-01' AND event_date < '2026-04-01'\nORDER BY event_date;\n\n-- Query 2: Calculate end time using INTERVAL\nSELECT event_name, start_time, start_time + duration AS end_time\nFROM events\nORDER BY event_date;\n\n-- Query 3: Events in the next 30 days from now\nSELECT event_name, event_date FROM events\nWHERE event_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '30 days'\nORDER BY event_date;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run Query 1 — 2 events in March.",
+        "Run Query 2 — start_time + duration = end_time for each event.",
+        "Run Query 3 — result depends on current date (likely 0 events since dates are in 2026).",
+        "Add a comment: what is the difference between TIMESTAMP and TIMESTAMPTZ (timestamp with time zone)?"
+      ],
+      "hint": "TIMESTAMPTZ stores a moment in time independent of timezone (internally stored as UTC). TIMESTAMP stores a 'wall clock' time with no timezone info — can be ambiguous across timezones.",
+      "expectedOutput": "Q1: Database Workshop(Mar 15), Web Dev Bootcamp(Mar 20)\nQ2: Workshop ends 12:00, Bootcamp ends 19:00, etc."
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 44,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Choosing the Right Data Type",
+    "description": {
+      "task": "Design a table with optimal data types for each attribute, avoiding common mistakes like using VARCHAR for numbers.",
+      "language": "sql",
+      "context": "Using the wrong data type causes storage waste, incorrect sorting, failed arithmetic, and data integrity issues. For example, storing phone numbers as INT drops leading zeros; storing ZIP codes as INT sorts '10001' before '90001' numerically instead of as text.",
+      "starterCode": "-- This schema has deliberately BAD type choices\n-- Review and fix each column type\n\n-- BAD (do NOT run this):\n-- CREATE TABLE user_profile_bad (\n--   user_id      VARCHAR(10),   -- should be INT\n--   age          VARCHAR(3),    -- should be INT or SMALLINT\n--   salary       FLOAT,         -- should be DECIMAL for money\n--   phone        INT,           -- should be VARCHAR (leading zeros, + signs)\n--   zip_code     INT,           -- should be VARCHAR (leading zeros)\n--   is_premium   VARCHAR(5),    -- should be BOOLEAN\n--   joined_date  VARCHAR(20)    -- should be DATE\n-- );\n\n-- GOOD: Correct data types\nCREATE TABLE user_profile (\n  user_id      INT PRIMARY KEY,\n  username     VARCHAR(30) NOT NULL,\n  age          SMALLINT CHECK (age >= 0 AND age <= 150),\n  salary       DECIMAL(10,2),\n  phone        VARCHAR(20),     -- allows +1-555-123-4567, leading zeros\n  zip_code     VARCHAR(10),     -- allows 07001, international formats\n  is_premium   BOOLEAN DEFAULT FALSE,\n  joined_date  DATE,\n  last_login   TIMESTAMP\n);\n\nINSERT INTO user_profile VALUES\n  (1, 'alice',  28, 85000.00, '+1-555-0101', '10001', TRUE,  '2023-06-15', '2026-03-01 09:00:00'),\n  (2, 'bob',    35, 72000.50, '+44-7700-900001', '07001', FALSE, '2022-01-10', '2026-03-02 14:30:00'),\n  (3, 'carol',  22, 55000.00, '+1-555-0303', '90001', TRUE,  '2024-03-20', '2026-03-03 08:15:00');\n\n-- Query 1: Premium users with salary > 70000\nSELECT username, salary, zip_code FROM user_profile\nWHERE is_premium = TRUE AND salary > 70000;\n\n-- Query 2: Users who joined before 2023\nSELECT username, joined_date FROM user_profile\nWHERE joined_date < '2023-01-01';\n",
+      "instructions": [
+        "Run the GOOD schema creation and inserts.",
+        "Run both queries.",
+        "Add a comment for each column in user_profile explaining why that type was chosen.",
+        "Explain: what would go wrong if zip_code was stored as INT and a user in New Jersey had zip '07001'?"
+      ],
+      "hint": "If zip_code is INT, '07001' is stored as 7001 (leading zero dropped). Sorting would be wrong, matching on '07001' would fail, and display would be incorrect.",
+      "expectedOutput": "Q1: alice (salary 85000, zip 10001)\nQ2: bob (joined 2022-01-10)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 44,
+    "allowedSubmissionType": "TEXT"
+  }
+]

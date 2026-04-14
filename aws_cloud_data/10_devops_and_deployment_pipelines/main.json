@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 238, "title": "Infrastructure as Code and CloudFormation", "dataType": "notes", "data": "cloudformation.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 239, "title": "AWS CodeCommit CodeBuild CodeDeploy", "dataType": "notes", "data": "code_commit_build_deploy.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 240, "title": "AWS CodePipeline", "dataType": "notes", "data": "codepipeline.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 241, "title": "Containers on AWS ECS and EKS", "dataType": "notes", "data": "ecs_and_eks.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 242, "title": "AWS Elastic Beanstalk", "dataType": "notes", "data": "elastic_beanstalk.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 243, "title": "CI/CD Best Practices on AWS", "dataType": "notes", "data": "cicd_best_practices.html", "displayOrder": 6, "verified": false}
+]

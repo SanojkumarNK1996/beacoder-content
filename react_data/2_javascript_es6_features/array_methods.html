@@ -1,0 +1,38 @@
+<h1>🔢 Array Methods: map, filter, reduce</h1>
+<h2>🗺️ .map() — Transform Each Element</h2>
+<div class="code-example">
+  <pre>
+const nums = [1, 2, 3, 4];
+const doubled = nums.map(n =&gt; n * 2); // [2, 4, 6, 8]
+
+// In React — render a list:
+const users = ['Alice', 'Bob', 'Carol'];
+return (
+  &lt;ul&gt;
+    {users.map(user =&gt; &lt;li key={user}&gt;{user}&lt;/li&gt;)}
+  &lt;/ul&gt;
+);
+  </pre>
+</div>
+<h2>🔍 .filter() — Keep Matching Elements</h2>
+<div class="code-example">
+  <pre>
+const ages = [15, 22, 18, 30, 16];
+const adults = ages.filter(age =&gt; age &gt;= 18); // [22, 18, 30]
+
+// Show only active users:
+const active = users.filter(u =&gt; u.isActive);
+  </pre>
+</div>
+<h2>➕ .reduce() — Aggregate to Single Value</h2>
+<div class="code-example">
+  <pre>
+const nums = [1, 2, 3, 4, 5];
+const sum = nums.reduce((acc, n) =&gt; acc + n, 0); // 15
+
+// Build an object from array:
+const byId = users.reduce((acc, u) =&gt; ({...acc, [u.id]: u}), {});
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p><code>map</code>, <code>filter</code>, <code>reduce</code> replace almost all for-loops in modern React code. They're non-mutating (return new arrays) — perfect for React's immutable state pattern.</p>

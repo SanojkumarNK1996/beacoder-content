@@ -1,0 +1,75 @@
+[
+  {
+    "title": "ALTER TABLE: Add and Remove Columns",
+    "description": {
+      "task": "Use ALTER TABLE to add new columns, set their defaults, and drop unused columns.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE products (\n  product_id   INT PRIMARY KEY,\n  name         VARCHAR(80) NOT NULL,\n  price        DECIMAL(8,2),\n  category     VARCHAR(40)\n);\n\nINSERT INTO products VALUES\n  (1, 'Laptop',      999.99, 'Electronics'),\n  (2, 'Mouse',        19.99, 'Electronics'),\n  (3, 'Notebook',      5.99, 'Stationery');\n\n-- Verify initial structure\nSELECT * FROM products;\n\n-- ALTER: Add a stock column with a default value\nALTER TABLE products ADD COLUMN stock INT DEFAULT 0;\n\n-- ALTER: Add a discount_percent column\nALTER TABLE products ADD COLUMN discount_percent DECIMAL(4,1) DEFAULT 0.0;\n\n-- Update stock for existing products\nUPDATE products SET stock = 100 WHERE product_id = 1;\nUPDATE products SET stock = 500 WHERE product_id = 2;\nUPDATE products SET stock = 1000 WHERE product_id = 3;\n\n-- View updated table\nSELECT * FROM products;\n\n-- ALTER: Drop a column (if category is no longer needed)\nALTER TABLE products DROP COLUMN category;\n\nSELECT * FROM products;\n",
+      "instructions": [
+        "Run each block sequentially: CREATE, INSERT, first SELECT.",
+        "Run the two ALTER ADD COLUMN statements.",
+        "Run the UPDATE statements and second SELECT.",
+        "Run ALTER DROP COLUMN and the final SELECT.",
+        "Note how existing rows get the DEFAULT value for new columns."
+      ],
+      "hint": "When you ADD a column with a DEFAULT, all existing rows immediately get that default value. Dropping a column is permanent — all data in that column is lost.",
+      "expectedOutput": "After ADD: 5 columns (product_id, name, price, category, stock, discount_percent)\nAfter UPDATE: stock values filled\nAfter DROP: category column removed"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 46,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "ALTER TABLE: Modify Column Types and Rename",
+    "description": {
+      "task": "Use ALTER TABLE to change a column's data type, rename a column, and rename the entire table.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE items (\n  item_id    INT PRIMARY KEY,\n  item_name  VARCHAR(50),\n  price      INT,           -- stored as INT, need to change to DECIMAL\n  qty        SMALLINT\n);\n\nINSERT INTO items VALUES (1,'Laptop',1000,5),(2,'Mouse',20,100),(3,'Monitor',300,20);\n\nSELECT * FROM items;\n\n-- ALTER: Change price from INT to DECIMAL(8,2)\nALTER TABLE items ALTER COLUMN price TYPE DECIMAL(8,2);\n\n-- ALTER: Rename a column\nALTER TABLE items RENAME COLUMN item_name TO product_name;\n\n-- ALTER: Rename qty to quantity\nALTER TABLE items RENAME COLUMN qty TO quantity;\n\n-- View the changes\nSELECT * FROM items;\n\n-- ALTER: Rename the table itself\nALTER TABLE items RENAME TO products_v2;\n\n-- Query with the new table name\nSELECT product_name, price, quantity FROM products_v2 ORDER BY price DESC;\n",
+      "instructions": [
+        "Run CREATE, INSERT, first SELECT.",
+        "Run ALTER TYPE change — verify price is now DECIMAL.",
+        "Run both RENAME COLUMN statements.",
+        "Run the second SELECT to see renamed columns.",
+        "Run RENAME TABLE and query products_v2.",
+        "In a comment: what risk exists when renaming a table in a production environment?"
+      ],
+      "hint": "In production, renaming a table breaks any application code, stored procedures, or views that reference the old table name. Always update all references before or after renaming.",
+      "expectedOutput": "After renames: columns are product_name, price(DECIMAL), quantity\nFinal query: Monitor(300), Laptop(1000), Mouse(20)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 46,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "ALTER TABLE: Add and Drop Constraints",
+    "description": {
+      "task": "Use ALTER TABLE to add NOT NULL, CHECK, UNIQUE constraints to an existing table and then drop one of them.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE staff (\n  staff_id   INT PRIMARY KEY,\n  name       VARCHAR(60),\n  email      VARCHAR(80),\n  salary     DECIMAL(10,2),\n  department VARCHAR(40)\n);\n\nINSERT INTO staff VALUES\n  (1, 'Alice', 'alice@co.com', 85000, 'Engineering'),\n  (2, 'Bob',   'bob@co.com',   72000, 'Marketing'),\n  (3, 'Carol', 'carol@co.com', 68000, 'HR');\n\n-- Add a UNIQUE constraint on email\nALTER TABLE staff ADD CONSTRAINT uq_staff_email UNIQUE (email);\n\n-- Add a CHECK constraint on salary (must be positive)\nALTER TABLE staff ADD CONSTRAINT chk_salary_positive CHECK (salary > 0);\n\n-- This INSERT would fail UNIQUE constraint\n-- INSERT INTO staff VALUES (4, 'Dave', 'alice@co.com', 90000, 'Finance');\n\n-- This INSERT would fail CHECK constraint\n-- INSERT INTO staff VALUES (5, 'Eve', 'eve@co.com', -5000, 'Finance');\n\n-- Valid new employee\nINSERT INTO staff VALUES (4, 'Dave', 'dave@co.com', 90000, 'Finance');\n\nSELECT * FROM staff ORDER BY staff_id;\n\n-- Drop the CHECK constraint\nALTER TABLE staff DROP CONSTRAINT chk_salary_positive;\n\n-- View remaining constraints\nSELECT constraint_name, constraint_type\nFROM information_schema.table_constraints\nWHERE table_name = 'staff';\n",
+      "instructions": [
+        "Run CREATE, INSERT, then both ALTER ADD CONSTRAINT statements.",
+        "Uncomment one of the failing inserts and note the error.",
+        "Re-comment it and insert Dave (valid).",
+        "Run SELECT to verify 4 rows.",
+        "Run DROP CONSTRAINT and the information_schema query."
+      ],
+      "hint": "Named constraints (ADD CONSTRAINT name ...) can be dropped by name later. Anonymous constraints are harder to drop. Always name your constraints in production schemas.",
+      "expectedOutput": "4 employees after valid INSERT\nAfter DROP CONSTRAINT: only PRIMARY KEY and UNIQUE remain in information_schema"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 46,
+    "allowedSubmissionType": "TEXT"
+  }
+]

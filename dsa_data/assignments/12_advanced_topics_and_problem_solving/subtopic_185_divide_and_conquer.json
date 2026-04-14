@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Merge Sort — Divide and Conquer",
+    "description": {
+      "task": "Implement Merge Sort from scratch using the divide-and-conquer paradigm. Track the number of splits and merges to illustrate the recursion depth. Sort an array and print step counts.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class MergeSortDC {\n    static int splits = 0, merges = 0;\n\n    static void merge(int[] arr, int l, int m, int r) {\n        merges++;\n        int n1 = m - l + 1, n2 = r - m;\n        int[] L = Arrays.copyOfRange(arr, l, m + 1);\n        int[] R = Arrays.copyOfRange(arr, m + 1, r + 1);\n        int i = 0, j = 0, k = l;\n        // TODO: standard merge: while both halves have elements, pick the smaller\n        //       then copy remaining L or R elements\n        while (i < n1 && j < n2) {\n            // TODO\n        }\n        while (i < n1) arr[k++] = L[i++];\n        while (j < n2) arr[k++] = R[j++];\n    }\n\n    static void mergeSort(int[] arr, int l, int r) {\n        if (l < r) {\n            splits++;\n            int m = l + (r - l) / 2;\n            mergeSort(arr, l, m);\n            mergeSort(arr, m + 1, r);\n            merge(arr, l, m, r);\n        }\n    }\n\n    public static void main(String[] args) {\n        int[] arr = {38, 27, 43, 3, 9, 82, 10};\n        System.out.println(\"Before: \" + Arrays.toString(arr));\n        mergeSort(arr, 0, arr.length - 1);\n        System.out.println(\"After:  \" + Arrays.toString(arr));\n        System.out.println(\"Splits: \" + splits);\n        System.out.println(\"Merges: \" + merges);\n    }\n}",
+      "instructions": [
+        "Inside while(i<n1&&j<n2): arr[k++]=(L[i]<=R[j])?L[i++]:R[j++];",
+        "Merge sort splits the array into halves (O(log n) levels) and merges them back",
+        "For n=7 elements: splits=6, merges=6 (each element is its own leaf after 6 splits breaking down to pairs/singles)",
+        "Expected sorted: [3, 9, 10, 27, 38, 43, 82]",
+        "Time complexity O(n log n), space O(n) for auxiliary arrays"
+      ],
+      "hint": "arr[k++]=(L[i]<=R[j])?L[i++]:R[j++];",
+      "expectedOutput": "Before: [38, 27, 43, 3, 9, 82, 10]\nAfter:  [3, 9, 10, 27, 38, 43, 82]\nSplits: 6\nMerges: 6"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 185,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Binary Search — Divide and Conquer Recursion",
+    "description": {
+      "task": "Implement recursive binary search using divide-and-conquer. Track recursion depth. Also implement power(base, exp) using fast exponentiation (also divide and conquer), reducing multiplications from O(n) to O(log n).",
+      "language": "java",
+      "starterCode": "public class DivideConquer {\n\n    static int depth = 0;\n\n    static int binarySearch(int[] arr, int target, int l, int r) {\n        if (l > r) return -1;\n        depth++;\n        int mid = l + (r - l) / 2;\n        if (arr[mid] == target) return mid;\n        // TODO: if target < arr[mid] search left half, else search right half\n        return -1;\n    }\n\n    static long power(long base, int exp) {\n        if (exp == 0) return 1;\n        // TODO: if exp is even: half = power(base, exp/2); return half*half\n        //       if exp is odd:  return base * power(base, exp-1)\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        int[] arr = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19};\n\n        int idx = binarySearch(arr, 13, 0, arr.length - 1);\n        System.out.println(\"Found 13 at index: \" + idx);\n        System.out.println(\"Recursion depth: \" + depth);\n\n        System.out.println(\"2^10 = \" + power(2, 10));\n        System.out.println(\"3^5  = \" + power(3, 5));\n    }\n}",
+      "instructions": [
+        "binarySearch: if(target<arr[mid]) return binarySearch(arr,target,l,mid-1); else return binarySearch(arr,target,mid+1,r);",
+        "power: long half=power(base,exp/2); return (exp%2==0)?half*half:base*half*half;",
+        "arr has 10 elements, 13 is at index 6 — depth should be 4 (steps: mid=4,mid=7,mid=5,mid=6)",
+        "2^10=1024; 3^5=243",
+        "Fast exponentiation: exp=10→5→2→1→0, only O(log n) multiplications"
+      ],
+      "hint": "binarySearch: return(target<arr[mid])?binarySearch(arr,target,l,mid-1):binarySearch(arr,target,mid+1,r); power: long h=power(base,exp/2);return(exp%2==0)?h*h:base*h*h;",
+      "expectedOutput": "Found 13 at index: 6\nRecursion depth: 4\n2^10 = 1024\n3^5  = 243"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 185,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Maximum Subarray — Divide and Conquer",
+    "description": {
+      "task": "Implement the maximum subarray problem using divide and conquer (O(n log n) approach). Split the array at mid, find max crossing subarray, then return max of left, right, and crossing. Compare result with Kadane's O(n) approach.",
+      "language": "java",
+      "starterCode": "public class MaxSubarrayDC {\n\n    static int maxCrossing(int[] arr, int l, int mid, int r) {\n        int leftSum = Integer.MIN_VALUE, sum = 0;\n        for (int i = mid; i >= l; i--) {\n            sum += arr[i];\n            leftSum = Math.max(leftSum, sum);\n        }\n        int rightSum = Integer.MIN_VALUE; sum = 0;\n        for (int i = mid + 1; i <= r; i++) {\n            sum += arr[i];\n            rightSum = Math.max(rightSum, sum);\n        }\n        return leftSum + rightSum;\n    }\n\n    static int maxSubarrayDC(int[] arr, int l, int r) {\n        if (l == r) return arr[l];\n        int mid = l + (r - l) / 2;\n        int leftMax  = maxSubarrayDC(arr, l, mid);\n        int rightMax = maxSubarrayDC(arr, mid + 1, r);\n        int crossMax = maxCrossing(arr, l, mid, r);\n        // TODO: return the maximum of leftMax, rightMax, crossMax\n        return 0;\n    }\n\n    static int kadane(int[] arr) {\n        int maxSoFar = arr[0], curr = arr[0];\n        // TODO: from index 1, curr = max(arr[i], curr+arr[i]); update maxSoFar\n        for (int i = 1; i < arr.length; i++) {\n            // TODO\n        }\n        return maxSoFar;\n    }\n\n    public static void main(String[] args) {\n        int[] arr = {-2, 1, -3, 4, -1, 2, 1, -5, 4};\n        System.out.println(\"DC result:     \" + maxSubarrayDC(arr, 0, arr.length - 1));\n        System.out.println(\"Kadane result: \" + kadane(arr));\n        System.out.println(\"Same answer:   \" + (maxSubarrayDC(arr,0,arr.length-1)==kadane(arr)));\n    }\n}",
+      "instructions": [
+        "maxSubarrayDC: return Math.max(crossMax, Math.max(leftMax, rightMax));",
+        "kadane: curr=Math.max(arr[i],curr+arr[i]); maxSoFar=Math.max(maxSoFar,curr);",
+        "Both algorithms should return 6 (subarray [4,-1,2,1])",
+        "D&C runs in O(n log n); Kadane's in O(n) — both give the correct answer",
+        "maxCrossing expands left from mid and right from mid+1 to find the best split"
+      ],
+      "hint": "return Math.max(crossMax,Math.max(leftMax,rightMax)); kadane: curr=Math.max(arr[i],curr+arr[i]);maxSoFar=Math.max(maxSoFar,curr);",
+      "expectedOutput": "DC result:     6\nKadane result: 6\nSame answer:   true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 185,
+    "allowedSubmissionType": "TEXT"
+  }
+]

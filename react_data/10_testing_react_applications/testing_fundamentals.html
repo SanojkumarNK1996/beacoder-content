@@ -1,0 +1,30 @@
+<h1>🧪 Testing Fundamentals for React</h1>
+<h2>🎯 Why Test?</h2>
+<p>Tests catch regressions, document behavior, and enable confident refactoring. Good tests focus on <strong>user behavior</strong>, not implementation details.</p>
+<h2>📋 Types of Tests</h2>
+<ul>
+  <li><strong>Unit tests</strong>: Test a single function or component in isolation (fastest)</li>
+  <li><strong>Integration tests</strong>: Test how components interact (main sweet spot)</li>
+  <li><strong>End-to-end (E2E) tests</strong>: Test full user flows in a real browser (slowest, highest confidence)</li>
+</ul>
+<h2>🔧 Testing Stack</h2>
+<ul>
+  <li><strong>Vitest / Jest</strong>: Test runner (execute tests, assertions)</li>
+  <li><strong>React Testing Library (RTL)</strong>: Render components, simulate user interactions</li>
+  <li><strong>Cypress / Playwright</strong>: E2E testing in real browser</li>
+</ul>
+<h2>📌 Test Structure: AAA Pattern</h2>
+<div class="code-example">
+  <pre>
+it('should increment counter on click', () =&gt; {
+  // Arrange
+  render(&lt;Counter /&gt;);
+  // Act
+  fireEvent.click(screen.getByRole('button', { name: /increment/i }));
+  // Assert
+  expect(screen.getByText('Count: 1')).toBeInTheDocument();
+});
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Focus on integration tests as your core test suite. They give the best ROI — test how the user actually interacts without being brittle to implementation changes.</p>

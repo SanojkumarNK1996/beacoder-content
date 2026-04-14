@@ -1,0 +1,69 @@
+[
+  {
+    "title": "DBMS Components Explorer",
+    "description": {
+      "task": "Write queries on a components table to identify the role of each DBMS component.",
+      "language": "sql",
+      "context": "A DBMS (Database Management System) is the software that manages storing, retrieving, and organising data. Examples: PostgreSQL, MySQL, Oracle, SQL Server.",
+      "starterCode": "CREATE TABLE dbms_components (\n  id INT PRIMARY KEY,\n  component VARCHAR(50),\n  role VARCHAR(120),\n  example VARCHAR(60)\n);\n\nINSERT INTO dbms_components VALUES\n  (1, 'Storage Manager',    'Manages physical storage of data on disk',            'InnoDB storage engine in MySQL'),\n  (2, 'Query Processor',   'Parses, optimises, and executes SQL queries',          'PostgreSQL query planner'),\n  (3, 'Transaction Manager','Ensures ACID properties for all transactions',         'MySQL transaction coordinator'),\n  (4, 'Buffer Manager',    'Caches frequently accessed data in memory',            'Shared buffer pool'),\n  (5, 'Schema Manager',    'Manages table definitions, indexes, constraints',      'System catalog / data dictionary'),\n  (6, 'Recovery Manager',  'Restores database to consistent state after failure',  'Write-Ahead Log (WAL)');\n\n-- Query 1: Show all components and their roles\n-- Query 2: Find the component responsible for queries\n-- Query 3: Find components related to 'memory' or 'cache'\n",
+      "instructions": [
+        "Query 1: SELECT component, role FROM dbms_components ORDER BY id.",
+        "Query 2: SELECT * FROM dbms_components WHERE component LIKE '%Query%' OR role LIKE '%query%'.",
+        "Query 3: SELECT * FROM dbms_components WHERE role LIKE '%memory%' OR role LIKE '%cache%' OR role LIKE '%Cache%'."
+      ],
+      "hint": "LIKE is case-sensitive in most databases. Use LOWER(column) LIKE '%keyword%' for case-insensitive matching if needed.",
+      "expectedOutput": "Q1: All 6 components with roles\nQ2: Query Processor row\nQ3: Buffer Manager row"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 31,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Popular DBMS Comparison",
+    "description": {
+      "task": "Query a DBMS comparison table to filter by use case and calculate aggregate statistics.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE popular_dbms (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  type VARCHAR(20),\n  license VARCHAR(15),\n  primary_use VARCHAR(60),\n  market_rank INT\n);\n\nINSERT INTO popular_dbms VALUES\n  (1, 'Oracle Database', 'Relational', 'Commercial', 'Enterprise, finance, ERP',     1),\n  (2, 'MySQL',           'Relational', 'Open Source', 'Web apps, CMS, startups',     2),\n  (3, 'Microsoft SQL Server','Relational','Commercial','Enterprise, Windows apps',   3),\n  (4, 'PostgreSQL',      'Relational', 'Open Source', 'Complex queries, analytics',  4),\n  (5, 'MongoDB',         'NoSQL',      'Open Source', 'Flexible docs, rapid dev',    5),\n  (6, 'Redis',           'NoSQL',      'Open Source', 'Caching, sessions, queues',   6),\n  (7, 'SQLite',          'Relational', 'Open Source', 'Mobile, embedded, testing',   7);\n\n-- Query 1: Show only Open Source DBMS options\n-- Query 2: Count DBMS by license type\n-- Query 3: Show top-3 by market_rank\n",
+      "instructions": [
+        "Query 1: SELECT name, primary_use FROM popular_dbms WHERE license = 'Open Source' ORDER BY market_rank.",
+        "Query 2: SELECT license, COUNT(*) as count FROM popular_dbms GROUP BY license.",
+        "Query 3: SELECT name, market_rank FROM popular_dbms ORDER BY market_rank LIMIT 3."
+      ],
+      "hint": "LIMIT N restricts the result to N rows. When combined with ORDER BY, it effectively gives you the top-N results.",
+      "expectedOutput": "Q1: MySQL, PostgreSQL, MongoDB, Redis, SQLite\nQ2: Commercial:2, Open Source:5\nQ3: Oracle(1), MySQL(2), SQL Server(3)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 31,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "DBMS vs Manual File Management",
+    "description": {
+      "task": "Write SQL queries that demonstrate DBMS capabilities that would be very complex using manual file management.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE employees (\n  id INT PRIMARY KEY,\n  name VARCHAR(50),\n  department VARCHAR(50),\n  salary DECIMAL(10,2),\n  years_experience INT,\n  hire_date DATE\n);\n\nINSERT INTO employees VALUES\n  (1, 'Alice',  'Engineering', 95000, 5,  '2019-03-15'),\n  (2, 'Bob',    'Marketing',   65000, 3,  '2021-07-01'),\n  (3, 'Carol',  'Engineering', 110000, 8, '2016-01-10'),\n  (4, 'Dave',   'HR',          55000, 2,  '2022-04-20'),\n  (5, 'Eve',    'Engineering', 88000, 4,  '2020-09-05'),\n  (6, 'Frank',  'Marketing',   72000, 6,  '2018-11-12'),\n  (7, 'Grace',  'HR',          61000, 4,  '2020-06-30');\n\n-- Query 1: Average salary per department\n-- Query 2: Employees earning above the Engineering department average\n-- Query 3: Headcount and total payroll per department, ordered by total payroll DESC\n",
+      "instructions": [
+        "Query 1: SELECT department, AVG(salary) as avg_salary FROM employees GROUP BY department ORDER BY avg_salary DESC.",
+        "Query 2: SELECT name, salary FROM employees WHERE department = 'Engineering' AND salary > (SELECT AVG(salary) FROM employees WHERE department = 'Engineering').",
+        "Query 3: SELECT department, COUNT(*) as headcount, SUM(salary) as total_payroll FROM employees GROUP BY department ORDER BY total_payroll DESC."
+      ],
+      "hint": "A subquery in the WHERE clause (correlated or uncorrelated) evaluates first. (SELECT AVG(salary) FROM employees WHERE department='Engineering') returns a single value used for comparison.",
+      "expectedOutput": "Q1: Engineering avg ~97667, Marketing avg ~68500, HR avg ~58000\nQ2: Carol(110000), Alice(95000) are above Engineering avg\nQ3: Engineering highest payroll"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 31,
+    "allowedSubmissionType": "TEXT"
+  }
+]

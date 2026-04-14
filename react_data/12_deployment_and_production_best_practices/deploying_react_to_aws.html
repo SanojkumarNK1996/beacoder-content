@@ -1,0 +1,36 @@
+<h1>☁️ Deploying React to AWS</h1>
+<h2>🎯 Option 1: S3 + CloudFront (Static Hosting)</h2>
+<p>Host the React build on S3, serve globally via CloudFront CDN with HTTPS.</p>
+<div class="code-example">
+  <pre>
+# Build the app
+npm run build
+
+# Upload to S3 (AWS CLI)
+aws s3 sync dist/ s3://my-react-app-bucket --delete
+
+# S3 bucket settings:
+# - Enable "Static website hosting"
+# - Set index.html as index document AND error document (SPA routing fix)
+# - Bucket policy: allow public read
+  </pre>
+</div>
+<h2>🔧 CloudFront Configuration</h2>
+<ul>
+  <li>Origin: S3 bucket website endpoint</li>
+  <li>Add custom error response: 404 → /index.html → 200 (SPA routing fix)</li>
+  <li>Enable HTTPS with ACM certificate</li>
+  <li>Set cache-control headers for assets vs index.html</li>
+</ul>
+<h2>🚀 Option 2: AWS Amplify</h2>
+<div class="code-example">
+  <pre>
+npm install -g @aws-amplify/cli
+amplify init
+amplify add hosting
+amplify publish
+  </pre>
+</div>
+<p>Amplify provides Vercel-like DX with full AWS integration — auto-deploys, preview environments, custom domains, and direct access to other AWS services.</p>
+<h2>🎯 Summary</h2>
+<p>S3 + CloudFront for full control and lowest cost. AWS Amplify for a managed experience like Vercel/Netlify with deeper AWS integration.</p>

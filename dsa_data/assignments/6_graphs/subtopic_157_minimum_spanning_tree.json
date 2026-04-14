@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Kruskal's Minimum Spanning Tree",
+    "description": {
+      "task": "Implement Kruskal's MST algorithm using Union-Find (Disjoint Set Union). Sort all edges by weight, then greedily add the smallest edge that doesn't form a cycle.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class KruskalMST {\n\n    int[] parent, rank;\n\n    int find(int x) {\n        if (parent[x] != x) parent[x] = find(parent[x]); // path compression\n        return parent[x];\n    }\n\n    boolean union(int a, int b) {\n        int ra = find(a), rb = find(b);\n        if (ra == rb) return false; // same component => cycle\n        if (rank[ra] < rank[rb]) parent[ra] = rb;\n        else if (rank[ra] > rank[rb]) parent[rb] = ra;\n        else { parent[rb] = ra; rank[ra]++; }\n        return true;\n    }\n\n    public List<int[]> kruskal(int V, int[][] edges) {\n        // edges[i] = {u, v, weight}\n        parent = new int[V]; rank = new int[V];\n        for (int i = 0; i < V; i++) parent[i] = i;\n\n        // TODO: Sort edges by weight, then iterate and add edge if union returns true\n        List<int[]> mst = new ArrayList<>();\n\n        return mst;\n    }\n\n    public static void main(String[] args) {\n        KruskalMST k = new KruskalMST();\n        int[][] edges = {\n            {0,1,10},{0,2,6},{0,3,5},{1,3,15},{2,3,4}\n        };\n        List<int[]> mst = k.kruskal(4, edges);\n        int total = 0;\n        for (int[] e : mst) {\n            System.out.println(e[0] + \" - \" + e[1] + \" : \" + e[2]);\n            total += e[2];\n        }\n        System.out.println(\"Total weight: \" + total);\n    }\n}",
+      "instructions": [
+        "Sort edges: Arrays.sort(edges, Comparator.comparingInt(e->e[2]));",
+        "Then iterate: for each edge {u,v,w}, if union(u,v) is true, add to mst list",
+        "Stop early when mst.size()==V-1 if you prefer (optional optimization)",
+        "Sorted edges by weight: {2,3,4},{0,3,5},{0,2,6},{0,1,10},{1,3,15}",
+        "MST includes: 2-3(4), 0-3(5), 0-1(10) = total 19; edge 0-2 skipped (would cycle)"
+      ],
+      "hint": "Arrays.sort(edges,Comparator.comparingInt(e->e[2])); for(int[] e:edges){if(union(e[0],e[1])) mst.add(e);}",
+      "expectedOutput": "2 - 3 : 4\n0 - 3 : 5\n0 - 1 : 10\nTotal weight: 19"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 157,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Prim's Minimum Spanning Tree",
+    "description": {
+      "task": "Implement Prim's MST algorithm using a min-heap PriorityQueue. Start from vertex 0, and greedily pick the minimum weight edge connecting a visited vertex to an unvisited one.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class PrimMST {\n\n    public int primMSTWeight(int V, List<int[]>[] adj) {\n        boolean[] inMST = new boolean[V];\n        int[] key = new int[V]; // min edge weight to include vertex in MST\n        Arrays.fill(key, Integer.MAX_VALUE);\n        key[0] = 0;\n\n        // PriorityQueue of {weight, vertex}\n        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));\n        pq.offer(new int[]{0, 0});\n        int totalWeight = 0;\n\n        while (!pq.isEmpty()) {\n            int[] curr = pq.poll();\n            int w = curr[0], u = curr[1];\n            if (inMST[u]) continue;\n            inMST[u] = true;\n            totalWeight += w;\n            // TODO: for each neighbor {v, weight} of u:\n            //       if !inMST[v] && weight < key[v], update key[v] and add to pq\n        }\n        return totalWeight;\n    }\n\n    @SuppressWarnings(\"unchecked\")\n    public static void main(String[] args) {\n        int V = 4;\n        List<int[]>[] adj = new ArrayList[V];\n        for (int i = 0; i < V; i++) adj[i] = new ArrayList<>();\n        int[][] edges = {{0,1,10},{0,2,6},{0,3,5},{1,3,15},{2,3,4}};\n        for (int[] e : edges) {\n            adj[e[0]].add(new int[]{e[1], e[2]});\n            adj[e[1]].add(new int[]{e[0], e[2]}); // undirected\n        }\n        PrimMST p = new PrimMST();\n        System.out.println(\"MST weight: \" + p.primMSTWeight(V, adj));\n    }\n}",
+      "instructions": [
+        "Iterate over adj[u]: for(int[] edge : adj[u]){ int v=edge[0], ew=edge[1]; ... }",
+        "If !inMST[v] && ew < key[v]: set key[v]=ew and pq.offer(new int[]{ew,v})",
+        "The MST weight is 4+5+10=19 (same result as Kruskal for the same graph)",
+        "The inMST check at pop prevents reprocessing a vertex",
+        "Do not modify the structure or variable names"
+      ],
+      "hint": "for(int[] edge:adj[u]){int v=edge[0],ew=edge[1]; if(!inMST[v]&&ew<key[v]){key[v]=ew; pq.offer(new int[]{ew,v});}}",
+      "expectedOutput": "MST weight: 19"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 157,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "MST Properties and Comparison",
+    "description": {
+      "task": "Create a class MSTAnalysis that computes MST weight using both Kruskal's and Prim's algorithms and verifies they produce the same total weight. Also count the number of edges in the MST.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MSTAnalysis {\n\n    // --- Union-Find helpers ---\n    int[] parent, rnk;\n    void initUF(int n){ parent=new int[n]; rnk=new int[n]; for(int i=0;i<n;i++) parent[i]=i; }\n    int find(int x){ return parent[x]==x?x:(parent[x]=find(parent[x])); }\n    boolean union(int a,int b){ int ra=find(a),rb=find(b); if(ra==rb)return false;\n        if(rnk[ra]<rnk[rb])parent[ra]=rb; else if(rnk[ra]>rnk[rb])parent[rb]=ra;\n        else{parent[rb]=ra;rnk[ra]++;} return true; }\n\n    public int kruskalWeight(int V, int[][] edges) {\n        initUF(V);\n        Arrays.sort(edges, Comparator.comparingInt(e -> e[2]));\n        int total = 0, count = 0;\n        for (int[] e : edges) {\n            if (union(e[0], e[1])) { total += e[2]; count++; }\n            if (count == V - 1) break;\n        }\n        return total;\n    }\n\n    @SuppressWarnings(\"unchecked\")\n    public int primWeight(int V, int[][] edges) {\n        List<int[]>[] adj = new ArrayList[V];\n        for (int i = 0; i < V; i++) adj[i] = new ArrayList<>();\n        for (int[] e : edges) { adj[e[0]].add(new int[]{e[1],e[2]}); adj[e[1]].add(new int[]{e[0],e[2]}); }\n        boolean[] vis = new boolean[V];\n        int[] key = new int[V]; Arrays.fill(key, Integer.MAX_VALUE); key[0] = 0;\n        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a->a[0]));\n        pq.offer(new int[]{0,0});\n        int total = 0;\n        while (!pq.isEmpty()) {\n            int[] cur = pq.poll(); int w=cur[0],u=cur[1];\n            if (vis[u]) continue; vis[u]=true; total+=w;\n            for (int[] nb:adj[u]) if(!vis[nb[0]]&&nb[1]<key[nb[0]]){key[nb[0]]=nb[1];pq.offer(new int[]{nb[1],nb[0]});}\n        }\n        return total;\n    }\n\n    public static void main(String[] args) {\n        MSTAnalysis m = new MSTAnalysis();\n        int[][] edges = {{0,1,10},{0,2,6},{0,3,5},{1,3,15},{2,3,4}};\n        int kw = m.kruskalWeight(4, edges);\n        int pw = m.primWeight(4, edges);\n        System.out.println(\"Kruskal MST weight: \" + kw);\n        System.out.println(\"Prim MST weight: \"    + pw);\n        System.out.println(\"Same result: \" + (kw == pw));\n        System.out.println(\"MST edge count: \" + (4 - 1)); // V-1\n    }\n}",
+      "instructions": [
+        "All implementations are provided — run the code and analyze the output",
+        "An MST of V vertices always has exactly V-1 edges",
+        "Both Kruskal and Prim produce the same total MST weight for the same graph",
+        "Observe that Kruskal sorts edges globally while Prim grows the MST from a seed vertex",
+        "The main method demonstrates how both algorithms confirm MST weight = 19"
+      ],
+      "hint": "This is a read-and-run exercise. Ensure you understand why both algorithms give the same MST weight, and note that MST edge count is always V-1.",
+      "expectedOutput": "Kruskal MST weight: 19\nPrim MST weight: 19\nSame result: true\nMST edge count: 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 157,
+    "allowedSubmissionType": "TEXT"
+  }
+]

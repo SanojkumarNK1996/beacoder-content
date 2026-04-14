@@ -1,0 +1,79 @@
+[
+  {
+    "title": "READ COMMITTED Isolation Level",
+    "description": {
+      "task": "Observe READ COMMITTED behaviour — a transaction only sees data committed by other transactions, preventing dirty reads.",
+      "language": "sql",
+      "context": "READ COMMITTED is PostgreSQL's default isolation level. It prevents dirty reads (reading uncommitted changes from another transaction) but allows non-repeatable reads (a second read of the same row can return different values if another transaction committed in between).",
+      "starterCode": "CREATE TABLE products (\n  product_id INT PRIMARY KEY,\n  name       VARCHAR(60),\n  price      DECIMAL(8,2)\n);\n\nINSERT INTO products VALUES (1,'Laptop',999.99),(2,'Mouse',19.99),(3,'Keyboard',59.99);\n\n-- Default isolation level in PostgreSQL\nSHOW transaction_isolation;\n\n-- READ COMMITTED demo: each statement sees latest committed data\n-- With READ COMMITTED:\n-- Session A: BEGIN; UPDATE price to 899.99 (not yet committed)\n-- Session B: SELECT price -- sees 999.99 (Session A not committed yet)\n-- Session A: COMMIT\n-- Session B: SELECT price again -- now sees 899.99 (correctly reads committed value)\n\n-- Single-session simulation:\nSELECT price FROM products WHERE product_id = 1;  -- 999.99\n\nBEGIN;\n  UPDATE products SET price = 899.99 WHERE product_id = 1;\n  -- Within the same transaction we can see our own change:\n  SELECT price FROM products WHERE product_id = 1;  -- 899.99 (our own change)\nCOMMIT;\n\n-- After COMMIT, all readers see the new price:\nSELECT price FROM products WHERE product_id = 1;  -- 899.99\n",
+      "instructions": [
+        "Run SHOW transaction_isolation — should return 'read committed'.",
+        "Run CREATE TABLE and INSERT.",
+        "Run BEGIN, UPDATE, inner SELECT (sees 899.99 — own change), COMMIT.",
+        "Run final SELECT — 899.99 confirmed.",
+        "In a comment: what is a 'dirty read' and which isolation levels prevent it?"
+      ],
+      "hint": "A dirty read is reading uncommitted data from another transaction. If that transaction rolls back, the dirty read was invalid. READ COMMITTED prevents this by only seeing committed data.",
+      "expectedOutput": "SHOW: read committed\nInner SELECT: 899.99 (own change)\nFinal SELECT: 899.99 (committed)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 64,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "REPEATABLE READ Isolation Level",
+    "description": {
+      "task": "Set REPEATABLE READ isolation level and observe that repeated reads within the same transaction return consistent results.",
+      "language": "sql",
+      "context": "REPEATABLE READ ensures that if you read a row twice in the same transaction, you get the same result — even if another transaction committed a change in between. Prevents dirty reads and non-repeatable reads.",
+      "starterCode": "CREATE TABLE account_balances (\n  account_id INT PRIMARY KEY,\n  owner      VARCHAR(50),\n  balance    DECIMAL(10,2)\n);\n\nINSERT INTO account_balances VALUES\n  (1,'Alice',1000.00),\n  (2,'Bob',  800.00),\n  (3,'Carol',600.00);\n\n-- Set isolation level to REPEATABLE READ\nBEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;\n  -- First read: see initial total\n  SELECT SUM(balance) AS total_balance FROM account_balances;\n\n  -- Imagine another session commits: Alice changes to 1200 here\n  -- (In REPEATABLE READ, we would NOT see that change in this transaction)\n\n  -- Second read: same result as first read in REPEATABLE READ\n  SELECT SUM(balance) AS total_balance FROM account_balances;\n\nCOMMIT;\n\n-- After transaction: a concurrent change would be visible\nSELECT SUM(balance) AS current_total FROM account_balances;\n",
+      "instructions": [
+        "Run CREATE TABLE and INSERT.",
+        "Run the REPEATABLE READ transaction with two SELECT SUM queries.",
+        "Both SELECT SUM within the transaction should return 2400 (consistent snapshot).",
+        "Run the final SELECT outside the transaction — also 2400 (nothing changed in this demo).",
+        "In a comment: explain the 'Non-Repeatable Read' problem and how REPEATABLE READ solves it.",
+        "In a comment: what is a 'Phantom Read' and which isolation level prevents it?"
+      ],
+      "hint": "Non-Repeatable Read: T1 reads row, T2 updates+commits, T1 re-reads the same row and sees different data. REPEATABLE READ prevents this by keeping a consistent snapshot for the transaction's duration. Phantom Read: T1 reads a range, T2 inserts a row in that range+commits, T1 re-reads the range and sees the new row. SERIALIZABLE prevents phantom reads.",
+      "expectedOutput": "Both inner SELECTs: 2400 (consistent snapshot)\nFinal SELECT: 2400"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 64,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Isolation Levels Comparison",
+    "description": {
+      "task": "Set different isolation levels and write SQL that demonstrates the trade-off between consistency and concurrency.",
+      "language": "sql",
+      "context": "SQL defines four isolation levels: READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, and SERIALIZABLE. Higher isolation levels prevent more anomalies but reduce concurrency and increase locking overhead.",
+      "starterCode": "-- Isolation level summary table for reference\nCREATE TABLE isolation_levels (\n  level_name      VARCHAR(30) PRIMARY KEY,\n  order_number    INT,\n  dirty_read      VARCHAR(10),\n  nonrepeatable_read VARCHAR(10),\n  phantom_read    VARCHAR(10),\n  performance     VARCHAR(10)\n);\n\nINSERT INTO isolation_levels VALUES\n  ('READ UNCOMMITTED', 1, 'Possible', 'Possible', 'Possible', 'Highest'),\n  ('READ COMMITTED',   2, 'Prevented','Possible', 'Possible', 'High'),\n  ('REPEATABLE READ',  3, 'Prevented','Prevented','Possible', 'Medium'),\n  ('SERIALIZABLE',     4, 'Prevented','Prevented','Prevented','Lowest');\n\n-- Query: See all anomaly risks per isolation level\nSELECT level_name, dirty_read, nonrepeatable_read, phantom_read, performance\nFROM isolation_levels\nORDER BY order_number;\n\n-- Demonstrate SERIALIZABLE transaction (strictest)\nBEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;\n  -- Any reads here are guaranteed to be consistent\n  SELECT level_name, performance FROM isolation_levels ORDER BY order_number;\nCOMMIT;\n\n-- Check current session isolation level\nSELECT current_setting('transaction_isolation') AS current_isolation;\n",
+      "instructions": [
+        "Run all statements.",
+        "The summary table shows all 4 levels with their anomaly prevention.",
+        "The SERIALIZABLE transaction runs with the strictest guarantees.",
+        "Run the current_setting query.",
+        "In a comment: which isolation level would you recommend for a financial application and why?",
+        "In a comment: why is READ UNCOMMITTED rarely used in practice?"
+      ],
+      "hint": "For financial applications: SERIALIZABLE or REPEATABLE READ prevents both non-repeatable reads and phantom reads — important when computing balances or running reports that must see a consistent snapshot.",
+      "expectedOutput": "Table showing 4 isolation levels with their anomaly profiles\nSERIALIZABLE transaction query executes successfully\ncurrent_isolation: 'read committed' (default, restored after COMMIT)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 64,
+    "allowedSubmissionType": "TEXT"
+  }
+]

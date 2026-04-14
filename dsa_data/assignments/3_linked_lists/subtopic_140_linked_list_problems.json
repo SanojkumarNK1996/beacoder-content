@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Floyd's Cycle Detection",
+    "description": {
+      "task": "Implement a CycleDetector class that uses Floyd's Tortoise and Hare algorithm to detect if a linked list has a cycle, find the cycle start node, and measure the cycle length.",
+      "language": "java",
+      "starterCode": "public class CycleDetector {\n\n    static class Node {\n        int val; Node next;\n        Node(int v) { val = v; }\n    }\n\n    public boolean hasCycle(Node head) {\n        Node slow = head, fast = head;\n        while (fast != null && fast.next != null) {\n            slow = slow.next;\n            fast = fast.next.next;\n            if (slow == fast) return true;\n        }\n        return false;\n    }\n\n    public Node findCycleStart(Node head) {\n        // TODO: detect meeting point, then reset one pointer to head,\n        // advance both one step at a time until they meet -> cycle start\n        return null;\n    }\n\n    public int cycleLength(Node head) {\n        // TODO: find meeting point, then count steps to return to same node\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        CycleDetector cd = new CycleDetector();\n        // Build: 1->2->3->4->5->3 (cycle at node with val=3)\n        Node n1=new Node(1),n2=new Node(2),n3=new Node(3),n4=new Node(4),n5=new Node(5);\n        n1.next=n2; n2.next=n3; n3.next=n4; n4.next=n5; n5.next=n3;\n        System.out.println(\"Has cycle: \" + cd.hasCycle(n1));\n        System.out.println(\"Cycle start: \" + cd.findCycleStart(n1).val);\n        System.out.println(\"Cycle length: \" + cd.cycleLength(n1));\n\n        // No cycle\n        Node a=new Node(1),b=new Node(2);\n        a.next=b;\n        System.out.println(\"No cycle: \" + cd.hasCycle(a));\n    }\n}",
+      "instructions": [
+        "hasCycle is already implemented — use it as a model for the other methods",
+        "findCycleStart: run slow/fast until they meet; then set one pointer back to head; advance both one step at a time; return when they meet (that's the cycle start)",
+        "cycleLength: find the meeting point (run slow/fast until slow==fast); then count steps for slow to return to the same node",
+        "Cycle: 1->2->3->4->5->3. Meeting point by Floyd's algo, cycle start is node 3, cycle length = 3 (3->4->5->3)",
+        "findCycleStart returns the node reference, print .val"
+      ],
+      "hint": "findCycleStart: detect meeting point first (same as hasCycle but save meeting). Then Node ptr=head; while(ptr!=meeting){ptr=ptr.next;meeting=meeting.next;} return ptr. cycleLength: count steps from meeting back to meeting.",
+      "expectedOutput": "Has cycle: true\nCycle start: 3\nCycle length: 3\nNo cycle: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 140,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Merge Two Sorted Linked Lists",
+    "description": {
+      "task": "Implement a MergeSortedLists class that merges two sorted singly linked lists into a single sorted list in-place (O(1) space), and also implements merge sort on a linked list.",
+      "language": "java",
+      "starterCode": "public class MergeSortedLists {\n\n    static class Node {\n        int val; Node next;\n        Node(int v) { val = v; }\n    }\n\n    public Node mergeTwoSorted(Node l1, Node l2) {\n        Node dummy = new Node(0);\n        Node curr = dummy;\n        // TODO: compare l1.val and l2.val, attach smaller, advance\n        // append remaining list\n        return dummy.next;\n    }\n\n    private Node getMiddle(Node head) {\n        Node slow = head, fast = head.next;\n        while (fast != null && fast.next != null) {\n            slow = slow.next; fast = fast.next.next;\n        }\n        return slow;\n    }\n\n    public Node mergeSort(Node head) {\n        if (head == null || head.next == null) return head;\n        Node mid = getMiddle(head);\n        Node right = mid.next;\n        mid.next = null; // split list\n        Node left = mergeSort(head);\n        right = mergeSort(right);\n        return mergeTwoSorted(left, right);\n    }\n\n    private Node buildList(int... vals) {\n        Node dummy=new Node(0),tail=dummy;\n        for(int v:vals){tail.next=new Node(v);tail=tail.next;} return dummy.next;\n    }\n    private String listStr(Node h) {\n        StringBuilder sb=new StringBuilder();\n        while(h!=null){sb.append(h.val);if(h.next!=null)sb.append(\"->\");h=h.next;} return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        MergeSortedLists msl = new MergeSortedLists();\n        Node l1 = msl.buildList(1, 3, 5);\n        Node l2 = msl.buildList(2, 4, 6);\n        System.out.println(msl.listStr(msl.mergeTwoSorted(l1, l2)));\n        Node unsorted = msl.buildList(4, 2, 1, 3);\n        System.out.println(msl.listStr(msl.mergeSort(unsorted)));\n    }\n}",
+      "instructions": [
+        "mergeTwoSorted: while both l1 and l2 are not null, pick smaller val, attach to curr.next, advance that pointer and curr; after loop, attach remaining non-null list",
+        "mergeSort, getMiddle, buildList, and listStr are already provided",
+        "Merge [1,3,5] and [2,4,6] → [1,2,3,4,5,6]",
+        "mergeSort([4,2,1,3]) → [1,2,3,4]",
+        "Do not modify mergeSort or getMiddle"
+      ],
+      "hint": "mergeTwoSorted: while(l1!=null&&l2!=null){if(l1.val<=l2.val){curr.next=l1;l1=l1.next;}else{curr.next=l2;l2=l2.next;} curr=curr.next;} curr.next=l1!=null?l1:l2;",
+      "expectedOutput": "1->2->3->4->5->6\n1->2->3->4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 140,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Intersection of Two Linked Lists",
+    "description": {
+      "task": "Implement an Intersection class that finds the node at which two singly linked lists intersect. Use the two-pointer approach: advance each pointer to the other list's head when it reaches the end, meeting at the intersection in O(n+m) time.",
+      "language": "java",
+      "starterCode": "public class Intersection {\n\n    static class Node {\n        int val; Node next;\n        Node(int v) { val = v; }\n    }\n\n    public Node findIntersection(Node headA, Node headB) {\n        // TODO: two pointers pA=headA, pB=headB\n        // when pA reaches null, redirect to headB\n        // when pB reaches null, redirect to headA\n        // return when pA==pB (or null if no intersection)\n        return null;\n    }\n\n    public static void main(String[] args) {\n        Intersection inter = new Intersection();\n\n        // Build: A: 4->1->8->4->5\n        //        B: 5->6->1->8->4->5  (both share 8->4->5)\n        Node shared3 = new Node(5);\n        Node shared2 = new Node(4); shared2.next = shared3;\n        Node shared1 = new Node(8); shared1.next = shared2;\n\n        Node a1 = new Node(4); Node a2 = new Node(1);\n        a1.next = a2; a2.next = shared1;\n\n        Node b1 = new Node(5); Node b2 = new Node(6); Node b3 = new Node(1);\n        b1.next = b2; b2.next = b3; b3.next = shared1;\n\n        Node result = inter.findIntersection(a1, b1);\n        System.out.println(\"Intersects at: \" + (result != null ? result.val : \"null\"));\n\n        // No intersection\n        Node x = new Node(1); Node y = new Node(2);\n        System.out.println(\"No intersection: \" + inter.findIntersection(x, y));\n    }\n}",
+      "instructions": [
+        "Set pA=headA, pB=headB",
+        "While pA!=pB: advance each (pA=pA.next, pB=pB.next); when pA==null set pA=headB; when pB==null set pB=headA",
+        "When pA==pB, return pA (could be null if no intersection, meaning both reach null together)",
+        "Intersection is at the node with value 8",
+        "For no-intersection case return null"
+      ],
+      "hint": "Node pA=headA,pB=headB; while(pA!=pB){pA=(pA==null)?headB:pA.next; pB=(pB==null)?headA:pB.next;} return pA;",
+      "expectedOutput": "Intersects at: 8\nNo intersection: null"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 140,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 136, "title": "Introduction to Linked Lists", "dataType": "notes", "data": "intro_to_linked_lists.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 137, "title": "Singly Linked Lists", "dataType": "notes", "data": "singly_linked_lists.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 138, "title": "Doubly Linked Lists", "dataType": "notes", "data": "doubly_linked_lists.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 139, "title": "Circular Linked Lists", "dataType": "notes", "data": "circular_linked_lists.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 140, "title": "Linked List Problems", "dataType": "notes", "data": "linked_list_problems.html", "displayOrder": 5, "verified": false}
+]

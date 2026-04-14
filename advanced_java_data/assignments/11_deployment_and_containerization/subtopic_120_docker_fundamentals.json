@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Dockerfile Layer Analyzer",
+    "description": {
+      "task": "Create a DockerfileAnalyzer class that parses a simplified Dockerfile (as a list of instruction strings) and analyzes its layer structure. Count cacheable layers, detect security issues (running as root, latest tag), and suggest optimizations.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class DockerfileAnalyzer {\n\n    public record Instruction(String command, String args) {}\n\n    private final List<Instruction> instructions;\n\n    public DockerfileAnalyzer(List<String> lines) {\n        this.instructions = lines.stream()\n            .filter(l -> !l.isBlank() && !l.startsWith(\"#\"))\n            .map(l -> {\n                int space = l.indexOf(' ');\n                if (space < 0) return new Instruction(l.toUpperCase(), \"\");\n                return new Instruction(l.substring(0, space).toUpperCase(),\n                                       l.substring(space + 1).trim());\n            })\n            .collect(Collectors.toList());\n    }\n\n    public int layerCount() {\n        // Count instructions that create a new layer: FROM, RUN, COPY, ADD\n        return 0; // TODO\n    }\n\n    public List<String> securityWarnings() {\n        // Detect: USER instruction absent (running as root), 'latest' tag in FROM\n        List<String> warnings = new ArrayList<>();\n        // TODO\n        return warnings;\n    }\n\n    public boolean hasOptimalCopyOrder() {\n        // Returns true if COPY instructions for source code come AFTER RUN for dependencies\n        // (i.e., at least one RUN instruction appears before the last COPY)\n        return false; // TODO\n    }\n\n    public static void main(String[] args) {\n        List<String> dockerfile = List.of(\n            \"FROM openjdk:17\",\n            \"WORKDIR /app\",\n            \"COPY pom.xml .\",\n            \"RUN mvn dependency:go-offline\",\n            \"COPY src ./src\",\n            \"RUN mvn package -DskipTests\",\n            \"EXPOSE 8080\",\n            \"CMD [\\\"java\\\", \\\"-jar\\\", \\\"app.jar\\\"]\"\n        );\n\n        DockerfileAnalyzer analyzer = new DockerfileAnalyzer(dockerfile);\n        System.out.println(\"Layers: \" + analyzer.layerCount());\n        System.out.println(\"Warnings: \" + analyzer.securityWarnings());\n        System.out.println(\"Optimal COPY order: \" + analyzer.hasOptimalCopyOrder());\n    }\n}",
+      "instructions": [
+        "layerCount() counts instructions whose command is FROM, RUN, COPY, or ADD",
+        "securityWarnings() adds 'Running as root: no USER instruction found' if no USER instruction exists",
+        "securityWarnings() adds 'Using latest tag in FROM is not recommended' if any FROM args contains ':latest' or no tag (no ':' in image name)",
+        "hasOptimalCopyOrder() returns true if there is at least one RUN instruction whose index precedes the index of the last COPY instruction",
+        "Comment lines (starting with #) and blank lines are already filtered out by the constructor"
+      ],
+      "hint": "layerCount(): filter instructions where Set.of('FROM','RUN','COPY','ADD').contains(cmd), count. hasOptimalCopyOrder(): find lastCopyIndex, find any RUN index < lastCopyIndex. securityWarnings(): check no instruction has 'USER' command; check FROM args with !args.contains(':').",
+      "expectedOutput": "Layers: 5\nWarnings: [Running as root: no USER instruction found, Using latest tag in FROM is not recommended]\nOptimal COPY order: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 120,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Docker Image Layer Cache Simulator",
+    "description": {
+      "task": "Build a DockerImageCache class that simulates Docker's layer caching mechanism. Each image is built from an ordered list of layers. When layers match a prior build, the cache is reused. Implement cache hit detection and invalidation (when a layer changes, all subsequent layers are invalidated).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class DockerImageCache {\n\n    private final Map<String, List<String>> buildCache = new LinkedHashMap<>();\n\n    public void cacheBuild(String imageTag, List<String> layers) {\n        buildCache.put(imageTag, new ArrayList<>(layers));\n    }\n\n    public int cacheHitLayers(String imageTag, List<String> newLayers) {\n        // Compare newLayers against cached layers for the given tag\n        // Return the count of consecutive matching layers from the start\n        // (cache is invalidated as soon as any layer differs)\n        return 0; // TODO\n    }\n\n    public List<String> layersToRebuild(String imageTag, List<String> newLayers) {\n        // Return the layers that cannot be served from cache\n        // These are the layers starting from the first mismatch\n        return new ArrayList<>(); // TODO\n    }\n\n    public static void main(String[] args) {\n        DockerImageCache cache = new DockerImageCache();\n\n        List<String> originalLayers = List.of(\n            \"base:openjdk17\", \"deps:pom.xml-hash-abc\",\n            \"source:src-hash-111\", \"build:jar-hash-aaa\"\n        );\n        cache.cacheBuild(\"myapp:latest\", originalLayers);\n\n        // New build: only source changed\n        List<String> newLayers = List.of(\n            \"base:openjdk17\", \"deps:pom.xml-hash-abc\",\n            \"source:src-hash-999\", \"build:jar-hash-bbb\"\n        );\n\n        System.out.println(\"Cache hits: \" + cache.cacheHitLayers(\"myapp:latest\", newLayers));\n        System.out.println(\"Rebuild layers: \" + cache.layersToRebuild(\"myapp:latest\", newLayers).size());\n    }\n}",
+      "instructions": [
+        "cacheBuild() stores a copy of the layers list under the image tag",
+        "cacheHitLayers() compares newLayers against cached layers element by element from index 0",
+        "Count consecutive matches until the first mismatch or the end of either list",
+        "layersToRebuild() returns newLayers sublist starting from the first mismatch index",
+        "Return 0 and full list respectively if the image tag is not in the cache"
+      ],
+      "hint": "In cacheHitLayers(): get cached list, iterate with index, stop when layers differ. Return the count. In layersToRebuild(): use cacheHitLayers() to get the hit count, then return newLayers.subList(hitCount, newLayers.size()).",
+      "expectedOutput": "Cache hits: 2\nRebuild layers: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 120,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Container Resource Limits Validator",
+    "description": {
+      "task": "Implement a ContainerResourceValidator class that validates Docker container resource configurations against platform constraints. Check memory limits, CPU quotas, and port bindings to ensure containers are configured safely for production deployment.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ContainerResourceValidator {\n\n    public record ContainerConfig(\n        String name,\n        long memoryLimitMb,\n        double cpuLimit,\n        List<Integer> exposedPorts,\n        boolean readOnlyRootFs\n    ) {}\n\n    public record ValidationReport(List<String> errors, List<String> warnings) {\n        public boolean isValid() { return errors.isEmpty(); }\n    }\n\n    public ValidationReport validate(ContainerConfig config) {\n        List<String> errors = new ArrayList<>();\n        List<String> warnings = new ArrayList<>();\n\n        // Errors:\n        // - memoryLimitMb < 128 -> 'Memory limit too low: minimum 128MB'\n        // - cpuLimit <= 0 or cpuLimit > 8 -> 'CPU limit out of range: 0.1 to 8.0'\n        // - exposedPorts contains privileged ports (< 1024) -> 'Privileged port <N> requires root'\n\n        // Warnings:\n        // - memoryLimitMb < 256 -> 'Consider increasing memory limit for production'\n        // - !readOnlyRootFs -> 'Consider enabling read-only root filesystem'\n\n        // TODO: implement checks\n\n        return new ValidationReport(errors, warnings);\n    }\n\n    public static void main(String[] args) {\n        ContainerResourceValidator validator = new ContainerResourceValidator();\n\n        ContainerConfig config = new ContainerConfig(\n            \"api-service\", 64, 2.0, List.of(80, 8080), false\n        );\n        ValidationReport report = validator.validate(config);\n        System.out.println(\"Valid: \" + report.isValid());\n        System.out.println(\"Errors: \" + report.errors());\n        System.out.println(\"Warnings: \" + report.warnings());\n    }\n}",
+      "instructions": [
+        "Memory error: add 'Memory limit too low: minimum 128MB' when memoryLimitMb < 128",
+        "CPU error: add 'CPU limit out of range: 0.1 to 8.0' when cpuLimit <= 0 or cpuLimit > 8.0",
+        "Port error: for each port < 1024, add 'Privileged port <N> requires root'",
+        "Memory warning: add 'Consider increasing memory limit for production' when memoryLimitMb < 256",
+        "ReadOnlyRootFs warning: add 'Consider enabling read-only root filesystem' when readOnlyRootFs is false"
+      ],
+      "hint": "For privileged ports, iterate exposedPorts: if (port < 1024) errors.add('Privileged port ' + port + ' requires root'). Memory checks: error at < 128, warning at < 256 (after the error check).",
+      "expectedOutput": "Valid: false\nErrors: [Memory limit too low: minimum 128MB, Privileged port 80 requires root]\nWarnings: [Consider increasing memory limit for production, Consider enabling read-only root filesystem]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 120,
+    "allowedSubmissionType": "TEXT"
+  }
+]

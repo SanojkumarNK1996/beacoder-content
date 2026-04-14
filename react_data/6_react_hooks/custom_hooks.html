@@ -1,0 +1,40 @@
+<h1>🔧 Custom Hooks</h1>
+<h2>🎯 What are Custom Hooks?</h2>
+<p>Custom hooks are functions that start with <code>use</code> and call other hooks internally. They let you extract and share stateful logic between components without changing the component tree.</p>
+<div class="code-example">
+  <pre>
+// Custom hook: useFetch
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    setLoading(true);
+    fetch(url)
+      .then(r =&gt; r.json())
+      .then(d =&gt; { setData(d); setLoading(false); })
+      .catch(e =&gt; { setError(e); setLoading(false); });
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// Usage in any component:
+function UserList() {
+  const { data: users, loading, error } = useFetch('/api/users');
+  if (loading) return &lt;Spinner /&gt;;
+  if (error) return &lt;Error msg={error.message} /&gt;;
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+  </pre>
+</div>
+<h2>📌 Common Custom Hooks</h2>
+<ul>
+  <li><code>useLocalStorage(key, initial)</code>: Persist state to localStorage</li>
+  <li><code>useDebounce(value, delay)</code>: Debounce rapidly-changing values</li>
+  <li><code>useWindowSize()</code>: Responsive design helpers</li>
+  <li><code>useOnClickOutside(ref, callback)</code>: Detect clicks outside an element</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Custom hooks are the primary code-reuse mechanism in React. Extract any logic that uses hooks and is shared across components into a custom hook.</p>

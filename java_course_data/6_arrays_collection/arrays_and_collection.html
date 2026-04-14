@@ -1,82 +1,125 @@
-<main class="course-content">
-  <article id="arrays-collections">
-    <header>
-      <h1>6. Arrays and Collections</h1>
-      <p><strong>Goal:</strong> Handling multiple data efficiently.</p>
-    </header>
+<h1>📚 Arrays in Java</h1>
 
-    <section>
-      <h2>Arrays</h2>
-      <p>
-        An <em>array</em> is a collection of elements of the same type stored in contiguous memory locations. 
-        It allows fast access using an index and is useful when you need to store multiple values of the same kind.
-      </p>
-    </section>
+<h2>1. 🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>In a <strong>college marks system</strong>, you store marks of 5 subjects for 1 student.</li>
+  <li>In <strong>IRCTC</strong>, you store all seat numbers in a coach.</li>
+  <li>In <strong>Swiggy</strong>, you store all item prices in the current cart.</li>
+  <li>Instead of creating <code>marks1, marks2, marks3...</code>, Java gives <strong>arrays</strong> to store multiple values of the <strong>same type</strong> together.</li>
+</ul>
 
-    <section>
-      <h3>Single-dimensional Arrays</h3>
-      <p>A single-dimensional array is a simple list of elements.</p>
-      <pre><code class="language-java">
-// Example: Single-dimensional array in Java
-public class SingleArrayExample {
+<h2>2. 📖 What Is an Array?</h2>
+<ul>
+  <li>An array is a <strong>fixed-size, ordered collection</strong> of elements of the <strong>same data type</strong>.</li>
+  <li>Each element is stored at an <strong>index</strong> (position) starting from 0.</li>
+  <li>Think of it like a row of boxes in memory: each box holds one value, and you can access it by position.</li>
+</ul>
+
+<h2>3. 🧾 Syntax / Basic Structure ⭐</h2>
+<p><strong>Declaration + Creation + Initialization</strong></p>
+<pre><code class="language-java">// 1. Declare
+int[] marks;
+
+// 2. Create array of size 5
+marks = new int[5];
+
+// 3. Assign values
+marks[0] = 85;
+marks[1] = 90;
+
+// Short form (declare + create + initialize)
+int[] scores = {85, 90, 78, 92};
+</code></pre>
+
+<p><strong>Accessing elements</strong></p>
+<pre><code class="language-java">System.out.println(scores[0]);      // first element
+System.out.println(scores[3]);      // fourth element
+System.out.println(scores.length);  // size of array
+</code></pre>
+
+<h2>4. 🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<pre><code class="language-java">public class ArrayDemo {
     public static void main(String[] args) {
-        int[] numbers = {10, 20, 30, 40};
+        int[] marks = {80, 85, 90};   // 1
 
-        // Access elements
-        System.out.println("First element: " + numbers[0]);
+        System.out.println(marks[0]); // 2
 
-        // Modify an element
-        numbers[2] = 35;
+        marks[1] = 88;                // 3
 
-        // Iterate through the array
-        for (int num : numbers) {
-            System.out.println(num);
+        for (int i = 0; i < marks.length; i++) { // 4
+            System.out.println("Subject " + (i + 1) + ": " + marks[i]);
         }
     }
 }
-      </code></pre>
-    </section>
+</code></pre>
+<ol>
+  <li><strong>Line 3</strong> – Creates an array of size 3 with values 80, 85, 90.</li>
+  <li><strong>Line 5</strong> – Accesses element at index 0 → prints 80.</li>
+  <li><strong>Line 7</strong> – Updates element at index 1 from 85 to 88.</li>
+  <li><strong>Lines 9–11</strong> – Loop from <code>0</code> to <code>marks.length - 1</code> and print each value.</li>
+</ol>
 
-    <section>
-      <h3>Multi-dimensional Arrays</h3>
-      <p>A multi-dimensional array is an array of arrays, often used for tables or grids.</p>
-      <pre><code class="language-java">
-// Example: Multi-dimensional array in Java
-public class MultiArrayExample {
-    public static void main(String[] args) {
-        int[][] matrix = {
-            {1, 2, 3},
-            {4, 5, 6},
-            {7, 8, 9}
-        };
+<h2>5. ✅ When to Use Arrays</h2>
+<ul>
+  <li>When the <strong>number of items is fixed</strong> (e.g., 12 months, 7 days, 5 subjects).</li>
+  <li>When all elements are of the <strong>same type</strong> (all <code>int</code>, all <code>double</code>, etc.).</li>
+  <li>When you need <strong>fast index-based access</strong>, like <code>marks[2]</code>.</li>
+</ul>
 
-        // Access an element
-        System.out.println("Element at [1][2]: " + matrix[1][2]);
+<h2>6. ⛔ When NOT to Use Arrays</h2>
+<ul>
+  <li>When the number of elements changes frequently → prefer <strong>collections</strong> like <code>ArrayList</code>.</li>
+  <li>When you need to <strong>insert/delete</strong> in the middle often – arrays are costly to resize.</li>
+  <li>When you need to store <strong>different types</strong> together (e.g., name + age + salary) – use a <strong>class</strong> instead.</li>
+</ul>
 
-        // Print all elements
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                System.out.print(matrix[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-}
-      </code></pre>
-    </section>
+<h2>7. 🧠 Minimum You MUST Remember</h2>
+<ul>
+  <li>Indexes start from <strong>0</strong> and go till <code>length - 1</code>.</li>
+  <li>Syntax: <code>type[] name = new type[size];</code> or <code>type[] name = {values};</code>.</li>
+  <li><code>array.length</code> gives the total number of elements.</li>
+  <li>Arrays are <strong>fixed size</strong> once created.</li>
+</ul>
 
-    <section>
-      <h3>Key Points</h3>
-      <ul>
-        <li>Arrays store multiple values of the same type.</li>
-        <li>Single-dimensional arrays represent lists.</li>
-        <li>Multi-dimensional arrays represent tables or grids.</li>
-        <li>Array indices start from 0.</li>
-      </ul>
-    </section>
+<h2>8. ⚠️ Common Mistakes</h2>
+<ul>
+  <li><strong>Index out of bounds</strong>: accessing <code>marks[3]</code> when size is 3 → <code>ArrayIndexOutOfBoundsException</code>.</li>
+  <li>Confusing <code>length</code> (for arrays) with <code>length()</code> (for strings).</li>
+  <li>Forgetting that all elements get <strong>default values</strong> if not set (e.g., 0 for int, null for objects).</li>
+</ul>
 
-    <footer>
-      <p><strong>Next:</strong> Explore Collections like Lists, Sets, and Maps for more flexibility.</p>
-    </footer>
-  </article>
-</main>
+<h2>9. 🎤 Interviewer’s Perspective</h2>
+<ul>
+  <li>"What is an array? Why do we use it?"</li>
+  <li>"How do you declare, initialize, and access array elements?"</li>
+  <li>"Difference between array and ArrayList?" (basic idea only for fresher).</li>
+  <li>"What happens if you access an invalid index in an array?"</li>
+</ul>
+
+<h2>10. 📝 Practice Questions ⭐</h2>
+<ol>
+  <li>
+    <strong>Very Easy:</strong>
+    <p>
+      Create an <code>int</code> array of size 5, store your marks in 5 subjects, and print all marks.
+    </p>
+  </li>
+  <li>
+    <strong>Easy:</strong>
+    <p>
+      Write a program to find the <strong>maximum</strong> and <strong>minimum</strong> value in an <code>int</code> array.
+    </p>
+  </li>
+  <li>
+    <strong>Medium:</strong>
+    <p>
+      In a Swiggy-like app, store prices of 5 items in a <code>double</code> array and print the <strong>total bill</strong>.
+    </p>
+  </li>
+  <li>
+    <strong>Medium (Thinking):</strong>
+    <p>
+      Create a 2D <code>int</code> array representing seats in a small theatre (3 rows × 3 columns). Fill it with seat numbers and print them in matrix form.
+    </p>
+  </li>
+</ol>

@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Cloud Deployment Region Selector",
+    "description": {
+      "task": "Implement a CloudRegionSelector class that selects the optimal cloud deployment region for an application based on requirements: latency to target users, data residency compliance, and service availability. Score each region and return the best match.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class CloudRegionSelector {\n\n    public record Region(\n        String name,\n        String continent,\n        int avgLatencyMs,\n        Set<String> availableServices,\n        boolean gdprCompliant\n    ) {}\n\n    private final List<Region> regions = new ArrayList<>();\n\n    public void addRegion(Region region) {\n        regions.add(region);\n    }\n\n    public Optional<Region> selectBest(\n        String requiredContinent,\n        Set<String> requiredServices,\n        boolean needsGdpr\n    ) {\n        // Filter by continent, required services, and GDPR if needed\n        // Among eligible regions, return the one with lowest avgLatencyMs\n        return Optional.empty(); // TODO\n    }\n\n    public List<Region> rankByLatency(Set<String> requiredServices) {\n        // Return all regions that have all required services, sorted by latency ascending\n        return new ArrayList<>(); // TODO\n    }\n\n    public static void main(String[] args) {\n        CloudRegionSelector selector = new CloudRegionSelector();\n        selector.addRegion(new Region(\"eu-west-1\", \"Europe\", 12, Set.of(\"EC2\",\"RDS\",\"Lambda\"), true));\n        selector.addRegion(new Region(\"us-east-1\", \"Americas\", 8, Set.of(\"EC2\",\"RDS\",\"Lambda\",\"Ground\"), false));\n        selector.addRegion(new Region(\"eu-central-1\", \"Europe\", 10, Set.of(\"EC2\",\"RDS\"), true));\n\n        Optional<Region> best = selector.selectBest(\"Europe\", Set.of(\"EC2\",\"RDS\",\"Lambda\"), true);\n        System.out.println(\"Best region: \" + best.map(Region::name).orElse(\"none\"));\n\n        List<Region> ranked = selector.rankByLatency(Set.of(\"EC2\",\"RDS\"));\n        System.out.println(\"Ranked count: \" + ranked.size());\n        System.out.println(\"Fastest: \" + ranked.get(0).name());\n    }\n}",
+      "instructions": [
+        "addRegion() appends a Region to the regions list",
+        "selectBest() filters regions by matching continent, all required services, and GDPR if needsGdpr=true",
+        "Among filtered regions, selectBest() returns the one with the minimum avgLatencyMs",
+        "rankByLatency() filters regions that contain all requiredServices (containsAll), sorted ascending by avgLatencyMs",
+        "Both methods return empty/empty-list when no regions match"
+      ],
+      "hint": "selectBest(): stream.filter(r -> r.continent().equals(requiredContinent) && r.availableServices().containsAll(requiredServices) && (!needsGdpr || r.gdprCompliant())).min(Comparator.comparingInt(Region::avgLatencyMs)). rankByLatency(): filter containsAll then sort.",
+      "expectedOutput": "Best region: eu-west-1\nRanked count: 3\nFastest: us-east-1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 122,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Blue-Green Deployment Traffic Controller",
+    "description": {
+      "task": "Implement a BlueGreenController class that manages traffic routing between two deployment slots (Blue and Green). During deployment, traffic is shifted from the active slot to the new version gradually. Implement traffic weight assignment and rollback capability.",
+      "language": "java",
+      "starterCode": "public class BlueGreenController {\n\n    public enum Slot { BLUE, GREEN }\n\n    private Slot activeSlot = Slot.BLUE;\n    private int blueWeight = 100;\n    private int greenWeight = 0;\n\n    public void shiftTraffic(int bluePercent, int greenPercent) {\n        // Validate total must equal 100\n        if (bluePercent + greenPercent != 100) {\n            throw new IllegalArgumentException(\"Traffic weights must sum to 100\");\n        }\n        this.blueWeight = bluePercent;\n        this.greenWeight = greenPercent;\n    }\n\n    public void promoteGreen() {\n        // Make Green the active slot, send all traffic to it\n        activeSlot = Slot.GREEN;\n        blueWeight = 0;\n        greenWeight = 100;\n    }\n\n    public void rollback() {\n        // Revert to Blue as active slot with 100% traffic\n        // TODO\n    }\n\n    public Slot routeRequest(double randomValue) {\n        // randomValue is between 0.0 and 1.0\n        // Route to BLUE if randomValue < blueWeight/100.0, else GREEN\n        return null; // TODO\n    }\n\n    public String status() {\n        return \"Active: \" + activeSlot + \" | Blue: \" + blueWeight + \"% | Green: \" + greenWeight + \"%\";\n    }\n\n    public static void main(String[] args) {\n        BlueGreenController controller = new BlueGreenController();\n        System.out.println(controller.status());\n\n        controller.shiftTraffic(80, 20);\n        System.out.println(\"Route 0.1: \" + controller.routeRequest(0.1));\n        System.out.println(\"Route 0.9: \" + controller.routeRequest(0.9));\n\n        controller.promoteGreen();\n        System.out.println(controller.status());\n\n        controller.rollback();\n        System.out.println(controller.status());\n    }\n}",
+      "instructions": [
+        "shiftTraffic() validates that bluePercent + greenPercent == 100 before setting weights",
+        "promoteGreen() sets activeSlot=GREEN, blueWeight=0, greenWeight=100",
+        "rollback() sets activeSlot=BLUE, blueWeight=100, greenWeight=0",
+        "routeRequest() returns BLUE if randomValue < (blueWeight / 100.0), otherwise GREEN",
+        "status() format is already implemented — do not change it"
+      ],
+      "hint": "rollback(): activeSlot = Slot.BLUE; blueWeight = 100; greenWeight = 0. routeRequest(): return randomValue < (blueWeight / 100.0) ? Slot.BLUE : Slot.GREEN;",
+      "expectedOutput": "Active: BLUE | Blue: 100% | Green: 0%\nRoute 0.1: BLUE\nRoute 0.9: GREEN\nActive: GREEN | Blue: 0% | Green: 100%\nActive: BLUE | Blue: 100% | Green: 0%"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 122,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Kubernetes Pod Spec Generator",
+    "description": {
+      "task": "Build a K8sPodSpecGenerator class that generates a simplified Kubernetes Pod specification in a structured format. Include container configuration (image, ports, env vars, resource limits) and produce a human-readable YAML-like output string.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class K8sPodSpecGenerator {\n\n    public record ResourceRequirements(String memoryRequest, String memoryLimit,\n                                       String cpuRequest, String cpuLimit) {}\n\n    public record ContainerSpec(\n        String name,\n        String image,\n        int containerPort,\n        Map<String, String> envVars,\n        ResourceRequirements resources\n    ) {}\n\n    public String generate(String podName, String namespace, ContainerSpec container) {\n        StringBuilder sb = new StringBuilder();\n        sb.append(\"apiVersion: v1\\n\");\n        sb.append(\"kind: Pod\\n\");\n        sb.append(\"metadata:\\n\");\n        sb.append(\"  name: \").append(podName).append(\"\\n\");\n        sb.append(\"  namespace: \").append(namespace).append(\"\\n\");\n        sb.append(\"spec:\\n\");\n        sb.append(\"  containers:\\n\");\n        sb.append(\"  - name: \").append(container.name()).append(\"\\n\");\n        sb.append(\"    image: \").append(container.image()).append(\"\\n\");\n        sb.append(\"    ports:\\n\");\n        sb.append(\"    - containerPort: \").append(container.containerPort()).append(\"\\n\");\n\n        // TODO: add env vars section\n        // TODO: add resources section with requests and limits\n\n        return sb.toString().trim();\n    }\n\n    public static void main(String[] args) {\n        K8sPodSpecGenerator gen = new K8sPodSpecGenerator();\n        ContainerSpec spec = new ContainerSpec(\n            \"api\",\n            \"myapp:1.0.0\",\n            8080,\n            Map.of(\"SPRING_PROFILES_ACTIVE\", \"production\", \"LOG_LEVEL\", \"WARN\"),\n            new ResourceRequirements(\"256Mi\", \"512Mi\", \"250m\", \"500m\")\n        );\n        System.out.println(gen.generate(\"api-pod\", \"default\", spec));\n    }\n}",
+      "instructions": [
+        "After the ports section, add an 'env:' block listing each envVar as '    - name: KEY\\n      value: VALUE'",
+        "After env, add a 'resources:' block with 'requests:' and 'limits:' sub-sections",
+        "Requests section: '      memory: <memoryRequest>' and '      cpu: <cpuRequest>'",
+        "Limits section: '      memory: <memoryLimit>' and '      cpu: <cpuLimit>'",
+        "The final output should not have a trailing newline (the .trim() handles this)"
+      ],
+      "hint": "For env vars: sb.append('    env:\\n'); then iterate envVars.entrySet() appending '    - name: ' + key + '\\n      value: ' + value + '\\n'. For resources, use 4 spaces for 'resources:' and 6 spaces for sub-keys.",
+      "expectedOutput": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: api-pod\n  namespace: default\nspec:\n  containers:\n  - name: api\n    image: myapp:1.0.0\n    ports:\n    - containerPort: 8080\n    env:\n    - name: LOG_LEVEL\n      value: WARN\n    - name: SPRING_PROFILES_ACTIVE\n      value: production\n    resources:\n      requests:\n        memory: 256Mi\n        cpu: 250m\n      limits:\n        memory: 512Mi\n        cpu: 500m"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 122,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,36 @@
+<h1>📌 useRef and useCallback</h1>
+<h2>🔖 useRef</h2>
+<p><code>useRef</code> creates a mutable reference that persists across renders without causing re-renders when changed. Two main uses:</p>
+<div class="code-example">
+  <pre>
+// 1. DOM access
+function FocusInput() {
+  const inputRef = useRef(null);
+  return (
+    &lt;&gt;
+      &lt;input ref={inputRef} /&gt;
+      &lt;button onClick={() =&gt; inputRef.current.focus()}&gt;Focus&lt;/button&gt;
+    &lt;/&gt;
+  );
+}
+
+// 2. Store mutable value (no re-render)
+function Timer() {
+  const intervalRef = useRef(null);
+  const start = () =&gt; { intervalRef.current = setInterval(tick, 1000); };
+  const stop = () =&gt; clearInterval(intervalRef.current);
+  ...
+}
+  </pre>
+</div>
+<h2>⚡ useCallback</h2>
+<p>Memoizes a function — returns the same function reference if dependencies haven't changed. Prevents unnecessary re-renders in child components that receive the function as props.</p>
+<div class="code-example">
+  <pre>
+const handleSubmit = useCallback(() =&gt; {
+  submitForm(data);
+}, [data]);   // New function only when data changes
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Use <code>useRef</code> for DOM access and storing mutable values, <code>useCallback</code> to stabilize function references passed to memoized child components.</p>

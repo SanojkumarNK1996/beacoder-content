@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Repository Pattern Implementation",
+    "description": {
+      "task": "Implement the Repository pattern for a Product entity. The repository abstracts data access operations (CRUD) behind an interface. Implement an in-memory version. Demonstrate how Spring Data JPA's JpaRepository models this pattern.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class ProductRepository {\n\n    public record Product(int id, String name, String category, double price) {}\n\n    interface Repository<T, ID> {\n        void save(T entity);\n        Optional<T> findById(ID id);\n        List<T> findAll();\n        void delete(ID id);\n        int count();\n    }\n\n    static class InMemoryProductRepository implements Repository<Product, Integer> {\n        private final Map<Integer, Product> store = new LinkedHashMap<>();\n\n        public void save(Product product) {\n            store.put(product.id(), product);\n        }\n\n        public Optional<Product> findById(Integer id) {\n            return Optional.ofNullable(store.get(id));\n        }\n\n        public List<Product> findAll() {\n            return new ArrayList<>(store.values());\n        }\n\n        public void delete(Integer id) {\n            store.remove(id);\n        }\n\n        public int count() { return store.size(); }\n\n        public List<Product> findByCategory(String category) {\n            // Return products where category matches (case-insensitive)\n            return new ArrayList<>(); // TODO\n        }\n\n        public List<Product> findByMaxPrice(double maxPrice) {\n            // Return products with price <= maxPrice, sorted by price ascending\n            return new ArrayList<>(); // TODO\n        }\n    }\n\n    public static void main(String[] args) {\n        InMemoryProductRepository repo = new InMemoryProductRepository();\n        repo.save(new Product(1, \"Laptop\", \"Electronics\", 999.99));\n        repo.save(new Product(2, \"Mouse\", \"Electronics\", 29.99));\n        repo.save(new Product(3, \"Desk\", \"Furniture\", 249.99));\n\n        System.out.println(\"Count: \" + repo.count());\n        System.out.println(\"Find 2: \" + repo.findById(2).map(Product::name).orElse(\"Not found\"));\n        System.out.println(\"Electronics: \" + repo.findByCategory(\"electronics\").size());\n        repo.delete(1);\n        System.out.println(\"After delete: \" + repo.count());\n        System.out.println(\"Cheap items: \" + repo.findByMaxPrice(250.0).stream().map(Product::name).collect(java.util.stream.Collectors.toList()));\n    }\n}",
+      "instructions": [
+        "save() uses the product's id as the map key, overwriting any existing product with the same id",
+        "findById() wraps the map lookup in Optional.ofNullable()",
+        "findByCategory() filters products case-insensitively: use equalsIgnoreCase() on the category field",
+        "findByMaxPrice() filters products where price <= maxPrice and sorts by price ascending",
+        "delete() removes the product by id; no-op if id not found"
+      ],
+      "hint": "findByCategory(): return store.values().stream().filter(p -> p.category().equalsIgnoreCase(category)).collect(...). findByMaxPrice(): filter p.price() <= maxPrice then sort with Comparator.comparingDouble(Product::price).",
+      "expectedOutput": "Count: 3\nFind 2: Mouse\nElectronics: 2\nAfter delete: 2\nCheap items: [Mouse, Desk]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 118,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Template Method Pattern for Report Generation",
+    "description": {
+      "task": "Implement the Template Method pattern for generating reports. An abstract ReportGenerator defines the fixed algorithm steps (fetchData → processData → formatOutput → export). Subclasses override specific steps for CSV and JSON report formats.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ReportGenerator {\n\n    // Template method — defines the algorithm skeleton\n    public final String generate(List<String[]> rawData) {\n        List<String[]> processed = processData(rawData);\n        String formatted = formatOutput(processed);\n        return export(formatted);\n    }\n\n    // Hook: default is identity (no filtering)\n    protected List<String[]> processData(List<String[]> data) {\n        return data;\n    }\n\n    // Abstract steps to be implemented by subclasses\n    protected String formatOutput(List<String[]> data) { return \"\"; }\n    protected String export(String content) { return content; }\n\n    static class CsvReportGenerator extends ReportGenerator {\n        @Override\n        protected String formatOutput(List<String[]> data) {\n            // Join each row with commas, join rows with newlines\n            StringBuilder sb = new StringBuilder();\n            for (String[] row : data) {\n                sb.append(String.join(\",\", row)).append(\"\\n\");\n            }\n            return sb.toString().trim();\n        }\n\n        @Override\n        protected String export(String content) {\n            return \"CSV:\\n\" + content;\n        }\n    }\n\n    static class JsonReportGenerator extends ReportGenerator {\n        @Override\n        protected String formatOutput(List<String[]> data) {\n            // Format each row as JSON object assuming first element is key, second is value\n            // Return a JSON array string\n            return null; // TODO\n        }\n\n        @Override\n        protected String export(String content) {\n            return \"JSON:\\n\" + content;\n        }\n    }\n\n    public static void main(String[] args) {\n        List<String[]> data = List.of(\n            new String[]{\"name\", \"Alice\"},\n            new String[]{\"age\", \"30\"}\n        );\n\n        System.out.println(new CsvReportGenerator().generate(data));\n        System.out.println(new JsonReportGenerator().generate(data));\n    }\n}",
+      "instructions": [
+        "The template method generate() is final and must not be overridden",
+        "CsvReportGenerator.formatOutput() joins each row's elements with ',' and rows with newlines",
+        "JsonReportGenerator.formatOutput() formats as '[{\"name\":\"Alice\"},{\"age\":\"30\"}]' (each row as key-value JSON object)",
+        "Both subclasses override export() to prefix the content with 'CSV:\\n' and 'JSON:\\n' respectively",
+        "processData() is a hook with a default identity implementation; subclasses may optionally override it"
+      ],
+      "hint": "JsonReportGenerator.formatOutput(): build a StringBuilder, iterate rows, format as '{\"' + row[0] + '\":\"' + row[1] + '\"}', join with ',' inside brackets '[...]'.",
+      "expectedOutput": "CSV:\nname,Alice\nage,30\nJSON:\n[{\"name\":\"Alice\"},{\"age\":\"30\"}]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 118,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "DTO and Mapper Pattern",
+    "description": {
+      "task": "Implement the Data Transfer Object (DTO) pattern with a Mapper for a User entity. The entity contains sensitive fields (password hash, internal id). The DTO exposes only safe fields for API responses. The mapper converts between entity and DTO.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class UserMapper {\n\n    // Entity (internal representation — never expose directly)\n    public record UserEntity(int id, String username, String email, String passwordHash, String role, boolean active) {}\n\n    // DTO (safe for API responses)\n    public record UserDto(String username, String email, String role) {}\n\n    // Admin DTO (includes all safe admin-visible fields)\n    public record AdminUserDto(int id, String username, String email, String role, boolean active) {}\n\n    public UserDto toDto(UserEntity entity) {\n        // Map entity to UserDto — omit id and passwordHash\n        return null; // TODO\n    }\n\n    public AdminUserDto toAdminDto(UserEntity entity) {\n        // Map entity to AdminUserDto — include id and active, still omit passwordHash\n        return null; // TODO\n    }\n\n    public List<UserDto> toDtoList(List<UserEntity> entities) {\n        // Map a list of entities to a list of DTOs\n        return new ArrayList<>(); // TODO\n    }\n\n    public static void main(String[] args) {\n        UserMapper mapper = new UserMapper();\n        UserEntity entity = new UserEntity(42, \"alice\", \"alice@example.com\", \"$2b$hash\", \"USER\", true);\n\n        UserDto dto = mapper.toDto(entity);\n        System.out.println(\"DTO username: \" + dto.username());\n        System.out.println(\"DTO email: \" + dto.email());\n\n        AdminUserDto adminDto = mapper.toAdminDto(entity);\n        System.out.println(\"Admin ID: \" + adminDto.id());\n        System.out.println(\"Admin active: \" + adminDto.active());\n\n        List<UserEntity> entities = List.of(entity,\n            new UserEntity(43, \"bob\", \"bob@example.com\", \"$2b$hash2\", \"ADMIN\", false));\n        System.out.println(\"DTO list size: \" + mapper.toDtoList(entities).size());\n    }\n}",
+      "instructions": [
+        "toDto() creates a UserDto from entity, copying only username, email, and role fields",
+        "toAdminDto() creates an AdminUserDto including id, username, email, role, and active (excluding passwordHash)",
+        "toDtoList() maps each entity in the list to a UserDto using toDto()",
+        "Neither DTO should ever include the passwordHash field",
+        "toDtoList() preserves the original order of the input list"
+      ],
+      "hint": "toDto(): return new UserDto(entity.username(), entity.email(), entity.role()). toAdminDto(): return new AdminUserDto(entity.id(), entity.username(), entity.email(), entity.role(), entity.active()). toDtoList(): stream map toDto.",
+      "expectedOutput": "DTO username: alice\nDTO email: alice@example.com\nAdmin ID: 42\nAdmin active: true\nDTO list size: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 118,
+    "allowedSubmissionType": "TEXT"
+  }
+]

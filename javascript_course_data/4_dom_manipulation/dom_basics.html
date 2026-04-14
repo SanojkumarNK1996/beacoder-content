@@ -1,0 +1,32 @@
+<h1>DOM Basics</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>To let JavaScript read and modify HTML elements dynamically (for example, updating cart count or error messages).</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>DOM (Document Object Model) is a tree representation of the HTML page.</li>
+  <li>JavaScript can query and update this tree.</li>
+</ul>
+
+<h2>Basic examples</h2>
+<pre><code>// HTML: &lt;p id="msg"&gt;Hello&lt;/p&gt;
+
+const para = document.getElementById('msg');
+para.textContent = 'Hello, JavaScript!';
+para.style.color = 'blue';
+</code></pre>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>Use document.getElementById, querySelector, or querySelectorAll to find elements.</li>
+  <li>You can change text, attributes, styles, and even create/remove elements.</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Select a button by ID and change its text using JavaScript.</li>
+  <li>Create a new list item and append it to an existing &lt;ul&gt;.</li>
+</ol>

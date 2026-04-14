@@ -1,0 +1,20 @@
+<h1>🔧 Microservices Architecture on AWS</h1>
+<h2>🎯 What are Microservices?</h2>
+<p>Microservices break a monolithic application into small, independently deployable services, each owning its data and business logic.</p>
+<h2>📋 AWS Services for Microservices</h2>
+<ul>
+  <li><strong>API Gateway</strong>: Single entry point; routes to different microservices</li>
+  <li><strong>ECS/EKS</strong>: Run each microservice as a container</li>
+  <li><strong>Lambda</strong>: Lightweight serverless microservices</li>
+  <li><strong>SQS/SNS/EventBridge</strong>: Async communication between services</li>
+  <li><strong>DynamoDB</strong>: Per-service database (database-per-service pattern)</li>
+  <li><strong>Service Mesh (AWS App Mesh)</strong>: Observability and traffic management between services</li>
+</ul>
+<h2>📌 Patterns</h2>
+<ul>
+  <li><strong>Database-per-service</strong>: Each service owns its data store</li>
+  <li><strong>Event sourcing</strong>: Services communicate via events (EventBridge, Kinesis)</li>
+  <li><strong>API Gateway + Lambda + DynamoDB</strong>: The pure serverless microservice stack</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Microservices on AWS give you independent deployability and scale-per-service, but add operational complexity. Start with a monolith; extract services as scale demands it.</p>

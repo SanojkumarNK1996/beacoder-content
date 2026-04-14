@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Dependency Version Conflict Resolver",
+    "description": {
+      "task": "Implement a VersionConflictResolver class that models Maven's nearest-wins and Gradle's highest-wins version resolution strategies. Given conflicting versions of the same dependency artifact, return the resolved version for each strategy.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class VersionConflictResolver {\n\n    public record VersionCandidate(String version, int depth) {}\n\n    public String resolveNearest(List<VersionCandidate> candidates) {\n        // Maven strategy: return the version with the smallest depth\n        // On tie, return the first one in the list\n        return \"\";\n    }\n\n    public String resolveHighest(List<VersionCandidate> candidates) {\n        // Gradle strategy: return the highest semantic version\n        // Versions are in 'MAJOR.MINOR.PATCH' format\n        return \"\";\n    }\n\n    private int[] parseVersion(String version) {\n        // Parse 'MAJOR.MINOR.PATCH' into an int array [major, minor, patch]\n        String[] parts = version.split(\"\\\\.\");\n        return new int[]{ Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]) };\n    }\n\n    public static void main(String[] args) {\n        VersionConflictResolver resolver = new VersionConflictResolver();\n        List<VersionCandidate> candidates = List.of(\n            new VersionCandidate(\"2.1.0\", 3),\n            new VersionCandidate(\"1.9.5\", 1),\n            new VersionCandidate(\"3.0.0\", 2)\n        );\n        System.out.println(\"Nearest: \" + resolver.resolveNearest(candidates));\n        System.out.println(\"Highest: \" + resolver.resolveHighest(candidates));\n    }\n}",
+      "instructions": [
+        "resolveNearest() finds the candidate with the minimum depth value",
+        "On tie in depth, resolveNearest() returns the first occurrence in the list",
+        "resolveHighest() compares versions numerically: compare major, then minor, then patch",
+        "parseVersion() helper splits the version string and converts to int array",
+        "Both methods must handle a list with a single candidate correctly"
+      ],
+      "hint": "For resolveNearest(), use stream min with Comparator.comparingInt(c -> c.depth()). For resolveHighest(), compare int arrays element by element using Arrays.compare().",
+      "expectedOutput": "Nearest: 1.9.5\nHighest: 3.0.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 106,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Transitive Dependency Expander",
+    "description": {
+      "task": "Create a TransitiveDependencyExpander class that resolves the full transitive dependency tree of a project. Given direct dependencies and their own dependencies, expand the full set of libraries needed at runtime.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TransitiveDependencyExpander {\n\n    private final Map<String, Set<String>> dependencyGraph = new HashMap<>();\n\n    public void register(String artifact, Set<String> itsOwnDeps) {\n        dependencyGraph.put(artifact, new HashSet<>(itsOwnDeps));\n    }\n\n    public Set<String> expandAll(Set<String> directDeps) {\n        // Return the full set of all transitive dependencies (including direct)\n        // Do not include the starting artifacts themselves if they are not deps of anything else\n        Set<String> result = new LinkedHashSet<>();\n        // Implement BFS or DFS expansion\n        return result;\n    }\n\n    public static void main(String[] args) {\n        TransitiveDependencyExpander expander = new TransitiveDependencyExpander();\n        expander.register(\"spring-web\", Set.of(\"spring-core\", \"spring-beans\"));\n        expander.register(\"spring-core\", Set.of(\"commons-logging\"));\n        expander.register(\"spring-beans\", Set.of(\"spring-core\"));\n        expander.register(\"commons-logging\", Set.of());\n\n        Set<String> full = expander.expandAll(Set.of(\"spring-web\"));\n        System.out.println(\"Total deps: \" + full.size());\n        System.out.println(\"Contains commons-logging: \" + full.contains(\"commons-logging\"));\n    }\n}",
+      "instructions": [
+        "register() stores each artifact's direct dependencies in dependencyGraph",
+        "expandAll() uses BFS or DFS starting from directDeps",
+        "The result includes the directDeps themselves and all their transitive dependencies",
+        "Each artifact appears only once in the result set (no duplicates)",
+        "Artifacts not registered in dependencyGraph are treated as leaf nodes with no further dependencies"
+      ],
+      "hint": "Use a Queue for BFS. Start by adding all directDeps to both the queue and result. For each polled artifact, look up its deps in dependencyGraph, add any not yet in result, and enqueue them.",
+      "expectedOutput": "Total deps: 4\nContains commons-logging: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 106,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Bill of Materials (BOM) Enforcer",
+    "description": {
+      "task": "Implement a BomEnforcer class that simulates Maven's Bill of Materials (BOM) concept. A BOM defines approved versions for artifacts. The enforcer checks whether project dependencies use BOM-approved versions and reports any violations.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BomEnforcer {\n\n    private final Map<String, String> bomVersions = new HashMap<>();\n\n    public void importBom(Map<String, String> bom) {\n        // Register artifact -> approved version mappings from the BOM\n        bomVersions.putAll(bom);\n    }\n\n    public List<String> enforceVersions(Map<String, String> projectDeps) {\n        // Check each projectDep against BOM versions\n        // Return list of violation messages for mismatches\n        // Format: 'VIOLATION: artifact uses X but BOM requires Y'\n        return new ArrayList<>();\n    }\n\n    public Map<String, String> resolveVersions(Map<String, String> projectDeps) {\n        // Return a new map: if dep has no version (empty string), use BOM version\n        // If dep has a version and it matches BOM, keep it\n        // If dep has a version that doesn't match BOM, keep project version (override)\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        BomEnforcer enforcer = new BomEnforcer();\n        enforcer.importBom(Map.of(\n            \"spring-core\", \"6.0.0\",\n            \"spring-web\", \"6.0.0\",\n            \"jackson\", \"2.14.0\"\n        ));\n\n        Map<String, String> projectDeps = Map.of(\n            \"spring-core\", \"5.3.0\",\n            \"spring-web\", \"6.0.0\",\n            \"jackson\", \"\"\n        );\n\n        System.out.println(enforcer.enforceVersions(projectDeps));\n        Map<String, String> resolved = enforcer.resolveVersions(projectDeps);\n        System.out.println(\"jackson resolved to: \" + resolved.get(\"jackson\"));\n    }\n}",
+      "instructions": [
+        "importBom() merges the given map into bomVersions",
+        "enforceVersions() iterates over projectDeps; for each artifact in bomVersions, check if version matches",
+        "Violations are reported only when the project specifies a non-empty version that differs from the BOM",
+        "Violation message format: 'VIOLATION: [artifact] uses [project version] but BOM requires [bom version]'",
+        "resolveVersions() fills empty project versions from the BOM; artifacts not in BOM are returned as-is"
+      ],
+      "hint": "In enforceVersions(), check if !projVersion.isEmpty() && !projVersion.equals(bomVersion) to trigger violation. In resolveVersions(), use bomVersions.getOrDefault() to fill in blanks.",
+      "expectedOutput": "[VIOLATION: spring-core uses 5.3.0 but BOM requires 6.0.0]\njackson resolved to: 2.14.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 106,
+    "allowedSubmissionType": "TEXT"
+  }
+]

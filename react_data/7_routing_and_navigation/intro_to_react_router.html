@@ -1,0 +1,39 @@
+<h1>🗺️ Introduction to React Router</h1>
+<h2>🎯 What is React Router?</h2>
+<p><strong>React Router</strong> is the standard routing library for React. It enables client-side navigation — the URL changes and the view updates without a full page reload.</p>
+<div class="code-example">
+  <pre>
+npm install react-router-dom
+  </pre>
+</div>
+<h2>🔧 Basic Setup (v6)</h2>
+<div class="code-example">
+  <pre>
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;nav&gt;
+        &lt;Link to="/"&gt;Home&lt;/Link&gt; | &lt;Link to="/about"&gt;About&lt;/Link&gt;
+      &lt;/nav&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;HomePage /&gt;} /&gt;
+        &lt;Route path="/about" element={&lt;AboutPage /&gt;} /&gt;
+        &lt;Route path="/users/:id" element={&lt;UserPage /&gt;} /&gt;
+        &lt;Route path="*" element={&lt;NotFoundPage /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}
+  </pre>
+</div>
+<h2>🎯 Key Components</h2>
+<ul>
+  <li><code>&lt;BrowserRouter&gt;</code>: Wraps app, uses HTML5 history API</li>
+  <li><code>&lt;Routes&gt;</code>: Matches URL to a route</li>
+  <li><code>&lt;Route&gt;</code>: Defines a URL path → component mapping</li>
+  <li><code>&lt;Link&gt;</code>: Navigate without page reload (use instead of <code>&lt;a&gt;</code>)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>React Router v6 is clean and declarative. Define routes with <code>&lt;Route&gt;</code>, navigate with <code>&lt;Link&gt;</code> or <code>useNavigate()</code>.</p>

@@ -1,0 +1,22 @@
+<h1>🏗️ Three-Tier Architecture on AWS</h1>
+<h2>🎯 What is Three-Tier Architecture?</h2>
+<p>The standard web application pattern: <strong>Presentation → Logic → Data</strong> tiers, each independently scalable and replaceable.</p>
+<h2>🗺️ AWS Implementation</h2>
+<div class="code-example">
+  <pre>
+Internet → Route 53 (DNS)
+         → CloudFront (CDN)
+         → ALB (Application Load Balancer)  [Public Subnet]
+         → EC2 / ECS (App Servers)          [Private Subnet]
+         → RDS / Aurora (Database)          [Private Subnet]
+         +→ ElastiCache (Cache Layer)        [Private Subnet]
+  </pre>
+</div>
+<h2>📋 Tier Responsibilities</h2>
+<ul>
+  <li><strong>Presentation</strong>: React/Angular SPA served via S3 + CloudFront. Or ALB → EC2 web tier.</li>
+  <li><strong>Application</strong>: EC2 (Auto Scaling), ECS containers, or Lambda. Business logic.</li>
+  <li><strong>Data</strong>: RDS/Aurora (relational), DynamoDB (NoSQL), S3 (objects), ElastiCache (cache).</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Three-tier is the starting point for most web apps on AWS. Keep tiers in separate subnets, use security groups to enforce tier isolation.</p>

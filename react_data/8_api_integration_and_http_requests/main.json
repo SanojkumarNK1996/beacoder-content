@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 293, "title": "Fetch API and HTTP Requests", "dataType": "notes", "data": "fetch_api_http_requests.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 294, "title": "Axios Library", "dataType": "notes", "data": "axios_library.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 295, "title": "Handling Loading and Error States", "dataType": "notes", "data": "loading_and_error_states.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 296, "title": "React Query for Data Fetching", "dataType": "notes", "data": "react_query.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 297, "title": "REST vs GraphQL in React", "dataType": "notes", "data": "rest_vs_graphql.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 298, "title": "Authentication Patterns JWT and OAuth", "dataType": "notes", "data": "authentication_patterns.html", "displayOrder": 6, "verified": false}
+]

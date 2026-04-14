@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Classify Data Structures by Type",
+    "description": {
+      "task": "Create a DataStructureClassifier class that categorizes data structures into Linear (Array, LinkedList, Stack, Queue) and Non-Linear (Tree, Graph) types. Implement methods to classify a given name and list all structures of a given category.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class DataStructureClassifier {\n\n    private static final Map<String, String> classifications = new HashMap<>();\n\n    static {\n        // Populate: name -> \"linear\" or \"non-linear\"\n    }\n\n    public String classify(String name) {\n        // Return classification (case-insensitive lookup), or \"unknown\"\n        return \"unknown\";\n    }\n\n    public List<String> getAllOfType(String type) {\n        // Return all data structure names matching the type\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        DataStructureClassifier clf = new DataStructureClassifier();\n        System.out.println(clf.classify(\"Array\"));\n        System.out.println(clf.classify(\"Tree\"));\n        System.out.println(clf.classify(\"unknown\"));\n        System.out.println(\"Linear count: \" + clf.getAllOfType(\"linear\").size());\n    }\n}",
+      "instructions": [
+        "Populate the static map with at least 4 linear structures: Array, LinkedList, Stack, Queue",
+        "Populate with at least 2 non-linear structures: Tree, Graph",
+        "classify() performs a case-insensitive lookup; return 'unknown' if not found",
+        "getAllOfType() returns all names whose value equals the given type string",
+        "Type comparison should be case-insensitive"
+      ],
+      "hint": "Store all keys in lowercase in the map. In classify(), do classifications.getOrDefault(name.toLowerCase(), 'unknown'). For getAllOfType(), stream entries filtering by value equalsIgnoreCase.",
+      "expectedOutput": "linear\nnon-linear\nunknown\nLinear count: 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 127,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Data Structure Selection Advisor",
+    "description": {
+      "task": "Implement a DataStructureAdvisor class that recommends the best data structure given a set of requirements. Requirements include: ordered insertion, fast lookup, LIFO access, FIFO access, key-value storage, and hierarchical relationships.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class DataStructureAdvisor {\n\n    public enum Requirement {\n        ORDERED_INSERTION, FAST_LOOKUP, LIFO_ACCESS, FIFO_ACCESS,\n        KEY_VALUE_STORAGE, HIERARCHICAL\n    }\n\n    public String recommend(Set<Requirement> requirements) {\n        // Return best data structure name based on requirements\n        if (requirements.contains(Requirement.LIFO_ACCESS)) return \"Stack\";\n        if (requirements.contains(Requirement.FIFO_ACCESS)) return \"Queue\";\n        if (requirements.contains(Requirement.KEY_VALUE_STORAGE)) return \"HashMap\";\n        if (requirements.contains(Requirement.HIERARCHICAL)) return \"Tree\";\n        if (requirements.contains(Requirement.FAST_LOOKUP)) return \"HashSet\";\n        if (requirements.contains(Requirement.ORDERED_INSERTION)) return \"ArrayList\";\n        return \"Array\";\n    }\n\n    public Map<String, String> justification() {\n        // Return map of data structure -> one-line justification\n        // TODO: populate with at least Stack, Queue, HashMap, Tree, HashSet, ArrayList\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        DataStructureAdvisor advisor = new DataStructureAdvisor();\n        System.out.println(advisor.recommend(Set.of(Requirement.LIFO_ACCESS)));\n        System.out.println(advisor.recommend(Set.of(Requirement.FIFO_ACCESS)));\n        System.out.println(advisor.recommend(Set.of(Requirement.KEY_VALUE_STORAGE)));\n        System.out.println(\"Justifications: \" + advisor.justification().size());\n    }\n}",
+      "instructions": [
+        "recommend() checks requirements in the predefined priority order shown in the skeleton",
+        "justification() returns a map with at least 6 entries (Stack, Queue, HashMap, Tree, HashSet, ArrayList)",
+        "Each justification is a non-empty string describing why that structure is useful",
+        "The recommend() method logic is provided — focus on implementing justification()",
+        "Justification map keys must exactly match the names returned by recommend()"
+      ],
+      "hint": "In justification(), use Map.of() or put() to add entries. Example: put('Stack', 'Ideal for LIFO operations like undo/redo and function call stacks').",
+      "expectedOutput": "Stack\nQueue\nHashMap\nJustifications: 6"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 127,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Memory Layout Visualizer",
+    "description": {
+      "task": "Build a MemoryLayoutVisualizer class that shows how data structures differ in memory usage. Given a list of elements, compare the logical memory layout of a contiguous structure (array) vs a node-based structure (linked list) in terms of wasted vs overhead bytes.",
+      "language": "java",
+      "starterCode": "public class MemoryLayoutVisualizer {\n\n    private static final int INT_SIZE = 4;     // bytes per integer\n    private static final int POINTER_SIZE = 8; // bytes per reference\n    private static final int NODE_OVERHEAD = 16; // bytes for object header\n\n    public int arrayMemoryBytes(int elementCount) {\n        // Array: only element data + array header (assume 16 bytes header)\n        return 16 + elementCount * INT_SIZE;\n    }\n\n    public int linkedListMemoryBytes(int elementCount) {\n        // Each node: NODE_OVERHEAD + INT_SIZE (data) + POINTER_SIZE (next pointer)\n        return 0; // TODO\n    }\n\n    public double memoryOverheadRatio(int elementCount) {\n        // Return linkedList / array memory ratio (how many times more memory)\n        return 0.0; // TODO\n    }\n\n    public String comparison(int elementCount) {\n        int arr = arrayMemoryBytes(elementCount);\n        int ll = linkedListMemoryBytes(elementCount);\n        return String.format(\n            \"Elements: %d | Array: %d bytes | LinkedList: %d bytes | Ratio: %.2fx\",\n            elementCount, arr, ll, memoryOverheadRatio(elementCount)\n        );\n    }\n\n    public static void main(String[] args) {\n        MemoryLayoutVisualizer viz = new MemoryLayoutVisualizer();\n        System.out.println(viz.comparison(10));\n        System.out.println(viz.comparison(100));\n        System.out.println(\"LL overhead per element: \" +\n            (viz.linkedListMemoryBytes(1) - viz.arrayMemoryBytes(1)) + \" bytes\");\n    }\n}",
+      "instructions": [
+        "arrayMemoryBytes() = 16 (header) + elementCount * INT_SIZE",
+        "linkedListMemoryBytes() = elementCount * (NODE_OVERHEAD + INT_SIZE + POINTER_SIZE)",
+        "memoryOverheadRatio() = (double) linkedListMemoryBytes(n) / arrayMemoryBytes(n)",
+        "comparison() is already implemented — focus on the three calculation methods",
+        "All calculations must use the named constants (INT_SIZE, POINTER_SIZE, NODE_OVERHEAD)"
+      ],
+      "hint": "linkedListMemoryBytes: each node costs NODE_OVERHEAD + INT_SIZE + POINTER_SIZE = 16+4+8 = 28 bytes. So total = elementCount * 28.",
+      "expectedOutput": "Elements: 10 | Array: 56 bytes | LinkedList: 280 bytes | Ratio: 5.00x\nElements: 100 | Array: 416 bytes | LinkedList: 2800 bytes | Ratio: 6.73x\nLL overhead per element: 224 bytes"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 127,
+    "allowedSubmissionType": "TEXT"
+  }
+]

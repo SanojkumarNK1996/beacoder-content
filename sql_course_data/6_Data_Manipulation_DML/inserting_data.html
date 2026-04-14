@@ -1,102 +1,75 @@
-<h1>Inserting Data (INSERT)</h1>
+<h1>Inserting Data (INSERT): 10-Part Beginner-Friendly Guide</h1>
 
-<p>Now that you’ve learned how to create tables, it’s time to fill them with data!  
-In SQL, the <strong>INSERT</strong> statement is used to add new records (rows) into a table.</p>
+<h2>1. Why Does This Topic Exist?</h2>
+<p>Every real-world app—like Paytm, Zomato, or your college ERP—needs to add new data (users, orders, marks) to its database. The <b>INSERT</b> command is how you add new records to your tables.</p>
 
-<hr>
+<h2>2. What Is This?</h2>
+<p><b>INSERT</b> is an SQL command used to add new rows (records) to a table. It’s how you put real data into your database.</p>
 
-<h2>1️⃣ What Is the INSERT Statement?</h2>
-
-<p>The <strong>INSERT</strong> command adds one or more new rows into a database table.</p>
-
-<p>General syntax:</p>
-
+<h2>3. Syntax/Structure</h2>
 <pre>
-INSERT INTO table_name (column1, column2, column3, ...)
-VALUES (value1, value2, value3, ...);
+-- Insert into specific columns
+INSERT INTO table_name (column1, column2, ...)
+VALUES (value1, value2, ...);
+
+-- Insert into all columns (order must match table)
+INSERT INTO table_name
+VALUES (value1, value2, ...);
+
+-- Insert multiple rows at once
+INSERT INTO table_name (column1, column2)
+VALUES (1, 'Amit'), (2, 'Priya');
 </pre>
 
-<p>Example:</p>
+<h2>4. Step-by-Step: How It Works</h2>
+<ol>
+  <li>Decide which table you want to add data to.</li>
+  <li>Write the <code>INSERT INTO</code> statement with the correct columns and values.</li>
+  <li>Run the command in your SQL tool (like MySQL Workbench, DBeaver, or command line).</li>
+  <li>Check your table with <code>SELECT * FROM table_name;</code> to see the new data.</li>
+</ol>
 
-<pre>
-INSERT INTO Students (StudentID, Name, Age)
-VALUES (1, 'Alice', 18);
-</pre>
-
-<p>This adds a new row to the <code>Students</code> table with the given values.</p>
-
-<hr>
-
-<h2>2️⃣ Inserting Data into All Columns</h2>
-
-<p>If you’re inserting values for <strong>all columns</strong> in the table, you can skip the column names (but the order must match the table definition):</p>
-
-<pre>
-INSERT INTO Students
-VALUES (2, 'Bob', 20);
-</pre>
-
-<p>✅ Tip: Always include column names for clarity, especially in large tables.</p>
-
-<hr>
-
-<h2>3️⃣ Inserting Multiple Rows at Once</h2>
-
-<p>You can insert multiple records in a single statement to save time:</p>
-
-<pre>
-INSERT INTO Students (StudentID, Name, Age)
-VALUES 
-(3, 'Charlie', 19),
-(4, 'Diana', 21),
-(5, 'Ethan', 22);
-</pre>
-
-<p>This adds three new students in one go!</p>
-
-<hr>
-
-<h2>4️⃣ Handling DEFAULT Values</h2>
-
-<p>If a column has a <code>DEFAULT</code> value defined, you can omit it during insertion — it will automatically take the default.</p>
-
-<pre>
-CREATE TABLE Orders (
-  OrderID INT PRIMARY KEY,
-  Status VARCHAR(20) DEFAULT 'Pending'
-);
-
-INSERT INTO Orders (OrderID) VALUES (1);
-</pre>
-
-<p>The value for <code>Status</code> will automatically be set to <code>'Pending'</code>.</p>
-
-<hr>
-
-<h2>5️⃣ Inserting NULL Values</h2>
-
-<p>If a column allows <code>NULL</code>, you can insert an empty value.</p>
-
-<pre>
-INSERT INTO Students (StudentID, Name, Age)
-VALUES (6, 'Fiona', NULL);
-</pre>
-
-<p>Here, the <code>Age</code> value will be empty (NULL).</p>
-
-<hr>
-
-<h2>6️⃣ Common Mistakes to Avoid</h2>
-
+<h2>5. When to Use</h2>
 <ul>
-  <li>❌ Mismatching column count — number of values must match number of columns.</li>
-  <li>❌ Violating constraints (e.g., inserting duplicate PRIMARY KEY).</li>
-  <li>❌ Inserting wrong data type (e.g., text in numeric columns).</li>
+  <li>When a new user signs up (insert into Users table).</li>
+  <li>When a new order is placed (insert into Orders table).</li>
+  <li>When you want to add any new record to your system.</li>
 </ul>
 
-<hr>
+<h2>6. When Not to Use</h2>
+<ul>
+  <li>When you want to update existing data (use <code>UPDATE</code> instead).</li>
+  <li>When you want to remove data (use <code>DELETE</code> instead).</li>
+</ul>
 
-<h2>7️⃣ Using INSERT with SELECT</h2>
+<h2>7. Minimum to Remember</h2>
+<ul>
+  <li>Always match the number of columns and values.</li>
+  <li>Use column names for clarity.</li>
+  <li>Use <code>NULL</code> for empty values if allowed.</li>
+  <li>You can insert multiple rows in one command.</li>
+</ul>
+
+<h2>8. Common Mistakes</h2>
+<ul>
+  <li>Mismatching column count and values.</li>
+  <li>Violating constraints (e.g., duplicate PRIMARY KEY).</li>
+  <li>Wrong data type (e.g., text in numeric columns).</li>
+</ul>
+
+<h2>9. Interviewer’s Perspective</h2>
+<ul>
+  <li>“How do you insert multiple rows in one SQL statement?”</li>
+  <li>“What happens if you omit a NOT NULL column in INSERT?”</li>
+  <li>“Why is it better to specify column names in INSERT?”</li>
+</ul>
+
+<h2>10. Practice Questions</h2>
+<ol>
+  <li>Write SQL to insert a new student (ID: 10, Name: Ravi, Age: 21) into the Students table.</li>
+  <li>How would you insert two new products into a Products table in one command?</li>
+  <li>What happens if you try to insert a duplicate PRIMARY KEY?</li>
+</ol>
 
 <p>You can insert data from another table using the <code>SELECT</code> statement.</p>
 

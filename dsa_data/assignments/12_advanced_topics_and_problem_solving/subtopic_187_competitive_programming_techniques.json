@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Bit Manipulation Tricks",
+    "description": {
+      "task": "Implement common bit manipulation operations: check if a number is a power of 2, count set bits (Hamming weight), find the single non-repeated element in an array where all others appear twice (XOR trick).",
+      "language": "java",
+      "starterCode": "public class BitManipulation {\n\n    static boolean isPowerOfTwo(int n) {\n        // TODO: a power of 2 has exactly one bit set: (n & (n-1)) == 0\n        //       also handle n <= 0 case\n        return false;\n    }\n\n    static int countBits(int n) {\n        int count = 0;\n        // TODO: Brian Kernighan: while n>0, n &= (n-1), count++\n        return count;\n    }\n\n    static int singleNumber(int[] nums) {\n        int result = 0;\n        // TODO: XOR all elements; pairs cancel out, leaving the unique element\n        for (int x : nums) {\n            // TODO: result ^= x\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"isPow2(16): \" + isPowerOfTwo(16));\n        System.out.println(\"isPow2(18): \" + isPowerOfTwo(18));\n        System.out.println(\"isPow2(1):  \" + isPowerOfTwo(1));\n\n        System.out.println(\"countBits(7):  \" + countBits(7));   // 111 = 3 bits\n        System.out.println(\"countBits(12): \" + countBits(12));  // 1100 = 2 bits\n\n        int[] arr = {4, 1, 2, 1, 2};\n        System.out.println(\"singleNumber: \" + singleNumber(arr));\n    }\n}",
+      "instructions": [
+        "isPowerOfTwo: return n>0 && (n&(n-1))==0;",
+        "countBits: while(n>0){n&=(n-1);count++;} — each iteration removes the lowest set bit",
+        "singleNumber: for(int x:nums)result^=x; — XOR of same numbers = 0, XOR with unique = unique",
+        "7 (binary 111) has 3 set bits; 12 (binary 1100) has 2 set bits",
+        "singleNumber({4,1,2,1,2}): pairs cancel (1^1=0, 2^2=0), leaving 4"
+      ],
+      "hint": "isPowerOfTwo: n>0&&(n&(n-1))==0; countBits: while(n>0){n&=(n-1);count++;} singleNumber: result^=x;",
+      "expectedOutput": "isPow2(16): true\nisPow2(18): false\nisPow2(1):  true\ncountBits(7):  3\ncountBits(12): 2\nsingleNumber: 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 187,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Modular Arithmetic and Fast Power",
+    "description": {
+      "task": "Implement modular exponentiation (fast power) to compute (base^exp) % mod efficiently in O(log exp) time. Also implement modular inverse using Fermat's little theorem (mod must be prime). Essential in competitive programming.",
+      "language": "java",
+      "starterCode": "public class ModularArithmetic {\n    static final long MOD = 1_000_000_007L;\n\n    static long modPow(long base, long exp, long mod) {\n        long result = 1;\n        base %= mod;\n        // TODO: while exp > 0:\n        //   if exp is odd: result = result * base % mod\n        //   base = base * base % mod\n        //   exp >>= 1\n        while (exp > 0) {\n            // TODO\n        }\n        return result;\n    }\n\n    // Modular inverse via Fermat's little theorem: a^(mod-2) % mod (mod must be prime)\n    static long modInverse(long a, long mod) {\n        // TODO: return modPow(a, mod - 2, mod)\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"2^10 % MOD = \" + modPow(2, 10, MOD));\n        System.out.println(\"3^100 % MOD = \" + modPow(3, 100, MOD));\n\n        // Verify modular inverse: a * inv(a) % mod == 1\n        long a = 3;\n        long inv = modInverse(a, MOD);\n        System.out.println(\"inv(3) % MOD = \" + inv);\n        System.out.println(\"3 * inv(3) % MOD = \" + (a * inv % MOD));\n    }\n}",
+      "instructions": [
+        "modPow: if(exp%2==1)result=result*base%mod; base=base*base%mod; exp>>=1;",
+        "modInverse: return modPow(a,mod-2,mod); (Fermat: a^(p-1)≡1 (mod p) for prime p)",
+        "2^10=1024; 1024%MOD=1024",
+        "3^100 % 1_000_000_007 = 981_350_898",
+        "modInverse(3)=333_333_336; 3*333_333_336%MOD=1 (verification)"
+      ],
+      "hint": "if(exp%2==1)result=result*base%mod; base=base*base%mod; exp>>=1; modInverse: return modPow(a,mod-2,mod);",
+      "expectedOutput": "2^10 % MOD = 1024\n3^100 % MOD = 981350898\ninv(3) % MOD = 333333336\n3 * inv(3) % MOD = 1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 187,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Sieve of Eratosthenes",
+    "description": {
+      "task": "Implement the Sieve of Eratosthenes to find all prime numbers up to N in O(N log log N) time. Then use the primes list to check primality and find the count of primes up to N.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SieveOfEratosthenes {\n\n    static boolean[] sieve(int n) {\n        boolean[] isPrime = new boolean[n + 1];\n        Arrays.fill(isPrime, true);\n        isPrime[0] = false;\n        if (n >= 1) isPrime[1] = false;\n        // TODO: for i from 2 to sqrt(n) inclusive:\n        //   if isPrime[i]: for j from i*i to n (step i), set isPrime[j]=false\n        for (int i = 2; (long)i * i <= n; i++) {\n            // TODO\n        }\n        return isPrime;\n    }\n\n    public static void main(String[] args) {\n        int N = 50;\n        boolean[] isPrime = sieve(N);\n\n        System.out.print(\"Primes up to \" + N + \": \");\n        List<Integer> primes = new ArrayList<>();\n        for (int i = 2; i <= N; i++) if (isPrime[i]) primes.add(i);\n        System.out.println(primes);\n\n        System.out.println(\"Count: \" + primes.size());\n        System.out.println(\"Is 47 prime: \" + isPrime[47]);\n        System.out.println(\"Is 49 prime: \" + isPrime[49]);\n    }\n}",
+      "instructions": [
+        "if(isPrime[i]){for(int j=i*i;j<=n;j+=i)isPrime[j]=false;}",
+        "Start inner loop at i*i (all smaller multiples already marked by earlier primes)",
+        "Primes up to 50: [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47] = 15 primes",
+        "47 is prime; 49=7×7 is not prime",
+        "The sieve is the most efficient algorithm for generating all primes up to N"
+      ],
+      "hint": "if(isPrime[i])for(int j=i*i;j<=n;j+=i)isPrime[j]=false;",
+      "expectedOutput": "Primes up to 50: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]\nCount: 15\nIs 47 prime: true\nIs 49 prime: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 187,
+    "allowedSubmissionType": "TEXT"
+  }
+]

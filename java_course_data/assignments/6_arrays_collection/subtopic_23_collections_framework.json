@@ -1,0 +1,73 @@
+[
+  {
+    "title": "ArrayList Shopping Cart",
+    "description": {
+      "task": "Simulate a shopping cart using an ArrayList: add items, remove one, and print the final list.",
+      "language": "java",
+      "starterCode": "import java.util.ArrayList;\n\npublic class ShoppingCart {\n    public static void main(String[] args) {\n        ArrayList<String> cart = new ArrayList<>();\n\n        // Add: \"Apple\", \"Banana\", \"Milk\", \"Bread\", \"Eggs\"\n        // Remove: \"Banana\" (by value)\n        // Print size and all items\n    }\n}",
+      "instructions": [
+        "Add 5 items: Apple, Banana, Milk, Bread, Eggs using cart.add().",
+        "Remove 'Banana' using cart.remove(\"Banana\").",
+        "Print 'Cart size: 4'.",
+        "Use a for-each loop to print each remaining item prefixed with '- '."
+      ],
+      "hint": "ArrayList.remove(Object) removes by value; remove(int index) removes by index. Both exist, so always pass a String (not an int) when removing by value.",
+      "expectedOutput": "Cart size: 4\n- Apple\n- Milk\n- Bread\n- Eggs"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 23,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "HashMap Word Frequency",
+    "description": {
+      "task": "Use a HashMap to count the frequency of each word in a sentence, then print each word and its count.",
+      "language": "java",
+      "context": "HashMaps store key-value pairs with O(1) average lookup. They are ideal for frequency counting and lookups by a unique key.",
+      "starterCode": "import java.util.HashMap;\n\npublic class WordFrequency {\n    public static void main(String[] args) {\n        String sentence = \"the cat sat on the mat the cat\";\n        String[] words = sentence.split(\" \");\n\n        HashMap<String, Integer> freq = new HashMap<>();\n\n        // For each word: if already in map, increment count; else put with count 1\n\n        // Print each entry: \"the: 3\", \"cat: 2\", etc.\n        for (String key : freq.keySet()) {\n            System.out.println(key + \": \" + freq.get(key));\n        }\n    }\n}",
+      "instructions": [
+        "Loop through the words array.",
+        "Use freq.containsKey(word) to check existence, then freq.put() or getOrDefault().",
+        "Alternative shorthand: freq.put(word, freq.getOrDefault(word, 0) + 1);",
+        "Print all entries using the provided for-each loop (order may vary)."
+      ],
+      "hint": "HashMap does not guarantee order. Your output may show entries in a different order than the expected — that is acceptable.",
+      "expectedOutput": "the: 3\ncat: 2\nsat: 1\non: 1\nmat: 1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 23,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "HashSet Unique Visitors",
+    "description": {
+      "task": "Use a HashSet to track unique visitors to a website (duplicate usernames are ignored). Print the unique count and the set.",
+      "language": "java",
+      "context": "A HashSet stores only unique elements. Adding a duplicate silently does nothing — it does not throw an error or alter the set.",
+      "starterCode": "import java.util.HashSet;\n\npublic class UniqueVisitors {\n    public static void main(String[] args) {\n        HashSet<String> visitors = new HashSet<>();\n\n        String[] log = {\"alice\", \"bob\", \"alice\", \"carol\", \"bob\", \"dave\", \"alice\"};\n\n        for (String user : log) {\n            visitors.add(user);  // duplicates are ignored\n        }\n\n        System.out.println(\"Total log entries: \" + log.length);\n        System.out.println(\"Unique visitors: \" + visitors.size());\n        System.out.println(\"Visitor set: \" + visitors);\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is — do not change it.",
+        "Verify that 7 log entries produce only 4 unique visitors.",
+        "Note that the Set's toString() output may not be in insertion order.",
+        "In a comment, explain the difference between List (allows duplicates) and Set (no duplicates)."
+      ],
+      "hint": "HashSet uses hashCode() and equals() to detect duplicates. String has these implemented, so duplicate strings are correctly rejected.",
+      "expectedOutput": "Total log entries: 7\nUnique visitors: 4\nVisitor set: [alice, bob, carol, dave]"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 23,
+    "allowedSubmissionType": "TEXT"
+  }
+]

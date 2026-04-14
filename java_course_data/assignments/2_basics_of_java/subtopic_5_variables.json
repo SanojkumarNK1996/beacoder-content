@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Variable Swap Challenge",
+    "description": {
+      "task": "Swap the values of two integer variables without using a third (temporary) variable and print the result before and after the swap.",
+      "context": "Swapping variables is a classic programming exercise that tests your understanding of variable assignment and arithmetic operations in Java.",
+      "language": "java",
+      "starterCode": "public class VariableSwap {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 25;\n\n        System.out.println(\"Before swap: a = \" + a + \", b = \" + b);\n\n        // Swap a and b WITHOUT using a third variable\n\n        System.out.println(\"After swap: a = \" + a + \", b = \" + b);\n    }\n}",
+      "instructions": [
+        "Use the given values: a = 10, b = 25.",
+        "Use arithmetic operations (addition and subtraction) to swap the two values.",
+        "Do NOT declare a third variable.",
+        "Print the values before and after the swap in the exact format shown."
+      ],
+      "hint": "Arithmetic swap steps: a = a + b;  then  b = a - b;  then  a = a - b;",
+      "expectedOutput": "Before swap: a = 10, b = 25\nAfter swap: a = 25, b = 10"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 5,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Constants with final",
+    "description": {
+      "task": "Write a Java program that declares constants using the 'final' keyword and tries to reassign one to observe the compile error.",
+      "language": "java",
+      "context": "The 'final' keyword prevents a variable from being reassigned after its first assignment, making it a constant. This is essential for values that should never change, like PI or tax rates.",
+      "starterCode": "public class Constants {\n    public static void main(String[] args) {\n        final double PI = 3.14159;\n        final int MAX_USERS = 100;\n\n        System.out.println(\"PI = \" + PI);\n        System.out.println(\"Max users allowed = \" + MAX_USERS);\n\n        double radius = 7.0;\n        // Calculate and print the area of a circle using PI\n        double area; // area = PI * radius * radius\n        System.out.println(\"Area of circle with radius 7: \" + area);\n    }\n}",
+      "instructions": [
+        "Keep the final constants PI and MAX_USERS as declared.",
+        "Calculate the area of a circle with radius 7.0 using the formula: PI * radius * radius.",
+        "Print all three output lines in the exact format shown.",
+        "As a bonus challenge (in a comment): try reassigning PI and note the compiler error message."
+      ],
+      "hint": "Constant names by convention are in UPPER_SNAKE_CASE. The formula for circle area is π × r².",
+      "expectedOutput": "PI = 3.14159\nMax users allowed = 100\nArea of circle with radius 7: 153.93791"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 5,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Variable Naming Rules Quiz",
+    "description": {
+      "task": "Fix the poorly named and invalid variable declarations in the starter code so the program compiles and prints the correct output.",
+      "language": "java",
+      "context": "Good variable names make code readable. Java also has strict rules for what makes a valid variable name.",
+      "starterCode": "public class VariableNaming {\n    public static void main(String[] args) {\n        // Fix these variable declarations - some have invalid names, some have poor names\n        int 1stNumber = 10;          // invalid name\n        double x = 3.14;             // poor name - rename to 'piValue'\n        String my-name = \"Alice\";   // invalid name\n        boolean Flag = true;         // poor name - rename to 'isLoggedIn'\n\n        System.out.println(\"First number: \" + 1stNumber);\n        System.out.println(\"Pi value: \" + x);\n        System.out.println(\"Name: \" + my-name);\n        System.out.println(\"Logged in: \" + Flag);\n    }\n}",
+      "instructions": [
+        "Fix '1stNumber' — variable names cannot start with a digit. Rename to 'firstNumber'.",
+        "Rename 'x' to 'piValue' for clarity.",
+        "Fix 'my-name' — hyphens are not allowed. Rename to 'myName' (camelCase).",
+        "Rename 'Flag' to 'isLoggedIn' (camelCase, descriptive boolean name).",
+        "Update all references so the program compiles and prints the expected output."
+      ],
+      "hint": "Java variable names: must start with a letter, $, or _; cannot contain spaces or hyphens; are case-sensitive; use camelCase by convention.",
+      "expectedOutput": "First number: 10\nPi value: 3.14\nName: Alice\nLogged in: true"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 5,
+    "allowedSubmissionType": "TEXT"
+  }
+]

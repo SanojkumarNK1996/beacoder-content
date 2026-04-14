@@ -1,0 +1,167 @@
+<h1>📘 API Documentation (Swagger / OpenAPI)</h1>
+
+<h2>🎯 Why Document APIs?</h2>
+<p>Good API documentation helps:</p>
+<ul>
+  <li>👨‍💻 Frontend and mobile developers understand your endpoints</li>
+  <li>🤖 Automated tools generate clients and tests</li>
+  <li>📚 New team members quickly learn the system</li>
+</ul>
+
+<p>For REST APIs, <strong>OpenAPI (formerly Swagger)</strong> is the de facto standard.</p>
+
+<h2>📄 What is OpenAPI?</h2>
+<p><strong>OpenAPI</strong> is a specification for describing REST APIs in a <strong>machine-readable format</strong> (JSON or YAML). It describes:</p>
+<ul>
+  <li>Endpoints and paths</li>
+  <li>HTTP methods</li>
+  <li>Request and response models</li>
+  <li>Parameters, headers, auth, etc.</li>
+</ul>
+
+<h2>🧰 Springdoc OpenAPI (for Spring Boot)</h2>
+<p><strong>springdoc-openapi</strong> is a popular library that automatically generates OpenAPI docs and a <strong>Swagger UI</strong> for Spring Boot apps.</p>
+
+<h3>1️⃣ Add Dependency</h3>
+
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springdoc&lt;/groupId&gt;
+  &lt;artifactId&gt;springdoc-openapi-starter-webmvc-ui&lt;/artifactId&gt;
+  &lt;version&gt;2.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<h3>2️⃣ Run the Application</h3>
+<p>By default, Springdoc will expose:</p>
+<ul>
+  <li>OpenAPI JSON: <code>/v3/api-docs</code></li>
+  <li>Swagger UI: <code>/swagger-ui.html</code> or <code>/swagger-ui/index.html</code></li>
+</ul>
+
+<h2>🧾 Example: Simple Book API with OpenAPI Annotations</h2>
+
+<div class="code-example">
+  <pre>
+@RestController
+@RequestMapping("/api/books")
+@Tag(name = "Books", description = "Operations related to books")
+public class BookController {
+
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    @Operation(summary = "Get all books")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "List of books returned")
+    })
+    @GetMapping
+    public List&lt;BookResponse&gt; getAllBooks() {
+        return bookService.getAllBooks();
+    }
+
+    @Operation(summary = "Get book by ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Book found"),
+        @ApiResponse(responseCode = "404", description = "Book not found")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;BookResponse&gt; getBookById(
+            @Parameter(description = "ID of the book to retrieve")
+            @PathVariable Long id) {
+
+        return bookService.getBookById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Create a new book")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Book created"),
+        @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
+    @PostMapping
+    public ResponseEntity&lt;BookResponse&gt; createBook(
+            @Valid @RequestBody CreateBookRequest request) {
+
+        BookResponse created = bookService.createBook(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+}
+  </pre>
+</div>
+
+<h2>📊 Swagger UI Demo</h2>
+<p>With Springdoc configured, navigating to <code>/swagger-ui.html</code> gives you an interactive UI where you can:</p>
+<ul>
+  <li>See all endpoints grouped by controller</li>
+  <li>Inspect request/response models</li>
+  <li>Try endpoints directly in the browser</li>
+</ul>
+
+<h2>🧱 Customizing OpenAPI Metadata</h2>
+
+<div class="code-example">
+  <pre>
+@Configuration
+public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Book Management API")
+                        .version("1.0.0")
+                        .description("API documentation for the Book Management system")
+                        .contact(new Contact()
+                                .name("Beacoder Team")
+                                .email("support@beacoder.com"))
+                );
+    }
+}
+  </pre>
+</div>
+
+<h2>🔐 Documenting Security</h2>
+
+<div class="code-example">
+  <pre>
+@SecurityScheme(
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT"
+)
+@SpringBootApplication
+public class BookManagementApplication { }
+
+@Operation(summary = "Get current user profile",
+           security = {@SecurityRequirement(name = "bearerAuth")})
+@GetMapping("/me")
+public UserProfile getProfile() {
+    // ...
+}
+  </pre>
+</div>
+
+<h2>🧩 Benefits of OpenAPI / Swagger</h2>
+
+<ul>
+  <li>📖 Human-readable, interactive documentation (Swagger UI)</li>
+  <li>⚙️ Machine-readable spec for generating clients (Java, JS, etc.)</li>
+  <li>✅ Easier testing and onboarding</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Use <strong>springdoc-openapi</strong> to generate OpenAPI specs for Spring Boot</li>
+  <li>Annotate controllers and models to enrich documentation</li>
+  <li>Leverage <strong>Swagger UI</strong> for interactive API exploration</li>
+</ul>
+
+<p>With proper API documentation in place, your REST APIs become much easier to use, test, and maintain—both for your team and external consumers.</p>

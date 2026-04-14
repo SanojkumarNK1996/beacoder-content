@@ -1,0 +1,77 @@
+[
+  {
+    "title": "DROP TABLE vs TRUNCATE",
+    "description": {
+      "task": "Demonstrate the difference between DROP TABLE (removes structure + data) and TRUNCATE (removes all data but keeps structure).",
+      "language": "sql",
+      "starterCode": "-- Create two test tables\nCREATE TABLE archive_data (\n  id INT PRIMARY KEY,\n  content VARCHAR(100)\n);\n\nCREATE TABLE temp_data (\n  id INT PRIMARY KEY,\n  value VARCHAR(100)\n);\n\nINSERT INTO archive_data VALUES (1,'record A'),(2,'record B'),(3,'record C');\nINSERT INTO temp_data VALUES (1,'temp 1'),(2,'temp 2'),(3,'temp 3');\n\nSELECT 'archive_data' AS tbl, COUNT(*) AS rows FROM archive_data\nUNION ALL\nSELECT 'temp_data', COUNT(*) FROM temp_data;\n\n-- TRUNCATE: remove all rows but keep the table structure\nTRUNCATE TABLE temp_data;\n\nSELECT COUNT(*) AS rows_after_truncate FROM temp_data;  -- should be 0\n\n-- Can INSERT again after TRUNCATE\nINSERT INTO temp_data VALUES (1,'new temp 1');\nSELECT * FROM temp_data;\n\n-- DROP: remove the table entirely (structure + data)\nDROP TABLE archive_data;\n\n-- This would now cause an error:\n-- SELECT * FROM archive_data;  -- table does not exist\n\nSELECT table_name FROM information_schema.tables\nWHERE table_schema = 'public' AND table_name IN ('archive_data','temp_data');\n",
+      "instructions": [
+        "Run CREATE statements, INSERT statements, and the UNION ALL count query.",
+        "Run TRUNCATE — verify 0 rows in temp_data.",
+        "Re-insert into temp_data — verify it works (table still exists).",
+        "Run DROP TABLE archive_data.",
+        "Run the information_schema query — only temp_data should appear.",
+        "Add a comment explaining: when would you use DROP vs TRUNCATE vs DELETE?"
+      ],
+      "hint": "DROP = gone forever. TRUNCATE = fast wipe (DDL operation, often not rollback-able). DELETE = removes rows one by one, fully logged, rollback-able. Use TRUNCATE only when you're certain all rows should be removed.",
+      "expectedOutput": "After TRUNCATE: 0 rows\nAfter DROP: only temp_data in information_schema\nRe-insert into temp_data: works normally"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 47,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "DROP with Dependencies",
+    "description": {
+      "task": "Attempt to DROP a table that has dependent tables (foreign keys), understand the error, and use CASCADE to resolve it.",
+      "language": "sql",
+      "context": "When a table is referenced by a FOREIGN KEY in another table, you cannot simply DROP it without first removing the dependency — or using CASCADE.",
+      "starterCode": "CREATE TABLE categories (\n  cat_id   INT PRIMARY KEY,\n  cat_name VARCHAR(50)\n);\n\nCREATE TABLE items (\n  item_id  INT PRIMARY KEY,\n  name     VARCHAR(80),\n  cat_id   INT,\n  FOREIGN KEY (cat_id) REFERENCES categories(cat_id)\n);\n\nINSERT INTO categories VALUES (1,'Electronics'),(2,'Books'),(3,'Clothing');\nINSERT INTO items VALUES (1,'Laptop',1),(2,'SQL Book',2),(3,'T-Shirt',3);\n\nSELECT * FROM items JOIN categories ON items.cat_id = categories.cat_id;\n\n-- This will FAIL because items references categories:\n-- DROP TABLE categories;  -- ERROR: cannot drop table categories because other objects depend on it\n\n-- Option A: Drop child table first, then parent\nDROP TABLE items;\nDROP TABLE categories;\n\n-- Recreate to demonstrate Option B:\nCREATE TABLE categories2 (cat_id INT PRIMARY KEY, cat_name VARCHAR(50));\nCREATE TABLE items2 (item_id INT PRIMARY KEY, name VARCHAR(80), cat_id INT,\n  FOREIGN KEY (cat_id) REFERENCES categories2(cat_id));\nINSERT INTO categories2 VALUES (1,'Electronics'),(2,'Books');\nINSERT INTO items2 VALUES (1,'Laptop',1),(2,'SQL Book',2);\n\n-- Option B: DROP with CASCADE (drops items2 automatically)\nDROP TABLE categories2 CASCADE;\n\n-- Verify items2 is also dropped:\nSELECT table_name FROM information_schema.tables\nWHERE table_schema = 'public' AND table_name IN ('categories2','items2');\n",
+      "instructions": [
+        "Run CREATE and INSERT for original tables, plus the JOIN query.",
+        "Drop items first, then categories (Option A).",
+        "Recreate with categories2/items2 and run DROP CASCADE (Option B).",
+        "Run the information_schema query — both tables should be gone.",
+        "In a comment: explain why CASCADE DROP can be dangerous in production."
+      ],
+      "hint": "CASCADE drops all dependent objects automatically. In production, this could silently delete entire chains of tables. Always check dependencies before using CASCADE.",
+      "expectedOutput": "Option A: manual order drop works\nOption B: DROP categories2 CASCADE also drops items2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 47,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Safe Schema Cleanup",
+    "description": {
+      "task": "Write a safe cleanup script that drops tables only if they exist using IF EXISTS, avoiding errors in CI/CD pipelines.",
+      "language": "sql",
+      "context": "In automated deployment pipelines, scripts may run even if tables were already cleaned up. Using DROP TABLE IF EXISTS prevents errors when the table doesn't exist.",
+      "starterCode": "-- Safe cleanup script (idempotent — can be run multiple times)\n\n-- IF EXISTS prevents errors if the table doesn't exist\nDROP TABLE IF EXISTS orders_backup;\nDROP TABLE IF EXISTS reports_temp;\nDROP TABLE IF EXISTS sessions_cache;\n\n-- Confirm no error even though tables never existed\nSELECT 'Cleanup completed' AS status;\n\n-- Now create and populate a table\nCREATE TABLE orders_backup (\n  backup_id   INT PRIMARY KEY,\n  original_id INT,\n  customer    VARCHAR(60),\n  total       DECIMAL(8,2),\n  backed_up_at TIMESTAMP DEFAULT NOW()\n);\n\nINSERT INTO orders_backup VALUES\n  (1, 1001, 'Alice',  150.00, NOW()),\n  (2, 1002, 'Bob',    200.00, NOW()),\n  (3, 1003, 'Carol',   80.00, NOW());\n\nSELECT * FROM orders_backup;\n\n-- Run cleanup again — no error because IF EXISTS handles missing table\nDROP TABLE IF EXISTS orders_backup;\nDROP TABLE IF EXISTS reports_temp;\n\nSELECT 'Second cleanup completed — no errors' AS status;\n",
+      "instructions": [
+        "Run the entire script from top to bottom.",
+        "Observe that DROP IF EXISTS on non-existent tables produces no error.",
+        "Verify orders_backup data loads correctly.",
+        "The second DROP IF EXISTS run should also succeed silently.",
+        "In a comment: why is idempotent SQL important in database migration scripts?"
+      ],
+      "hint": "Idempotent means running the same script multiple times produces the same result without errors. Critical for automated deployments that might retry on failure.",
+      "expectedOutput": "'Cleanup completed' status\n3 rows in orders_backup\n'Second cleanup completed' status — no errors"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 47,
+    "allowedSubmissionType": "TEXT"
+  }
+]

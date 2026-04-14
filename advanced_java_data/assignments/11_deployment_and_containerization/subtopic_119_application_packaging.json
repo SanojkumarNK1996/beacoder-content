@@ -1,0 +1,74 @@
+[
+  {
+    "title": "JAR Manifest Builder",
+    "description": {
+      "task": "Implement a JarManifestBuilder class that constructs a MANIFEST.MF file content for an executable JAR. The manifest defines the main class, classpath entries, and build metadata. Validate that all required entries are present before building.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class JarManifestBuilder {\n\n    private String mainClass;\n    private final List<String> classpath = new ArrayList<>();\n    private final Map<String, String> attributes = new LinkedHashMap<>();\n\n    public JarManifestBuilder mainClass(String mainClass) {\n        this.mainClass = mainClass;\n        return this;\n    }\n\n    public JarManifestBuilder addClasspathEntry(String jarOrDir) {\n        classpath.add(jarOrDir);\n        return this;\n    }\n\n    public JarManifestBuilder attribute(String key, String value) {\n        attributes.put(key, value);\n        return this;\n    }\n\n    public String build() {\n        // Validate mainClass is set, then build manifest string\n        // Format: 'Key: Value\\n' for each entry\n        // Class-Path entry joins classpath entries with spaces\n        if (mainClass == null || mainClass.isBlank()) {\n            throw new IllegalStateException(\"Main-Class is required\");\n        }\n        StringBuilder sb = new StringBuilder();\n        sb.append(\"Manifest-Version: 1.0\\n\");\n        sb.append(\"Main-Class: \").append(mainClass).append(\"\\n\");\n        if (!classpath.isEmpty()) {\n            sb.append(\"Class-Path: \").append(String.join(\" \", classpath)).append(\"\\n\");\n        }\n        for (Map.Entry<String, String> entry : attributes.entrySet()) {\n            sb.append(entry.getKey()).append(\": \").append(entry.getValue()).append(\"\\n\");\n        }\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        String manifest = new JarManifestBuilder()\n            .mainClass(\"com.example.Application\")\n            .addClasspathEntry(\"lib/spring-core.jar\")\n            .addClasspathEntry(\"lib/jackson.jar\")\n            .attribute(\"Built-By\", \"Maven\")\n            .attribute(\"Implementation-Version\", \"1.0.0\")\n            .build();\n\n        System.out.print(manifest);\n    }\n}",
+      "instructions": [
+        "mainClass(), addClasspathEntry(), and attribute() all return 'this' for fluent chaining",
+        "build() prepends 'Manifest-Version: 1.0' as the first line",
+        "Class-Path line uses a space separator between entries",
+        "Additional attributes are appended after the standard entries in insertion order",
+        "build() throws IllegalStateException('Main-Class is required') if mainClass is null or blank"
+      ],
+      "hint": "The implementation is mostly provided. Ensure attribute() does attributes.put(key, value) and returns this. The build() method body is complete in the skeleton.",
+      "expectedOutput": "Manifest-Version: 1.0\nMain-Class: com.example.Application\nClass-Path: lib/spring-core.jar lib/jackson.jar\nBuilt-By: Maven\nImplementation-Version: 1.0.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 119,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Multi-Environment Deployment Config",
+    "description": {
+      "task": "Create a DeploymentConfigManager class that manages application configurations for different environments (dev, staging, production). Each environment has specific settings (DB URL, log level, replicas). Implement validation that production configs meet minimum requirements.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class DeploymentConfigManager {\n\n    public record EnvConfig(\n        String environment,\n        String dbUrl,\n        String logLevel,\n        int replicas,\n        boolean tlsEnabled\n    ) {}\n\n    private final Map<String, EnvConfig> configs = new LinkedHashMap<>();\n\n    public void registerConfig(EnvConfig config) {\n        configs.put(config.environment(), config);\n    }\n\n    public EnvConfig getConfig(String environment) {\n        return configs.get(environment);\n    }\n\n    public List<String> validateProduction() {\n        // Validate production config meets requirements:\n        // - replicas >= 2\n        // - tlsEnabled must be true\n        // - logLevel must be 'WARN' or 'ERROR' (not verbose)\n        // Return list of violation messages\n        List<String> violations = new ArrayList<>();\n        EnvConfig prod = configs.get(\"production\");\n        if (prod == null) return List.of(\"No production config found\");\n        // TODO: add checks\n        return violations;\n    }\n\n    public static void main(String[] args) {\n        DeploymentConfigManager manager = new DeploymentConfigManager();\n\n        manager.registerConfig(new EnvConfig(\"dev\",\n            \"jdbc:h2:mem:dev\", \"DEBUG\", 1, false));\n        manager.registerConfig(new EnvConfig(\"production\",\n            \"jdbc:postgresql://prod:5432/app\", \"INFO\", 1, true));\n\n        System.out.println(\"Dev replicas: \" + manager.getConfig(\"dev\").replicas());\n        List<String> violations = manager.validateProduction();\n        System.out.println(\"Violations: \" + violations.size());\n        violations.forEach(System.out::println);\n    }\n}",
+      "instructions": [
+        "registerConfig() stores the config using environment name as key",
+        "getConfig() retrieves the config by environment name, returns null if not found",
+        "validateProduction() checks: replicas >= 2, tlsEnabled==true, logLevel in {WARN, ERROR}",
+        "Each violation is a descriptive string (e.g., 'Production requires at least 2 replicas')",
+        "validateProduction() returns empty list when all checks pass"
+      ],
+      "hint": "In validateProduction(): if (prod.replicas() < 2) violations.add('Production requires at least 2 replicas'); if (!prod.tlsEnabled()) violations.add('TLS must be enabled in production'); if (!Set.of('WARN','ERROR').contains(prod.logLevel())) violations.add('Log level too verbose for production');",
+      "expectedOutput": "Dev replicas: 1\nViolations: 2\nProduction requires at least 2 replicas\nLog level too verbose for production"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 119,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Health Check Endpoint Simulator",
+    "description": {
+      "task": "Implement a HealthCheckService class that simulates Spring Boot Actuator's /actuator/health endpoint. Register health indicators (database, message broker, disk space) and compute an overall application health status as UP, DOWN, or DEGRADED.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.function.Supplier;\n\npublic class HealthCheckService {\n\n    public enum Status { UP, DOWN, DEGRADED }\n\n    public record HealthDetail(String component, Status status, String message) {}\n\n    private final Map<String, Supplier<HealthDetail>> indicators = new LinkedHashMap<>();\n\n    public void registerIndicator(String name, Supplier<HealthDetail> indicator) {\n        indicators.put(name, indicator);\n    }\n\n    public Map<String, HealthDetail> checkAll() {\n        // Run all indicators and collect results\n        Map<String, HealthDetail> results = new LinkedHashMap<>();\n        for (Map.Entry<String, Supplier<HealthDetail>> entry : indicators.entrySet()) {\n            results.put(entry.getKey(), entry.getValue().get());\n        }\n        return results;\n    }\n\n    public Status overallStatus() {\n        // DOWN if any component is DOWN\n        // DEGRADED if any component is DEGRADED (but none are DOWN)\n        // UP if all components are UP\n        return Status.UP; // TODO\n    }\n\n    public static void main(String[] args) {\n        HealthCheckService service = new HealthCheckService();\n\n        service.registerIndicator(\"database\",\n            () -> new HealthDetail(\"database\", Status.UP, \"Connected to PostgreSQL\"));\n        service.registerIndicator(\"redis\",\n            () -> new HealthDetail(\"redis\", Status.DEGRADED, \"High latency detected\"));\n        service.registerIndicator(\"disk\",\n            () -> new HealthDetail(\"disk\", Status.UP, \"82% free\"));\n\n        Map<String, HealthDetail> details = service.checkAll();\n        System.out.println(\"Components: \" + details.size());\n        System.out.println(\"Overall: \" + service.overallStatus());\n        System.out.println(\"Redis status: \" + details.get(\"redis\").status());\n    }\n}",
+      "instructions": [
+        "registerIndicator() stores the name-to-supplier mapping",
+        "checkAll() invokes all registered indicators and returns their results",
+        "overallStatus() iterates over all indicator results",
+        "If any component has Status.DOWN, return Status.DOWN immediately",
+        "If all are UP but at least one is DEGRADED, return Status.DEGRADED; otherwise return Status.UP"
+      ],
+      "hint": "In overallStatus(), call checkAll() then use stream: if any DOWN return DOWN; else if any DEGRADED return DEGRADED; else return UP. Use anyMatch(d -> d.status() == Status.DOWN).",
+      "expectedOutput": "Components: 3\nOverall: DEGRADED\nRedis status: DEGRADED"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 119,
+    "allowedSubmissionType": "TEXT"
+  }
+]

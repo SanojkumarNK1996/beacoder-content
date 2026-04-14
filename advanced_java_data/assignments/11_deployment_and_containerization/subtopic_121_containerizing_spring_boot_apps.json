@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Spring Boot Dockerfile Generator",
+    "description": {
+      "task": "Implement a SpringBootDockerfileGenerator class that programmatically generates an optimized multi-stage Dockerfile for a Spring Boot application. The output should use a build stage with Maven and a lean runtime stage, following best practices for layer caching.",
+      "language": "java",
+      "starterCode": "public class SpringBootDockerfileGenerator {\n\n    public record AppConfig(\n        String appName,\n        String mainClass,\n        String javaVersion,\n        int serverPort,\n        boolean enableHealthCheck\n    ) {}\n\n    public String generate(AppConfig config) {\n        StringBuilder sb = new StringBuilder();\n\n        // Stage 1: Build\n        sb.append(\"# Build stage\\n\");\n        sb.append(\"FROM maven:3.9-eclipse-temurin-\").append(config.javaVersion()).append(\" AS build\\n\");\n        sb.append(\"WORKDIR /build\\n\");\n        // Copy pom.xml first for dependency caching\n        sb.append(\"COPY pom.xml .\\n\");\n        sb.append(\"RUN mvn dependency:go-offline -q\\n\");\n        sb.append(\"COPY src ./src\\n\");\n        sb.append(\"RUN mvn package -DskipTests -q\\n\");\n        sb.append(\"\\n\");\n\n        // Stage 2: Runtime\n        sb.append(\"# Runtime stage\\n\");\n        sb.append(\"FROM eclipse-temurin:\");\n        // TODO: append java version and '-jre-alpine' for lean image\n        sb.append(\"\\n\");\n        sb.append(\"WORKDIR /app\\n\");\n        sb.append(\"COPY --from=build /build/target/*.jar app.jar\\n\");\n\n        // TODO: add EXPOSE instruction using config.serverPort()\n        // TODO: if enableHealthCheck, add HEALTHCHECK instruction\n        // TODO: add non-root USER instruction (uid 1001)\n        // TODO: add ENTRYPOINT\n\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        SpringBootDockerfileGenerator gen = new SpringBootDockerfileGenerator();\n        AppConfig config = new AppConfig(\"myapp\", \"com.example.Application\", \"17\", 8080, true);\n        System.out.print(gen.generate(config));\n    }\n}",
+      "instructions": [
+        "The runtime base image should be 'eclipse-temurin:<javaVersion>-jre-alpine' for a lean image",
+        "Add 'EXPOSE <serverPort>' after COPY in the runtime stage",
+        "When enableHealthCheck=true, add: 'HEALTHCHECK CMD curl -f http://localhost:<port>/actuator/health || exit 1'",
+        "Add 'USER 1001' before ENTRYPOINT to run as non-root",
+        "End with 'ENTRYPOINT [\"java\", \"-jar\", \"app.jar\"]'"
+      ],
+      "hint": "Append each line individually with sb.append(...). For HEALTHCHECK: sb.append('HEALTHCHECK CMD curl -f http://localhost:' + config.serverPort() + '/actuator/health || exit 1\\n'). For USER: sb.append('USER 1001\\n').",
+      "expectedOutput": "# Build stage\nFROM maven:3.9-eclipse-temurin-17 AS build\nWORKDIR /build\nCOPY pom.xml .\nRUN mvn dependency:go-offline -q\nCOPY src ./src\nRUN mvn package -DskipTests -q\n\n# Runtime stage\nFROM eclipse-temurin:17-jre-alpine\nWORKDIR /app\nCOPY --from=build /build/target/*.jar app.jar\nEXPOSE 8080\nHEALTHCHECK CMD curl -f http://localhost:8080/actuator/health || exit 1\nUSER 1001\nENTRYPOINT [\"java\", \"-jar\", \"app.jar\"]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 121,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Docker Compose Service Dependency Resolver",
+    "description": {
+      "task": "Implement a DockerComposeResolver class that models docker-compose service dependencies (depends_on). Given service definitions and their dependencies, compute the start-up order and identify circular dependencies.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class DockerComposeResolver {\n\n    private final Map<String, List<String>> services = new LinkedHashMap<>();\n\n    public void addService(String name, String... dependsOn) {\n        services.put(name, new ArrayList<>(List.of(dependsOn)));\n    }\n\n    public List<String> startupOrder() {\n        // Return services in topological order (dependencies first)\n        // Throw IllegalStateException if circular dependency detected\n        List<String> order = new ArrayList<>();\n        Set<String> visited = new HashSet<>();\n        Set<String> inProgress = new HashSet<>();\n\n        for (String service : services.keySet()) {\n            if (!visited.contains(service)) {\n                dfs(service, visited, inProgress, order);\n            }\n        }\n        return order;\n    }\n\n    private void dfs(String service, Set<String> visited, Set<String> inProgress, List<String> order) {\n        // TODO: implement DFS with cycle detection\n    }\n\n    public List<String> findCircularDependencies() {\n        // Return list of services involved in circular dependencies, or empty list\n        try {\n            startupOrder();\n            return new ArrayList<>();\n        } catch (IllegalStateException e) {\n            // Re-detect which services form the cycle\n            return detectCycles();\n        }\n    }\n\n    private List<String> detectCycles() {\n        List<String> cycleParticipants = new ArrayList<>();\n        Set<String> visited = new HashSet<>();\n        Set<String> inProgress = new HashSet<>();\n        for (String s : services.keySet()) {\n            if (!visited.contains(s)) {\n                collectCycles(s, visited, inProgress, cycleParticipants);\n            }\n        }\n        return cycleParticipants;\n    }\n\n    private void collectCycles(String s, Set<String> visited, Set<String> inProgress, List<String> result) {\n        inProgress.add(s);\n        for (String dep : services.getOrDefault(s, List.of())) {\n            if (inProgress.contains(dep) && !result.contains(dep)) result.add(dep);\n            else if (!visited.contains(dep)) collectCycles(dep, visited, inProgress, result);\n        }\n        inProgress.remove(s);\n        visited.add(s);\n    }\n\n    public static void main(String[] args) {\n        DockerComposeResolver resolver = new DockerComposeResolver();\n        resolver.addService(\"app\", \"database\", \"redis\");\n        resolver.addService(\"database\");\n        resolver.addService(\"redis\");\n        resolver.addService(\"nginx\", \"app\");\n\n        System.out.println(\"Startup order: \" + resolver.startupOrder());\n        System.out.println(\"Cycles: \" + resolver.findCircularDependencies());\n    }\n}",
+      "instructions": [
+        "addService() registers a service with zero or more dependencies",
+        "dfs() implements post-order DFS: mark inProgress on entry, recurse into each dependency, add to order on exit, mark visited",
+        "dfs() throws IllegalStateException('Circular dependency: ' + service) when encountering a service already in inProgress",
+        "startupOrder() ensures dependencies appear before dependent services (topological sort)",
+        "findCircularDependencies() returns empty list when no cycles exist"
+      ],
+      "hint": "In dfs(): inProgress.add(service); for (String dep : services.getOrDefault(service, List.of())) { if (inProgress.contains(dep)) throw new IllegalStateException(...); if (!visited.contains(dep)) dfs(dep, ...); } order.add(service); inProgress.remove(service); visited.add(service);",
+      "expectedOutput": "Startup order: [database, redis, app, nginx]\nCycles: []"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 121,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Container Environment Variable Injector",
+    "description": {
+      "task": "Create an EnvVarInjector class that simulates container environment variable injection. It merges variables from multiple sources (Dockerfile defaults, docker-compose env, runtime overrides) with a defined precedence order. Higher priority sources override lower ones.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class EnvVarInjector {\n\n    public enum Source {\n        DOCKERFILE_DEFAULT,  // lowest priority\n        COMPOSE_ENV,\n        RUNTIME_OVERRIDE     // highest priority\n    }\n\n    private final Map<Source, Map<String, String>> envSources = new EnumMap<>(Source.class);\n\n    public void addEnv(Source source, Map<String, String> vars) {\n        envSources.computeIfAbsent(source, k -> new HashMap<>()).putAll(vars);\n    }\n\n    public Map<String, String> resolve() {\n        // Merge all sources in precedence order (lowest to highest)\n        // Higher priority sources override lower ones\n        Map<String, String> result = new LinkedHashMap<>();\n        // Process in order: DOCKERFILE_DEFAULT -> COMPOSE_ENV -> RUNTIME_OVERRIDE\n        for (Source source : new Source[]{Source.DOCKERFILE_DEFAULT, Source.COMPOSE_ENV, Source.RUNTIME_OVERRIDE}) {\n            Map<String, String> vars = envSources.getOrDefault(source, Map.of());\n            result.putAll(vars);\n        }\n        return result;\n    }\n\n    public String get(String key) {\n        return resolve().get(key);\n    }\n\n    public boolean hasKey(String key) {\n        return resolve().containsKey(key);\n    }\n\n    public static void main(String[] args) {\n        EnvVarInjector injector = new EnvVarInjector();\n        injector.addEnv(Source.DOCKERFILE_DEFAULT, Map.of(\n            \"DB_HOST\", \"localhost\", \"LOG_LEVEL\", \"DEBUG\", \"PORT\", \"8080\"\n        ));\n        injector.addEnv(Source.COMPOSE_ENV, Map.of(\n            \"DB_HOST\", \"postgres\", \"DB_USER\", \"appuser\"\n        ));\n        injector.addEnv(Source.RUNTIME_OVERRIDE, Map.of(\n            \"LOG_LEVEL\", \"WARN\"\n        ));\n\n        Map<String, String> resolved = injector.resolve();\n        System.out.println(\"DB_HOST: \" + resolved.get(\"DB_HOST\"));\n        System.out.println(\"LOG_LEVEL: \" + resolved.get(\"LOG_LEVEL\"));\n        System.out.println(\"Total vars: \" + resolved.size());\n    }\n}",
+      "instructions": [
+        "addEnv() merges the given vars into the source-specific map using putAll",
+        "resolve() iterates over sources from lowest to highest priority, calling putAll on the result",
+        "RUNTIME_OVERRIDE has highest priority and overrides COMPOSE_ENV and DOCKERFILE_DEFAULT",
+        "COMPOSE_ENV overrides DOCKERFILE_DEFAULT but is overridden by RUNTIME_OVERRIDE",
+        "get() and hasKey() call resolve() internally — no need to duplicate the merge logic"
+      ],
+      "hint": "The resolve() implementation is already provided in the skeleton. The key insight is that putAll() on a LinkedHashMap overwrites existing keys, so later sources override earlier ones. Just ensure addEnv() correctly merges into the source map.",
+      "expectedOutput": "DB_HOST: postgres\nLOG_LEVEL: WARN\nTotal vars: 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 32,
+    "subtopicId": 121,
+    "allowedSubmissionType": "TEXT"
+  }
+]

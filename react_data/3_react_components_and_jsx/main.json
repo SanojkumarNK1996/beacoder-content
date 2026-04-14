@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 266, "title": "Introduction to JSX", "dataType": "notes", "data": "intro_to_jsx.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 267, "title": "Functional Components", "dataType": "notes", "data": "functional_components.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 268, "title": "Class Components", "dataType": "notes", "data": "class_components.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 269, "title": "Component Composition", "dataType": "notes", "data": "component_composition.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 270, "title": "Rendering Lists and Conditional Rendering", "dataType": "notes", "data": "lists_and_conditional_rendering.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 271, "title": "React Styling Methods", "dataType": "notes", "data": "react_styling.html", "displayOrder": 6, "verified": false}
+]

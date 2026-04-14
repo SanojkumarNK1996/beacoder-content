@@ -1,0 +1,27 @@
+<h1>⚡ Binary Search</h1>
+<h2>🎯 Algorithm</h2>
+<p>On a sorted array, binary search compares the target with the middle element and eliminates half the search space each iteration.</p>
+<div class="code-example">
+  <pre>
+int binarySearch(int[] arr, int target) {
+    int left = 0, right = arr.length - 1;
+    while (left &lt;= right) {
+        int mid = left + (right - left) / 2;  // Avoids overflow
+        if (arr[mid] == target) return mid;
+        else if (arr[mid] &lt; target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;  // Not found
+}
+  </pre>
+</div>
+<h2>📐 Complexity</h2>
+<ul>
+  <li><strong>Time</strong>: O(log n)</li>
+  <li><strong>Space</strong>: O(1) iterative, O(log n) recursive</li>
+  <li>Requires a <strong>sorted array</strong></li>
+</ul>
+<h2>⚠️ Common Pitfall</h2>
+<p>Use <code>mid = left + (right - left) / 2</code> instead of <code>(left + right) / 2</code> to avoid integer overflow when indexes are large.</p>
+<h2>🎯 Summary</h2>
+<p>Binary search is one of the most important interview topics. Many problems reduce to "binary search on the answer".</p>

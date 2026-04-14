@@ -1,0 +1,183 @@
+<h1>🚨 Exception Handling in REST APIs</h1>
+
+<h2>🎯 Goal</h2>
+<p>Learn how to handle errors in a <strong>clean, consistent, and user-friendly</strong> way using Spring&apos;s exception handling features.</p>
+
+<h2>❌ What Happens Without Proper Handling?</h2>
+<p>If you don&apos;t handle exceptions:</p>
+<ul>
+  <li>Clients see <strong>HTML error pages</strong> instead of JSON</li>
+  <li>Error messages may expose <strong>internal details</strong></li>
+  <li>Different endpoints return <strong>inconsistent error formats</strong></li>
+</ul>
+
+<p>For REST APIs, you want <strong>structured JSON error responses</strong>.</p>
+
+<h2>🧱 Basic Local Exception Handling</h2>
+
+<div class="code-example">
+  <pre>
+@GetMapping("/orders/{id}")
+public Order getOrder(@PathVariable Long id) {
+    try {
+        return orderService.getOrderById(id);
+    } catch (OrderNotFoundException ex) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+}
+  </pre>
+</div>
+
+<p>This works, but scattering <code>try/catch</code> blocks everywhere is <strong>not clean</strong>. Better: a <strong>global exception handler</strong>.</p>
+
+<h2>🌍 Global Exception Handling with @ControllerAdvice</h2>
+
+<h3>1️⃣ Define an Error Response Model</h3>
+
+<div class="code-example">
+  <pre>
+public class ApiError {
+
+    private int status;
+    private String error;
+    private String message;
+    private String path;
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    // constructors, getters, setters
+}
+  </pre>
+</div>
+
+<h3>2️⃣ Create a Global Exception Handler</h3>
+
+<div class="code-example">
+  <pre>
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity&lt;ApiError&gt; handleResourceNotFound(ResourceNotFoundException ex,
+                                                            HttpServletRequest request) {
+        ApiError error = new ApiError();
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setError("Not Found");
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;ApiError&gt; handleValidationException(MethodArgumentNotValidException ex,
+                                                               HttpServletRequest request) {
+        String message = ex.getBindingResult().getFieldErrors().stream()
+                .map(fe -&gt; fe.getField() + ": " + fe.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        ApiError error = new ApiError();
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setError("Validation Failed");
+        error.setMessage(message);
+        error.setPath(request.getRequestURI());
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;ApiError&gt; handleGenericException(Exception ex, HttpServletRequest request) {
+        ApiError error = new ApiError();
+        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setError("Internal Server Error");
+        error.setMessage("An unexpected error occurred");
+        error.setPath(request.getRequestURI());
+
+        // Log the complete exception for debugging
+        ex.printStackTrace();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+}
+  </pre>
+</div>
+
+<h2>🧪 Custom Domain Exceptions</h2>
+
+<div class="code-example">
+  <pre>
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+
+// Usage in service layer
+public User getUserById(Long id) {
+    return userRepository.findById(id)
+            .orElseThrow(() -&gt; new ResourceNotFoundException("User not found with id: " + id));
+}
+  </pre>
+</div>
+
+<p><code>@ResponseStatus</code> on the exception class automatically sets the HTTP status if thrown.</p>
+
+<h2>📄 Example Error Response</h2>
+
+<div class="code-example">
+  <pre>
+GET /api/users/999
+
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{
+  "status": 404,
+  "error": "Not Found",
+  "message": "User not found with id: 999",
+  "path": "/api/users/999",
+  "timestamp": "2026-03-19T10:15:30.123"
+}
+  </pre>
+</div>
+
+<h2>🧱 Handling Validation Errors</h2>
+
+<p>When using <code>@Valid</code> on request bodies, validation failures throw <code>MethodArgumentNotValidException</code>. Our global handler converts them into a clean JSON response.</p>
+
+<div class="code-example">
+  <pre>
+@PostMapping("/users")
+public ResponseEntity&lt;User&gt; createUser(@Valid @RequestBody CreateUserRequest request) {
+    User user = userService.createUser(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(user);
+}
+
+// If validation fails, client might see:
+{
+  "status": 400,
+  "error": "Validation Failed",
+  "message": "email: must be a well-formed email address, password: Password must be at least 8 characters",
+  "path": "/api/users",
+  "timestamp": "2026-03-19T10:20:45.567"
+}
+  </pre>
+</div>
+
+<h2>🧩 Best Practices</h2>
+
+<ul>
+  <li>Use <strong>structured error responses</strong> with consistent format</li>
+  <li>Never expose <strong>stack traces</strong> or internal details to clients</li>
+  <li>Log full exceptions on the server side</li>
+  <li>Map <strong>domain errors</strong> (e.g., &quot;insufficient balance&quot;) to proper HTTP codes (e.g., 400)</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Use <strong>@RestControllerAdvice</strong> and <strong>@ExceptionHandler</strong> for global error handling</li>
+  <li>Return consistent <strong>JSON error structures</strong> with meaningful messages</li>
+  <li>Combine with <strong>Bean Validation</strong> for robust input validation</li>
+</ul>
+
+<p>Next, you&apos;ll see how to add <strong>API Documentation</strong> using tools like Swagger / OpenAPI.</p>

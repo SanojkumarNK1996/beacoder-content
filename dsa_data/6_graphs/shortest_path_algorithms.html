@@ -1,0 +1,25 @@
+<h1>🛣️ Shortest Path Algorithms</h1>
+<h2>🎯 Dijkstra's Algorithm</h2>
+<p>Finds shortest paths from a source to all vertices in a <strong>weighted, non-negative</strong> graph. Uses a min-heap (PriorityQueue).</p>
+<ul>
+  <li>Time: O((V + E) log V)</li>
+  <li>Does NOT work with negative edge weights</li>
+</ul>
+<h2>🌐 Floyd-Warshall</h2>
+<p>Finds shortest paths <strong>between all pairs</strong> of vertices. Uses dynamic programming.</p>
+<ul>
+  <li>Time: O(V³) — suitable for small dense graphs</li>
+  <li>Handles negative edges (but not negative cycles)</li>
+</ul>
+<h2>🔄 Bellman-Ford</h2>
+<p>Single-source shortest paths, handles <strong>negative edge weights</strong>.</p>
+<ul>
+  <li>Time: O(V × E) — slower than Dijkstra</li>
+  <li>Can detect negative cycles</li>
+</ul>
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Use <strong>Dijkstra</strong> for most weighted shortest-path problems</li>
+  <li>Use <strong>Bellman-Ford</strong> if negative weights exist</li>
+  <li>Use <strong>Floyd-Warshall</strong> for all-pairs shortest paths on small graphs</li>
+</ul>

@@ -1,0 +1,22 @@
+<h1>#️⃣ Hash Tables Fundamentals</h1>
+<h2>🎯 What is a Hash Table?</h2>
+<p>A <strong>hash table</strong> maps keys to values using a <strong>hash function</strong> to compute the index (bucket) in an array where the value is stored.</p>
+<h2>📐 Complexity</h2>
+<ul>
+  <li><strong>Insert</strong>: O(1) average</li>
+  <li><strong>Search</strong>: O(1) average</li>
+  <li><strong>Delete</strong>: O(1) average</li>
+  <li><strong>Worst case</strong>: O(n) if all keys hash to the same bucket</li>
+</ul>
+<h2>🔧 Java Implementation</h2>
+<div class="code-example">
+  <pre>
+HashMap&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
+map.put("apple", 3);
+map.put("banana", 5);
+System.out.println(map.get("apple")); // 3
+System.out.println(map.containsKey("cherry")); // false
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Hash tables are the most versatile data structure for fast lookups, frequency counting, and caching. Every programmer must master them.</p>

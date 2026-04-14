@@ -1,0 +1,38 @@
+<h1>🔮 Mocking and Integration Testing</h1>
+<h2>🎯 Why Mock?</h2>
+<p>Tests should be fast, deterministic, and isolated. Mock external dependencies (APIs, timers, modules) to avoid real network calls.</p>
+<h2>🔧 Mocking API Calls with MSW</h2>
+<p><strong>Mock Service Worker (MSW)</strong> is the best approach — intercepts fetch/axios requests at the network level.</p>
+<div class="code-example">
+  <pre>
+// handlers.js - define mock API responses
+import { http, HttpResponse } from 'msw';
+export const handlers = [
+  http.get('/api/users', () =&gt; HttpResponse.json([{ id: 1, name: 'Alice' }])),
+  http.post('/api/users', async ({ request }) =&gt; {
+    const body = await request.json();
+    return HttpResponse.json({ id: 2, ...body }, { status: 201 });
+  }),
+];
+
+// Setup in tests:
+import { setupServer } from 'msw/node';
+const server = setupServer(...handlers);
+beforeAll(() =&gt; server.listen());
+afterEach(() =&gt; server.resetHandlers());
+afterAll(() =&gt; server.close());
+  </pre>
+</div>
+<h2>📌 Integration Test Example</h2>
+<div class="code-example">
+  <pre>
+test('loads and displays users', async () =&gt; {
+  render(&lt;UserList /&gt;);
+  expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  // After API resolves:
+  expect(await screen.findByText('Alice')).toBeInTheDocument();
+});
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>MSW is the gold standard for API mocking — tests work identically with real fetch calls, the mock just intercepts network requests. More realistic than mocking modules.</p>

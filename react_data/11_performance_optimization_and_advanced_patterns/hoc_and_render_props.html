@@ -1,0 +1,40 @@
+<h1>🎨 Higher Order Components and Render Props</h1>
+<h2>🎯 Higher Order Components (HOC)</h2>
+<p>An HOC is a function that takes a component and returns an enhanced component. A pattern for code reuse before hooks.</p>
+<div class="code-example">
+  <pre>
+// HOC: withAuth — wraps a component to require authentication
+function withAuth(WrappedComponent) {
+  return function AuthenticatedComponent(props) {
+    const { user } = useAuth();
+    if (!user) return &lt;Navigate to="/login" /&gt;;
+    return &lt;WrappedComponent {...props} user={user} /&gt;;
+  };
+}
+
+const ProtectedDashboard = withAuth(Dashboard);
+
+// HOC: withLoading
+function withLoading(Component) {
+  return ({ isLoading, ...props }) =&gt;
+    isLoading ? &lt;Spinner /&gt; : &lt;Component {...props} /&gt;;
+}
+  </pre>
+</div>
+<h2>🔄 Render Props Pattern</h2>
+<div class="code-example">
+  <pre>
+// Another code-reuse pattern — pass render function as prop
+function MouseTracker({ render }) {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  return &lt;div onMouseMove={e =&gt; setPos({ x: e.clientX, y: e.clientY })}&gt;
+    {render(pos)}
+  &lt;/div&gt;;
+}
+
+// Usage:
+&lt;MouseTracker render={({ x, y }) =&gt; &lt;span&gt;{x}, {y}&lt;/span&gt;} /&gt;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Custom hooks have largely replaced HOCs and render props for code sharing, but HOCs are still used for auth wrappers, logging, and error boundaries in class component style code.</p>

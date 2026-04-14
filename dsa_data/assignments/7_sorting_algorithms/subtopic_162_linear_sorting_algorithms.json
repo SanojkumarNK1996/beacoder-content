@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Counting Sort Implementation",
+    "description": {
+      "task": "Implement Counting Sort for non-negative integers. Count the frequency of each element, compute cumulative counts (to maintain stability), then place elements in sorted order into an output array.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class CountingSort {\n\n    public int[] sort(int[] arr) {\n        if (arr.length == 0) return arr;\n        int max = arr[0];\n        for (int x : arr) if (x > max) max = x;\n\n        int[] count = new int[max + 1];\n        // TODO: Step 1 — count occurrences: count[arr[i]]++\n        for (int x : arr) {\n            // count[x]++;\n        }\n\n        // TODO: Step 2 — cumulative sum (so count[i] = number of elements <= i)\n        for (int i = 1; i <= max; i++) {\n            // count[i] += count[i-1];\n        }\n\n        // Step 3 — build output array (traverse input from right for stability)\n        int[] output = new int[arr.length];\n        for (int i = arr.length - 1; i >= 0; i--) {\n            // TODO: output[count[arr[i]]-1] = arr[i]; and decrement count[arr[i]]\n        }\n        return output;\n    }\n\n    public static void main(String[] args) {\n        CountingSort cs = new CountingSort();\n        int[] arr = {4, 2, 2, 8, 3, 3, 1};\n        System.out.println(\"Before: \" + Arrays.toString(arr));\n        int[] sorted = cs.sort(arr);\n        System.out.println(\"After:  \" + Arrays.toString(sorted));\n\n        int[] arr2 = {1, 0, 0, 3, 2};\n        System.out.println(\"Sorted: \" + Arrays.toString(cs.sort(arr2)));\n    }\n}",
+      "instructions": [
+        "Step 1: for(int x:arr) count[x]++;",
+        "Step 2: for(int i=1;i<=max;i++) count[i]+=count[i-1];",
+        "Step 3: output[count[arr[i]]-1]=arr[i]; count[arr[i]]--;",
+        "Counting sort runs in O(n+k) where k is the max value — linear time!",
+        "It is only suitable when the range of values k is not too large relative to n"
+      ],
+      "hint": "Step1: count[x]++; Step2: count[i]+=count[i-1]; Step3: output[count[arr[i]]-1]=arr[i]; count[arr[i]]--;",
+      "expectedOutput": "Before: [4, 2, 2, 8, 3, 3, 1]\nAfter:  [1, 2, 2, 3, 3, 4, 8]\nSorted: [0, 0, 1, 2, 3]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 162,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Radix Sort (LSD) Implementation",
+    "description": {
+      "task": "Implement Radix Sort (Least Significant Digit) that sorts integers by individual digit positions. Use a stable Counting Sort on each digit place (1s, 10s, 100s, …). Process digits from least significant to most significant.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class RadixSort {\n\n    // Counting sort on digit at 'exp' place (1, 10, 100, ...)\n    private void countByDigit(int[] arr, int exp) {\n        int n = arr.length;\n        int[] output = new int[n];\n        int[] count = new int[10]; // digits 0-9\n\n        for (int x : arr) count[(x / exp) % 10]++;\n        for (int i = 1; i < 10; i++) count[i] += count[i-1]; // cumulative\n\n        // Build output from right for stability\n        for (int i = n - 1; i >= 0; i--) {\n            int digit = (arr[i] / exp) % 10;\n            output[--count[digit]] = arr[i];\n        }\n        System.arraycopy(output, 0, arr, 0, n);\n    }\n\n    public int[] radixSort(int[] arr) {\n        int max = arr[0];\n        for (int x : arr) if (x > max) max = x;\n        // TODO: for each exp = 1, 10, 100, ... (while max/exp > 0), call countByDigit\n        return arr;\n    }\n\n    public static void main(String[] args) {\n        RadixSort rs = new RadixSort();\n        int[] arr = {170, 45, 75, 90, 802, 24, 2, 66};\n        System.out.println(\"Before: \" + Arrays.toString(arr));\n        rs.radixSort(arr);\n        System.out.println(\"After:  \" + Arrays.toString(arr));\n\n        int[] arr2 = {3, 6, 9, 1, 4, 7, 2, 5, 8};\n        rs.radixSort(arr2);\n        System.out.println(\"Sorted: \" + Arrays.toString(arr2));\n    }\n}",
+      "instructions": [
+        "for(int exp=1;max/exp>0;exp*=10) countByDigit(arr,exp);",
+        "The countByDigit method is fully implemented — just add the loop in radixSort",
+        "Radix sort is O(d*(n+k)) where d=number of digits, k=10 for base-10 — effectively O(n) for fixed-width integers",
+        "Processing digits from LSD (exp=1) to MSD maintains correct order",
+        "arr={170,45,75,90,802,24,2,66} → sorted: [2,24,45,66,75,90,170,802]"
+      ],
+      "hint": "for(int exp=1;max/exp>0;exp*=10) countByDigit(arr,exp);",
+      "expectedOutput": "Before: [170, 45, 75, 90, 802, 24, 2, 66]\nAfter:  [2, 24, 45, 66, 75, 90, 170, 802]\nSorted: [1, 2, 3, 4, 5, 6, 7, 8, 9]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 162,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Bucket Sort for Floats",
+    "description": {
+      "task": "Implement Bucket Sort for floating-point numbers in the range [0.0, 1.0). Distribute values into n buckets, sort each bucket using insertion sort, then concatenate. This achieves O(n) average time.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BucketSort {\n\n    public double[] sort(double[] arr) {\n        int n = arr.length;\n        @SuppressWarnings(\"unchecked\")\n        List<Double>[] buckets = new ArrayList[n];\n        for (int i = 0; i < n; i++) buckets[i] = new ArrayList<>();\n\n        // TODO: Distribute: for each x in arr, add to bucket index (int)(x * n)\n\n        // TODO: Sort each bucket (use Collections.sort)\n\n        // TODO: Concatenate all buckets back into arr\n        int idx = 0;\n        // fill arr from sorted buckets\n\n        return arr;\n    }\n\n    public static void main(String[] args) {\n        BucketSort bs = new BucketSort();\n        double[] arr = {0.78, 0.17, 0.39, 0.26, 0.72, 0.94, 0.21, 0.12, 0.23, 0.68};\n        System.out.println(\"Before: \" + Arrays.toString(arr));\n        bs.sort(arr);\n        System.out.printf(\"After:  %s%n\", Arrays.toString(arr));\n    }\n}",
+      "instructions": [
+        "Distribute: for(double x:arr) buckets[(int)(x*n)].add(x);",
+        "Sort each bucket: for(List<Double> b:buckets) Collections.sort(b);",
+        "Concatenate: for(List<Double> b:buckets) for(double x:b) arr[idx++]=x;",
+        "The output should be all 10 floats in ascending order",
+        "Bucket sort works best when input is uniformly distributed over a range"
+      ],
+      "hint": "Distribute: buckets[(int)(x*n)].add(x); Sort: Collections.sort(b); Concat: arr[idx++]=x;",
+      "expectedOutput": "Before: [0.78, 0.17, 0.39, 0.26, 0.72, 0.94, 0.21, 0.12, 0.23, 0.68]\nAfter:  [0.12, 0.17, 0.21, 0.23, 0.26, 0.39, 0.68, 0.72, 0.78, 0.94]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 162,
+    "allowedSubmissionType": "TEXT"
+  }
+]

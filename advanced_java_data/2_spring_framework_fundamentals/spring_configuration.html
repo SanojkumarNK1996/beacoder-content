@@ -1,0 +1,606 @@
+<h1>⚙️ Spring Configuration</h1>
+
+<h2>🎯 What is Spring Configuration?</h2>
+<p>Spring Configuration is about <strong>telling Spring how to create, wire, and manage your beans</strong>. It's the blueprint that guides the Spring IoC container in building your application.</p>
+
+<div class="config-intro">
+    <div class="analogy-card">
+        <h3>🏗️ Construction Blueprint Analogy</h3>
+        <p>Just like a building needs <strong>architectural drawings</strong> to guide construction workers:</p>
+        <ul>
+            <li>📋 <strong>Blueprint:</strong> Spring Configuration</li>
+            <li>👷 <strong>Construction Workers:</strong> Spring IoC Container</li>
+            <li>🏢 <strong>Final Building:</strong> Your Running Application</li>
+        </ul>
+    </div>
+</div>
+
+<h2>🔧 Three Ways to Configure Spring</h2>
+
+<div class="config-types-overview">
+    <div class="config-type-card">
+        <h3>📄 XML Configuration</h3>
+        <p>Traditional, explicit, verbose</p>
+        <p><em>Spring 1.0+ era</em></p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="config-type-card">
+        <h3>🎯 Annotation-Based</h3>
+        <p>Modern, concise, declarative</p>
+        <p><em>Spring 2.5+ era</em></p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="config-type-card">
+        <h3>☕ Java Configuration</h3>
+        <p>Type-safe, refactorable, flexible</p>
+        <p><em>Spring 3.0+ era</em></p>
+    </div>
+</div>
+
+<h2>📄 1. XML Configuration (Legacy)</h2>
+
+<h3>🔧 Basic XML Configuration</h3>
+<div class="config-example">
+    <h4>applicationContext.xml:</h4>
+    <div class="code-example">
+        <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd"&gt;
+
+    &lt;!-- Bean definitions --&gt;
+    &lt;bean id="userRepository" class="com.example.UserRepositoryImpl"/&gt;
+    
+    &lt;bean id="emailService" class="com.example.EmailServiceImpl"/&gt;
+    
+    &lt;!-- Dependency injection via constructor --&gt;
+    &lt;bean id="userService" class="com.example.UserService"&gt;
+        &lt;constructor-arg ref="userRepository"/&gt;
+        &lt;constructor-arg ref="emailService"/&gt;
+    &lt;/bean&gt;
+    
+    &lt;!-- Property injection --&gt;
+    &lt;bean id="databaseConfig" class="com.example.DatabaseConfig"&gt;
+        &lt;property name="url" value="jdbc:mysql://localhost:3306/mydb"/&gt;
+        &lt;property name="username" value="user"/&gt;
+        &lt;property name="password" value="password"/&gt;
+    &lt;/bean&gt;
+
+&lt;/beans&gt;
+        </pre>
+    </div>
+
+    <h4>Loading XML Configuration:</h4>
+    <div class="code-example">
+        <pre>
+// Load XML configuration
+ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+// Get beans
+UserService userService = context.getBean("userService", UserService.class);
+DatabaseConfig dbConfig = context.getBean("databaseConfig", DatabaseConfig.class);
+        </pre>
+    </div>
+</div>
+
+<div class="pros-cons-grid">
+    <div class="pros-card">
+        <h4>✅ XML Configuration Pros:</h4>
+        <ul>
+            <li>🔍 <strong>Explicit:</strong> Everything clearly defined</li>
+            <li>🔧 <strong>External:</strong> Configuration separate from code</li>
+            <li>📊 <strong>Centralized:</strong> All beans in one place</li>
+            <li>🔄 <strong>No Recompilation:</strong> Change config without rebuilding</li>
+        </ul>
+    </div>
+    <div class="cons-card">
+        <h4>❌ XML Configuration Cons:</h4>
+        <ul>
+            <li>📝 <strong>Verbose:</strong> Lots of boilerplate code</li>
+            <li>⚠️ <strong>Error-Prone:</strong> No compile-time checking</li>
+            <li>🔄 <strong>Maintenance:</strong> Hard to refactor</li>
+            <li>📚 <strong>Learning Curve:</strong> XML schemas to learn</li>
+        </ul>
+    </div>
+</div>
+
+<h2>🎯 2. Annotation-Based Configuration (Modern)</h2>
+
+<h3>🔧 Core Annotations</h3>
+<div class="annotations-grid">
+    <div class="annotation-card">
+        <h4>@Component</h4>
+        <p>Generic Spring-managed component</p>
+        <div class="code-example">
+            <pre>
+@Component
+public class UserRepository {
+    // Spring will create and manage this bean
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="annotation-card">
+        <h4>@Service</h4>
+        <p>Business logic layer component</p>
+        <div class="code-example">
+            <pre>
+@Service
+public class UserService {
+    // Semantic annotation for service layer
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="annotation-card">
+        <h4>@Repository</h4>
+        <p>Data access layer component</p>
+        <div class="code-example">
+            <pre>
+@Repository
+public class UserRepository {
+    // Includes exception translation
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="annotation-card">
+        <h4>@Controller</h4>
+        <p>Web layer component</p>
+        <div class="code-example">
+            <pre>
+@Controller
+public class UserController {
+    // Web MVC controller
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h3>🎯 Complete Annotation Example</h3>
+<div class="code-example">
+    <pre>
+// Repository layer
+@Repository
+public class UserRepository {
+    public User save(User user) {
+        // Database operations
+        return user;
+    }
+    
+    public User findById(Long id) {
+        // Database query
+        return new User();
+    }
+}
+
+// Service layer
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+    
+    // Constructor injection (no @Autowired needed in Spring 4.3+)
+    public UserService(UserRepository userRepository, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+    }
+    
+    public User createUser(String email) {
+        User user = new User(email);
+        User savedUser = userRepository.save(user);
+        emailService.sendWelcomeEmail(email);
+        return savedUser;
+    }
+}
+
+// Configuration to enable component scanning
+@Configuration
+@ComponentScan(basePackages = "com.example")
+public class AppConfig {
+    // Spring will scan and register @Component, @Service, @Repository, etc.
+}
+
+// Alternative: Enable scanning in main class
+@SpringBootApplication  // Includes @ComponentScan
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+    </pre>
+</div>
+
+<h2>☕ 3. Java Configuration (Type-Safe)</h2>
+
+<h3>🔧 Java Config Class</h3>
+<div class="code-example">
+    <pre>
+@Configuration
+public class AppConfig {
+    
+    // Bean definition method
+    @Bean
+    public UserRepository userRepository() {
+        return new UserRepositoryImpl();
+    }
+    
+    @Bean
+    public EmailService emailService() {
+        return new EmailServiceImpl();
+    }
+    
+    // Method injection - Spring calls methods to get dependencies
+    @Bean
+    public UserService userService(UserRepository userRepository, EmailService emailService) {
+        return new UserService(userRepository, emailService);
+    }
+    
+    // Configuration properties
+    @Bean
+    public DatabaseConfig databaseConfig() {
+        DatabaseConfig config = new DatabaseConfig();
+        config.setUrl("jdbc:mysql://localhost:3306/mydb");
+        config.setUsername("user");
+        config.setPassword("password");
+        return config;
+    }
+    
+    // Conditional bean creation
+    @Bean
+    @Profile("production")  // Only create in production profile
+    public PaymentService paymentService() {
+        return new RealPaymentService();
+    }
+    
+    @Bean
+    @Profile("test")  // Only create in test profile  
+    public PaymentService mockPaymentService() {
+        return new MockPaymentService();
+    }
+}
+    </pre>
+</div>
+
+<h3>🎯 Loading Java Configuration</h3>
+<div class="code-example">
+    <pre>
+// Load Java configuration
+ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+// Get beans
+UserService userService = context.getBean(UserService.class);
+DatabaseConfig dbConfig = context.getBean(DatabaseConfig.class);
+
+// Or with Spring Boot (auto-configuration)
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(Application.class, args);
+        UserService userService = context.getBean(UserService.class);
+    }
+}
+    </pre>
+</div>
+
+<h2>🔧 Advanced Configuration Features</h2>
+
+<h3>1️⃣ Property Injection</h3>
+<div class="code-example">
+    <pre>
+// application.properties
+app.name=MyApplication
+app.version=1.0.0
+database.url=jdbc:mysql://localhost:3306/mydb
+email.enabled=true
+
+// Configuration class
+@Configuration
+@PropertySource("classpath:application.properties")
+public class AppConfig {
+    
+    @Value("${app.name}")
+    private String appName;
+    
+    @Value("${app.version}")
+    private String appVersion;
+    
+    @Bean
+    public AppInfo appInfo() {
+        return new AppInfo(appName, appVersion);
+    }
+}
+
+// In any Spring-managed bean
+@Service
+public class UserService {
+    @Value("${database.url}")
+    private String databaseUrl;
+    
+    @Value("${email.enabled:false}")  // Default value if property not found
+    private boolean emailEnabled;
+}
+    </pre>
+</div>
+
+<h3>2️⃣ Profiles for Different Environments</h3>
+<div class="code-example">
+    <pre>
+// Development configuration
+@Configuration
+@Profile("development")
+public class DevConfig {
+    @Bean
+    public DataSource dataSource() {
+        return new H2DataSource(); // In-memory database for dev
+    }
+}
+
+// Production configuration
+@Configuration
+@Profile("production")
+public class ProdConfig {
+    @Bean
+    public DataSource dataSource() {
+        return new MySQLDataSource(); // Real database for prod
+    }
+}
+
+// Activate profiles
+// 1. In application.properties:
+spring.profiles.active=development
+
+// 2. As JVM argument:
+java -Dspring.profiles.active=production -jar myapp.jar
+
+// 3. Environment variable:
+export SPRING_PROFILES_ACTIVE=production
+    </pre>
+</div>
+
+<h3>3️⃣ Conditional Bean Creation</h3>
+<div class="code-example">
+    <pre>
+@Configuration
+public class AppConfig {
+    
+    // Create only if class is on classpath
+    @Bean
+    @ConditionalOnClass(RedisTemplate.class)
+    public CacheManager redisCacheManager() {
+        return new RedisCacheManager();
+    }
+    
+    // Create only if property has specific value
+    @Bean
+    @ConditionalOnProperty(name = "cache.provider", havingValue = "ehcache")
+    public CacheManager ehcacheCacheManager() {
+        return new EhcacheCacheManager();
+    }
+    
+    // Create only if another bean is missing
+    @Bean
+    @ConditionalOnMissingBean(CacheManager.class)
+    public CacheManager defaultCacheManager() {
+        return new NoOpCacheManager(); // Default fallback
+    }
+}
+    </pre>
+</div>
+
+<h2>📊 Configuration Comparison</h2>
+<table>
+    <tr>
+        <th>Aspect</th>
+        <th>📄 XML</th>
+        <th>🎯 Annotation</th>
+        <th>☕ Java Config</th>
+    </tr>
+    <tr>
+        <td><strong>Verbosity</strong></td>
+        <td>High</td>
+        <td>Low</td>
+        <td>Medium</td>
+    </tr>
+    <tr>
+        <td><strong>Type Safety</strong></td>
+        <td>No</td>
+        <td>Limited</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td><strong>Refactoring</strong></td>
+        <td>Hard</td>
+        <td>Good</td>
+        <td>Excellent</td>
+    </tr>
+    <tr>
+        <td><strong>IDE Support</strong></td>
+        <td>Limited</td>
+        <td>Good</td>
+        <td>Excellent</td>
+    </tr>
+    <tr>
+        <td><strong>External Config</strong></td>
+        <td>Yes</td>
+        <td>Partial</td>
+        <td>With @PropertySource</td>
+    </tr>
+    <tr>
+        <td><strong>Learning Curve</strong></td>
+        <td>Steep</td>
+        <td>Gentle</td>
+        <td>Moderate</td>
+    </tr>
+</table>
+
+<h2>🎯 Modern Best Practices</h2>
+
+<div class="best-practices-grid">
+    <div class="practice-card">
+        <h3>1️⃣ Use Spring Boot Auto-Configuration</h3>
+        <div class="code-example">
+            <pre>
+@SpringBootApplication  // Combines @Configuration + @ComponentScan + @EnableAutoConfiguration
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+
+// Spring Boot automatically configures:
+// - DataSource (if database dependency found)
+// - JPA (if JPA dependency found)
+// - Web MVC (if web dependency found)
+// - Security (if security dependency found)
+            </pre>
+        </div>
+    </div>
+
+    <div class="practice-card">
+        <h3>2️⃣ Externalize Configuration</h3>
+        <div class="code-example">
+            <pre>
+# application.yml (preferred over .properties)
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydb
+    username: ${DB_USER:user}
+    password: ${DB_PASSWORD:password}
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+app:
+  name: My Application
+  version: @project.version@  # Maven property injection
+  features:
+    - email-notifications
+    - user-registration
+    - payment-processing
+            </pre>
+        </div>
+    </div>
+
+    <div class="practice-card">
+        <h3>3️⃣ Use Configuration Properties Classes</h3>
+        <div class="code-example">
+            <pre>
+// Type-safe configuration properties
+@ConfigurationProperties(prefix = "app")
+@Data  // Lombok for getters/setters
+public class AppProperties {
+    private String name;
+    private String version;
+    private List&lt;String&gt; features;
+    private Database database = new Database();
+    
+    @Data
+    public static class Database {
+        private String url;
+        private String username;
+        private String password;
+    }
+}
+
+// Enable configuration properties
+@Configuration
+@EnableConfigurationProperties(AppProperties.class)
+public class AppConfig {
+    // Configuration properties available as beans
+}
+
+// Use in any component
+@Service
+public class UserService {
+    private final AppProperties appProperties;
+    
+    public UserService(AppProperties appProperties) {
+        this.appProperties = appProperties;
+    }
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>⚠️ Common Configuration Mistakes</h2>
+
+<div class="mistakes-section">
+    <div class="mistake-card">
+        <h3>❌ Mixing Configuration Styles</h3>
+        <div class="code-example">
+            <pre>
+// ❌ Don't mix - confusing and hard to maintain
+@Configuration
+@ImportResource("classpath:old-beans.xml")  // XML import
+public class MixedConfig {
+    @Bean
+    public UserService userService() {  // Java config
+        return new UserService();
+    }
+}
+
+// ✅ Choose one approach and stick to it
+@Configuration
+public class JavaConfig {
+    // All beans defined in Java
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="mistake-card">
+        <h3>❌ Hardcoding Values</h3>
+        <div class="code-example">
+            <pre>
+// ❌ Bad - hardcoded values
+@Bean
+public DataSource dataSource() {
+    HikariConfig config = new HikariConfig();
+    config.setJdbcUrl("jdbc:mysql://localhost:3306/mydb");  // Hardcoded!
+    config.setUsername("user");                              // Hardcoded!
+    config.setPassword("password");                          // Hardcoded!
+    return new HikariDataSource(config);
+}
+
+// ✅ Good - externalized configuration
+@Bean
+public DataSource dataSource(@Value("${database.url}") String url,
+                           @Value("${database.username}") String username,
+                           @Value("${database.password}") String password) {
+    HikariConfig config = new HikariConfig();
+    config.setJdbcUrl(url);
+    config.setUsername(username);
+    config.setPassword(password);
+    return new HikariDataSource(config);
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<div class="key-takeaway">
+    <h3>🎯 Key Takeaway</h3>
+    <p>Modern Spring development favors <strong>annotation-based configuration</strong> with <strong>Spring Boot auto-configuration</strong>. Use <strong>Java configuration</strong> for complex scenarios and <strong>externalize properties</strong> for environment-specific settings.</p>
+    
+    <p>💡 <strong>Modern Stack:</strong> Spring Boot + Annotations + YAML properties + Configuration Properties classes = Clean, maintainable, type-safe configuration</p>
+</div>
+
+<h2>🛤️ Next Steps</h2>
+<p>Mastering Spring Configuration prepares you for:</p>
+<ul>
+    <li>🚀 Building Spring Boot applications with auto-configuration</li>
+    <li>💾 Integrating databases with Spring Data</li>
+    <li>🌐 Creating REST APIs with Spring MVC</li>
+    <li>🔒 Implementing security with Spring Security</li>
+    <li>🧪 Writing comprehensive tests with proper configuration</li>
+</ul>

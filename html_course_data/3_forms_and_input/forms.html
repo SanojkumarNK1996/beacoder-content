@@ -1,0 +1,66 @@
+<h1>HTML Forms</h1>
+
+<h2>🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>IRCTC booking, bank login, job application portals, and college admission forms all rely on HTML forms to collect user data.</li>
+  <li>Without forms, users cannot search, register, log in, or submit any information.</li>
+</ul>
+
+<h2>📖 What Is This</h2>
+<ul>
+  <li>HTML forms provide a structured way to collect input from users.</li>
+  <li>They use controls like text fields, checkboxes, radios, dropdowns, and buttons.</li>
+</ul>
+
+<h3>🧾 Syntax / Basic Structure ⭐</h3>
+<pre><code>&lt;form action="/submit" method="post"&gt;
+  &lt;label for="name"&gt;Name:&lt;/label&gt;
+  &lt;input type="text" id="name" name="name" /&gt;
+
+  &lt;label for="age"&gt;Age:&lt;/label&gt;
+  &lt;input type="number" id="age" name="age" /&gt;
+
+  &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+<h2>🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<ol>
+  <li>&lt;form&gt; wraps all input fields and defines where (action) and how (method) data is sent.</li>
+  <li>Each &lt;input&gt;, &lt;select&gt;, or &lt;textarea&gt; collects a piece of data using its name attribute.</li>
+  <li>When the user clicks the submit button, the browser sends the data to the server.</li>
+</ol>
+
+<h2>When to Use</h2>
+<ul>
+  <li>Registration/login pages, search bars, feedback forms, checkouts.</li>
+</ul>
+
+<h2>When NOT to Use</h2>
+<ul>
+  <li>Don’t use a full form when a simple link or button is enough (e.g., navigation).</li>
+</ul>
+
+<h2>Minimum You MUST Remember</h2>
+<ul>
+  <li>&lt;form action="..." method="get|post"&gt; ... &lt;/form&gt;.</li>
+  <li>Each control must have a name for its value to be submitted.</li>
+</ul>
+
+<h2>Common Mistakes</h2>
+<ul>
+  <li>Missing name attribute on inputs (data will not be sent).</li>
+  <li>Using GET for sensitive data like passwords.</li>
+</ul>
+
+<h2>Interviewer’s Perspective</h2>
+<ul>
+  <li>Difference between GET and POST in forms?</li>
+  <li>Why is the name attribute important?</li>
+</ul>
+
+<h2>Practice Questions</h2>
+<ol>
+  <li>Create a simple form with fields: name, email, and message.</li>
+  <li>Use both text and number input types and submit the form.</li>
+</ol>

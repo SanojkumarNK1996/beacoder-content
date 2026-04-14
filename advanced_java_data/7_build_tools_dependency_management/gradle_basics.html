@@ -1,0 +1,199 @@
+<h1>⚡ Gradle Basics</h1>
+
+<h2>🎯 What is Gradle?</h2>
+<p><strong>Gradle</strong> is a modern, flexible build tool for JVM and other ecosystems. It combines the best ideas from Maven and Ant, with:</p>
+<ul>
+  <li>🧠 A powerful <strong>DSL</strong> (Groovy or Kotlin)</li>
+  <li>⚡ <strong>Incremental builds</strong> and caching for speed</li>
+  <li>📦 Great support for <strong>multi-module projects</strong></li>
+</ul>
+
+<h2>📄 build.gradle (Groovy DSL)</h2>
+
+<div class="code-example">
+  <pre>
+plugins {
+    id 'java'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.2.0'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+  </pre>
+</div>
+
+<h2>🔧 Gradle Wrapper</h2>
+<p>The <strong>Gradle Wrapper</strong> (<code>gradlew</code>) allows you to run a specific Gradle version without installing it globally.</p>
+
+<div class="code-example">
+  <pre>
+./gradlew build
+./gradlew test
+./gradlew clean
+  </pre>
+</div>
+
+<p>In Windows, use <code>gradlew.bat</code>.</p>
+
+<h2>🏗️ Common Tasks</h2>
+
+<ul>
+  <li><code>clean</code> – Delete build directory</li>
+  <li><code>compileJava</code> – Compile main source</li>
+  <li><code>test</code> – Run tests</li>
+  <li><code>bootRun</code> – Run Spring Boot app (with Spring plugin)</li>
+  <li><code>build</code> – Full build (compilation + tests + packaging)</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+./gradlew clean build
+./gradlew test
+./gradlew bootRun
+  </pre>
+</div>
+
+<h2>📦 Dependencies</h2>
+
+<p>Gradle uses <strong>configurations</strong> similar to Maven scopes:</p>
+<ul>
+  <li><strong>implementation</strong> – Main dependencies</li>
+  <li><strong>api</strong> – Exposed to consumers (for libraries)</li>
+  <li><strong>testImplementation</strong> – Test dependencies</li>
+  <li><strong>runtimeOnly</strong> – Only at runtime</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.projectlombok:lombok:1.18.30'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+  </pre>
+</div>
+
+<h2>🌱 Spring Boot with Gradle</h2>
+
+<div class="code-example">
+  <pre>
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+  </pre>
+</div>
+
+<p>With the Spring Boot plugin:</p>
+<ul>
+  <li><code>bootRun</code> – Runs the app</li>
+  <li><code>bootJar</code> – Builds an executable JAR</li>
+</ul>
+
+<h2>📁 Multi-Module Projects</h2>
+
+<p>Gradle makes multi-project builds straightforward:</p>
+
+<div class="code-example">
+  <pre>
+my-multi-project/
+├── settings.gradle
+├── build.gradle (root)
+├── app/
+│   └── build.gradle
+└── core/
+    └── build.gradle
+  </pre>
+</div>
+
+<div class="code-example">
+  <pre>
+// settings.gradle
+rootProject.name = 'my-multi-project'
+include 'app', 'core'
+  </pre>
+</div>
+
+<h2>⚖️ Maven vs Gradle (High-Level)</h2>
+
+<table>
+  <tr>
+    <th>Aspect</th>
+    <th>Maven</th>
+    <th>Gradle</th>
+  </tr>
+  <tr>
+    <td>Config format</td>
+    <td>XML (pom.xml)</td>
+    <td>Groovy/Kotlin DSL (build.gradle)</td>
+  </tr>
+  <tr>
+    <td>Philosophy</td>
+    <td>Convention over configuration</td>
+    <td>Highly flexible, scriptable</td>
+  </tr>
+  <tr>
+    <td>Speed</td>
+    <td>Good</td>
+    <td>Very good (incremental build, caching)</td>
+  </tr>
+  <tr>
+    <td>Readability</td>
+    <td>Very explicit XML</td>
+    <td>Concise DSL</td>
+  </tr>
+</table>
+
+<h2>🧪 Useful Gradle Commands</h2>
+
+<div class="code-example">
+  <pre>
+# Show tasks
+./gradlew tasks
+
+# Show dependencies
+./gradlew dependencies --configuration implementation
+
+# Run a single test
+./gradlew test --tests com.example.CalculatorTest
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Gradle is a <strong>modern, fast, and flexible</strong> build tool</li>
+  <li>Uses a <strong>Groovy/Kotlin DSL</strong> instead of XML</li>
+  <li>Works very well with <strong>Spring Boot</strong> via dedicated plugins</li>
+</ul>
+
+<p>In the next section, you&apos;ll learn how to handle <strong>dependency management</strong> effectively in both Maven and Gradle.</p>

@@ -1,102 +1,82 @@
-<h1>Set Operations in SQL (UNION, UNION ALL, INTERSECT, EXCEPT)</h1>
+<h1>Set Operations in SQL: 10-Part Beginner-Friendly Guide</h1>
 
-<p>SQL <strong>set operations</strong> combine the results of two or more <code>SELECT</code> queries into a single result set.  
-They work just like mathematical sets — allowing you to find the union, intersection, or difference between query results.</p>
+<h2>1. Why Does This Topic Exist?</h2>
+<p>In real-world scenarios—like merging student lists from two years, or finding customers who bought from both Amazon and Flipkart—you need to combine or compare results from multiple queries. SQL set operations make this easy.</p>
 
-<p>Each query in a set operation must:
-<ul>
-  <li>Return the same number of columns</li>
-  <li>Have compatible data types</li>
-  <li>Return columns in the same order</li>
-</ul>
-</p>
+<h2>2. What Is This?</h2>
+<p>Set operations in SQL let you combine results from two or more <b>SELECT</b> queries. The main ones are <b>UNION</b>, <b>UNION ALL</b>, <b>INTERSECT</b>, and <b>EXCEPT</b> (or <b>MINUS</b>).</p>
 
-<hr>
-
-<h2>1️⃣ What Are SQL Set Operations?</h2>
-
-<p>SQL supports these primary set operations:</p>
-
-<ul>
-  <li><strong>UNION</strong> — combines results and removes duplicates</li>
-  <li><strong>UNION ALL</strong> — combines results including duplicates</li>
-  <li><strong>INTERSECT</strong> — returns only common rows</li>
-  <li><strong>EXCEPT</strong> (or <strong>MINUS</strong> in some databases) — returns rows from the first query that don’t appear in the second</li>
-</ul>
-
-<hr>
-
-<h2>2️⃣ Example Tables</h2>
-
-<p><strong>Students2024</strong> table:</p>
-<table border="1" cellpadding="5">
-  <tr><th>Name</th><th>Course</th></tr>
-  <tr><td>John</td><td>Math</td></tr>
-  <tr><td>Mary</td><td>Science</td></tr>
-  <tr><td>Alex</td><td>English</td></tr>
-</table>
-
-<p><strong>Students2025</strong> table:</p>
-<table border="1" cellpadding="5">
-  <tr><th>Name</th><th>Course</th></tr>
-  <tr><td>Mary</td><td>Science</td></tr>
-  <tr><td>Alex</td><td>English</td></tr>
-  <tr><td>Linda</td><td>History</td></tr>
-</table>
-
-<hr>
-
-<h2>3️⃣ UNION</h2>
-
-<p>The <strong>UNION</strong> operator combines the results of two queries and removes duplicates.</p>
-
+<h2>3. Syntax/Structure</h2>
 <pre>
-SELECT Name, Course FROM Students2024
+-- Combine results and remove duplicates
+SELECT ... FROM ...
 UNION
-SELECT Name, Course FROM Students2025;
-</pre>
+SELECT ... FROM ...;
 
-<p><strong>Result:</strong></p>
-
-<table border="1" cellpadding="5">
-  <tr><th>Name</th><th>Course</th></tr>
-  <tr><td>John</td><td>Math</td></tr>
-  <tr><td>Mary</td><td>Science</td></tr>
-  <tr><td>Alex</td><td>English</td></tr>
-  <tr><td>Linda</td><td>History</td></tr>
-</table>
-
-<p><strong>Note:</strong> Duplicates (like Mary and Alex) appear only once.</p>
-
-<hr>
-
-<h2>4️⃣ UNION ALL</h2>
-
-<p>The <strong>UNION ALL</strong> operator combines results but <strong>keeps duplicates</strong>.</p>
-
-<pre>
-SELECT Name, Course FROM Students2024
+-- Combine results and keep duplicates
+SELECT ... FROM ...
 UNION ALL
-SELECT Name, Course FROM Students2025;
+SELECT ... FROM ...;
+
+-- Find common rows
+SELECT ... FROM ...
+INTERSECT
+SELECT ... FROM ...;
+
+-- Find rows in first query but not in second
+SELECT ... FROM ...
+EXCEPT
+SELECT ... FROM ...;
 </pre>
 
-<p><strong>Result:</strong></p>
+<h2>4. Step-by-Step: How It Works</h2>
+<ol>
+  <li>Write two or more <code>SELECT</code> queries with the same number and type of columns.</li>
+  <li>Combine them using <code>UNION</code>, <code>UNION ALL</code>, <code>INTERSECT</code>, or <code>EXCEPT</code>.</li>
+  <li>Run the query to get the combined or compared results.</li>
+</ol>
 
-<table border="1" cellpadding="5">
-  <tr><th>Name</th><th>Course</th></tr>
-  <tr><td>John</td><td>Math</td></tr>
-  <tr><td>Mary</td><td>Science</td></tr>
-  <tr><td>Alex</td><td>English</td></tr>
-  <tr><td>Mary</td><td>Science</td></tr>
-  <tr><td>Alex</td><td>English</td></tr>
-  <tr><td>Linda</td><td>History</td></tr>
-</table>
+<h2>5. When to Use</h2>
+<ul>
+  <li>To merge lists from different years or sources (e.g., students from 2024 and 2025).</li>
+  <li>To find customers who appear in both or only one of two lists.</li>
+  <li>To compare results from different queries.</li>
+</ul>
 
-<p><strong>Difference:</strong> <code>UNION ALL</code> is faster than <code>UNION</code> because it skips duplicate checks.</p>
+<h2>6. When Not to Use</h2>
+<ul>
+  <li>When queries return different numbers or types of columns.</li>
+  <li>When you only need data from one table (use <code>SELECT</code> or <code>JOIN</code> instead).</li>
+</ul>
 
-<hr>
+<h2>7. Minimum to Remember</h2>
+<ul>
+  <li><code>UNION</code>: Combines and removes duplicates.</li>
+  <li><code>UNION ALL</code>: Combines and keeps duplicates.</li>
+  <li><code>INTERSECT</code>: Only common rows.</li>
+  <li><code>EXCEPT</code>: Rows in first query, not in second.</li>
+</ul>
 
-<h2>5️⃣ INTERSECT</h2>
+<h2>8. Common Mistakes</h2>
+<ul>
+  <li>Different column counts or types in queries (causes errors).</li>
+  <li>Assuming <code>UNION</code> keeps duplicates (it removes them).</li>
+  <li>Using set operations with queries in different column order.</li>
+</ul>
+
+<h2>9. Interviewer’s Perspective</h2>
+<ul>
+  <li>“What is the difference between UNION and UNION ALL?”</li>
+  <li>“How do you find students who are in both 2024 and 2025 batches?”</li>
+  <li>“How do you get all unique products sold in two different years?”</li>
+</ul>
+
+<h2>10. Practice Questions</h2>
+<ol>
+  <li>Write SQL to combine two lists of employees, removing duplicates.</li>
+  <li>How would you find customers who bought in both 2024 and 2025?</li>
+  <li>Write a query to get all orders from 2025 that were not present in 2024.</li>
+</ol>
 
 <p>The <strong>INTERSECT</strong> operator returns only the rows that exist in both queries.</p>
 

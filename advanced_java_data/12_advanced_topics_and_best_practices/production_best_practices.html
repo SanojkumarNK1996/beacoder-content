@@ -1,0 +1,39 @@
+<h1>🏭 Production Best Practices</h1>
+
+<h2>🎯 Goal</h2>
+<p>Make your Java/Spring applications <strong>robust, maintainable, and safe</strong> in real-world production environments.</p>
+
+<h2>❤️ Health and Readiness</h2>
+<ul>
+  <li>Expose health endpoints (Spring Boot Actuator)</li>
+  <li>Separate <strong>liveness</strong> (process alive) and <strong>readiness</strong> (ready to receive traffic)</li>
+</ul>
+
+<h2>🔁 Graceful Shutdown</h2>
+<ul>
+  <li>Allow in-flight requests to finish before shutting down</li>
+  <li>Configure proper shutdown hooks in Spring Boot</li>
+</ul>
+
+<h2>⚙️ Configuration Management</h2>
+<ul>
+  <li>Use profiles (dev, test, prod)</li>
+  <li>Externalize secrets and environment-specific settings</li>
+</ul>
+
+<h2>🛡️ Security</h2>
+<ul>
+  <li>Enforce HTTPS, secure cookies, strong auth</li>
+  <li>Keep dependencies updated and scan for vulnerabilities</li>
+</ul>
+
+<h2>📦 Release and Deployment</h2>
+<ul>
+  <li>Automate builds and deployments (CI/CD)</li>
+  <li>Use blue-green or rolling deployments to reduce downtime</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Production readiness includes health checks, graceful shutdown, secure configuration, and safe deployment strategies</li>
+</ul>

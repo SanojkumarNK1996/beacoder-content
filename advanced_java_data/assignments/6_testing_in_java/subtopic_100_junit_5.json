@@ -1,0 +1,73 @@
+[
+  {
+    "title": "JUnit 5 Annotations in Action",
+    "description": {
+      "task": "Simulate the behavior of JUnit 5's core annotations (@Test, @BeforeEach, @AfterEach, @BeforeAll, @AfterAll) by implementing a custom test runner that respects lifecycle hooks.",
+      "language": "java",
+      "starterCode": "import java.lang.annotation.*;\nimport java.lang.reflect.*;\nimport java.util.*;\n\n@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)\n@interface Test {}\n\n@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)\n@interface BeforeEach {}\n\n@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)\n@interface AfterEach {}\n\n@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)\n@interface BeforeAll {}\n\n@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)\n@interface AfterAll {}\n\npublic class StringUtilsTest {\n    private static List<String> setupLog = new ArrayList<>();\n    \n    @BeforeAll\n    public static void initTestSuite() {\n        System.out.println(\"[BeforeAll] Setting up test suite\");\n    }\n    \n    @BeforeEach\n    public void setUp() {\n        setupLog.clear();\n        System.out.println(\"[BeforeEach] Preparing test context\");\n    }\n    \n    @Test\n    public void testReverse() {\n        String result = new StringBuilder(\"hello\").reverse().toString();\n        System.out.println(\"[Test] testReverse: \" + (result.equals(\"olleh\") ? \"PASS\" : \"FAIL\"));\n    }\n    \n    @Test\n    public void testUpperCase() {\n        System.out.println(\"[Test] testUpperCase: \" + (\"java\".toUpperCase().equals(\"JAVA\") ? \"PASS\" : \"FAIL\"));\n    }\n    \n    @AfterEach\n    public void tearDown() {\n        System.out.println(\"[AfterEach] Cleaning up after test\");\n    }\n    \n    @AfterAll\n    public static void cleanupTestSuite() {\n        System.out.println(\"[AfterAll] Test suite complete\");\n    }\n}\n\npublic class JUnit5Runner {\n    public void run(Class<?> testClass) throws Exception {\n        Object instance = testClass.getDeclaredConstructor().newInstance();\n        \n        // TODO: Find and invoke @BeforeAll methods (static)\n        // TODO: For each @Test method:\n        //   - Invoke @BeforeEach\n        //   - Invoke the @Test method\n        //   - Invoke @AfterEach\n        // TODO: Invoke @AfterAll methods (static)\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        new JUnit5Runner().run(StringUtilsTest.class);\n    }\n}",
+      "instructions": [
+        "In run(), find all methods sorted by annotation type.",
+        "Invoke @BeforeAll methods first (static — invoke on null or with testClass).",
+        "For each @Test method: invoke @BeforeEach method(s), then the @Test method, then @AfterEach method(s).",
+        "Invoke @AfterAll methods last.",
+        "Run Main as-is."
+      ],
+      "hint": "JUnit 5's test lifecycle is crucial for test isolation. @BeforeEach creates fresh state before each test so one test's side effects don't affect another.",
+      "expectedOutput": "[BeforeAll] Setting up test suite\n[BeforeEach] Preparing test context\n[Test] testReverse: PASS\n[AfterEach] Cleaning up after test\n[BeforeEach] Preparing test context\n[Test] testUpperCase: PASS\n[AfterEach] Cleaning up after test\n[AfterAll] Test suite complete"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 100,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Parameterized Tests",
+    "description": {
+      "task": "Implement a parameterized test runner that runs the same test method with multiple input sets. Demonstrate testing a method with various inputs and expected outputs.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class StringValidator {\n    public boolean isValidEmail(String email) {\n        if (email == null || email.isBlank()) return false;\n        return email.contains(\"@\") && email.contains(\".\") && !email.startsWith(\"@\") && !email.endsWith(\".\");\n    }\n    \n    public boolean isValidPhone(String phone) {\n        if (phone == null) return false;\n        return phone.matches(\"\\\\d{10}\");\n    }\n    \n    public String capitalize(String s) {\n        if (s == null || s.isEmpty()) return s;\n        return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();\n    }\n}\n\npublic class ParameterizedTestRunner {\n    private int passed = 0, failed = 0;\n    \n    public <T> void testWithParams(String testName, java.util.function.Function<T, Boolean> testFn,\n                                    List<Object[]> cases) {\n        System.out.println(\"Test: \" + testName);\n        for (Object[] testCase : cases) {\n            @SuppressWarnings(\"unchecked\")\n            T input = (T) testCase[0];\n            boolean expected = (Boolean) testCase[1];\n            boolean actual = testFn.apply(input);\n            String status = actual == expected ? \"PASS\" : \"FAIL\";\n            System.out.printf(\"  %s: input=%-30s expected=%s actual=%s%n\",\n                status, \"'\" + input + \"'\", expected, actual);\n            if (actual == expected) passed++; else failed++;\n        }\n    }\n    \n    public void printSummary() {\n        System.out.println(\"\\nResults: \" + passed + \" passed, \" + failed + \" failed\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        StringValidator validator = new StringValidator();\n        ParameterizedTestRunner runner = new ParameterizedTestRunner();\n        \n        runner.testWithParams(\"isValidEmail\",\n            (String email) -> validator.isValidEmail(email),\n            Arrays.asList(\n                new Object[]{\"user@example.com\", true},\n                new Object[]{\"invalid-email\", false},\n                new Object[]{\"@example.com\", false},\n                new Object[]{\"\", false},\n                new Object[]{\"a@b.org\", true}\n            ));\n        \n        runner.testWithParams(\"isValidPhone\",\n            (String phone) -> validator.isValidPhone(phone),\n            Arrays.asList(\n                new Object[]{\"1234567890\", true},\n                new Object[]{\"123\", false},\n                new Object[]{\"12345678901\", false},\n                new Object[]{\"abcdefghij\", false}\n            ));\n        \n        runner.printSummary();\n    }\n}",
+      "instructions": [
+        "Run Main as-is — the framework and test cases are already set up.",
+        "Verify all email and phone validation tests pass.",
+        "If any test fails, fix the StringValidator methods accordingly.",
+        "The output should show all PASSes."
+      ],
+      "hint": "JUnit 5 @ParameterizedTest with @MethodSource, @CsvSource, or @ValueSource runs the same test with different inputs. This reduces duplicate test code significantly.",
+      "expectedOutput": "Test: isValidEmail\n  PASS: input='user@example.com'              expected=true actual=true\n  PASS: input='invalid-email'                  expected=false actual=false\n  PASS: input='@example.com'                   expected=false actual=false\n  PASS: input=''                               expected=false actual=false\n  PASS: input='a@b.org'                        expected=true actual=true\nTest: isValidPhone\n  PASS: input='1234567890'                     expected=true actual=true\n  PASS: input='123'                            expected=false actual=false\n  PASS: input='12345678901'                    expected=false actual=false\n  PASS: input='abcdefghij'                     expected=false actual=false\n\nResults: 9 passed, 0 failed"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 100,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Custom Assertions",
+    "description": {
+      "task": "Write a comprehensive test suite for an OrderService using custom assertion methods that produce readable failure messages. Test creation, calculation, and state transitions.",
+      "language": "java",
+      "context": "JUnit 5's assertAll() runs multiple assertions and reports all failures, not just the first. Custom assertion methods improve test readability and maintainability.",
+      "starterCode": "import java.util.*;\n\npublic class Order {\n    public enum Status { PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED }\n    \n    private int id;\n    private List<String> items = new ArrayList<>();\n    private double total = 0;\n    private Status status = Status.PENDING;\n    \n    public Order(int id) { this.id = id; }\n    \n    public void addItem(String item, double price) {\n        items.add(item);\n        total += price;\n    }\n    \n    public boolean confirm() {\n        if (status == Status.PENDING && !items.isEmpty()) {\n            status = Status.CONFIRMED;\n            return true;\n        }\n        return false;\n    }\n    \n    public boolean ship() {\n        if (status == Status.CONFIRMED) { status = Status.SHIPPED; return true; }\n        return false;\n    }\n    \n    public boolean cancel() {\n        if (status == Status.PENDING || status == Status.CONFIRMED) {\n            status = Status.CANCELLED; return true;\n        }\n        return false;\n    }\n    \n    public int getId() { return id; }\n    public List<String> getItems() { return items; }\n    public double getTotal() { return total; }\n    public Status getStatus() { return status; }\n}\n\npublic class OrderTest {\n    private int assertions = 0, failures = 0;\n    \n    private void assert_equals(String msg, Object expected, Object actual) {\n        assertions++;\n        if (Objects.equals(expected, actual)) System.out.println(\"  PASS: \" + msg);\n        else { failures++; System.out.println(\"  FAIL: \" + msg + \" | Expected: \" + expected + \" | Actual: \" + actual); }\n    }\n    \n    private void assert_true(String msg, boolean condition) {\n        assert_equals(msg, true, condition);\n    }\n    \n    public void testOrderCreation() {\n        System.out.println(\"Test: Order Creation\");\n        Order order = new Order(1);\n        order.addItem(\"Laptop\", 999.99);\n        order.addItem(\"Mouse\", 29.99);\n        \n        // TODO: Assert id=1, item count=2, total=1029.98, status=PENDING\n    }\n    \n    public void testOrderConfirmation() {\n        System.out.println(\"Test: Order Confirmation\");\n        Order order = new Order(2);\n        // TODO: Test confirm() returns false when empty\n        // TODO: Add item, then test confirm() returns true\n        // TODO: Test status is CONFIRMED\n        // TODO: Test confirm() again returns false (already confirmed)\n    }\n    \n    public void testOrderCancellation() {\n        System.out.println(\"Test: Order Cancellation\");\n        Order order = new Order(3);\n        order.addItem(\"Book\", 15.0);\n        order.confirm();\n        order.ship();\n        // TODO: Test cancel() returns false when SHIPPED\n        // TODO: Test status remains SHIPPED\n    }\n    \n    public void runAll() {\n        testOrderCreation();\n        testOrderConfirmation();\n        testOrderCancellation();\n        System.out.println(\"\\nTotal: \" + assertions + \" assertions, \" + failures + \" failed\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new OrderTest().runAll();\n    }\n}",
+      "instructions": [
+        "testOrderCreation(): assert order.getId()==1, items.size()==2, total==1029.98 (delta 0.01), status==PENDING.",
+        "testOrderConfirmation(): assert confirm() returns false on empty order; add item, assert confirm() returns true; assert status==CONFIRMED; assert second confirm() returns false.",
+        "testOrderCancellation(): assert cancel() returns false when SHIPPED; assert status remains SHIPPED.",
+        "Run Main as-is after implementing the TODO sections."
+      ],
+      "hint": "JUnit 5's assertAll() is great for grouping related assertions. Use assertThrows() for exception testing and assertThat() with Hamcrest matchers for fluent assertions.",
+      "expectedOutput": "Test: Order Creation\n  PASS: order id\n  PASS: item count\n  PASS: total price\n  PASS: initial status\nTest: Order Confirmation\n  PASS: cannot confirm empty order\n  PASS: confirm with items\n  PASS: status after confirm\n  PASS: cannot confirm twice\nTest: Order Cancellation\n  PASS: cannot cancel shipped order\n  PASS: status remains shipped\n\nTotal: 10 assertions, 0 failed"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 100,
+    "allowedSubmissionType": "TEXT"
+  }
+]

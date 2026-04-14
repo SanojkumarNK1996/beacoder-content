@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Scalar and IN Subqueries",
+    "description": {
+      "task": "Use scalar subqueries (returning a single value) and IN subqueries (returning multiple values) in WHERE clauses.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE employees (\n  emp_id     INT PRIMARY KEY,\n  name       VARCHAR(60),\n  department VARCHAR(40),\n  salary     DECIMAL(10,2)\n);\n\nINSERT INTO employees VALUES\n  (1,  'Alice',  'Engineering',  95000),\n  (2,  'Bob',    'Marketing',    65000),\n  (3,  'Carol',  'Engineering',  88000),\n  (4,  'Dave',   'HR',           55000),\n  (5,  'Eve',    'Engineering', 105000),\n  (6,  'Frank',  'Marketing',    70000),\n  (7,  'Grace',  'HR',           58000),\n  (8,  'Henry',  'Engineering',  91000);\n\n-- Scalar subquery: employees earning above average salary\nSELECT name, salary\nFROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees)\nORDER BY salary DESC;\n\n-- IN subquery: employees in departments that have more than 2 staff\nSELECT name, department\nFROM employees\nWHERE department IN (\n  SELECT department\n  FROM employees\n  GROUP BY department\n  HAVING COUNT(*) > 2\n)\nORDER BY department, name;\n\n-- Scalar subquery in SELECT column: show salary vs dept average\nSELECT\n  name,\n  salary,\n  department,\n  (SELECT AVG(salary) FROM employees e2 WHERE e2.department = e1.department) AS dept_avg\nFROM employees e1\nORDER BY department, salary DESC;\n",
+      "instructions": [
+        "Run all INSERT and all three queries.",
+        "Q1: employees above average (~78375) — Alice, Eve, Carol, Henry.",
+        "Q2: departments with 3+ staff — Engineering has 4, so only Engineering employees appear.",
+        "Q3: each employee shown with their department's average salary.",
+        "Add a comment: what is a correlated subquery and why does Q3 use one?"
+      ],
+      "hint": "A correlated subquery references a column from the outer query (e1.department). It runs once for each row in the outer query. Non-correlated subqueries run once and return a fixed result.",
+      "expectedOutput": "Q1: Eve(105k), Alice(95k), Henry(91k), Carol(88k)\nQ2: 4 Engineering employees only\nQ3: each row shows salary + dept avg"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 56,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "EXISTS Subquery",
+    "description": {
+      "task": "Use EXISTS and NOT EXISTS subqueries to check for the presence or absence of related rows.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE customers (\n  customer_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  email VARCHAR(80)\n);\n\nCREATE TABLE orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  total       DECIMAL(8,2),\n  order_date  DATE,\n  FOREIGN KEY (customer_id) REFERENCES customers(customer_id)\n);\n\nINSERT INTO customers VALUES\n  (1,'Alice','alice@mail.com'),\n  (2,'Bob','bob@mail.com'),\n  (3,'Carol','carol@mail.com'),\n  (4,'Dave','dave@mail.com'),\n  (5,'Eve','eve@mail.com');\n\nINSERT INTO orders VALUES\n  (101,1,150.00,'2026-01-05'),\n  (102,1,200.00,'2026-01-10'),\n  (103,2,80.00, '2026-01-12'),\n  (104,3,350.00,'2026-01-15'),\n  (105,1,120.00,'2026-02-01');\n\n-- EXISTS: customers who have placed at least one order\nSELECT name FROM customers c\nWHERE EXISTS (\n  SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id\n);\n\n-- NOT EXISTS: customers who have NEVER placed an order\nSELECT name FROM customers c\nWHERE NOT EXISTS (\n  SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id\n);\n\n-- EXISTS with condition: customers who have a large order (>100)\nSELECT name FROM customers c\nWHERE EXISTS (\n  SELECT 1 FROM orders o\n  WHERE o.customer_id = c.customer_id AND o.total > 100\n);\n",
+      "instructions": [
+        "Run all INSERT and EXISTS queries.",
+        "Q1: Alice, Bob, Carol (have orders). Dave and Eve excluded.",
+        "Q2: Dave and Eve (no orders).",
+        "Q3: Alice (150, 200, 120 all >100), Bob(80 not >100 excluded), Carol(350>100).",
+        "Add a comment: when should you prefer EXISTS over IN?"
+      ],
+      "hint": "EXISTS stops scanning as soon as it finds one matching row (short-circuits). IN must collect all matching values first. EXISTS is often faster for large datasets with EXISTS on the inner table.",
+      "expectedOutput": "Q1 (has orders): Alice, Bob, Carol\nQ2 (no orders): Dave, Eve\nQ3 (order>100): Alice, Carol"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 56,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "CTE (Common Table Expressions)",
+    "description": {
+      "task": "Use WITH (CTE) to simplify complex queries by breaking them into named, reusable steps.",
+      "language": "sql",
+      "context": "A CTE (WITH clause) defines a named temporary result set that can be referenced within the main query. It improves readability and avoids deeply nested subqueries.",
+      "starterCode": "CREATE TABLE sales (\n  sale_id  INT PRIMARY KEY,\n  rep_name VARCHAR(50),\n  region   VARCHAR(30),\n  product  VARCHAR(60),\n  amount   DECIMAL(8,2),\n  sale_date DATE\n);\n\nINSERT INTO sales VALUES\n  (1,  'Alice', 'North', 'Laptop',   999.99, '2026-01-05'),\n  (2,  'Bob',   'South', 'Mouse',     19.99, '2026-01-06'),\n  (3,  'Alice', 'North', 'Monitor',  299.99, '2026-01-07'),\n  (4,  'Carol', 'East',  'Laptop',   999.99, '2026-01-08'),\n  (5,  'Bob',   'South', 'Keyboard',  49.99, '2026-01-09'),\n  (6,  'Alice', 'North', 'Headphones',79.99, '2026-01-10'),\n  (7,  'Carol', 'East',  'Mouse',     19.99, '2026-01-11'),\n  (8,  'Dave',  'West',  'Laptop',   999.99, '2026-01-12');\n\n-- CTE: find reps whose total sales exceed 500, then rank them\nWITH rep_sales AS (\n  SELECT rep_name, SUM(amount) AS total_sales\n  FROM sales\n  GROUP BY rep_name\n),\nhigh_performers AS (\n  SELECT rep_name, total_sales\n  FROM rep_sales\n  WHERE total_sales > 500\n)\nSELECT\n  rep_name,\n  total_sales,\n  RANK() OVER (ORDER BY total_sales DESC) AS sales_rank\nFROM high_performers\nORDER BY total_sales DESC;\n",
+      "instructions": [
+        "Run all INSERT and the CTE query.",
+        "rep_sales CTE: Alice=1379.97, Carol=1019.98, Bob=69.98, Dave=999.99.",
+        "high_performers filters to those >500: Alice, Carol, Dave.",
+        "Final result: ranked Alice(1), Dave(2), Carol(3).",
+        "Add a comment: how is a CTE different from a subquery? List one advantage."
+      ],
+      "hint": "CTEs (WITH) are named and can be referenced multiple times in the same query. Subqueries are inline and can't be reused. CTEs also make complex queries much easier to read and maintain.",
+      "expectedOutput": "high_performers: Alice(1379.97 rank1), Dave(999.99 rank2), Carol(1019.98 rank3)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 56,
+    "allowedSubmissionType": "TEXT"
+  }
+]

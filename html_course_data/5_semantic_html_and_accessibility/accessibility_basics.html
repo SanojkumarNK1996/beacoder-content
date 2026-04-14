@@ -1,0 +1,60 @@
+<h1>Accessibility Basics</h1>
+
+<h2>🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>Government sites (like UIDAI for Aadhaar) must be usable by people with visual or motor impairments.</li>
+  <li>Accessible websites support screen readers, keyboard navigation, and clear content for all users.</li>
+</ul>
+
+<h2>📖 What Is This</h2>
+<ul>
+  <li>Web accessibility means designing sites usable by everyone, including people with disabilities.</li>
+  <li>It involves proper semantics, alt text, ARIA roles, focus management, and more.</li>
+</ul>
+
+<h3>🧾 Key Concepts ⭐</h3>
+<ul>
+  <li>Alt text for images (&lt;img alt="..." /&gt;).</li>
+  <li>Keyboard-focusable elements (links, buttons, form controls).</li>
+  <li>ARIA roles and labels when semantics alone are not enough.</li>
+</ul>
+
+<h2>🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<ol>
+  <li>Screen readers read out content based on semantics and ARIA attributes.</li>
+  <li>Keyboard users navigate using Tab/Shift+Tab, so focus order matters.</li>
+</ol>
+
+<h2>When to Use</h2>
+<ul>
+  <li>Always—accessibility should be part of every web project.</li>
+</ul>
+
+<h2>When NOT to Use</h2>
+<ul>
+  <li>There is no "don’t use"—but avoid misusing ARIA when HTML semantics are enough.</li>
+</ul>
+
+<h2>Minimum You MUST Remember</h2>
+<ul>
+  <li>Always provide alt text for informative images.</li>
+  <li>Ensure all interactive elements are reachable via keyboard.</li>
+  <li>Use semantic HTML first, ARIA only when required.</li>
+</ul>
+
+<h2>Common Mistakes</h2>
+<ul>
+  <li>Using click handlers on non-focusable elements like plain &lt;div&gt; without handling keyboard events.</li>
+  <li>Missing labels for form fields.</li>
+</ul>
+
+<h2>Interviewer’s Perspective</h2>
+<ul>
+  <li>What is web accessibility and why is it important?</li>
+  <li>How do you make images and forms accessible?</li>
+</ul>
+
+<h2>Practice Questions</h2>
+<ol>
+  <li>Take an existing page and add alt text, labels, and proper focus order.</li>
+</ol>

@@ -1,0 +1,18 @@
+<h1>🔄 CI/CD Best Practices on AWS</h1>
+<h2>📋 CI/CD Principles</h2>
+<ul>
+  <li><strong>Continuous Integration (CI)</strong>: Automatically build and test every commit. Fail fast — catch issues before they reach production.</li>
+  <li><strong>Continuous Delivery (CD)</strong>: Every passing build can be deployed to production with a manual approval gate.</li>
+  <li><strong>Continuous Deployment</strong>: Every passing build automatically deploys to production (no manual gate).</li>
+</ul>
+<h2>🏆 AWS CI/CD Best Practices</h2>
+<ul>
+  <li>Use <strong>feature branches + pull requests</strong> — merge to main triggers the pipeline</li>
+  <li>Run tests in parallel in CodeBuild to speed up pipelines</li>
+  <li>Use <strong>Blue/Green or Canary deployments</strong> to minimize deployment risk</li>
+  <li>Store secrets in <strong>Secrets Manager</strong>, not in pipeline env vars</li>
+  <li>Tag all deployments for traceability</li>
+  <li>Include rollback automation — don't just hope for the best</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Automate everything from commit to production. The goal: any developer can deploy safely at any time, with automated guardrails preventing bad releases.</p>

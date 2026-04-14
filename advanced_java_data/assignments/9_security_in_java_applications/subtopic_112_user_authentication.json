@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Password Hashing and Verification",
+    "description": {
+      "task": "Implement a PasswordEncoder class that simulates Spring Security's BCryptPasswordEncoder concept. Use a salted hash approach: prefix the password with a salt before hashing. The encoder should hash passwords for storage and verify raw passwords against stored hashes.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class PasswordEncoder {\n\n    // Simplified hash: sum of char values * salt.length (for demonstration only)\n    private int simpleHash(String value) {\n        int sum = 0;\n        for (char c : value.toCharArray()) sum += c;\n        return sum * value.length();\n    }\n\n    public String encode(String rawPassword) {\n        // Generate a random 6-char salt, prefix to password, hash, return as 'salt$hash'\n        String salt = String.valueOf((int)(Math.random() * 900000) + 100000);\n        int hash = simpleHash(salt + rawPassword);\n        return salt + \"$\" + hash;\n    }\n\n    public boolean matches(String rawPassword, String encodedPassword) {\n        // Extract salt from encodedPassword, re-hash rawPassword, compare\n        return false;\n    }\n\n    public boolean isEncodedFormat(String value) {\n        // Return true if value contains exactly one '$' separator\n        return false;\n    }\n\n    public static void main(String[] args) {\n        PasswordEncoder encoder = new PasswordEncoder();\n        String encoded = encoder.encode(\"mySecret123\");\n        System.out.println(\"Encoded format: \" + encoder.isEncodedFormat(encoded));\n        System.out.println(\"Correct password: \" + encoder.matches(\"mySecret123\", encoded));\n        System.out.println(\"Wrong password: \" + encoder.matches(\"wrongPass\", encoded));\n    }\n}",
+      "instructions": [
+        "encode() generates a 6-digit numeric salt, creates the salted input as salt+rawPassword, hashes it, and returns 'salt$hash'",
+        "matches() splits encodedPassword on '$' to extract the salt, re-hashes salt+rawPassword, compares to stored hash",
+        "matches() returns false if encodedPassword is not in the correct format",
+        "isEncodedFormat() returns true if the string contains exactly one '$' character",
+        "Two calls to encode() with the same password should produce different encoded values (due to random salt)"
+      ],
+      "hint": "In matches(), split on '\\\\$' to get [salt, hash]. Re-compute simpleHash(salt + rawPassword) and compare to Integer.parseInt(hash). In isEncodedFormat(), count occurrences of '$'.",
+      "expectedOutput": "Encoded format: true\nCorrect password: true\nWrong password: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 112,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "JWT Token Builder and Parser",
+    "description": {
+      "task": "Implement a simplified JwtService class that creates and parses JWT-like tokens. The token format is 'header.payload.signature' where payload is a Base64-encoded JSON-like string of claims. Validate the signature and check token expiry.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.Base64;\n\npublic class JwtService {\n\n    private final String secretKey;\n\n    public JwtService(String secretKey) {\n        this.secretKey = secretKey;\n    }\n\n    public String generateToken(String subject, long expiryMs, long currentTimeMs) {\n        // Create payload as 'sub=subject;exp=expiryTimestamp'\n        // Encode payload in Base64\n        // Create signature: Base64 of (payload + secretKey)\n        // Return 'header.encodedPayload.signature'\n        String header = Base64.getEncoder().encodeToString(\"JWT\".getBytes());\n        long expiry = currentTimeMs + expiryMs;\n        String payload = \"sub=\" + subject + \";exp=\" + expiry;\n        String encodedPayload = Base64.getEncoder().encodeToString(payload.getBytes());\n        String signature = Base64.getEncoder().encodeToString((encodedPayload + secretKey).getBytes());\n        return header + \".\" + encodedPayload + \".\" + signature;\n    }\n\n    public Map<String, String> parseToken(String token) {\n        // Decode the payload section, parse key=value pairs separated by ';'\n        // Return map of claim name -> value\n        return new HashMap<>();\n    }\n\n    public boolean isValid(String token, long currentTimeMs) {\n        // Verify signature and check that exp > currentTimeMs\n        return false;\n    }\n\n    public static void main(String[] args) {\n        JwtService jwt = new JwtService(\"secret\");\n        String token = jwt.generateToken(\"alice\", 3600_000L, 1_000_000L);\n        System.out.println(\"Valid: \" + jwt.isValid(token, 1_000_000L));\n        System.out.println(\"Expired: \" + jwt.isValid(token, 5_000_000L));\n        Map<String, String> claims = jwt.parseToken(token);\n        System.out.println(\"Subject: \" + claims.get(\"sub\"));\n    }\n}",
+      "instructions": [
+        "generateToken() creates a token with 3 dot-separated parts: header, Base64-encoded payload, signature",
+        "parseToken() splits the token on '.', Base64-decodes the middle part, and splits on ';' to parse 'key=value' pairs",
+        "isValid() re-computes the expected signature from the payload + secretKey and compares it to the token's signature",
+        "isValid() also checks that the 'exp' claim value (as long) is greater than currentTimeMs",
+        "Return an empty map from parseToken() if the token format is invalid (not 3 parts)"
+      ],
+      "hint": "In isValid(), split on '\\\\.', compute expectedSig = Base64.encodeToString((parts[1] + secretKey).getBytes()), then compare to parts[2] and check exp. In parseToken(), decode parts[1] and split by ';', then split each by '='.",
+      "expectedOutput": "Valid: true\nExpired: false\nSubject: alice"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 112,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "User Credential Store",
+    "description": {
+      "task": "Create a UserCredentialStore class that models Spring Security's UserDetailsService. Store users with encoded passwords and roles. Implement authentication (verify credentials) and track failed login attempts with account locking after repeated failures.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class UserCredentialStore {\n\n    public record UserDetails(String username, String encodedPassword, Set<String> roles, boolean locked) {}\n\n    private final Map<String, UserDetails> users = new HashMap<>();\n    private final Map<String, Integer> failedAttempts = new HashMap<>();\n    private final int maxFailedAttempts;\n\n    public UserCredentialStore(int maxFailedAttempts) {\n        this.maxFailedAttempts = maxFailedAttempts;\n    }\n\n    public void registerUser(String username, String rawPassword, Set<String> roles) {\n        // Hash the password (use simple hash: charsum) and store user as unlocked\n        int hash = rawPassword.chars().sum();\n        users.put(username, new UserDetails(username, String.valueOf(hash), roles, false));\n    }\n\n    public boolean authenticate(String username, String rawPassword) {\n        // Return false if user not found or account locked\n        // Verify password; on failure increment failedAttempts and lock if threshold reached\n        // On success, reset failedAttempts\n        return false;\n    }\n\n    public boolean isLocked(String username) {\n        UserDetails user = users.get(username);\n        return user != null && user.locked();\n    }\n\n    public static void main(String[] args) {\n        UserCredentialStore store = new UserCredentialStore(3);\n        store.registerUser(\"bob\", \"pass123\", Set.of(\"USER\"));\n\n        System.out.println(store.authenticate(\"bob\", \"pass123\")); // true\n        store.authenticate(\"bob\", \"wrong\");\n        store.authenticate(\"bob\", \"wrong\");\n        store.authenticate(\"bob\", \"wrong\");\n        System.out.println(\"Locked: \" + store.isLocked(\"bob\"));   // true\n    }\n}",
+      "instructions": [
+        "registerUser() hashes the password using char sum and stores a UserDetails with locked=false",
+        "authenticate() returns false immediately if user doesn't exist or is locked",
+        "On password mismatch, increment failedAttempts; lock the user when failedAttempts >= maxFailedAttempts by replacing UserDetails with locked=true",
+        "On successful authentication, reset failedAttempts to 0 and return true",
+        "isLocked() checks the locked flag on the stored UserDetails"
+      ],
+      "hint": "When locking, replace the user in the map: users.put(username, new UserDetails(username, encodedPassword, roles, true)). Use users.get(username) to retrieve the existing record before modifying it.",
+      "expectedOutput": "true\nLocked: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 112,
+    "allowedSubmissionType": "TEXT"
+  }
+]

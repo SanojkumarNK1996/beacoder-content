@@ -1,37 +1,61 @@
-<body style="font-family:Arial, sans-serif; margin:30px; line-height:1.6;">
-  <h1>Locks and Concurrency Control in SQL</h1>
-  <p>
-    Concurrency control ensures that multiple database transactions can occur simultaneously 
-    without causing data inconsistency. It uses <strong>locks</strong> to manage access to shared resources.
-  </p>
+<h1>Locks and Concurrency Control in SQL</h1>
+<hr>
+<h2>1️⃣ Why Does This Topic Exist?</h2>
+<p>Locks and concurrency control help many users work with the same data at the same time without errors. In Indian banks, IRCTC, and e-commerce, this prevents double booking, lost money, or data corruption.</p>
 
-  <h2>Types of Locks</h2>
-  <ul>
-    <li><strong>Shared Lock (S):</strong> Allows multiple transactions to read but not modify data.</li>
-    <li><strong>Exclusive Lock (X):</strong> Prevents other transactions from reading or writing the data.</li>
-    <li><strong>Intent Locks:</strong> Indicate intention to acquire specific locks at a finer level.</li>
-  </ul>
+<h2>2️⃣ What Are Locks and Concurrency?</h2>
+<p>Locks are rules that control who can read or write data at a time. Concurrency control means managing many users or programs using the database together.</p>
 
-  <h2>Isolation Levels</h2>
-  <ul>
-    <li><strong>Read Uncommitted:</strong> Allows dirty reads.</li>
-    <li><strong>Read Committed:</strong> Prevents dirty reads.</li>
-    <li><strong>Repeatable Read:</strong> Prevents dirty and non-repeatable reads.</li>
-    <li><strong>Serializable:</strong> Ensures full isolation; highest level.</li>
-  </ul>
-
-  <h2>Example</h2>
-  <pre style="background:#f6f8fa; padding:10px; border:1px solid #ccc;">
-BEGIN;
+<h2>3️⃣ Syntax/Structure</h2>
+<pre>
+-- Example: Lock a row for update
 SELECT * FROM accounts WHERE id = 1 FOR UPDATE;
-UPDATE accounts SET balance = balance - 100 WHERE id = 1;
-COMMIT;
-  </pre>
+</pre>
 
-  <h2>Best Practices</h2>
-  <ul>
-    <li>Keep transactions short.</li>
-    <li>Access resources in a consistent order.</li>
-    <li>Handle deadlocks by retrying transactions.</li>
-  </ul>
-</body>
+<h2>4️⃣ Step-by-Step Execution</h2>
+<ol>
+  <li>Start a transaction.</li>
+  <li>Lock the data you want to change (e.g., <code>FOR UPDATE</code>).</li>
+  <li>Make your changes (UPDATE, DELETE).</li>
+  <li>Commit or rollback the transaction.</li>
+</ol>
+
+<h2>5️⃣ When to Use</h2>
+<ul>
+  <li>When many users need to update the same data (e.g., booking tickets, updating balances).</li>
+  <li>To prevent two people from changing the same row at the same time.</li>
+</ul>
+
+<h2>6️⃣ When Not to Use</h2>
+<ul>
+  <li>For simple SELECT queries that don’t change data.</li>
+  <li>When you don’t need to prevent conflicts (read-only reports).</li>
+</ul>
+
+<h2>7️⃣ Minimum to Remember</h2>
+<ul>
+  <li>Locks prevent data problems when many users work together.</li>
+  <li>Use locks for updates, not for simple reads.</li>
+</ul>
+
+<h2>8️⃣ Common Mistakes</h2>
+<ul>
+  <li>Forgetting to release locks (by committing or rolling back).</li>
+  <li>Locking too much data, which slows down the system.</li>
+  <li>Not handling deadlocks (when two users wait for each other).</li>
+</ul>
+
+<h2>9️⃣ Interviewer’s Perspective</h2>
+<ul>
+  <li>What is a lock? Why is it needed?</li>
+  <li>Give a real-life Indian example where locks prevent problems (e.g., IRCTC ticket booking).</li>
+  <li>What is a deadlock? How do you handle it?</li>
+</ul>
+
+<h2>🔟 Practice Questions</h2>
+<ol>
+  <li>Write SQL to lock a row for update.</li>
+  <li>What is the difference between shared and exclusive locks?</li>
+  <li>How do you prevent deadlocks in a busy system?</li>
+  <li>When would you use a lock in a banking application?</li>
+</ol>

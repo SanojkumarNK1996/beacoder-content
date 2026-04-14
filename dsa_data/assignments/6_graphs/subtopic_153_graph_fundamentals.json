@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Graph Basics and Properties",
+    "description": {
+      "task": "Implement a GraphInfo class that, given an adjacency list representation, computes: number of vertices, number of edges, whether a vertex exists, the degree of a vertex, and whether the graph has any self-loops.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GraphInfo {\n\n    private Map<Integer, List<Integer>> adjList;\n    private boolean directed;\n\n    public GraphInfo(Map<Integer, List<Integer>> adjList, boolean directed) {\n        this.adjList = adjList;\n        this.directed = directed;\n    }\n\n    public int vertexCount() {\n        return adjList.size();\n    }\n\n    public int edgeCount() {\n        // TODO: sum all neighbor list sizes; if undirected divide by 2\n        return 0;\n    }\n\n    public int degree(int vertex) {\n        // TODO: return size of neighbor list for vertex, or -1 if vertex not found\n        return -1;\n    }\n\n    public boolean hasSelfLoop() {\n        // TODO: true if any vertex v has an edge to itself (v in its own list)\n        return false;\n    }\n\n    public static void main(String[] args) {\n        Map<Integer, List<Integer>> g = new LinkedHashMap<>();\n        g.put(0, Arrays.asList(1, 2));\n        g.put(1, Arrays.asList(0, 3));\n        g.put(2, Arrays.asList(0, 3));\n        g.put(3, Arrays.asList(1, 2));\n        GraphInfo gi = new GraphInfo(g, false);\n        System.out.println(\"Vertices: \" + gi.vertexCount());\n        System.out.println(\"Edges: \" + gi.edgeCount());\n        System.out.println(\"Degree of 0: \" + gi.degree(0));\n        System.out.println(\"Degree of 3: \" + gi.degree(3));\n        System.out.println(\"Self-loop: \" + gi.hasSelfLoop());\n    }\n}",
+      "instructions": [
+        "edgeCount: sum all adjList values' sizes; if undirected (directed==false), divide by 2",
+        "degree(vertex): return adjList.getOrDefault(vertex, Collections.emptyList()).size(); return -1 if vertex not in map",
+        "hasSelfLoop: for each entry, check if its neighbors list contains the key itself",
+        "Graph: 4 vertices, 4 edges (undirected), degree(0)=2, degree(3)=2, no self-loops",
+        "For degree, return -1 if vertex not present"
+      ],
+      "hint": "edgeCount: int total=adjList.values().stream().mapToInt(List::size).sum(); return directed?total:total/2; degree: List<Integer> nb=adjList.get(vertex); return nb==null?-1:nb.size();",
+      "expectedOutput": "Vertices: 4\nEdges: 4\nDegree of 0: 2\nDegree of 3: 2\nSelf-loop: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 153,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Directed vs Undirected Graph Builder",
+    "description": {
+      "task": "Implement a GraphBuilder class that builds both directed and undirected graphs from a list of edges. For undirected, add both directions. Implement addEdge, removeEdge, and hasEdge methods.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GraphBuilder {\n\n    private Map<Integer, Set<Integer>> adj = new HashMap<>();\n    private boolean directed;\n\n    public GraphBuilder(boolean directed) {\n        this.directed = directed;\n    }\n\n    public void addVertex(int v) {\n        adj.putIfAbsent(v, new HashSet<>());\n    }\n\n    public void addEdge(int u, int v) {\n        addVertex(u); addVertex(v);\n        adj.get(u).add(v);\n        if (!directed) {\n            // TODO: also add edge v -> u for undirected\n        }\n    }\n\n    public void removeEdge(int u, int v) {\n        // TODO: remove v from u's neighbor set (and u from v's if undirected)\n    }\n\n    public boolean hasEdge(int u, int v) {\n        // TODO: return true if u->v edge exists\n        return false;\n    }\n\n    public void print() {\n        for (Map.Entry<Integer, Set<Integer>> e : new TreeMap<>(adj).entrySet()) {\n            System.out.println(e.getKey() + \" -> \" + new TreeSet<>(e.getValue()));\n        }\n    }\n\n    public static void main(String[] args) {\n        GraphBuilder ug = new GraphBuilder(false);\n        ug.addEdge(1, 2); ug.addEdge(2, 3); ug.addEdge(1, 3);\n        System.out.println(\"Undirected:\");\n        ug.print();\n        System.out.println(\"hasEdge(2,1): \" + ug.hasEdge(2, 1));\n        ug.removeEdge(1, 2);\n        System.out.println(\"After remove(1,2): hasEdge(1,2)=\" + ug.hasEdge(1, 2));\n    }\n}",
+      "instructions": [
+        "addEdge undirected case: adj.get(v).add(u);",
+        "removeEdge: if(adj.containsKey(u)) adj.get(u).remove(v); if(!directed&&adj.containsKey(v)) adj.get(v).remove(u);",
+        "hasEdge: return adj.containsKey(u) && adj.get(u).contains(v);",
+        "For undirected graph with edges (1,2),(2,3),(1,3): each vertex has both endpoints in its neighbor set",
+        "After addEdge(1,2) in undirected: hasEdge(2,1)=true; after removeEdge(1,2): hasEdge(1,2)=false"
+      ],
+      "hint": "addEdge else: adj.get(v).add(u). removeEdge: adj.get(u).remove(v); if(!directed) adj.get(v).remove(u). hasEdge: return adj.containsKey(u)&&adj.get(u).contains(v);",
+      "expectedOutput": "Undirected:\n1 -> [2, 3]\n2 -> [1, 3]\n3 -> [1, 2]\nhasEdge(2,1): true\nAfter remove(1,2): hasEdge(1,2)=false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 153,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Graph Connected Components",
+    "description": {
+      "task": "Implement a ConnectedComponents class that finds the number of connected components in an undirected graph using DFS. Also return a mapping from each vertex to its component number.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ConnectedComponents {\n\n    public int countComponents(Map<Integer, List<Integer>> graph) {\n        Set<Integer> visited = new HashSet<>();\n        int count = 0;\n        for (int vertex : graph.keySet()) {\n            if (!visited.contains(vertex)) {\n                dfs(graph, vertex, visited);\n                count++;\n            }\n        }\n        return count;\n    }\n\n    private void dfs(Map<Integer, List<Integer>> graph, int node, Set<Integer> visited) {\n        visited.add(node);\n        for (int neighbor : graph.getOrDefault(node, Collections.emptyList())) {\n            if (!visited.contains(neighbor)) dfs(graph, neighbor, visited);\n        }\n    }\n\n    public Map<Integer, Integer> componentMap(Map<Integer, List<Integer>> graph) {\n        // TODO: return map vertex -> component number (0-indexed)\n        // Use same approach as countComponents but label each visited set\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        ConnectedComponents cc = new ConnectedComponents();\n        Map<Integer, List<Integer>> g = new LinkedHashMap<>();\n        g.put(0, Arrays.asList(1, 2));\n        g.put(1, Arrays.asList(0));\n        g.put(2, Arrays.asList(0));\n        g.put(3, Arrays.asList(4));\n        g.put(4, Arrays.asList(3));\n        System.out.println(\"Components: \" + cc.countComponents(g));\n        System.out.println(\"Map: \" + new TreeMap<>(cc.componentMap(g)));\n    }\n}",
+      "instructions": [
+        "componentMap: same DFS loop as countComponents; instead of just counting, call a DFS that labels all reachable vertices with the current component number",
+        "Use a Map<Integer,Integer> componentId; inside dfs label each visited vertex: componentId.put(v, compNum)",
+        "countComponents is already implemented — model componentMap after it",
+        "Graph has component 0 = {0,1,2}, component 1 = {3,4}",
+        "componentMap: {0->0, 1->0, 2->0, 3->1, 4->1}"
+      ],
+      "hint": "componentMap: Map<Integer,Integer> id=new HashMap<>(); int comp=0; for(int v:graph.keySet()){if(!id.containsKey(v)){dfsLabel(graph,v,comp,id); comp++;}} return id; dfsLabel labels vertex with comp number.",
+      "expectedOutput": "Components: 2\nMap: {0=0, 1=0, 2=0, 3=1, 4=1}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 153,
+    "allowedSubmissionType": "TEXT"
+  }
+]

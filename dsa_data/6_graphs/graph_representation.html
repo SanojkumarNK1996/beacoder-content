@@ -1,0 +1,25 @@
+<h1>📊 Graph Representation</h1>
+<h2>🧮 Adjacency Matrix</h2>
+<p>A 2D array where <code>matrix[i][j] = 1</code> (or weight) if there's an edge from i to j.</p>
+<ul>
+  <li>Space: O(V²)</li>
+  <li>Check if edge exists: O(1)</li>
+  <li>Best for dense graphs</li>
+</ul>
+<h2>📋 Adjacency List</h2>
+<p>Each vertex holds a list of its neighbors.</p>
+<div class="code-example">
+  <pre>
+Map&lt;Integer, List&lt;Integer&gt;&gt; graph = new HashMap&lt;&gt;();
+graph.put(0, List.of(1, 2));
+graph.put(1, List.of(0, 3));
+graph.put(2, List.of(0));
+graph.put(3, List.of(1));
+  </pre>
+</div>
+<ul>
+  <li>Space: O(V + E)</li>
+  <li>Best for sparse graphs (most real-world graphs)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Prefer <strong>adjacency list</strong> for most problems. Use adjacency matrix when you need O(1) edge lookups and the graph is dense.</p>

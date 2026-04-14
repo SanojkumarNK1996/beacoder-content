@@ -1,102 +1,70 @@
 <h1>Advantages of Views in SQL</h1>
-
-<p>Views in SQL are a powerful feature that help make data handling easier, safer, and more efficient.  
-They act as a <strong>layer of abstraction</strong> between users and the actual database tables — simplifying complex queries and protecting sensitive data.</p>
-
 <hr>
+<h2>1️⃣ Why Does This Topic Exist?</h2>
+<p>Views are used to make working with data easier, safer, and more efficient. In Indian companies, views help different teams see only the data they need, and protect sensitive information like salaries or customer details.</p>
 
-<h2>1️⃣ Simplifies Complex Queries</h2>
+<h2>2️⃣ What Is This?</h2>
+<p>A view is a virtual table created from a SQL query. It acts as a layer between users and the actual tables, making complex queries simple and hiding sensitive data.</p>
 
-<p>One of the main benefits of using views is that they <strong>simplify complex SQL queries</strong>.  
-Instead of writing long joins and filters every time, you can save that query as a view and reuse it.</p>
-
-<p><strong>Example:</strong></p>
+<h2>3️⃣ Syntax/Structure</h2>
 <pre>
-CREATE VIEW SalesSummary AS
-SELECT c.CustomerName, SUM(o.Amount) AS TotalSales
-FROM Customers c
-JOIN Orders o ON c.CustomerID = o.CustomerID
-GROUP BY c.CustomerName;
+CREATE VIEW view_name AS
+SELECT column1, column2
+FROM table_name
+WHERE condition;
 </pre>
 
-<p>Now, to get a sales summary, you can just use:</p>
-<pre>
-SELECT * FROM SalesSummary;
-</pre>
+<h2>4️⃣ Step-by-Step Execution</h2>
+<ol>
+  <li>Write a SELECT query for the data you want to show.</li>
+  <li>Use <code>CREATE VIEW</code> to save it as a view.</li>
+  <li>Query the view as if it were a table.</li>
+  <li>Update the view if business logic changes.</li>
+</ol>
 
-<p>✅ Saves time and reduces mistakes when working with repetitive queries.</p>
+<h2>5️⃣ When to Use</h2>
+<ul>
+  <li>To simplify repeated complex queries (e.g., monthly sales summary).</li>
+  <li>To restrict access to sensitive columns (e.g., hiding salary in HR systems).</li>
+  <li>To provide a consistent data format for reports across departments.</li>
+</ul>
 
-<hr>
+<h2>6️⃣ When Not to Use</h2>
+<ul>
+  <li>When you need to update data through the view and it is not updatable (e.g., views with GROUP BY or JOIN).</li>
+  <li>If the underlying tables change structure very often.</li>
+</ul>
 
-<h2>2️⃣ Enhances Data Security</h2>
+<h2>7️⃣ Minimum to Remember</h2>
+<ul>
+  <li>Views simplify queries and protect data.</li>
+  <li>They do not store data themselves.</li>
+  <li>Use <code>CREATE VIEW</code> and <code>DROP VIEW</code> to manage them.</li>
+</ul>
 
-<p>Views can help <strong>restrict access to sensitive data</strong>.  
-You can allow users to query data through a view that hides confidential information like salaries or passwords.</p>
+<h2>8️⃣ Common Mistakes</h2>
+<ul>
+  <li>Assuming views store data—they only store queries.</li>
+  <li>Trying to update data through a non-updatable view.</li>
+  <li>Not updating the view when the underlying table changes.</li>
+</ul>
 
-<p><strong>Example:</strong></p>
-<pre>
-CREATE VIEW PublicEmployees AS
-SELECT Name, Dept, Location
-FROM Employees;
-</pre>
+<h2>9️⃣ Interviewer’s Perspective</h2>
+<ul>
+  <li>What are the main advantages of using views?</li>
+  <li>How do views help in securing data?</li>
+  <li>Give an example of using a view in an Indian retail company (e.g., showing only active customers to the sales team).</li>
+  <li>Can you update data through a view? When is it not possible?</li>
+</ul>
 
-<p>Users with access to <code>PublicEmployees</code> won’t see the salary data from the original <code>Employees</code> table.</p>
-
-<p>✅ This helps enforce <strong>data privacy</strong> without changing table permissions.</p>
-
-<hr>
-
-<h2>3️⃣ Provides Logical Data Independence</h2>
-
-<p>Views give <strong>logical independence</strong> from the underlying database structure.  
-Even if table names or columns change internally, you can update the view definition — users continue using the same view name without being affected.</p>
-
-<p>✅ This is very useful when restructuring or optimizing databases.</p>
-
-<hr>
-
-<h2>4️⃣ Reusability and Consistency</h2>
-
-<p>Once a view is created, it can be reused in multiple queries, reports, or applications.  
-This ensures that <strong>everyone sees consistent data</strong>, because they all use the same underlying logic.</p>
-
-<p><strong>Example:</strong></p>
-<pre>
-SELECT * FROM ActiveCustomers;
-</pre>
-
-<p>This will always return customers who meet the defined criteria — ensuring consistency across all departments or reports.</p>
-
-<hr>
-
-<h2>5️⃣ Easier Maintenance</h2>
-
-<p>When you need to update a query or business logic, you can simply <strong>update the view</strong> instead of editing multiple queries across your system.</p>
-
-<p><strong>Example:</strong></p>
-<pre>
-CREATE OR REPLACE VIEW ActiveCustomers AS
-SELECT * FROM Customers WHERE Status = 'Active' AND Country = 'USA';
-</pre>
-
-<p>✅ Every report or application using <code>ActiveCustomers</code> automatically gets the new logic.</p>
-
-<hr>
-
-<h2>6️⃣ Improved Readability and Reporting</h2>
-
-<p>Views can be designed to show only the most relevant columns, with clear naming conventions.  
-This improves <strong>readability</strong> for non-technical users and simplifies report generation.</p>
-
-<p><strong>Example:</strong></p>
-<pre>
-CREATE VIEW DepartmentSummary AS
-SELECT Dept AS Department, COUNT(*) AS EmployeeCount
-FROM Employees
-GROUP BY Dept;
-</pre>
-
-<p>✅ Useful for business users who don’t need to know SQL joins or table structures.</p>
+<h2>🔟 Practice Questions</h2>
+<ol>
+  <li>Write a SQL statement to create a view that shows only customer names and total sales from a sales table.</li>
+  <li>How can you use a view to hide the salary column from employees?</li>
+  <li>What happens if you drop a table that a view depends on?</li>
+  <li>Give an example of a view that is not updatable.</li>
+  <li>How do views help maintain consistency in reports?</li>
+</ol>
 
 <hr>
 

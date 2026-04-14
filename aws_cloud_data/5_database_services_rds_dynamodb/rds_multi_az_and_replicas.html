@@ -1,0 +1,22 @@
+<h1>🔄 RDS Multi-AZ and Read Replicas</h1>
+<h2>🏢 Multi-AZ Deployment</h2>
+<p>AWS maintains a <strong>standby replica</strong> of your database in a different AZ, synchronously replicated.</p>
+<ul>
+  <li><strong>Automatic failover</strong>: If primary fails, DNS automatically points to standby (1–2 min)</li>
+  <li>Standby is NOT readable — for HA only</li>
+  <li>Use for production databases requiring high availability</li>
+</ul>
+<h2>📖 Read Replicas</h2>
+<p>Asynchronously replicated copies of the primary database. Readable, can be promoted to standalone DB.</p>
+<ul>
+  <li>Up to 15 read replicas for Aurora, 5 for MySQL/PostgreSQL</li>
+  <li>Can span multiple AZs or even multiple regions</li>
+  <li>Use to scale read-heavy workloads (reporting, analytics)</li>
+</ul>
+<h2>⚖️ Multi-AZ vs Read Replica</h2>
+<ul>
+  <li><strong>Multi-AZ</strong> = high availability, automatic failover, NOT readable</li>
+  <li><strong>Read Replica</strong> = scale reads, eventual consistency, manually fail over</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Use Multi-AZ for production HA. Add Read Replicas to offload reporting queries and reduce load on the primary.</p>

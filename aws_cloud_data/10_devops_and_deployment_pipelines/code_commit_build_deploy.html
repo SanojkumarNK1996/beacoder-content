@@ -1,0 +1,26 @@
+<h1>🔧 AWS CodeCommit, CodeBuild, CodeDeploy</h1>
+<h2>📦 AWS CodeCommit</h2>
+<p>Fully managed Git repository service (like GitHub, but in AWS). Private repos, integrated with IAM for access control. Note: AWS is deprecating new customer usage of CodeCommit in favor of GitHub/GitLab integrations.</p>
+<h2>🏗️ AWS CodeBuild</h2>
+<p>Fully managed build service: compiles source code, runs tests, and produces deployment artifacts. No build servers to manage. Integrates with GitHub, GitLab, Bitbucket as source.</p>
+<div class="code-example">
+  <pre>
+# buildspec.yml - CodeBuild instructions
+version: 0.2
+phases:
+  install:
+    commands: - npm install
+  build:
+    commands: - npm test - npm run build
+artifacts:
+  files: - dist/**
+  </pre>
+</div>
+<h2>🚀 AWS CodeDeploy</h2>
+<p>Automates application deployments to EC2, Lambda, ECS, or on-premises servers.</p>
+<ul>
+  <li><strong>In-place deployment</strong>: Update existing instances</li>
+  <li><strong>Blue/Green deployment</strong>: Shift traffic to new environment, instant rollback</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Together these form the AWS DevOps suite. CodeBuild for CI (test + build), CodeDeploy for CD (deploy). Most teams use GitHub Actions or Jenkins with CodeDeploy.</p>

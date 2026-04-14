@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 244, "title": "AWS Cost Management Overview", "dataType": "notes", "data": "cost_management_overview.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 245, "title": "AWS Billing Dashboard and Cost Explorer", "dataType": "notes", "data": "billing_and_cost_explorer.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 246, "title": "Reserved Instances and Savings Plans", "dataType": "notes", "data": "reserved_instances_savings_plans.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 247, "title": "AWS Budgets and Alerts", "dataType": "notes", "data": "aws_budgets_and_alerts.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 248, "title": "Cost Optimization Best Practices", "dataType": "notes", "data": "cost_optimization_best_practices.html", "displayOrder": 5, "verified": false}
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Fractional Knapsack",
+    "description": {
+      "task": "Solve the Fractional Knapsack problem: given items with weights and values, and a knapsack capacity, maximize total value. Unlike 0/1 Knapsack, you may take fractions of items. Sort items by value/weight ratio and greedily fill.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class FractionalKnapsack {\n\n    public double maxValue(int[] weights, int[] values, int capacity) {\n        int n = weights.length;\n        // Create items array and sort by value/weight ratio descending\n        Integer[] idx = new Integer[n];\n        for (int i = 0; i < n; i++) idx[i] = i;\n        Arrays.sort(idx, (a, b) -> Double.compare(\n            (double) values[b] / weights[b],\n            (double) values[a] / weights[a]\n        ));\n\n        double totalValue = 0;\n        int remaining = capacity;\n\n        for (int i : idx) {\n            if (remaining <= 0) break;\n            if (weights[i] <= remaining) {\n                // TODO: take entire item: totalValue += values[i]; remaining -= weights[i];\n            } else {\n                // TODO: take fraction: totalValue += values[i] * ((double) remaining / weights[i]); remaining = 0;\n            }\n        }\n        return totalValue;\n    }\n\n    public static void main(String[] args) {\n        FractionalKnapsack fk = new FractionalKnapsack();\n        int[] w = {10, 20, 30};\n        int[] v = {60, 100, 120};\n        System.out.printf(\"Max value (cap=50): %.2f%n\", fk.maxValue(w, v, 50));\n\n        int[] w2 = {2, 3, 5, 7};\n        int[] v2 = {10, 5, 15, 7};\n        System.out.printf(\"Max value (cap=10): %.2f%n\", fk.maxValue(w2, v2, 10));\n    }\n}",
+      "instructions": [
+        "Whole item: totalValue+=values[i]; remaining-=weights[i];",
+        "Fraction: totalValue+=values[i]*((double)remaining/weights[i]); remaining=0;",
+        "w={10,20,30}, v={60,100,120}: ratios=6,5,4; take all of w=10(+60), all of w=20(+100), 20/30 of w=30(+80) = 240.0",
+        "w2={2,3,5,7}, v2={10,5,15,7}: ratios=5,1.67,3,1; take w=2(+10), w=5(+15), 3/7 of w=7(+3) + w=3 doesn't fit... let me recalculate: sorted by ratio: w=2(5.0),w=5(3.0),w=3(1.67),w=7(1.0); take w=2(+10)rem=8, w=5(+15)rem=3, fraction of w=3: 3/3=all(+5)rem=0 → 30.0",
+        "Expected: 30.00 for the second case"
+      ],
+      "hint": "Whole item: totalValue+=values[i];remaining-=weights[i]; Fraction: totalValue+=values[i]*((double)remaining/weights[i]);remaining=0;",
+      "expectedOutput": "Max value (cap=50): 240.00\nMax value (cap=10): 30.00"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 176,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Task Scheduling to Minimize Lateness",
+    "description": {
+      "task": "You have tasks with deadlines and processing times. Schedule all tasks to minimize the maximum lateness (lateness = completion time - deadline, or 0 if early). Greedy: earliest deadline first minimizes max lateness.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TaskLateness {\n\n    static class Task {\n        String name; int proc, deadline;\n        Task(String n, int p, int d){name=n;proc=p;deadline=d;}\n    }\n\n    public int minMaxLateness(List<Task> tasks) {\n        // TODO: Sort tasks by deadline (earliest first)\n        // Process in order, tracking current time and max lateness\n        int time = 0, maxLate = 0;\n        for (Task t : tasks) {\n            time += t.proc;\n            int lateness = Math.max(0, time - t.deadline);\n            maxLate = Math.max(maxLate, lateness);\n            System.out.printf(\"  Task %s: finish=%d deadline=%d lateness=%d%n\",\n                              t.name, time, t.deadline, lateness);\n        }\n        return maxLate;\n    }\n\n    public static void main(String[] args) {\n        TaskLateness tl = new TaskLateness();\n        List<Task> tasks = new ArrayList<>(Arrays.asList(\n            new Task(\"A\", 3, 6),\n            new Task(\"B\", 2, 4),\n            new Task(\"C\", 1, 3)\n        ));\n        System.out.println(\"--- Greedy (earliest deadline first) ---\");\n        int maxLate = tl.minMaxLateness(tasks);\n        System.out.println(\"Max lateness: \" + maxLate);\n    }\n}",
+      "instructions": [
+        "Sort: tasks.sort(Comparator.comparingInt(t->t.deadline));",
+        "Add the sort call at the start of minMaxLateness, before the loop",
+        "After sorting by deadline: C(d=3), B(d=4), A(d=6)",
+        "C: time=1, lateness=max(0,1-3)=0; B: time=3, lateness=max(0,3-4)=0; A: time=6, lateness=max(0,6-6)=0",
+        "Earliest-deadline-first achieves 0 max lateness here"
+      ],
+      "hint": "tasks.sort(Comparator.comparingInt(t->t.deadline));",
+      "expectedOutput": "--- Greedy (earliest deadline first) ---\n  Task C: finish=1 deadline=3 lateness=0\n  Task B: finish=3 deadline=4 lateness=0\n  Task A: finish=6 deadline=6 lateness=0\nMax lateness: 0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 176,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Gas Station — Circular Tour",
+    "description": {
+      "task": "Given N gas stations in a circle with gas[i] available and cost[i] to travel to the next station, find the starting station index to complete a circular tour, or return -1 if no solution exists. Use O(n) greedy: track total and current surplus.",
+      "language": "java",
+      "starterCode": "public class GasStation {\n\n    public int canCompleteCircuit(int[] gas, int[] cost) {\n        int totalSurplus = 0, currentSurplus = 0, start = 0;\n        for (int i = 0; i < gas.length; i++) {\n            int diff = gas[i] - cost[i];\n            totalSurplus  += diff;\n            currentSurplus += diff;\n            // TODO: if currentSurplus < 0, we can't start from 'start' through i;\n            //       reset currentSurplus = 0 and set start = i + 1\n        }\n        // TODO: return start if totalSurplus >= 0, else return -1\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        GasStation gs = new GasStation();\n        int[] gas  = {1, 2, 3, 4, 5};\n        int[] cost = {3, 4, 5, 1, 2};\n        System.out.println(\"Start station: \" + gs.canCompleteCircuit(gas, cost));\n\n        int[] gas2  = {2, 3, 4};\n        int[] cost2 = {3, 4, 3};\n        System.out.println(\"Start station: \" + gs.canCompleteCircuit(gas2, cost2));\n    }\n}",
+      "instructions": [
+        "if(currentSurplus<0){currentSurplus=0;start=i+1;}",
+        "return (totalSurplus>=0)?start:-1;",
+        "gas={1,2,3,4,5}, cost={3,4,5,1,2}: net=[−2,−2,−2,3,3]; start at station 3 (index 3)",
+        "gas2={2,3,4}, cost2={3,4,3}: total net=2+3+4−3−4−3=−1 < 0 → impossible, return -1",
+        "Key insight: if a solution exists, it is unique and the greedy finds it in one pass"
+      ],
+      "hint": "if(currentSurplus<0){currentSurplus=0;start=i+1;} return (totalSurplus>=0)?start:-1;",
+      "expectedOutput": "Start station: 3\nStart station: -1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 176,
+    "allowedSubmissionType": "TEXT"
+  }
+]

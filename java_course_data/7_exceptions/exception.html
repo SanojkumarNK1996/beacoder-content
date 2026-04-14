@@ -1,148 +1,119 @@
-<main class="course-content">
-  <article id="exception-handling">
-    <header>
-      <h1>10. Exception Handling</h1>
-      <p><strong>Goal:</strong> Handling errors in Java effectively to make programs more reliable and user-friendly.</p>
-    </header>
+<h1>🚨 Exception Handling in Java</h1>
 
-    <section>
-      <h2>What are Exceptions?</h2>
-      <p>
-        An <strong>exception</strong> is an event that occurs during the execution of a program that disrupts the normal flow of instructions.
-        In Java, exceptions are objects that represent errors or unexpected situations.
-      </p>
-      <pre><code class="language-java">
-// Example: Simple exception
-public class ExceptionExample {
-    public static void main(String[] args) {
-        int a = 10, b = 0;
-        System.out.println(a / b); // causes ArithmeticException
-    }
+<h2>1. 🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>In <strong>UPI payments</strong>, if internet goes off mid-transaction, the app must <strong>handle it safely</strong> – not double debit your money.</li>
+  <li>In <strong>IRCTC</strong>, if payment fails after seat is blocked, the system must <strong>roll back</strong> the booking.</li>
+  <li>In a <strong>college result portal</strong>, if some marks data is missing, it should show a <strong>friendly error</strong>, not crash.</li>
+  <li>Similarly, in Java, <strong>exceptions</strong> let us handle errors gracefully instead of the program suddenly stopping.</li>
+</ul>
+
+<h2>2. 📖 What Is an Exception?</h2>
+<ul>
+  <li>An <strong>exception</strong> is an <strong>unexpected problem</strong> that happens while the program is running (e.g., divide by zero, file not found).</li>
+  <li>In Java, exceptions are <strong>objects</strong> that describe what went wrong.</li>
+  <li>Without handling them, your program can <strong>crash</strong> with an error message.</li>
+</ul>
+
+<h2>3. 🧾 Syntax / Basic Structure ⭐</h2>
+<p><strong>Basic try–catch</strong></p>
+<pre><code class="language-java">try {
+    // risky code
+} catch (ExceptionType e) {
+    // handling code
 }
-      </code></pre>
-    </section>
+</code></pre>
 
-    <section>
-      <h2>Types of Exceptions</h2>
-      <ul>
-        <li><strong>Checked Exceptions:</strong> Checked at compile-time (e.g., IOException, SQLException).</li>
-        <li><strong>Unchecked Exceptions:</strong> Occur at runtime (e.g., NullPointerException, ArithmeticException).</li>
-      </ul>
-      <pre><code class="language-java">
-// Example: Checked vs Unchecked
-import java.io.FileReader;
-import java.io.IOException;
-
-public class ExceptionTypes {
+<p><strong>Example: Handling divide-by-zero</strong></p>
+<pre><code class="language-java">public class SimpleExceptionDemo {
     public static void main(String[] args) {
+        int a = 10;
+        int b = 0;
+
         try {
-            FileReader file = new FileReader("data.txt"); // Checked exception
-        } catch (IOException e) {
-            System.out.println("File not found: " + e.getMessage());
+            int result = a / b;               // risky
+            System.out.println(result);
+        } catch (ArithmeticException e) {      // handle
+            System.out.println("Cannot divide by zero");
         }
 
-        int x = 5 / 0; // Unchecked exception
+        System.out.println("Program continues...");
     }
 }
-      </code></pre>
-    </section>
+</code></pre>
 
-    <section>
-      <h2>Try-Catch-Finally</h2>
-      <p>
-        The <strong>try-catch-finally</strong> block is used to handle exceptions gracefully.
-        The <code>finally</code> block executes whether or not an exception occurs.
-      </p>
-      <pre><code class="language-java">
-// Example: try-catch-finally
-public class TryCatchExample {
-    public static void main(String[] args) {
-        try {
-            int[] nums = {1, 2, 3};
-            System.out.println(nums[5]); // Throws exception
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error: " + e.getMessage());
-        } finally {
-            System.out.println("Execution complete.");
-        }
-    }
-}
-      </code></pre>
-    </section>
+<h2>4. 🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<ol>
+  <li><strong>Normal flow enters try-block</strong> – Java starts executing statements inside <code>try { ... }</code>.</li>
+  <li><strong>Exception occurs</strong> – At <code>a / b</code> with <code>b = 0</code>, Java detects an <code>ArithmeticException</code>.</li>
+  <li><strong>Jump to matching catch-block</strong> – Java stops the try-block and looks for <code>catch (ArithmeticException e)</code>.</li>
+  <li><strong>Catch-block runs</strong> – Prints "Cannot divide by zero" instead of crashing.</li>
+  <li><strong>Program continues</strong> – The next line after the try–catch prints "Program continues...".</li>
+</ol>
 
-    <section>
-      <h2>throw and throws</h2>
-      <p>
-        The <strong>throw</strong> keyword is used to manually throw an exception, 
-        while <strong>throws</strong> declares exceptions that a method might throw.
-      </p>
-      <pre><code class="language-java">
-// Example: throw and throws
-public class ThrowExample {
-    static void checkAge(int age) throws Exception {
-        if (age < 18) {
-            throw new Exception("Not eligible to vote");
-        } else {
-            System.out.println("Eligible to vote");
-        }
-    }
+<h2>5. ✅ When to Use Exception Handling</h2>
+<ul>
+  <li>When dealing with <strong>user input</strong> (wrong values, empty input).</li>
+  <li>When working with <strong>files, database, network</strong> – things can go wrong outside your program.</li>
+  <li>Whenever you want to show a <strong>clear message</strong> instead of a crash.</li>
+</ul>
 
-    public static void main(String[] args) {
-        try {
-            checkAge(16);
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-        }
-    }
-}
-      </code></pre>
-    </section>
+<h2>6. ⛔ When NOT to Use / Misuse</h2>
+<ul>
+  <li>Don’t use exceptions for <strong>normal flow</strong> (e.g., using try–catch instead of simple <code>if</code> checks).</li>
+  <li>Don’t write <code>catch (Exception e)</code> everywhere and ignore the problem.</li>
+  <li>Don’t leave catch blocks empty – always handle or log the error.</li>
+</ul>
 
-    <section>
-      <h2>Custom Exceptions</h2>
-      <p>
-        You can create your own exception classes by extending the <code>Exception</code> class or <code>RuntimeException</code> class.
-      </p>
-      <pre><code class="language-java">
-// Example: Custom exception
-class InvalidAgeException extends Exception {
-    public InvalidAgeException(String message) {
-        super(message);
-    }
-}
+<h2>7. 🧠 Minimum You MUST Remember</h2>
+<ul>
+  <li><strong>try</strong> – block where exception might occur.</li>
+  <li><strong>catch</strong> – block that handles the exception.</li>
+  <li><strong>finally</strong> – (optional) block that always runs (closing files, releasing resources).</li>
+  <li>Two broad types: <strong>checked</strong> (must handle at compile time) and <strong>unchecked</strong> (runtime).</li>
+</ul>
 
-public class CustomExceptionExample {
-    static void validate(int age) throws InvalidAgeException {
-        if (age < 18)
-            throw new InvalidAgeException("Age must be 18 or above");
-        else
-            System.out.println("Welcome!");
-    }
+<h2>8. ⚠️ Common Mistakes</h2>
+<ul>
+  <li>Putting <strong>too much code</strong> inside <code>try</code> – makes debugging harder.</li>
+  <li>Catching generic <code>Exception</code> instead of specific types (like <code>IOException</code>, <code>ArithmeticException</code>).</li>
+  <li>Swallowing exceptions: <code>catch (Exception e) {}</code> with empty body.</li>
+  <li>Not closing resources (files, DB connections) – use <code>finally</code> or <code>try-with-resources</code>.</li>
+</ul>
 
-    public static void main(String[] args) {
-        try {
-            validate(15);
-        } catch (InvalidAgeException e) {
-            System.out.println("Caught Exception: " + e.getMessage());
-        }
-    }
-}
-      </code></pre>
-    </section>
+<h2>9. 🎤 Interviewer’s Perspective</h2>
+<ul>
+  <li>"What is an exception? How is it different from an error?"</li>
+  <li>"Explain try, catch, finally with an example."</li>
+  <li>"Difference between checked and unchecked exceptions?"</li>
+  <li>"Why is exception handling important in real applications like banking or IRCTC?"</li>
+</ul>
 
-    <section>
-      <h2>Key Points</h2>
-      <ul>
-        <li>Exceptions prevent program crashes by handling errors gracefully.</li>
-        <li>Checked exceptions must be handled or declared using <code>throws</code>.</li>
-        <li>Unchecked exceptions occur during runtime.</li>
-        <li>Use <code>try-catch-finally</code> to handle errors safely.</li>
-        <li>Custom exceptions make code more meaningful and specific to your application.</li>
-      </ul>
-    </section>
+<h2>10. 📝 Practice Questions ⭐</h2>
+<ol>
+  <li>
+    <strong>Very Easy:</strong>
+    <p>
+      Write a program that divides two integers. Use try–catch to handle <code>ArithmeticException</code> (divide by zero) and print a friendly message.
+    </p>
+  </li>
+  <li>
+    <strong>Easy:</strong>
+    <p>
+      Simulate an ATM: ask user for amount to withdraw. If amount is greater than balance, throw and catch a custom <code>InsufficientBalanceException</code> and print a message.
+    </p>
+  </li>
+  <li>
+    <strong>Medium:</strong>
+    <p>
+      Read a file using <code>FileReader</code>. Handle <code>IOException</code> using try–catch–finally and ensure the file is always closed.
+    </p>
+  </li>
+  <li>
+    <strong>Medium (Thinking):</strong>
+    <p>
+      In a UPI app, list 3 situations where exceptions might occur (network issues, wrong PIN, server down). For each, write which type of Java exception you might use and how you would handle it.
+    </p>
+  </li>
+</ol>
 
-    <footer>
-      <p><strong>Next:</strong> Learn about Java’s <code>try-with-resources</code> for handling files and streams safely.</p>
-    </footer>
-  </article>
-</main>

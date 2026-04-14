@@ -1,0 +1,381 @@
+<h1>🔄 Inversion of Control (IoC)</h1>
+
+<h2>🎯 What is Inversion of Control?</h2>
+<p>Inversion of Control (IoC) is a <strong>design principle</strong> where the control of object creation and dependency management is <strong>inverted</strong> from the application code to an external framework or container.</p>
+
+<div class="concept-intro">
+    <div class="traditional-way">
+        <h3>❌ Traditional Control</h3>
+        <p><strong>Your code controls everything</strong></p>
+        <p>You create objects, manage dependencies, handle lifecycle</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="ioc-way">
+        <h3>✅ Inverted Control</h3>
+        <p><strong>Container controls object creation</strong></p>
+        <p>Framework creates objects, injects dependencies, manages lifecycle</p>
+    </div>
+</div>
+
+<h2>🏠 Real-World Analogy: Restaurant Experience</h2>
+<div class="analogy-section">
+    <div class="analogy-card">
+        <h3>🍳 Without IoC (Traditional Cooking)</h3>
+        <p><strong>You do everything yourself:</strong></p>
+        <ul>
+            <li>🛒 Go shopping for ingredients</li>
+            <li>🔪 Prepare and chop vegetables</li>
+            <li>🔥 Cook the meal</li>
+            <li>🧽 Clean up dishes</li>
+        </ul>
+        <p><em>You control the entire process but do all the work!</em></p>
+    </div>
+
+    <div class="analogy-card">
+        <h3>🍽️ With IoC (Restaurant Service)</h3>
+        <p><strong>Restaurant handles everything:</strong></p>
+        <ul>
+            <li>📋 You just order what you want</li>
+            <li>👨‍🍳 Chef handles ingredient sourcing</li>
+            <li>🔥 Kitchen staff cooks your meal</li>
+            <li>🧽 Restaurant cleans up</li>
+        </ul>
+        <p><em>You get what you need without managing the details!</em></p>
+    </div>
+</div>
+
+<h2>💻 Code Example: Traditional vs IoC</h2>
+
+<h3>❌ Traditional Approach (Without IoC)</h3>
+<div class="code-example traditional">
+    <p><strong>Problem:</strong> Tight coupling, hard to test, inflexible</p>
+    <pre>
+public class EmailService {
+    public void sendEmail(String message) {
+        System.out.println("Sending email: " + message);
+    }
+}
+
+public class NotificationService {
+    // Tightly coupled - creates dependency directly
+    private EmailService emailService = new EmailService();
+    
+    public void sendNotification(String message) {
+        // What if we want SMS instead? We need to change code!
+        emailService.sendEmail(message);
+    }
+}
+
+public class UserController {
+    // More tight coupling
+    private NotificationService notificationService = new NotificationService();
+    
+    public void registerUser(User user) {
+        // User registration logic...
+        notificationService.sendNotification("Welcome " + user.getName());
+    }
+}
+    </pre>
+    <p><strong>Issues:</strong></p>
+    <ul>
+        <li>🔗 Hard-coded dependencies</li>
+        <li>🧪 Difficult to unit test</li>
+        <li>🔄 Hard to change implementations</li>
+        <li>♻️ Can't reuse components easily</li>
+    </ul>
+</div>
+
+<h3>✅ IoC Approach (With Spring)</h3>
+<div class="code-example ioc">
+    <p><strong>Solution:</strong> Loose coupling, testable, flexible</p>
+    <pre>
+// Interface for flexibility
+public interface NotificationService {
+    void sendNotification(String message);
+}
+
+@Service
+public class EmailNotificationService implements NotificationService {
+    public void sendNotification(String message) {
+        System.out.println("Sending email: " + message);
+    }
+}
+
+@Service
+public class SMSNotificationService implements NotificationService {
+    public void sendNotification(String message) {
+        System.out.println("Sending SMS: " + message);
+    }
+}
+
+@Controller
+public class UserController {
+    // Spring injects the dependency - we don't create it!
+    @Autowired
+    private NotificationService notificationService;
+    
+    public void registerUser(User user) {
+        // User registration logic...
+        notificationService.sendNotification("Welcome " + user.getName());
+    }
+}
+    </pre>
+    <p><strong>Benefits:</strong></p>
+    <ul>
+        <li>🔄 Loose coupling through interfaces</li>
+        <li>🧪 Easy to mock for testing</li>
+        <li>⚙️ Configure different implementations</li>
+        <li>♻️ Reusable components</li>
+    </ul>
+</div>
+
+<h2>🏗️ Spring IoC Container</h2>
+<p>The <strong>Spring IoC Container</strong> is the core of Spring Framework. It manages object creation, wiring, and lifecycle.</p>
+
+<div class="container-diagram">
+    <h3>How Spring Container Works:</h3>
+    <div class="workflow">
+        <div class="step">
+            <h4>1️⃣ Configuration</h4>
+            <p>Tell Spring about your beans</p>
+            <code>@Component, @Service, @Repository</code>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+            <h4>2️⃣ Container Startup</h4>
+            <p>Spring scans and creates beans</p>
+            <code>ApplicationContext</code>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+            <h4>3️⃣ Dependency Resolution</h4>
+            <p>Spring injects dependencies</p>
+            <code>@Autowired</code>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+            <h4>4️⃣ Bean Management</h4>
+            <p>Container manages lifecycle</p>
+            <code>Singleton, Prototype, etc.</code>
+        </div>
+    </div>
+</div>
+
+<h2>🔧 Types of IoC Containers in Spring</h2>
+
+<div class="container-types">
+    <div class="container-type">
+        <h3>1️⃣ BeanFactory</h3>
+        <ul>
+            <li>👶 Basic IoC container</li>
+            <li>⚡ Lightweight</li>
+            <li>🔄 Lazy initialization</li>
+            <li>📚 Limited features</li>
+        </ul>
+        <div class="code-example">
+            <pre>
+BeanFactory factory = new XmlBeanFactory(new FileSystemResource("beans.xml"));
+UserService userService = (UserService) factory.getBean("userService");
+            </pre>
+        </div>
+    </div>
+
+    <div class="container-type">
+        <h3>2️⃣ ApplicationContext</h3>
+        <ul>
+            <li>🚀 Advanced IoC container</li>
+            <li>🌟 More features than BeanFactory</li>
+            <li>⚡ Eager initialization</li>
+            <li>🎯 Event handling, AOP, internationalization</li>
+        </ul>
+        <div class="code-example">
+            <pre>
+ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+// or with annotations
+ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+UserService userService = context.getBean(UserService.class);
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>📋 Bean Lifecycle in IoC Container</h2>
+<div class="lifecycle-diagram">
+    <div class="lifecycle-step">
+        <h4>1️⃣ Instantiation</h4>
+        <p>Container creates bean instance</p>
+    </div>
+    <div class="lifecycle-arrow">↓</div>
+    <div class="lifecycle-step">
+        <h4>2️⃣ Populate Properties</h4>
+        <p>Set bean properties and dependencies</p>
+    </div>
+    <div class="lifecycle-arrow">↓</div>
+    <div class="lifecycle-step">
+        <h4>3️⃣ Initialization</h4>
+        <p>Call initialization methods</p>
+    </div>
+    <div class="lifecycle-arrow">↓</div>
+    <div class="lifecycle-step">
+        <h4>4️⃣ Ready for Use</h4>
+        <p>Bean available in application</p>
+    </div>
+    <div class="lifecycle-arrow">↓</div>
+    <div class="lifecycle-step">
+        <h4>5️⃣ Destruction</h4>
+        <p>Cleanup when container shuts down</p>
+    </div>
+</div>
+
+<h2>💡 IoC Benefits in Detail</h2>
+
+<div class="benefits-grid">
+    <div class="benefit-card">
+        <h3>🧪 Improved Testability</h3>
+        <p>Easy to inject mock objects for unit testing</p>
+        <div class="code-example">
+            <pre>
+@Test
+void testUserRegistration() {
+    // Mock the dependency
+    NotificationService mockService = Mockito.mock(NotificationService.class);
+    
+    // Inject mock manually or use @MockBean
+    UserController controller = new UserController(mockService);
+    
+    // Test without real email sending
+    controller.registerUser(new User("John"));
+    
+    verify(mockService).sendNotification(anyString());
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="benefit-card">
+        <h3>🔄 Flexibility & Configuration</h3>
+        <p>Change implementations without code changes</p>
+        <div class="code-example">
+            <pre>
+# application.properties
+notification.type=email
+
+# Switch to SMS by changing configuration
+notification.type=sms
+
+@Value("${notification.type}")
+private String notificationType;
+            </pre>
+        </div>
+    </div>
+
+    <div class="benefit-card">
+        <h3>♻️ Code Reusability</h3>
+        <p>Components can be reused in different contexts</p>
+        <div class="code-example">
+            <pre>
+// Same UserService can be used in:
+// - Web controllers
+// - REST APIs  
+// - Batch jobs
+// - Tests
+// without any changes!
+            </pre>
+        </div>
+    </div>
+
+    <div class="benefit-card">
+        <h3>🎯 Single Responsibility</h3>
+        <p>Classes focus on business logic, not object creation</p>
+        <div class="code-example">
+            <pre>
+@Service
+public class UserService {
+    // Focus only on user business logic
+    // No need to worry about creating dependencies
+    
+    public User createUser(UserDto userDto) {
+        // Just use injected dependencies
+        return userRepository.save(convertToEntity(userDto));
+    }
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>⚠️ Common IoC Misconceptions</h2>
+
+<div class="misconceptions">
+    <div class="misconception">
+        <h3>❌ "IoC is just about @Autowired"</h3>
+        <p><strong>Truth:</strong> IoC is a design principle. @Autowired is just one way to implement it.</p>
+    </div>
+    
+    <div class="misconception">
+        <h3>❌ "IoC makes code more complex"</h3>
+        <p><strong>Truth:</strong> IoC reduces complexity by removing dependency management from business logic.</p>
+    </div>
+    
+    <div class="misconception">
+        <h3>❌ "IoC is only for large applications"</h3>
+        <p><strong>Truth:</strong> IoC benefits applications of all sizes by improving testability and maintainability.</p>
+    </div>
+</div>
+
+<h2>🎯 IoC vs Other Patterns</h2>
+<table>
+    <tr>
+        <th>Pattern</th>
+        <th>Control Location</th>
+        <th>Flexibility</th>
+        <th>Testing</th>
+        <th>Complexity</th>
+    </tr>
+    <tr>
+        <td><strong>🔄 IoC</strong></td>
+        <td>External container</td>
+        <td>High</td>
+        <td>Excellent</td>
+        <td>Medium</td>
+    </tr>
+    <tr>
+        <td>🏭 Factory Pattern</td>
+        <td>Factory class</td>
+        <td>Medium</td>
+        <td>Good</td>
+        <td>Low</td>
+    </tr>
+    <tr>
+        <td>🎯 Service Locator</td>
+        <td>Service registry</td>
+        <td>Medium</td>
+        <td>Medium</td>
+        <td>Medium</td>
+    </tr>
+    <tr>
+        <td>🔗 Direct Instantiation</td>
+        <td>Client code</td>
+        <td>Low</td>
+        <td>Poor</td>
+        <td>Low (initially)</td>
+    </tr>
+</table>
+
+<div class="key-takeaway">
+    <h3>🎯 Key Takeaway</h3>
+    <p>IoC is about <strong>giving up control</strong> to gain <strong>flexibility and maintainability</strong>. Instead of your code managing dependencies, you let Spring handle the "plumbing" while you focus on business logic.</p>
+    
+    <p>💡 <strong>Remember:</strong> IoC is the foundation that enables Dependency Injection. Think of IoC as the <strong>principle</strong> and DI as the <strong>implementation technique</strong>.</p>
+</div>
+
+<h2>🛤️ Next Steps</h2>
+<p>Understanding IoC prepares you for:</p>
+<ul>
+    <li>💉 Learning Dependency Injection patterns and techniques</li>
+    <li>📋 Understanding Spring Bean management</li>
+    <li>⚙️ Configuring Spring applications effectively</li>
+    <li>🧪 Writing better unit tests with mocking</li>
+    <li>🏗️ Designing loosely coupled architectures</li>
+</ul>

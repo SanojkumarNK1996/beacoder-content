@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Singly Linked List Insert and Delete",
+    "description": {
+      "task": "Implement a SinglyLinkedList class with insert at head, insert at position, delete by value, and contains operations. The list should maintain a size counter.",
+      "language": "java",
+      "starterCode": "public class SinglyLinkedList {\n\n    static class Node {\n        int val;\n        Node next;\n        Node(int v) { this.val = v; }\n    }\n\n    private Node head;\n    private int size;\n\n    public void insertHead(int val) {\n        Node n = new Node(val);\n        n.next = head;\n        head = n;\n        size++;\n    }\n\n    public void insertAt(int pos, int val) {\n        if (pos == 0) { insertHead(val); return; }\n        // TODO: traverse to pos-1, insert new node after it\n    }\n\n    public boolean delete(int val) {\n        // TODO: remove first node with this value, update links, size--\n        // Return true if deleted, false if not found\n        return false;\n    }\n\n    public boolean contains(int val) {\n        // TODO: return true if any node has this value\n        return false;\n    }\n\n    public void print() {\n        Node c = head;\n        StringBuilder sb = new StringBuilder();\n        while (c != null) { sb.append(c.val); if (c.next != null) sb.append(\"->\"); c = c.next; }\n        System.out.println(sb);\n    }\n\n    public static void main(String[] args) {\n        SinglyLinkedList sll = new SinglyLinkedList();\n        sll.insertHead(3);\n        sll.insertHead(1);\n        sll.insertAt(1, 2);\n        sll.print();\n        System.out.println(\"Contains 2: \" + sll.contains(2));\n        sll.delete(2);\n        sll.print();\n        System.out.println(\"Contains 2: \" + sll.contains(2));\n    }\n}",
+      "instructions": [
+        "insertAt(pos, val): traverse to pos-1 node, create new Node(val), set newNode.next=curr.next, curr.next=newNode, size++; if pos>=size append to end",
+        "delete(val): handle head deletion separately; otherwise find predecessor and relink; decrement size on success",
+        "contains(val): traverse until node with val found, return true; return false if end reached",
+        "After insertHead(3), insertHead(1), insertAt(1,2): list is 1->2->3",
+        "delete(2) removes 2, list becomes 1->3"
+      ],
+      "hint": "insertAt: Node c=head; for(int i=0;i<pos-1&&c.next!=null;i++) c=c.next; Node n=new Node(val); n.next=c.next; c.next=n; size++;",
+      "expectedOutput": "1->2->3\nContains 2: true\n1->3\nContains 2: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 137,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Reverse a Singly Linked List",
+    "description": {
+      "task": "Implement a ReverseList class that reverses a singly linked list in-place using an iterative three-pointer approach (prev, curr, next). Also implement a recursive reversal.",
+      "language": "java",
+      "starterCode": "public class ReverseList {\n\n    static class Node {\n        int val; Node next;\n        Node(int v) { val = v; }\n    }\n\n    public Node reverseIterative(Node head) {\n        Node prev = null, curr = head;\n        // TODO: iterate, reversing next pointers\n        return prev; // prev becomes new head\n    }\n\n    public Node reverseRecursive(Node head) {\n        // TODO: base case: null or single node returns head\n        // Recursive: reverse rest, set head.next.next=head, head.next=null\n        return null;\n    }\n\n    private Node buildList(int... vals) {\n        Node dummy = new Node(0), tail = dummy;\n        for (int v : vals) { tail.next = new Node(v); tail = tail.next; }\n        return dummy.next;\n    }\n\n    private String listToString(Node h) {\n        StringBuilder sb = new StringBuilder();\n        while (h != null) { sb.append(h.val); if (h.next != null) sb.append(\"->\"); h = h.next; }\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        ReverseList rl = new ReverseList();\n        Node n1 = rl.buildList(1, 2, 3, 4, 5);\n        System.out.println(\"Original: \" + rl.listToString(n1));\n        n1 = rl.reverseIterative(n1);\n        System.out.println(\"Iterative reversed: \" + rl.listToString(n1));\n        Node n2 = rl.buildList(1, 2, 3, 4, 5);\n        n2 = rl.reverseRecursive(n2);\n        System.out.println(\"Recursive reversed: \" + rl.listToString(n2));\n    }\n}",
+      "instructions": [
+        "reverseIterative: while curr != null: save next=curr.next; curr.next=prev; prev=curr; curr=next; return prev",
+        "reverseRecursive: if head==null || head.next==null return head; Node rest=reverseRecursive(head.next); head.next.next=head; head.next=null; return rest",
+        "Both methods must work correctly for a 5-element list",
+        "buildList and listToString are provided — do not modify them",
+        "Both produce 5->4->3->2->1"
+      ],
+      "hint": "Iterative: Node prev=null,curr=head; while(curr!=null){Node nxt=curr.next; curr.next=prev; prev=curr; curr=nxt;} return prev;",
+      "expectedOutput": "Original: 1->2->3->4->5\nIterative reversed: 5->4->3->2->1\nRecursive reversed: 5->4->3->2->1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 137,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Linked List Nth From End",
+    "description": {
+      "task": "Implement a NthFromEnd class that finds the k-th node from the end of a singly linked list in a single pass using the two-pointer technique (fast and slow pointers). Also implement a method to remove the k-th node from the end.",
+      "language": "java",
+      "starterCode": "public class NthFromEnd {\n\n    static class Node {\n        int val; Node next;\n        Node(int v) { val = v; }\n    }\n\n    // Return value of k-th node from end (k=1 = last node)\n    public int findKthFromEnd(Node head, int k) {\n        // TODO: advance fast pointer k steps, then move both until fast reaches end\n        return -1;\n    }\n\n    // Remove k-th node from end, return new head\n    public Node removeKthFromEnd(Node head, int k) {\n        Node dummy = new Node(0);\n        dummy.next = head;\n        Node fast = dummy, slow = dummy;\n        // TODO: advance fast k+1 steps, move both until fast==null\n        //       then slow.next = slow.next.next\n        return dummy.next;\n    }\n\n    private Node buildList(int... vals) {\n        Node dummy = new Node(0), tail = dummy;\n        for (int v : vals) { tail.next = new Node(v); tail = tail.next; }\n        return dummy.next;\n    }\n\n    private String listToString(Node h) {\n        StringBuilder sb = new StringBuilder();\n        while (h != null) { sb.append(h.val); if (h.next != null) sb.append(\"->\"); h = h.next; }\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        NthFromEnd nfe = new NthFromEnd();\n        Node list = nfe.buildList(1, 2, 3, 4, 5);\n        System.out.println(\"2nd from end: \" + nfe.findKthFromEnd(list, 2));\n        System.out.println(\"1st from end: \" + nfe.findKthFromEnd(list, 1));\n        Node list2 = nfe.buildList(1, 2, 3, 4, 5);\n        list2 = nfe.removeKthFromEnd(list2, 2);\n        System.out.println(\"After removing 2nd from end: \" + nfe.listToString(list2));\n    }\n}",
+      "instructions": [
+        "findKthFromEnd: move fast pointer k steps ahead; then move both fast and slow together until fast.next==null; return slow.val",
+        "removeKthFromEnd: with dummy head, advance fast k+1 steps from dummy; then move both until fast==null; slow.next=slow.next.next",
+        "For list [1,2,3,4,5]: 2nd from end is 4, 1st from end is 5",
+        "Removing 2nd from end of [1,2,3,4,5] gives [1,2,3,5]",
+        "buildList and listToString are provided"
+      ],
+      "hint": "findKthFromEnd: Node fast=head,slow=head; for(int i=0;i<k;i++) fast=fast.next; while(fast.next!=null){fast=fast.next;slow=slow.next;} return slow.val;",
+      "expectedOutput": "2nd from end: 4\n1st from end: 5\nAfter removing 2nd from end: 1->2->3->5"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 137,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,24 @@
+<h1>🔍 AWS CloudTrail</h1>
+<h2>🎯 What is CloudTrail?</h2>
+<p><strong>AWS CloudTrail</strong> records all API calls made in your AWS account — who did what, from where, and when. It's your audit log for governance, compliance, and security analysis.</p>
+<h2>📋 What CloudTrail Records</h2>
+<ul>
+  <li>Every AWS API call (console, CLI, SDK): CreateBucket, RunInstances, PutObject</li>
+  <li>Who made the call (IAM user, role, root)</li>
+  <li>Source IP address</li>
+  <li>Timestamp</li>
+  <li>Request parameters and response</li>
+</ul>
+<h2>📌 CloudTrail vs CloudWatch</h2>
+<ul>
+  <li><strong>CloudTrail</strong>: WHO did WHAT to which resource (API audit log)</li>
+  <li><strong>CloudWatch</strong>: HOW IS the resource performing (metrics and logs)</li>
+</ul>
+<h2>🔒 Best Practices</h2>
+<ul>
+  <li>Enable CloudTrail in ALL regions</li>
+  <li>Store logs in S3 with integrity validation</li>
+  <li>Set CloudTrail log alerts for sensitive actions (root login, IAM changes)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>CloudTrail is mandatory for security compliance. Enable it immediately after account creation — it answers "who deleted that bucket?"</p>

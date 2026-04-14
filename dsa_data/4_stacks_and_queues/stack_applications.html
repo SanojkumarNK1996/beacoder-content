@@ -1,0 +1,29 @@
+<h1>🎯 Stack Applications</h1>
+
+<h2>📞 Function Call Stack</h2>
+<p>Every time a method is called, a frame is pushed onto the JVM call stack. On return, the frame is popped.</p>
+
+<h2>🔢 Expression Evaluation</h2>
+<p>Stacks are used to evaluate/parse arithmetic expressions (infix → postfix, balanced parentheses).</p>
+
+<div class="code-example">
+  <pre>
+// Check balanced parentheses
+boolean isBalanced(String s) {
+    Deque&lt;Character&gt; stack = new ArrayDeque&lt;&gt;();
+    for (char c : s.toCharArray()) {
+        if (c == '(' || c == '[' || c == '{') stack.push(c);
+        else if (c == ')' &amp;&amp; (stack.isEmpty() || stack.pop() != '(')) return false;
+        else if (c == ']' &amp;&amp; (stack.isEmpty() || stack.pop() != '[')) return false;
+        else if (c == '}' &amp;&amp; (stack.isEmpty() || stack.pop() != '{')) return false;
+    }
+    return stack.isEmpty();
+}
+  </pre>
+</div>
+
+<h2>↩️ Backtracking</h2>
+<p>Stacks track choices in DFS, maze solving, and undo operations.</p>
+
+<h2>🎯 Summary</h2>
+<p>Stacks appear in <strong>recursion, parsing, undo/redo, DFS</strong>, and many classic interview problems.</p>

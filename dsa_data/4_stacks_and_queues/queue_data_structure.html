@@ -1,0 +1,31 @@
+<h1>🚶 Queue Data Structure</h1>
+
+<h2>🎯 What is a Queue?</h2>
+<p>A <strong>queue</strong> follows FIFO — <strong>First In, First Out</strong>. Elements are added at the rear and removed from the front.</p>
+
+<div class="analogy-card">
+  <h3>🎟️ Ticket Counter Analogy</h3>
+  <p>People join at the back and leave from the front. First person in line is first served.</p>
+</div>
+
+<h2>🔧 Core Operations</h2>
+<ul>
+  <li><strong>enqueue(x)</strong> – Add to rear: O(1)</li>
+  <li><strong>dequeue()</strong> – Remove from front: O(1)</li>
+  <li><strong>peek()</strong> – View front element: O(1)</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+queue.offer(10);
+queue.offer(20);
+queue.offer(30);
+System.out.println(queue.peek());  // 10
+System.out.println(queue.poll());  // 10 (removed)
+System.out.println(queue.peek());  // 20
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<p>Queues are essential for <strong>BFS, task scheduling, producer-consumer patterns</strong>.</p>

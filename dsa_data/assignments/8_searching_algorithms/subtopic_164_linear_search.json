@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Linear Search with Tracking",
+    "description": {
+      "task": "Implement a LinearSearch class with methods for: (1) basic linear search returning index or -1, (2) find all occurrences of a target, and (3) find the maximum element with its index.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class LinearSearch {\n\n    public int search(int[] arr, int target) {\n        // TODO: Iterate arr; return index when arr[i]==target, else return -1\n        return -1;\n    }\n\n    public List<Integer> findAll(int[] arr, int target) {\n        // TODO: Return list of all indices where arr[i]==target\n        List<Integer> indices = new ArrayList<>();\n        return indices;\n    }\n\n    public int[] findMax(int[] arr) {\n        // TODO: Return {maxValue, maxIndex}; handle empty array returning {-1,-1}\n        if (arr.length == 0) return new int[]{-1, -1};\n        int maxVal = arr[0], maxIdx = 0;\n        // TODO: scan to update maxVal and maxIdx\n        return new int[]{maxVal, maxIdx};\n    }\n\n    public static void main(String[] args) {\n        LinearSearch ls = new LinearSearch();\n        int[] arr = {4, 2, 7, 2, 9, 2, 1};\n\n        System.out.println(\"Search 7: index \" + ls.search(arr, 7));\n        System.out.println(\"Search 5: index \" + ls.search(arr, 5));\n        System.out.println(\"All 2s: \" + ls.findAll(arr, 2));\n        int[] mx = ls.findMax(arr);\n        System.out.println(\"Max: \" + mx[0] + \" at index \" + mx[1]);\n    }\n}",
+      "instructions": [
+        "search: for(int i=0;i<arr.length;i++) if(arr[i]==target) return i;",
+        "findAll: for(int i=0;i<arr.length;i++) if(arr[i]==target) indices.add(i);",
+        "findMax: for(int i=1;i<arr.length;i++) if(arr[i]>maxVal){maxVal=arr[i];maxIdx=i;}",
+        "Linear search is O(n) — must check every element in the worst case",
+        "arr={4,2,7,2,9,2,1}: 7 is at index 2; 2 appears at [1,3,5]; max is 9 at index 4"
+      ],
+      "hint": "search: for(int i=0;i<arr.length;i++) if(arr[i]==target) return i; findAll: indices.add(i); findMax: if(arr[i]>maxVal){maxVal=arr[i];maxIdx=i;}",
+      "expectedOutput": "Search 7: index 2\nSearch 5: index -1\nAll 2s: [1, 3, 5]\nMax: 9 at index 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 164,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Sentinel Linear Search",
+    "description": {
+      "task": "Implement Sentinel Linear Search which places the target at the end of the array to eliminate the bounds-check (i >= n) from the inner loop. This reduces constant-factor overhead. Compare with regular linear search.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class SentinelSearch {\n\n    public int regularSearch(int[] arr, int target) {\n        for (int i = 0; i < arr.length; i++)\n            if (arr[i] == target) return i;\n        return -1;\n    }\n\n    public int sentinelSearch(int[] original, int target) {\n        // Work on a copy with one extra slot for the sentinel\n        int n = original.length;\n        int[] arr = Arrays.copyOf(original, n + 1);\n        arr[n] = target; // place sentinel at end\n\n        int i = 0;\n        // TODO: Loop without bounds check: while(arr[i] != target) i++;\n        // TODO: if i < n, return i (found in original), else return -1\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        SentinelSearch ss = new SentinelSearch();\n        int[] arr = {15, 3, 8, 22, 5, 17, 11};\n\n        System.out.println(\"Regular  search 17: \" + ss.regularSearch(arr, 17));\n        System.out.println(\"Sentinel search 17: \" + ss.sentinelSearch(arr, 17));\n        System.out.println(\"Regular  search 99: \" + ss.regularSearch(arr, 99));\n        System.out.println(\"Sentinel search 99: \" + ss.sentinelSearch(arr, 99));\n    }\n}",
+      "instructions": [
+        "while(arr[i]!=target) i++;",
+        "After loop: if(i<n) return i; else return -1;",
+        "Sentinel at arr[n] guarantees the loop always terminates (avoids out-of-bounds)",
+        "arr={15,3,8,22,5,17,11}: 17 is at index 5; 99 is not in original (i==n after loop)",
+        "Sentinel optimization saves one comparison per iteration — useful for very large arrays"
+      ],
+      "hint": "while(arr[i]!=target) i++; return (i<n)?i:-1;",
+      "expectedOutput": "Regular  search 17: 5\nSentinel search 17: 5\nRegular  search 99: -1\nSentinel search 99: -1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 164,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "2D Matrix Linear Search",
+    "description": {
+      "task": "Implement linear search for a 2D matrix. Search every cell row by row and column by column. Return the {row, col} position of the target, or {-1, -1} if not found. Also count how many cells were examined.",
+      "language": "java",
+      "starterCode": "public class Matrix2DSearch {\n\n    public int[] search(int[][] matrix, int target) {\n        // TODO: Iterate all rows and columns; return {row, col} when found\n        for (int row = 0; row < matrix.length; row++) {\n            for (int col = 0; col < matrix[row].length; col++) {\n                // TODO: if matrix[row][col] == target, return new int[]{row, col}\n            }\n        }\n        return new int[]{-1, -1};\n    }\n\n    public int countSearch(int[][] matrix, int target) {\n        // TODO: Count cells visited before finding target (or total cells if not found)\n        int visited = 0;\n        for (int row = 0; row < matrix.length; row++)\n            for (int col = 0; col < matrix[row].length; col++) {\n                visited++;\n                // TODO: if found, return visited\n            }\n        return visited;\n    }\n\n    public static void main(String[] args) {\n        Matrix2DSearch ms = new Matrix2DSearch();\n        int[][] mat = {\n            {1,  3,  5,  7},\n            {9, 11, 13, 15},\n            {2,  4,  6,  8}\n        };\n        int[] pos = ms.search(mat, 13);\n        System.out.println(\"13 found at: [\" + pos[0] + \", \" + pos[1] + \"]\");\n        System.out.println(\"Cells visited for 13: \" + ms.countSearch(mat, 13));\n        int[] pos2 = ms.search(mat, 99);\n        System.out.println(\"99 found at: [\" + pos2[0] + \", \" + pos2[1] + \"]\");\n        System.out.println(\"Cells visited for 99: \" + ms.countSearch(mat, 99));\n    }\n}",
+      "instructions": [
+        "search: if(matrix[row][col]==target) return new int[]{row,col};",
+        "countSearch: if(matrix[row][col]==target) return visited;",
+        "13 is at row=1, col=2 (0-indexed) — visited 7 cells to reach it",
+        "99 is not in the matrix — all 12 cells visited",
+        "Linear search on a 2D m×n matrix is O(m*n)"
+      ],
+      "hint": "search: if(matrix[row][col]==target) return new int[]{row,col}; countSearch: visited++; if(matrix[row][col]==target) return visited;",
+      "expectedOutput": "13 found at: [1, 2]\nCells visited for 13: 7\n99 found at: [-1, -1]\nCells visited for 99: 12"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 164,
+    "allowedSubmissionType": "TEXT"
+  }
+]

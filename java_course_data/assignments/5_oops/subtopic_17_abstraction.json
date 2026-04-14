@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Abstract Shape Class",
+    "description": {
+      "task": "Create an abstract Shape class with an abstract method area(). Implement it in Triangle and Square subclasses.",
+      "language": "java",
+      "starterCode": "abstract class Shape {\n    String color;\n\n    Shape(String color) {\n        this.color = color;\n    }\n\n    // Abstract method — subclasses MUST implement this\n    abstract double area();\n\n    void describe() {\n        System.out.println(\"Color: \" + color + \", Area: \" + String.format(\"%.2f\", area()));\n    }\n}\n\n// Triangle extends Shape: fields base and height, area = 0.5 * base * height\n\n// Square extends Shape: field side, area = side * side\n\npublic class AbstractDemo {\n    public static void main(String[] args) {\n        Shape t = new Triangle(\"Red\", 6.0, 4.0);\n        Shape s = new Square(\"Blue\", 5.0);\n        t.describe();\n        s.describe();\n    }\n}",
+      "instructions": [
+        "Implement Triangle(String color, double base, double height) with area() returning 0.5 * base * height.",
+        "Implement Square(String color, double side) with area() returning side * side.",
+        "Do NOT change AbstractDemo.main() or the abstract Shape class.",
+        "Note: you cannot instantiate Shape directly — only its concrete subclasses."
+      ],
+      "hint": "Abstract classes can have constructors but cannot be instantiated with 'new Shape(...)'. Subclass constructors pass values to the parent with super(color).",
+      "expectedOutput": "Color: Red, Area: 12.00\nColor: Blue, Area: 25.00"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 17,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Interface Implementation",
+    "description": {
+      "task": "Create a Printable interface with a print() method. Implement it in two classes: Document and Photo.",
+      "language": "java",
+      "context": "An interface is a contract that forces implementing classes to provide specific methods. Unlike abstract classes, interfaces support multiple implementation.",
+      "starterCode": "interface Printable {\n    void print(); // implicitly public and abstract\n}\n\n// Document implements Printable: has String title\n// print(): prints \"Printing document: <title>\"\n\n// Photo implements Printable: has String filename, int width, int height\n// print(): prints \"Printing photo: <filename> (<width>x<height>)\"\n\npublic class InterfaceDemo {\n    public static void main(String[] args) {\n        Printable doc = new Document(\"Annual Report\");\n        Printable photo = new Photo(\"vacation.jpg\", 1920, 1080);\n\n        doc.print();\n        photo.print();\n    }\n}",
+      "instructions": [
+        "Implement Document with constructor Document(String title) and implement print().",
+        "Implement Photo with constructor Photo(String filename, int width, int height) and implement print().",
+        "Do NOT change InterfaceDemo.main()."
+      ],
+      "hint": "Classes use 'implements InterfaceName'. All interface methods are implicitly public — your implementations must also be public.",
+      "expectedOutput": "Printing document: Annual Report\nPrinting photo: vacation.jpg (1920x1080)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 17,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Multiple Interfaces",
+    "description": {
+      "task": "Create two interfaces (Flyable and Swimmable) and a Duck class that implements both. A Penguin class implements only Swimmable.",
+      "language": "java",
+      "context": "Java does not support inheriting from multiple classes, but a class can implement multiple interfaces. This is a key advantage of interfaces over abstract classes.",
+      "starterCode": "interface Flyable {\n    void fly();\n}\n\ninterface Swimmable {\n    void swim();\n}\n\n// Duck implements both Flyable and Swimmable\n// fly(): prints \"Duck is flying.\"\n// swim(): prints \"Duck is swimming.\"\n\n// Penguin implements only Swimmable\n// swim(): prints \"Penguin is swimming.\"\n\npublic class MultiInterface {\n    public static void main(String[] args) {\n        Duck duck = new Duck();\n        duck.fly();\n        duck.swim();\n\n        Swimmable penguin = new Penguin();\n        penguin.swim();\n    }\n}",
+      "instructions": [
+        "Implement Duck implementing both Flyable and Swimmable.",
+        "Implement Penguin implementing only Swimmable.",
+        "Do NOT change MultiInterface.main().",
+        "Observe that a Penguin can be referenced as Swimmable but cannot call fly()."
+      ],
+      "hint": "Multiple interface syntax: class Duck implements Flyable, Swimmable { ... }",
+      "expectedOutput": "Duck is flying.\nDuck is swimming.\nPenguin is swimming."
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 17,
+    "allowedSubmissionType": "TEXT"
+  }
+]

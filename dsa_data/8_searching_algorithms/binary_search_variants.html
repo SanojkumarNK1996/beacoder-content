@@ -1,0 +1,23 @@
+<h1>🔎 Variants of Binary Search</h1>
+<h2>📌 Find First Occurrence</h2>
+<p>When there are duplicates, find the <strong>leftmost</strong> occurrence of the target.</p>
+<div class="code-example">
+  <pre>
+int firstOccurrence(int[] arr, int target) {
+    int left = 0, right = arr.length - 1, result = -1;
+    while (left &lt;= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) { result = mid; right = mid - 1; }
+        else if (arr[mid] &lt; target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return result;
+}
+  </pre>
+</div>
+<h2>📌 Find Last Occurrence</h2>
+<p>Similar but set <code>left = mid + 1</code> when a match is found — continues searching right.</p>
+<h2>📌 Search in Rotated Sorted Array</h2>
+<p>A classic leetcode problem: determine which half is sorted, then decide which side to search.</p>
+<h2>🎯 Summary</h2>
+<p>Master binary search variants — they appear in many interview problems under disguise (e.g., minimum in rotated sorted array, square root, capacity to ship packages).</p>

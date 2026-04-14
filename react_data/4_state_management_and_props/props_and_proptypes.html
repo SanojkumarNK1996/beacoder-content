@@ -1,0 +1,45 @@
+<h1>🎭 Props and PropTypes</h1>
+<h2>🎯 Passing Props</h2>
+<div class="code-example">
+  <pre>
+// Parent passes props
+&lt;UserCard
+  name="Alice"
+  age={30}
+  isAdmin={true}
+  hobbies={['reading', 'coding']}
+  onDelete={handleDelete}
+/&gt;
+
+// Child receives props
+function UserCard({ name, age, isAdmin, hobbies, onDelete }) {
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;{name} {isAdmin &amp;&amp; '(Admin)'}&lt;/h2&gt;
+      &lt;p&gt;Age: {age}&lt;/p&gt;
+      &lt;ul&gt;{hobbies.map(h =&gt; &lt;li key={h}&gt;{h}&lt;/li&gt;)}&lt;/ul&gt;
+      &lt;button onClick={onDelete}&gt;Delete&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+  </pre>
+</div>
+<h2>🔍 PropTypes (Runtime Type Checking)</h2>
+<div class="code-example">
+  <pre>
+import PropTypes from 'prop-types';
+
+UserCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number.isRequired,
+  isAdmin: PropTypes.bool,
+  onDelete: PropTypes.func.isRequired,
+};
+
+UserCard.defaultProps = { isAdmin: false };
+  </pre>
+</div>
+<h2>📌 TypeScript Alternative</h2>
+<p>PropTypes are runtime checks. TypeScript interfaces give compile-time safety — preferred for larger projects.</p>
+<h2>🎯 Summary</h2>
+<p>Props are read-only data passed from parent. Use PropTypes or TypeScript interfaces to document expected prop types and catch bugs early.</p>

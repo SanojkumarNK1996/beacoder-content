@@ -1,0 +1,20 @@
+<h1>🔄 AWS Step Functions</h1>
+<h2>🎯 What are Step Functions?</h2>
+<p><strong>AWS Step Functions</strong> is a serverless workflow orchestration service. Coordinate multiple Lambda functions and other AWS services into a visual workflow (state machine).</p>
+<h2>📋 Why Step Functions?</h2>
+<ul>
+  <li>Lambda has max 15-minute timeout — Step Functions can run for up to 1 year</li>
+  <li>Handle retry logic, error handling, branching without complex code</li>
+  <li>Visual workflow editor in AWS console</li>
+  <li>Audit: Full execution history and logs</li>
+</ul>
+<h2>📌 State Types</h2>
+<ul>
+  <li><strong>Task</strong>: Invoke Lambda, call another AWS service</li>
+  <li><strong>Choice</strong>: Branching logic (like if/switch)</li>
+  <li><strong>Wait</strong>: Pause for a specified time</li>
+  <li><strong>Parallel</strong>: Execute branches concurrently</li>
+  <li><strong>Map</strong>: Iterate over a list</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Use Step Functions when you have multi-step workflows: order processing, document approval, ML pipelines, data ETL. Takes complexity out of application code.</p>

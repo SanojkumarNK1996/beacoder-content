@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 141, "title": "Stack Data Structure", "dataType": "notes", "data": "stack_data_structure.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 142, "title": "Stack Implementation", "dataType": "notes", "data": "stack_implementation.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 143, "title": "Stack Applications", "dataType": "notes", "data": "stack_applications.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 144, "title": "Queue Data Structure", "dataType": "notes", "data": "queue_data_structure.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 145, "title": "Queue Implementation", "dataType": "notes", "data": "queue_implementation.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 146, "title": "Queue Applications", "dataType": "notes", "data": "queue_applications.html", "displayOrder": 6, "verified": false}
+]

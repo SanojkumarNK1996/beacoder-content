@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 260, "title": "Arrow Functions and Template Literals", "dataType": "notes", "data": "arrow_functions_template_literals.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 261, "title": "Destructuring and Spread Operator", "dataType": "notes", "data": "destructuring_and_spread.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 262, "title": "Modules Import and Export", "dataType": "notes", "data": "modules_import_export.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 263, "title": "Promises and Async Await", "dataType": "notes", "data": "promises_and_async_await.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 264, "title": "Array Methods map filter reduce", "dataType": "notes", "data": "array_methods.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 265, "title": "Optional Chaining and Nullish Coalescing", "dataType": "notes", "data": "optional_chaining_nullish.html", "displayOrder": 6, "verified": false}
+]

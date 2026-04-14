@@ -1,0 +1,74 @@
+[
+  {
+    "title": "API Gateway Route Matcher",
+    "description": {
+      "task": "Implement an ApiGateway class that routes incoming HTTP requests to downstream microservices based on URL path prefixes. The gateway should support route registration, request forwarding decisions, and path rewriting (stripping the prefix before forwarding).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ApiGateway {\n\n    public record Route(String prefix, String targetService, boolean stripPrefix) {}\n    public record ForwardDecision(String targetService, String rewrittenPath) {}\n\n    private final List<Route> routes = new ArrayList<>();\n\n    public void addRoute(String prefix, String targetService, boolean stripPrefix) {\n        routes.add(new Route(prefix, targetService, stripPrefix));\n    }\n\n    public ForwardDecision resolve(String requestPath) {\n        // Find the first matching route (most specific prefix wins: longest match)\n        // Return ForwardDecision with target service and rewritten path\n        // Return null if no route matches\n        return null;\n    }\n\n    public static void main(String[] args) {\n        ApiGateway gateway = new ApiGateway();\n        gateway.addRoute(\"/api/users\", \"user-service\", true);\n        gateway.addRoute(\"/api/orders\", \"order-service\", true);\n        gateway.addRoute(\"/api\", \"fallback-service\", false);\n\n        ForwardDecision d1 = gateway.resolve(\"/api/users/profile\");\n        System.out.println(d1.targetService() + \" -> \" + d1.rewrittenPath());\n\n        ForwardDecision d2 = gateway.resolve(\"/api/payments/123\");\n        System.out.println(d2.targetService() + \" -> \" + d2.rewrittenPath());\n    }\n}",
+      "instructions": [
+        "addRoute() appends a Route to the routes list",
+        "resolve() finds the route whose prefix is the longest match against the start of requestPath",
+        "When stripPrefix=true, the rewrittenPath is requestPath with the prefix removed",
+        "When stripPrefix=false, the rewrittenPath is the original requestPath unchanged",
+        "resolve() returns null if no route prefix matches the start of requestPath"
+      ],
+      "hint": "Sort matching routes by prefix length descending to find the longest match first. Use requestPath.startsWith(route.prefix()) to check matches. For stripping: requestPath.substring(prefix.length()).",
+      "expectedOutput": "user-service -> /profile\nfallback-service -> /api/payments/123"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 110,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Rate Limiter for API Gateway",
+    "description": {
+      "task": "Build a RateLimiter class for an API gateway that limits the number of requests per client per time window. Use a fixed-window counter algorithm: each client gets a quota of N requests per window, resetting after the window expires.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class RateLimiter {\n\n    private final int maxRequests;\n    private final long windowMs;\n\n    // clientId -> [requestCount, windowStartMs]\n    private final Map<String, long[]> clientState = new HashMap<>();\n\n    public RateLimiter(int maxRequests, long windowMs) {\n        this.maxRequests = maxRequests;\n        this.windowMs = windowMs;\n    }\n\n    public boolean allowRequest(String clientId, long currentTimeMs) {\n        // Check if the client is within their rate limit for the current window\n        // Returns true if allowed, false if limit exceeded\n        return false;\n    }\n\n    public int remainingQuota(String clientId, long currentTimeMs) {\n        // Return the number of remaining requests in client's current window\n        return maxRequests;\n    }\n\n    public static void main(String[] args) {\n        RateLimiter limiter = new RateLimiter(3, 60_000L); // 3 req per minute\n\n        long t = 0L;\n        System.out.println(limiter.allowRequest(\"client-1\", t));      // true\n        System.out.println(limiter.allowRequest(\"client-1\", t));      // true\n        System.out.println(limiter.allowRequest(\"client-1\", t));      // true\n        System.out.println(limiter.allowRequest(\"client-1\", t));      // false (limit exceeded)\n        System.out.println(limiter.allowRequest(\"client-1\", t + 61_000L)); // true (new window)\n    }\n}",
+      "instructions": [
+        "clientState stores [requestCount, windowStartMs] for each client",
+        "allowRequest() fetches or initializes the client's state",
+        "If currentTimeMs >= windowStartMs + windowMs, reset the window: set requestCount=0 and windowStartMs=currentTimeMs",
+        "If requestCount < maxRequests, increment it and return true; otherwise return false",
+        "remainingQuota() returns maxRequests - requestCount after applying any window reset"
+      ],
+      "hint": "Use clientState.computeIfAbsent(clientId, k -> new long[]{0, currentTimeMs}) to initialize. After the window check and possible reset, test requestCount < maxRequests before incrementing.",
+      "expectedOutput": "true\ntrue\ntrue\nfalse\ntrue"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 110,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Request Aggregator Gateway Pattern",
+    "description": {
+      "task": "Implement an AggregatorGateway class that implements the API Composition (Aggregator) pattern. When a client makes a single request, the gateway fetches data from multiple downstream services and merges the results into one response.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.function.Supplier;\n\npublic class AggregatorGateway {\n\n    public record ServiceCall(String key, Supplier<Map<String, Object>> fetcher) {}\n\n    private final List<ServiceCall> registeredCalls = new ArrayList<>();\n\n    public void registerCall(String key, Supplier<Map<String, Object>> fetcher) {\n        registeredCalls.add(new ServiceCall(key, fetcher));\n    }\n\n    public Map<String, Object> aggregate() {\n        // Execute all registered service calls and merge results\n        // Each call's results are stored under its 'key' in the response\n        return new LinkedHashMap<>();\n    }\n\n    public static void main(String[] args) {\n        AggregatorGateway gateway = new AggregatorGateway();\n\n        gateway.registerCall(\"user\", () -> Map.of(\"name\", \"Alice\", \"email\", \"alice@example.com\"));\n        gateway.registerCall(\"orders\", () -> Map.of(\"count\", 5, \"total\", 250.00));\n        gateway.registerCall(\"loyalty\", () -> Map.of(\"points\", 1200));\n\n        Map<String, Object> response = gateway.aggregate();\n        System.out.println(\"Keys: \" + response.keySet());\n        System.out.println(\"User name: \" + ((Map<?,?>) response.get(\"user\")).get(\"name\"));\n        System.out.println(\"Order count: \" + ((Map<?,?>) response.get(\"orders\")).get(\"count\"));\n    }\n}",
+      "instructions": [
+        "registerCall() appends a ServiceCall (key + fetcher supplier) to registeredCalls",
+        "aggregate() iterates over all registered calls and invokes each fetcher",
+        "Each call's returned map is placed into the result under its key",
+        "The aggregate result uses LinkedHashMap to preserve registration order",
+        "aggregate() should not throw exceptions from individual fetchers — wrap in try-catch and use an empty map for failed calls"
+      ],
+      "hint": "In aggregate(), for each call, do result.put(call.key(), call.fetcher().get()). Wrap in try-catch and put an empty Map.of() on failure. Use LinkedHashMap to preserve insertion order.",
+      "expectedOutput": "Keys: [user, orders, loyalty]\nUser name: Alice\nOrder count: 5"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 110,
+    "allowedSubmissionType": "TEXT"
+  }
+]

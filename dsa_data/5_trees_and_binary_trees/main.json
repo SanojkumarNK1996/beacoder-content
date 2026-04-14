@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 147, "title": "Introduction to Trees", "dataType": "notes", "data": "intro_to_trees.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 148, "title": "Binary Trees", "dataType": "notes", "data": "binary_trees.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 149, "title": "Tree Traversals", "dataType": "notes", "data": "tree_traversals.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 150, "title": "Binary Search Trees (BST)", "dataType": "notes", "data": "binary_search_trees.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 151, "title": "Balanced Trees", "dataType": "notes", "data": "balanced_trees.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 152, "title": "Tree Applications", "dataType": "notes", "data": "tree_applications.html", "displayOrder": 6, "verified": false}
+]

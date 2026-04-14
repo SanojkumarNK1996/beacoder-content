@@ -1,0 +1,78 @@
+[
+  {
+    "title": "B-tree Index on High-Cardinality Column",
+    "description": {
+      "task": "Create a B-tree index on a high-cardinality column and verify it is used by the query planner with EXPLAIN.",
+      "language": "sql",
+      "context": "B-tree is the default index type in PostgreSQL. It stores values in a sorted tree structure, enabling O(log n) lookups for equality and range queries.",
+      "starterCode": "CREATE TABLE transactions (\n  txn_id       SERIAL PRIMARY KEY,\n  account_id   INT,\n  txn_date     DATE,\n  amount       DECIMAL(10,2),\n  txn_type     VARCHAR(20),\n  description  VARCHAR(200)\n);\n\nINSERT INTO transactions (account_id, txn_date, amount, txn_type, description)\nSELECT\n  (random() * 1000 + 1)::INT,\n  '2025-01-01'::DATE + (random() * 365)::INT,\n  (random() * 10000)::DECIMAL(10,2),\n  CASE WHEN random() < 0.5 THEN 'credit' ELSE 'debit' END,\n  'Transaction description ' || generate_series\nFROM generate_series(1, 1000);\n\n-- Without index: query must scan all 1000 rows\nEXPLAIN SELECT * FROM transactions WHERE account_id = 42;\n\n-- Create B-tree index on account_id\nCREATE INDEX idx_txn_account ON transactions(account_id);\n\n-- With index: should show Index Scan or Bitmap Index Scan\nEXPLAIN SELECT * FROM transactions WHERE account_id = 42;\n\n-- Range query with date index\nCREATE INDEX idx_txn_date ON transactions(txn_date);\nEXPLAIN SELECT * FROM transactions WHERE txn_date BETWEEN '2025-06-01' AND '2025-08-31';\n",
+      "instructions": [
+        "Run the CREATE TABLE and INSERT to generate 1000 rows.",
+        "Run the first EXPLAIN — note 'Seq Scan' (sequential scan).",
+        "Create the account index.",
+        "Re-run the same EXPLAIN — should now show 'Index Scan' on idx_txn_account.",
+        "Create the date index and run the date range EXPLAIN.",
+        "Add a comment explaining: what information does EXPLAIN ANALYZE provide beyond EXPLAIN?"
+      ],
+      "hint": "EXPLAIN shows the plan. EXPLAIN ANALYZE actually executes the query and shows real timing. This is more useful for performance tuning but should not be run with UPDATE/DELETE without wrapping in a transaction that you ROLLBACK.",
+      "expectedOutput": "Before index: Seq Scan on transactions\nAfter index: Index Scan using idx_txn_account\nDate range: Bitmap Index Scan on idx_txn_date"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 60,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Partial and Expression Indexes",
+    "description": {
+      "task": "Create a partial index (only indexes a subset of rows) and an expression index (indexes the result of a function).",
+      "language": "sql",
+      "context": "Partial indexes only index rows matching a WHERE condition. Expression indexes store the result of a function. Both reduce index size and improve performance for specific query patterns.",
+      "starterCode": "CREATE TABLE orders (\n  order_id   INT PRIMARY KEY,\n  customer   VARCHAR(50),\n  status     VARCHAR(20),\n  total      DECIMAL(8,2),\n  email      VARCHAR(80),\n  order_date DATE\n);\n\nINSERT INTO orders VALUES\n  (1, 'Alice', 'pending',   150.00, 'alice@mail.com',  '2026-01-05'),\n  (2, 'Bob',   'completed', 200.00, 'BOB@MAIL.COM',    '2026-01-06'),\n  (3, 'Carol', 'pending',   300.00, 'carol@mail.com',  '2026-01-07'),\n  (4, 'Dave',  'cancelled',  80.00, 'Dave@Mail.Com',   '2026-01-08'),\n  (5, 'Eve',   'pending',   120.00, 'eve@mail.com',    '2026-01-09'),\n  (6, 'Frank', 'completed', 450.00, 'frank@MAIL.com',  '2026-01-10'),\n  (7, 'Grace', 'pending',   220.00, 'grace@mail.com',  '2026-01-11'),\n  (8, 'Henry', 'completed', 380.00, 'henry@mail.com',  '2026-01-12');\n\n-- Partial index: only index PENDING orders (frequently queried)\nCREATE INDEX idx_pending_orders ON orders(order_date)\nWHERE status = 'pending';\n\n-- Expression index: case-insensitive email lookup\nCREATE INDEX idx_email_lower ON orders(LOWER(email));\n\n-- Query using the partial index (only scans pending rows)\nSELECT order_id, customer, total FROM orders\nWHERE status = 'pending' AND order_date >= '2026-01-06'\nORDER BY order_date;\n\n-- Query using the expression index (case-insensitive)\nSELECT order_id, customer, email FROM orders\nWHERE LOWER(email) = 'bob@mail.com';\n",
+      "instructions": [
+        "Run all CREATE TABLE, INSERT, and CREATE INDEX statements.",
+        "Run both queries.",
+        "Partial index query: should return Carol, Eve, Grace (pending, after Jan 6).",
+        "Expression index query: finds Bob regardless of his ALL-CAPS email.",
+        "Add a comment: how much smaller is idx_pending_orders compared to a full index on order_date?"
+      ],
+      "hint": "The partial index only indexes 4 'pending' rows out of 8. A full index would store 8 entries. Partial indexes are ideal for status columns where only one or two values are frequently queried (active, pending).",
+      "expectedOutput": "Pending after Jan 6: Carol(300), Eve(120), Grace(220)\nCase-insensitive email: finds Bob(BOB@MAIL.COM)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 60,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Index Maintenance",
+    "description": {
+      "task": "List all indexes on a table, understand when to rebuild them, and practice dropping unused indexes.",
+      "language": "sql",
+      "context": "Indexes can become bloated over time (due to UPDATEs and DELETEs) or become unused. Regular maintenance — including identifying unused indexes — is an important DBA task.",
+      "starterCode": "CREATE TABLE products (\n  product_id SERIAL PRIMARY KEY,\n  sku        VARCHAR(20) UNIQUE,\n  name       VARCHAR(100),\n  category   VARCHAR(40),\n  price      DECIMAL(8,2),\n  stock      INT\n);\n\nINSERT INTO products (sku, name, category, price, stock) VALUES\n  ('LAP001','Gaming Laptop','Electronics',999.99,50),\n  ('MSE001','Wireless Mouse','Electronics',19.99,200),\n  ('KBD001','Mechanical Keyboard','Electronics',59.99,120),\n  ('DSK001','Office Desk','Furniture',250.00,30),\n  ('CHR001','Office Chair','Furniture',175.00,15);\n\n-- Create multiple indexes\nCREATE INDEX idx_products_category ON products(category);\nCREATE INDEX idx_products_price    ON products(price);\nCREATE INDEX idx_products_name     ON products(name);\n\n-- List all indexes on this table\nSELECT indexname, indexdef\nFROM pg_indexes\nWHERE tablename = 'products'\nORDER BY indexname;\n\n-- Check index sizes (PostgreSQL)\nSELECT\n  indexname,\n  pg_size_pretty(pg_relation_size(indexname::regclass)) AS index_size\nFROM pg_indexes\nWHERE tablename = 'products'\nORDER BY pg_relation_size(indexname::regclass) DESC;\n\n-- Drop an unused index safely\nDROP INDEX IF EXISTS idx_products_name;\n\n-- Verify it's removed\nSELECT indexname FROM pg_indexes WHERE tablename = 'products' ORDER BY indexname;\n",
+      "instructions": [
+        "Run all CREATE TABLE, INSERT, CREATE INDEX statements.",
+        "Run the pg_indexes list query — should show 4+ indexes (primary, unique, 3 custom).",
+        "Run the index size query.",
+        "Run DROP INDEX and verify the remaining indexes.",
+        "Add a comment: what PostgreSQL view or extension can you use to find indexes that haven't been used in queries?"
+      ],
+      "hint": "pg_stat_user_indexes tracks idx_scan (number of times each index has been used). An index with idx_scan=0 after weeks of production traffic is a candidate for removal.",
+      "expectedOutput": "Index list: 5+ indexes initially\nAfter DROP: idx_products_name removed\n4 indexes remain"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 60,
+    "allowedSubmissionType": "TEXT"
+  }
+]

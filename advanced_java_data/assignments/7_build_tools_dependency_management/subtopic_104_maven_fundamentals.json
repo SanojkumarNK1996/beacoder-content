@@ -1,0 +1,74 @@
+[
+  {
+    "title": "POM File Dependency Parser",
+    "description": {
+      "task": "Implement a PomDependencyParser class that parses a simplified POM-like structure (represented as a list of strings in 'groupId:artifactId:version:scope' format) and provides query methods to filter by scope and detect duplicate groupId:artifactId pairs.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class PomDependencyParser {\n\n    public record Dependency(String groupId, String artifactId, String version, String scope) {}\n\n    private final List<Dependency> dependencies = new ArrayList<>();\n\n    public void addDependency(String gav) {\n        // Parse 'groupId:artifactId:version:scope' and add to dependencies\n    }\n\n    public List<Dependency> getByScope(String scope) {\n        // Return all dependencies matching the given scope\n        return new ArrayList<>();\n    }\n\n    public List<String> findDuplicates() {\n        // Return list of 'groupId:artifactId' strings that appear more than once\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        PomDependencyParser parser = new PomDependencyParser();\n        parser.addDependency(\"org.springframework:spring-core:6.0.0:compile\");\n        parser.addDependency(\"junit:junit:4.13:test\");\n        parser.addDependency(\"org.springframework:spring-core:5.3.0:compile\");\n        parser.addDependency(\"com.google.guava:guava:31.0:compile\");\n\n        List<Dependency> compileDeps = parser.getByScope(\"compile\");\n        System.out.println(\"Compile count: \" + compileDeps.size());\n        System.out.println(\"Duplicates: \" + parser.findDuplicates());\n    }\n}",
+      "instructions": [
+        "addDependency() splits the input string on ':' into exactly 4 parts",
+        "getByScope() filters dependencies list by matching scope field (case-sensitive)",
+        "findDuplicates() returns a list of 'groupId:artifactId' strings that appear more than once across all added dependencies",
+        "The returned duplicates list should not itself contain duplicates",
+        "addDependency() should handle malformed strings gracefully (skip them)"
+      ],
+      "hint": "For findDuplicates(), use a Map<String, Long> with stream groupingBy and counting, then filter entries where count > 1.",
+      "expectedOutput": "Compile count: 3\nDuplicates: [org.springframework:spring-core]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 104,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Maven Build Lifecycle Runner",
+    "description": {
+      "task": "Create a MavenBuildRunner class that models Maven's default build phases (validate, compile, test, package, verify, install, deploy) with configurable plugin goals attached to specific phases. When a phase runs, all goals bound to that phase should execute in order.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MavenBuildRunner {\n\n    private final Map<String, List<String>> phaseGoals = new LinkedHashMap<>();\n    private final List<String> executionLog = new ArrayList<>();\n\n    private static final List<String> LIFECYCLE = List.of(\n        \"validate\", \"compile\", \"test\", \"package\", \"verify\", \"install\", \"deploy\"\n    );\n\n    public void bindGoal(String phase, String goal) {\n        // Bind a goal string to a phase\n    }\n\n    public List<String> execute(String targetPhase) {\n        // Execute all phases up to and including targetPhase\n        // For each phase, execute bound goals in bind order\n        // Return the full execution log\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        MavenBuildRunner runner = new MavenBuildRunner();\n        runner.bindGoal(\"compile\", \"compiler:compile\");\n        runner.bindGoal(\"test\", \"surefire:test\");\n        runner.bindGoal(\"package\", \"jar:jar\");\n\n        List<String> log = runner.execute(\"package\");\n        log.forEach(System.out::println);\n    }\n}",
+      "instructions": [
+        "bindGoal() appends the goal to the list for the given phase (creating the list if absent)",
+        "execute() runs phases from 'validate' through targetPhase in LIFECYCLE order",
+        "For each phase, executionLog should record '[phase] Running: [goal]' for each bound goal",
+        "Phases with no bound goals are silently skipped (nothing logged)",
+        "If targetPhase is invalid (not in LIFECYCLE), return an empty list"
+      ],
+      "hint": "Use phaseGoals.getOrDefault(phase, List.of()) to safely get goals. Format the log entry as phase + \" Running: \" + goal.",
+      "expectedOutput": "compile Running: compiler:compile\ntest Running: surefire:test\npackage Running: jar:jar"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 104,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Dependency Scope Resolver",
+    "description": {
+      "task": "Implement a DependencyScopeResolver that determines the effective classpath for different Maven scopes. Given a list of dependencies (each with a scope), return only those that should appear on the compile, test, or runtime classpath respectively.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class DependencyScopeResolver {\n\n    public enum Scope { COMPILE, TEST, RUNTIME, PROVIDED }\n\n    public record Dep(String name, Scope scope) {}\n\n    public List<String> compileClasspath(List<Dep> deps) {\n        // Return names of deps on compile classpath: COMPILE and PROVIDED\n        return new ArrayList<>();\n    }\n\n    public List<String> testClasspath(List<Dep> deps) {\n        // Return names of deps on test classpath: COMPILE, TEST, RUNTIME, PROVIDED\n        return new ArrayList<>();\n    }\n\n    public List<String> runtimeClasspath(List<Dep> deps) {\n        // Return names of deps on runtime classpath: COMPILE and RUNTIME\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        DependencyScopeResolver resolver = new DependencyScopeResolver();\n        List<Dep> deps = List.of(\n            new Dep(\"spring-core\", Scope.COMPILE),\n            new Dep(\"junit\", Scope.TEST),\n            new Dep(\"logback\", Scope.RUNTIME),\n            new Dep(\"servlet-api\", Scope.PROVIDED)\n        );\n        System.out.println(\"Compile: \" + resolver.compileClasspath(deps));\n        System.out.println(\"Test: \" + resolver.testClasspath(deps));\n        System.out.println(\"Runtime: \" + resolver.runtimeClasspath(deps));\n    }\n}",
+      "instructions": [
+        "compileClasspath() includes COMPILE and PROVIDED scopes",
+        "testClasspath() includes COMPILE, TEST, RUNTIME, and PROVIDED scopes",
+        "runtimeClasspath() includes COMPILE and RUNTIME scopes (not PROVIDED — container provides it at runtime)",
+        "Each method returns the dep names (not Dep objects) as a list",
+        "Maintain the original order from the input list"
+      ],
+      "hint": "Use stream filter with Set.of(Scope.COMPILE, Scope.PROVIDED) for compile classpath. Use EnumSet for efficient scope membership checks.",
+      "expectedOutput": "Compile: [spring-core, servlet-api]\nTest: [spring-core, junit, logback, servlet-api]\nRuntime: [spring-core, logback]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 104,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,38 @@
+<h1>🔤 String Manipulation</h1>
+
+<h2>🎯 Strings in Java</h2>
+<p>In Java, <code>String</code> is an <strong>immutable</strong> sequence of characters.</p>
+
+<div class="code-example">
+  <pre>
+String s = "Hello, World!";
+System.out.println(s.length());           // 13
+System.out.println(s.charAt(7));          // W
+System.out.println(s.substring(7, 12));   // World
+System.out.println(s.toLowerCase());      // hello, world!
+System.out.println(s.contains("World"));  // true
+System.out.println(s.replace("World", "Java")); // Hello, Java!
+  </pre>
+</div>
+
+<h2>🏗️ StringBuilder (Mutable)</h2>
+<div class="code-example">
+  <pre>
+StringBuilder sb = new StringBuilder();
+sb.append("Hello");
+sb.append(", ");
+sb.append("World!");
+System.out.println(sb.toString()); // Hello, World!
+  </pre>
+</div>
+
+<h2>📌 Common Pattern: Reverse a String</h2>
+<div class="code-example">
+  <pre>
+String reversed = new StringBuilder("hello").reverse().toString();
+System.out.println(reversed); // olleh
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<p>Use <code>String</code> for immutable values, <code>StringBuilder</code> when building strings in loops to avoid O(n²) concatenation overhead.</p>

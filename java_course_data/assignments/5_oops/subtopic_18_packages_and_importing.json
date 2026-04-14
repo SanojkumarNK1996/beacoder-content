@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Using java.lang.Math",
+    "description": {
+      "task": "Write a Java program that uses at least 5 methods from the java.lang.Math class and prints a formatted result for each.",
+      "language": "java",
+      "starterCode": "// java.lang is imported automatically — no import needed\npublic class MathPackage {\n    public static void main(String[] args) {\n        // Use 5 Math methods and print the results\n        // Examples: Math.abs(), Math.pow(), Math.sqrt(), Math.max(), Math.round()\n    }\n}",
+      "instructions": [
+        "Use Math.abs(-15) and print 'Absolute value of -15: 15'.",
+        "Use Math.pow(2, 8) and print 'Power 2^8: 256.0'.",
+        "Use Math.sqrt(144) and print 'Square root of 144: 12.0'.",
+        "Use Math.max(34, 67) and print 'Max of 34 and 67: 67'.",
+        "Use Math.round(9.7) and print 'Round 9.7: 10'."
+      ],
+      "hint": "java.lang is the default package and is always imported. Math.pow returns double; Math.round returns long.",
+      "expectedOutput": "Absolute value of -15: 15\nPower 2^8: 256.0\nSquare root of 144: 12.0\nMax of 34 and 67: 67\nRound 9.7: 10"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 18,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Import java.util.Scanner",
+    "description": {
+      "task": "Write a Java program that imports java.util.Scanner to read a user's name and age from the console, then prints a greeting.",
+      "language": "java",
+      "context": "The java.util package must be explicitly imported. Scanner lets you read user input from System.in.",
+      "starterCode": "// Import Scanner here\n\npublic class ScannerDemo {\n    public static void main(String[] args) {\n        // Create a Scanner object reading from System.in\n        // Read a String for name\n        // Read an int for age\n        // Print: \"Hello, <name>! You are <age> years old.\"\n        // Close the Scanner\n    }\n}",
+      "instructions": [
+        "Add the import statement: import java.util.Scanner;",
+        "Create Scanner sc = new Scanner(System.in);",
+        "Use sc.next() or sc.nextLine() to read the name.",
+        "Use sc.nextInt() to read the age.",
+        "Print the greeting in the exact format: 'Hello, Alice! You are 22 years old.'",
+        "Call sc.close() at the end."
+      ],
+      "hint": "If using nextLine() after nextInt(), you may need an extra sc.nextLine() call to consume the leftover newline. Test with input: Alice and 22.",
+      "expectedOutput": "Hello, Alice! You are 22 years old."
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 18,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Custom Package Structure",
+    "description": {
+      "task": "Demonstrate the concept of packages by creating a class inside a named package and using it from a main class with an import statement.",
+      "language": "java",
+      "context": "Packages organise classes into namespaces and prevent naming conflicts. The package declaration must be the first statement in a Java source file.",
+      "starterCode": "// File 1: com/utils/Greeter.java\n// package com.utils;\n// public class Greeter {\n//     public static String greet(String name) {\n//         return \"Hello, \" + name + \"! Welcome to Java packages.\";\n//     }\n// }\n\n// File 2: Main.java (default package)\n// import com.utils.Greeter;\n// public class Main {\n//     public static void main(String[] args) {\n//         System.out.println(Greeter.greet(\"Learner\"));\n//         System.out.println(Greeter.greet(\"Java Dev\"));\n//     }\n// }\n\n// For submission: write both classes in one file using a static nested approach\npublic class PackageDemo {\n    static class Greeter {\n        public static String greet(String name) {\n            return \"Hello, \" + name + \"! Welcome to Java packages.\";\n        }\n    }\n\n    public static void main(String[] args) {\n        System.out.println(Greeter.greet(\"Learner\"));\n        System.out.println(Greeter.greet(\"Java Dev\"));\n    }\n}",
+      "instructions": [
+        "Run the starter code and observe the output.",
+        "In a comment block, explain: what a package declaration looks like, what the import statement format is, and why packages are useful.",
+        "Submit the code with the explanation comment."
+      ],
+      "hint": "A package declaration is: package com.myapp.utils; placed before any class definition. The import statement is: import com.myapp.utils.ClassName;",
+      "expectedOutput": "Hello, Learner! Welcome to Java packages.\nHello, Java Dev! Welcome to Java packages."
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 18,
+    "allowedSubmissionType": "TEXT"
+  }
+]

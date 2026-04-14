@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Infix to Postfix Conversion",
+    "description": {
+      "task": "Implement an InfixToPostfix class that converts an infix expression to postfix (Reverse Polish Notation) using a stack. Handle operators +, -, *, / with standard precedence (* and / higher than + and -).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class InfixToPostfix {\n\n    private int precedence(char op) {\n        if (op == '*' || op == '/') return 2;\n        if (op == '+' || op == '-') return 1;\n        return 0;\n    }\n\n    public String convert(String infix) {\n        Deque<Character> stack = new ArrayDeque<>();\n        StringBuilder result = new StringBuilder();\n        for (char c : infix.toCharArray()) {\n            if (Character.isLetterOrDigit(c)) {\n                result.append(c);\n            } else if (c == '(') {\n                stack.push(c);\n            } else if (c == ')') {\n                // TODO: pop until '(' found, append to result\n            } else {\n                // TODO: while stack not empty and top has >= precedence, pop and append\n                // then push current operator\n            }\n        }\n        // TODO: pop remaining operators\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        InfixToPostfix itop = new InfixToPostfix();\n        System.out.println(itop.convert(\"A+B*C\"));\n        System.out.println(itop.convert(\"(A+B)*C\"));\n        System.out.println(itop.convert(\"A+B*C-D/E\"));\n    }\n}",
+      "instructions": [
+        "On ')': while stack.peek()!='(' append stack.pop() to result; then pop the '(' (discard it)",
+        "On operator: while stack is not empty && stack.peek()!='(' && precedence(stack.peek())>=precedence(c): pop and append to result; push c",
+        "After the main loop: pop all remaining operators from stack and append to result",
+        "A+B*C → ABC*+ (B*C has higher precedence, evaluated first)",
+        "(A+B)*C → AB+C*"
+      ],
+      "hint": "operator case: while(!stack.isEmpty()&&stack.peek()!='('&&precedence(stack.peek())>=precedence(c)) result.append(stack.pop()); stack.push(c); After loop: while(!stack.isEmpty()) result.append(stack.pop());",
+      "expectedOutput": "ABC*+\nAB+C*\nABC*+DE/-"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 143,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Postfix Expression Evaluator",
+    "description": {
+      "task": "Implement a PostfixEvaluator class that evaluates a postfix (RPN) expression given as a space-separated string. Operands are pushed onto a stack; operators pop two operands, compute, and push the result.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class PostfixEvaluator {\n\n    public int evaluate(String postfix) {\n        Deque<Integer> stack = new ArrayDeque<>();\n        String[] tokens = postfix.split(\" \");\n        for (String token : tokens) {\n            if (token.matches(\"-?\\\\d+\")) {\n                stack.push(Integer.parseInt(token));\n            } else {\n                // TODO: pop two operands b and a, apply operator, push result\n                // operators: +, -, *, /\n            }\n        }\n        return stack.pop();\n    }\n\n    public static void main(String[] args) {\n        PostfixEvaluator pe = new PostfixEvaluator();\n        System.out.println(pe.evaluate(\"3 4 +\"));\n        System.out.println(pe.evaluate(\"5 1 2 + 4 * + 3 -\"));\n        System.out.println(pe.evaluate(\"2 3 1 * + 9 -\"));\n    }\n}",
+      "instructions": [
+        "When token is an operator: int b=stack.pop(), a=stack.pop(); compute a op b; push result",
+        "Note the order: first popped is the right operand (b), second popped is the left operand (a)",
+        "Support +, -, *, / (integer division)",
+        "'3 4 +' = 7; '5 1 2 + 4 * + 3 -' = 14; '2 3 1 * + 9 -' = -4",
+        "The regex '-?\\\\d+' matches both positive and negative integers"
+      ],
+      "hint": "int b=stack.pop(),a=stack.pop(); switch(token){case'+':stack.push(a+b);break;case'-':stack.push(a-b);break;case'*':stack.push(a*b);break;case'/':stack.push(a/b);break;}",
+      "expectedOutput": "7\n14\n-4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 143,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Backtracking: Maze Solver with Stack",
+    "description": {
+      "task": "Implement a MazeSolver class that uses an explicit stack (not recursion) to find a path from start (0,0) to end (n-1,n-1) in a 2D grid. 0=open, 1=wall. Track the path using a stack of int[] {row, col}.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MazeSolver {\n\n    private int[][] maze;\n    private int n;\n\n    public MazeSolver(int[][] maze) {\n        this.maze = maze;\n        this.n = maze.length;\n    }\n\n    public List<int[]> solve() {\n        boolean[][] visited = new boolean[n][n];\n        Deque<int[]> stack = new ArrayDeque<>();\n        Deque<List<int[]>> pathStack = new ArrayDeque<>();\n\n        stack.push(new int[]{0, 0});\n        pathStack.push(new ArrayList<>(List.of(new int[]{0, 0})));\n        visited[0][0] = true;\n\n        int[][] dirs = {{0,1},{1,0},{0,-1},{-1,0}};\n\n        while (!stack.isEmpty()) {\n            int[] curr = stack.pop();\n            List<int[]> path = pathStack.pop();\n\n            if (curr[0] == n-1 && curr[1] == n-1) return path;\n\n            // TODO: for each direction, if in bounds, not wall, not visited:\n            //       mark visited, push neighbor, push path + neighbor\n        }\n        return new ArrayList<>(); // no path\n    }\n\n    public static void main(String[] args) {\n        int[][] maze = {\n            {0, 0, 1, 0},\n            {1, 0, 0, 0},\n            {1, 1, 0, 1},\n            {0, 0, 0, 0}\n        };\n        MazeSolver ms = new MazeSolver(maze);\n        List<int[]> path = ms.solve();\n        System.out.println(\"Path length: \" + path.size());\n        for (int[] step : path) System.out.println(\"(\" + step[0] + \",\" + step[1] + \")\");\n    }\n}",
+      "instructions": [
+        "For each direction (right, down, left, up), compute nr=curr[0]+dir[0], nc=curr[1]+dir[1]",
+        "Check: 0<=nr<n, 0<=nc<n, maze[nr][nc]==0, !visited[nr][nc]",
+        "If valid: visited[nr][nc]=true; stack.push({nr,nc}); create newPath=new ArrayList<>(path); newPath.add({nr,nc}); pathStack.push(newPath)",
+        "The maze leads from (0,0) to (3,3) through a valid 7-step path",
+        "Return the first path found"
+      ],
+      "hint": "for(int[] d:dirs){int nr=curr[0]+d[0],nc=curr[1]+d[1]; if(nr>=0&&nr<n&&nc>=0&&nc<n&&maze[nr][nc]==0&&!visited[nr][nc]){visited[nr][nc]=true; stack.push(new int[]{nr,nc}); List<int[]> np=new ArrayList<>(path); np.add(new int[]{nr,nc}); pathStack.push(np);}}",
+      "expectedOutput": "Path length: 7\n(0,0)\n(0,1)\n(1,1)\n(1,2)\n(1,3)\n(2,2)\n(3,2)\n(3,3)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 143,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,25 @@
+<h1>🔀 Subnets, Route Tables, and Internet Gateway</h1>
+<h2>📌 Public vs Private Subnets</h2>
+<ul>
+  <li><strong>Public Subnet</strong>: Has a route to the Internet Gateway. Resources can have public IPs. (Web servers, bastion hosts)</li>
+  <li><strong>Private Subnet</strong>: No direct internet route. (Databases, app servers) — outbound internet via NAT Gateway</li>
+</ul>
+<h2>🗺️ Route Tables</h2>
+<p>Each subnet is associated with a route table. Rules determine where traffic goes.</p>
+<div class="code-example">
+  <pre>
+Public Route Table routes:
+  10.0.0.0/16  →  local (within VPC)
+  0.0.0.0/0    →  igw-xxxxx (Internet Gateway)
+
+Private Route Table routes:
+  10.0.0.0/16  →  local
+  0.0.0.0/0    →  nat-xxxxx (NAT Gateway)
+  </pre>
+</div>
+<h2>🌐 Internet Gateway (IGW)</h2>
+<p>Allows VPC resources to communicate with the internet. Attach one IGW per VPC.</p>
+<h2>🔒 NAT Gateway</h2>
+<p>Allows private subnet resources to initiate outbound internet traffic (e.g., download updates) without being reachable from the internet. Deployed in a public subnet.</p>
+<h2>🎯 Summary</h2>
+<p>Standard pattern: public subnets for load balancers, private subnets for app servers and databases. NAT Gateway for private subnet outbound access.</p>

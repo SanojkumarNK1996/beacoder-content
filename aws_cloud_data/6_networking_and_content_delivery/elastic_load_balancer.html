@@ -1,0 +1,18 @@
+<h1>⚖️ Elastic Load Balancer</h1>
+<h2>🎯 What is ELB?</h2>
+<p><strong>Elastic Load Balancing (ELB)</strong> automatically distributes incoming application traffic across multiple targets (EC2 instances, containers, IPs, Lambda) in one or more AZs.</p>
+<h2>📋 ELB Types</h2>
+<ul>
+  <li><strong>ALB (Application Load Balancer)</strong>: Layer 7 (HTTP/HTTPS). Path-based and host-based routing. Best for microservices and web apps.</li>
+  <li><strong>NLB (Network Load Balancer)</strong>: Layer 4 (TCP/UDP/TLS). Ultra-low latency, millions of RPS. Best for real-time apps, WebSockets, VoIP.</li>
+  <li><strong>GLB (Gateway Load Balancer)</strong>: Deploy third-party virtual network appliances (firewalls, IDS/IPS).</li>
+</ul>
+<h2>🔧 Key Features</h2>
+<ul>
+  <li>Health checks on targets</li>
+  <li>SSL/TLS termination</li>
+  <li>Stickiness (session affinity)</li>
+  <li>Cross-zone load balancing</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Use ALB for HTTP/HTTPS web apps. Use NLB when you need extreme performance or non-HTTP protocols. Always use ELB with Auto Scaling for elastic, HA architectures.</p>

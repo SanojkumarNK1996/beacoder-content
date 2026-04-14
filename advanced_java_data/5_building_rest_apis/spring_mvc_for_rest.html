@@ -1,0 +1,228 @@
+<h1>🌱 Spring MVC for REST</h1>
+
+<h2>🎯 Goal</h2>
+<p>Learn how to use <strong>Spring MVC</strong> to build RESTful APIs with controllers, mappings, and JSON responses.</p>
+
+<h2>🏗️ Spring Web Stack Overview</h2>
+
+<ul>
+  <li>🌐 <strong>DispatcherServlet</strong> – Front controller that receives all HTTP requests</li>
+  <li>🧭 <strong>Handler Mapping</strong> – Finds the right controller method</li>
+  <li>🧱 <strong>Controller</strong> – Your code that handles the request</li>
+  <li>📦 <strong>Message Converters</strong> – Convert Java objects ↔ JSON</li>
+</ul>
+
+<div class="diagram">
+  <pre>
+Client  --&gt;  DispatcherServlet  --&gt;  Controller  --&gt;  Service  --&gt;  Repository
+          &lt;-- JSON Response  &lt;--  MessageConverter
+  </pre>
+</div>
+
+<h2>🔧 Basic REST Controller</h2>
+
+<div class="code-example">
+  <pre>
+@RestController
+@RequestMapping("/api/hello")
+public class HelloController {
+
+    @GetMapping
+    public String sayHello() {
+        return "Hello, REST!";
+    }
+}
+  </pre>
+</div>
+
+<ul>
+  <li><code>@RestController</code> = <code>@Controller</code> + <code>@ResponseBody</code> (return values written directly as HTTP response)</li>
+  <li><code>@RequestMapping("/api/hello")</code> – base path</li>
+  <li><code>@GetMapping</code> – handles GET requests</li>
+</ul>
+
+<h2>📚 Example: Book REST Controller</h2>
+
+<h3>1️⃣ Model</h3>
+<div class="code-example">
+  <pre>
+public class Book {
+    private Long id;
+    private String title;
+    private String author;
+
+    // getters and setters
+}
+  </pre>
+</div>
+
+<h3>2️⃣ Service</h3>
+<div class="code-example">
+  <pre>
+@Service
+public class BookService {
+
+    private final Map&lt;Long, Book&gt; books = new HashMap&lt;&gt;();
+    private long nextId = 1L;
+
+    public List&lt;Book&gt; findAll() {
+        return new ArrayList&lt;&gt;(books.values());
+    }
+
+    public Optional&lt;Book&gt; findById(Long id) {
+        return Optional.ofNullable(books.get(id));
+    }
+
+    public Book create(Book book) {
+        book.setId(nextId++);
+        books.put(book.getId(), book);
+        return book;
+    }
+
+    public Optional&lt;Book&gt; update(Long id, Book updated) {
+        if (!books.containsKey(id)) {
+            return Optional.empty();
+        }
+        updated.setId(id);
+        books.put(id, updated);
+        return Optional.of(updated);
+    }
+
+    public boolean delete(Long id) {
+        return books.remove(id) != null;
+    }
+}
+  </pre>
+</div>
+
+<h3>3️⃣ REST Controller</h3>
+
+<div class="code-example">
+  <pre>
+@RestController
+@RequestMapping("/api/books")
+public class BookController {
+
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    // GET /api/books
+    @GetMapping
+    public List&lt;Book&gt; getAllBooks() {
+        return bookService.findAll();
+    }
+
+    // GET /api/books/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;Book&gt; getBookById(@PathVariable Long id) {
+        return bookService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // POST /api/books
+    @PostMapping
+    public ResponseEntity&lt;Book&gt; createBook(@RequestBody Book book) {
+        Book created = bookService.create(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    // PUT /api/books/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity&lt;Book&gt; updateBook(@PathVariable Long id, @RequestBody Book book) {
+        return bookService.update(id, book)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // DELETE /api/books/{id}
+    @DeleteMapping("/{id}")
+    public ResponseEntity&lt;Void&gt; deleteBook(@PathVariable Long id) {
+        boolean deleted = bookService.delete(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+}
+  </pre>
+</div>
+
+<h2>🔑 Common Spring MVC Annotations for REST</h2>
+
+<ul>
+  <li><code>@RestController</code> – Marks class as REST controller</li>
+  <li><code>@RequestMapping</code> – Base path and method mapping</li>
+  <li><code>@GetMapping</code>, <code>@PostMapping</code>, <code>@PutMapping</code>, <code>@DeleteMapping</code>, <code>@PatchMapping</code></li>
+  <li><code>@PathVariable</code> – Extracts value from URL path</li>
+  <li><code>@RequestParam</code> – Extracts query parameter</li>
+  <li><code>@RequestBody</code> – Binds request JSON body to Java object</li>
+  <li><code>@ResponseStatus</code> – Sets HTTP status on response</li>
+</ul>
+
+<h2>📨 Example: Path Variables and Request Params</h2>
+
+<div class="code-example">
+  <pre>
+// GET /api/users/5
+@GetMapping("/users/{id}")
+public User getUser(@PathVariable("id") Long userId) {
+    return userService.getById(userId);
+}
+
+// GET /api/users?role=ADMIN&amp;active=true
+@GetMapping("/users")
+public List&lt;User&gt; getUsers(@RequestParam String role,
+                           @RequestParam(defaultValue = "true") boolean active) {
+    return userService.findByRoleAndActive(role, active);
+}
+  </pre>
+</div>
+
+<h2>📦 Content Negotiation</h2>
+<p>Spring can return different formats (JSON, XML) based on the <code>Accept</code> header.</p>
+
+<ul>
+  <li><code>Accept: application/json</code> → JSON</li>
+  <li><code>Accept: application/xml</code> → XML (if configured)</li>
+</ul>
+
+<p>With Spring Boot and <code>spring-boot-starter-web</code>, JSON (via Jackson) is enabled by default.</p>
+
+<h2>🧪 Testing a REST Controller (Quick View)</h2>
+
+<div class="code-example">
+  <pre>
+@WebMvcTest(BookController.class)
+class BookControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private BookService bookService;
+
+    @Test
+    void shouldReturnBooks() throws Exception {
+        Book book = new Book();
+        book.setId(1L);
+        book.setTitle("Spring in Action");
+
+        when(bookService.findAll()).thenReturn(List.of(book));
+
+        mockMvc.perform(get("/api/books"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Spring in Action"));
+    }
+}
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Spring MVC makes it easy to build RESTful APIs with <strong>controllers and annotations</strong></li>
+  <li><strong>DispatcherServlet</strong> coordinates request handling</li>
+  <li><strong>@RestController</strong> and mapping annotations define clean HTTP endpoints</li>
+</ul>
+
+<p>Next, we&apos;ll look at <strong>Request and Response Handling</strong> in more detail, including JSON mapping and validation.</p>

@@ -1,0 +1,70 @@
+<h1>🧠 Behavioral Patterns</h1>
+
+<h2>🎯 Goal</h2>
+<p><strong>Behavioral design patterns</strong> focus on <strong>communication between objects</strong>, assigning responsibilities, and making interactions flexible.</p>
+
+<h2>👀 Observer Pattern</h2>
+<p>Defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified automatically.</p>
+
+<h3>Use Cases</h3>
+<ul>
+  <li>Event systems</li>
+  <li>GUI frameworks</li>
+  <li>Messaging / notification systems</li>
+</ul>
+
+<h2>🎯 Strategy Pattern</h2>
+<p>Defines a family of algorithms, encapsulates each one, and makes them interchangeable.</p>
+
+<h3>Example</h3>
+<p>Different discount strategies in an e-commerce app: SeasonalDiscount, LoyaltyDiscount, NoDiscount.</p>
+
+<div class="code-example">
+  <pre>
+public interface DiscountStrategy {
+    double apply(double price);
+}
+
+public class NoDiscount implements DiscountStrategy {
+    public double apply(double price) { return price; }
+}
+
+public class PercentageDiscount implements DiscountStrategy {
+    private final double percentage;
+    public PercentageDiscount(double percentage) { this.percentage = percentage; }
+    public double apply(double price) { return price * (1 - percentage); }
+}
+
+public class PriceCalculator {
+    private DiscountStrategy strategy;
+
+    public void setStrategy(DiscountStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public double calculate(double price) {
+        return strategy.apply(price);
+    }
+}
+  </pre>
+</div>
+
+<h2>📨 Command Pattern</h2>
+<p>Encapsulates a request as an object, allowing you to parameterize, queue, and log requests.</p>
+
+<ul>
+  <li>Useful for undo/redo operations</li>
+  <li>Task queues, job scheduling</li>
+</ul>
+
+<h2>🧾 Template Method Pattern</h2>
+<p>Defines the skeleton of an algorithm in a base class, deferring some steps to subclasses.</p>
+
+<p>Example: abstract class for processing files with hooks for parsing, validating, and saving.</p>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Behavioral patterns organize <strong>interactions and responsibilities</strong> among objects</li>
+  <li>Strategy and Template Method help vary <strong>algorithms and behavior</strong></li>
+  <li>Observer and Command shine in <strong>event-driven and task-based</strong> systems</li>
+</ul>

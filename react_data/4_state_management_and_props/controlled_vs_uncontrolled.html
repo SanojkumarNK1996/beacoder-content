@@ -1,0 +1,37 @@
+<h1>🎛️ Controlled vs Uncontrolled Components</h1>
+<h2>✅ Controlled Components</h2>
+<p>React controls the form element's value via state. The state is the "single source of truth."</p>
+<div class="code-example">
+  <pre>
+function ControlledInput() {
+  const [value, setValue] = useState('');
+  return (
+    &lt;input
+      value={value}
+      onChange={e =&gt; setValue(e.target.value)}
+    /&gt;
+  );
+}
+  </pre>
+</div>
+<ul>
+  <li>Full control: validate on change, transform input, disable submit based on value</li>
+  <li>More code but more predictable</li>
+</ul>
+<h2>🔓 Uncontrolled Components</h2>
+<p>DOM manages the input value; React reads it via a <code>ref</code> when needed.</p>
+<div class="code-example">
+  <pre>
+function UncontrolledInput() {
+  const inputRef = useRef();
+  const handleSubmit = () =&gt; console.log(inputRef.current.value);
+  return &lt;input ref={inputRef} defaultValue="initial" /&gt;;
+}
+  </pre>
+</div>
+<ul>
+  <li>Less code; good for simple forms or file inputs</li>
+  <li>Harder to validate in real time</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Use controlled components for most forms — they give you real-time validation and predictable behavior. Uncontrolled components are acceptable for simple read-once forms.</p>

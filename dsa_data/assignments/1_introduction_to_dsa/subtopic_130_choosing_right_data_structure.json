@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Data Structure Benchmark",
+    "description": {
+      "task": "Implement a DataStructureBenchmark class that times insertion and lookup operations for three structures: int[] (array), ArrayList<Integer>, and HashMap<Integer,Integer>. For each structure, insert n elements then perform n lookups and print which is fastest.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class DataStructureBenchmark {\n\n    public long timeArrayInsert(int n) {\n        long start = System.nanoTime();\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) arr[i] = i;\n        return System.nanoTime() - start;\n    }\n\n    public long timeArrayListInsert(int n) {\n        long start = System.nanoTime();\n        List<Integer> list = new ArrayList<>();\n        for (int i = 0; i < n; i++) list.add(i);\n        return System.nanoTime() - start;\n    }\n\n    public long timeHashMapInsert(int n) {\n        // TODO: measure time to insert n key-value pairs (key=i, value=i)\n        return 0;\n    }\n\n    public long timeArrayLookup(int n) {\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) arr[i] = i;\n        long start = System.nanoTime();\n        for (int i = 0; i < n; i++) {\n            int ignored = arr[i]; // index-based O(1) lookup\n        }\n        return System.nanoTime() - start;\n    }\n\n    public long timeHashMapLookup(int n) {\n        // TODO: build HashMap with n entries then measure n get() calls\n        return 0;\n    }\n\n    public void benchmark(int n) {\n        System.out.println(\"=== n=\" + n + \" ===\");\n        System.out.println(\"Insert | Array: \" + timeArrayInsert(n) + \"ns\");\n        System.out.println(\"Insert | ArrayList: \" + timeArrayListInsert(n) + \"ns\");\n        System.out.println(\"Insert | HashMap: \" + timeHashMapInsert(n) + \"ns\");\n        System.out.println(\"Lookup | Array: \" + timeArrayLookup(n) + \"ns\");\n        System.out.println(\"Lookup | HashMap: \" + timeHashMapLookup(n) + \"ns\");\n    }\n\n    public static void main(String[] args) {\n        DataStructureBenchmark db = new DataStructureBenchmark();\n        db.benchmark(1000);\n    }\n}",
+      "instructions": [
+        "timeHashMapInsert(n): record System.nanoTime() start, put n key-value pairs (i -> i) into a new HashMap, return elapsed nanos",
+        "timeHashMapLookup(n): build a HashMap with n entries first (outside timing), then time n get(i) calls",
+        "Both timing methods must use System.nanoTime() for start and return nanoTime()-start",
+        "The benchmark() method is already implemented — only the two TODO methods need code",
+        "Actual output values vary by machine; the format must match exactly"
+      ],
+      "hint": "timeHashMapInsert: long start = System.nanoTime(); Map<Integer,Integer> map = new HashMap<>(); for(int i=0;i<n;i++) map.put(i,i); return System.nanoTime()-start;",
+      "expectedOutput": "=== n=1000 ===\nInsert | Array: [varies]ns\nInsert | ArrayList: [varies]ns\nInsert | HashMap: [varies]ns\nLookup | Array: [varies]ns\nLookup | HashMap: [varies]ns"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 130,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Structure Selector by Use Case",
+    "description": {
+      "task": "Implement a StructureSelector class with a select(String useCase) method that returns the most appropriate Java collection type as a string. Handle the following use cases: 'undo-stack', 'job-queue', 'word-count', 'ranked-scores', 'ordered-list', 'unique-emails'.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class StructureSelector {\n\n    public String select(String useCase) {\n        // TODO: return the appropriate Java type string for each use case\n        // undo-stack      -> \"Stack\"\n        // job-queue       -> \"LinkedList\" (used as Queue)\n        // word-count      -> \"HashMap\"\n        // ranked-scores   -> \"TreeMap\"\n        // ordered-list    -> \"ArrayList\"\n        // unique-emails   -> \"HashSet\"\n        // default         -> \"Unknown\"\n        return \"Unknown\";\n    }\n\n    public void explainSelection(String useCase) {\n        String selected = select(useCase);\n        System.out.println(useCase + \" -> \" + selected);\n    }\n\n    public static void main(String[] args) {\n        StructureSelector ss = new StructureSelector();\n        String[] cases = {\"undo-stack\", \"job-queue\", \"word-count\",\n                          \"ranked-scores\", \"ordered-list\", \"unique-emails\"};\n        for (String uc : cases) {\n            ss.explainSelection(uc);\n        }\n    }\n}",
+      "instructions": [
+        "Implement select() using a switch or a series of if-else checks on the useCase string",
+        "Map 'undo-stack' -> 'Stack', 'job-queue' -> 'LinkedList', 'word-count' -> 'HashMap'",
+        "Map 'ranked-scores' -> 'TreeMap', 'ordered-list' -> 'ArrayList', 'unique-emails' -> 'HashSet'",
+        "Return 'Unknown' for any unrecognized use case",
+        "All comparisons should be done with exact lowercase strings as shown"
+      ],
+      "hint": "Use a switch(useCase) statement with case 'undo-stack': return 'Stack'; etc., and a default: return 'Unknown';",
+      "expectedOutput": "undo-stack -> Stack\njob-queue -> LinkedList\nword-count -> HashMap\nranked-scores -> TreeMap\nordered-list -> ArrayList\nunique-emails -> HashSet"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 130,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Trade-off Analyzer for Data Structures",
+    "description": {
+      "task": "Create a TradeoffAnalyzer class that represents complexity trade-offs for common operations across data structures. Store lookup, insert, and delete complexities for Array, LinkedList, HashMap, and TreeMap. Implement a printTradeoffs() method and a bestForOperation(String op) method.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TradeoffAnalyzer {\n\n    // Each entry: {lookupBest, insertBest, deleteBest} as Big-O strings\n    private static final Map<String, String[]> complexities = new LinkedHashMap<>();\n\n    static {\n        complexities.put(\"Array\",      new String[]{\"O(1)\", \"O(n)\", \"O(n)\"});\n        complexities.put(\"LinkedList\", new String[]{\"O(n)\", \"O(1)\", \"O(1)\"});\n        // TODO: add HashMap entry: lookup=O(1), insert=O(1), delete=O(1)\n        // TODO: add TreeMap entry: lookup=O(log n), insert=O(log n), delete=O(log n)\n    }\n\n    public void printTradeoffs() {\n        System.out.printf(\"%-12s %-10s %-10s %-10s%n\", \"Structure\", \"Lookup\", \"Insert\", \"Delete\");\n        for (Map.Entry<String, String[]> e : complexities.entrySet()) {\n            String[] c = e.getValue();\n            System.out.printf(\"%-12s %-10s %-10s %-10s%n\", e.getKey(), c[0], c[1], c[2]);\n        }\n    }\n\n    public String bestForOperation(String op) {\n        // Return structure with O(1) in the given op slot\n        // op is \"lookup\", \"insert\", or \"delete\"\n        int idx = op.equals(\"lookup\") ? 0 : op.equals(\"insert\") ? 1 : 2;\n        for (Map.Entry<String, String[]> e : complexities.entrySet()) {\n            if (\"O(1)\".equals(e.getValue()[idx])) return e.getKey();\n        }\n        return \"None\";\n    }\n\n    public static void main(String[] args) {\n        TradeoffAnalyzer ta = new TradeoffAnalyzer();\n        ta.printTradeoffs();\n        System.out.println(\"Best for lookup: \" + ta.bestForOperation(\"lookup\"));\n        System.out.println(\"Best for insert: \" + ta.bestForOperation(\"insert\"));\n    }\n}",
+      "instructions": [
+        "Add HashMap entry to the static block: complexities.put('HashMap', new String[]{\"O(1)\", \"O(1)\", \"O(1)\"})",
+        "Add TreeMap entry: complexities.put('TreeMap', new String[]{\"O(log n)\", \"O(log n)\", \"O(log n)\"})",
+        "Do not modify printTradeoffs() or bestForOperation() — they are already implemented",
+        "The table must print 4 rows (Array, LinkedList, HashMap, TreeMap) in insertion order",
+        "bestForOperation('lookup') returns 'Array' (first O(1) lookup), bestForOperation('insert') returns 'LinkedList'"
+      ],
+      "hint": "Just add two put() calls inside the static { } block after the LinkedList entry.",
+      "expectedOutput": "Structure    Lookup     Insert     Delete    \nArray        O(1)       O(n)       O(n)      \nLinkedList   O(n)       O(1)       O(1)      \nHashMap      O(1)       O(1)       O(1)      \nTreeMap      O(log n)   O(log n)   O(log n)  \nBest for lookup: Array\nBest for insert: LinkedList"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 130,
+    "allowedSubmissionType": "TEXT"
+  }
+]

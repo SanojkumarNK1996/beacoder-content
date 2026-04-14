@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Basic Aggregate Functions",
+    "description": {
+      "task": "Use COUNT, SUM, AVG, MIN, and MAX to compute summary statistics from a sales table.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE sales (\n  sale_id    INT PRIMARY KEY,\n  region     VARCHAR(30),\n  product    VARCHAR(60),\n  quantity   INT,\n  unit_price DECIMAL(8,2),\n  sale_date  DATE\n);\n\nINSERT INTO sales VALUES\n  (1,  'North', 'Laptop',      2, 999.99, '2026-01-05'),\n  (2,  'South', 'Mouse',      10,  19.99, '2026-01-08'),\n  (3,  'East',  'Keyboard',    5,  49.99, '2026-01-12'),\n  (4,  'West',  'Monitor',     3, 299.99, '2026-01-15'),\n  (5,  'North', 'Laptop',      1, 999.99, '2026-02-03'),\n  (6,  'South', 'Headphones',  4,  79.99, '2026-02-10'),\n  (7,  'East',  'Mouse',       8,  19.99, '2026-02-14'),\n  (8,  'West',  'Laptop',      3, 999.99, '2026-02-20'),\n  (9,  'North', 'Keyboard',    6,  49.99, '2026-03-01'),\n  (10, 'South', 'Monitor',     2, 299.99, '2026-03-08');\n\n-- Aggregate the entire table\nSELECT\n  COUNT(*)                          AS total_transactions,\n  SUM(quantity)                     AS total_units_sold,\n  SUM(quantity * unit_price)        AS total_revenue,\n  AVG(unit_price)                   AS avg_unit_price,\n  MIN(unit_price)                   AS cheapest_item,\n  MAX(unit_price)                   AS most_expensive_item,\n  COUNT(DISTINCT product)           AS unique_products\nFROM sales;\n",
+      "instructions": [
+        "Run the CREATE TABLE and INSERT statements.",
+        "Run the aggregate SELECT.",
+        "Verify: total_transactions=10, unique_products=5.",
+        "Write a second query: total revenue by region (SUM per region).",
+        "Write a third query: average unit_price per product."
+      ],
+      "hint": "COUNT(*) counts all rows. COUNT(DISTINCT column) counts unique non-null values. SUM/AVG/MIN/MAX ignore NULL values automatically.",
+      "expectedOutput": "total_transactions:10, total_units_sold:44, unique_products:5\nRegion revenue: varies"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 53,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Aggregate with CASE WHEN",
+    "description": {
+      "task": "Use CASE WHEN inside aggregate functions to compute conditional aggregates (pivot-style counts and sums).",
+      "language": "sql",
+      "starterCode": "CREATE TABLE tickets (\n  ticket_id  INT PRIMARY KEY,\n  category   VARCHAR(30),\n  priority   VARCHAR(10),\n  status     VARCHAR(20),\n  created_at DATE\n);\n\nINSERT INTO tickets VALUES\n  (1,  'Bug',     'high',   'open',     '2026-01-05'),\n  (2,  'Feature', 'low',    'closed',   '2026-01-06'),\n  (3,  'Bug',     'high',   'closed',   '2026-01-07'),\n  (4,  'Bug',     'medium', 'open',     '2026-01-08'),\n  (5,  'Feature', 'high',   'open',     '2026-01-09'),\n  (6,  'Support', 'low',    'open',     '2026-01-10'),\n  (7,  'Bug',     'low',    'closed',   '2026-01-11'),\n  (8,  'Feature', 'medium', 'open',     '2026-01-12'),\n  (9,  'Support', 'high',   'closed',   '2026-01-13'),\n  (10, 'Bug',     'medium', 'open',     '2026-01-14');\n\n-- Conditional aggregate: count open vs closed per category\nSELECT\n  category,\n  COUNT(*) AS total,\n  COUNT(CASE WHEN status = 'open'   THEN 1 END) AS open_count,\n  COUNT(CASE WHEN status = 'closed' THEN 1 END) AS closed_count,\n  COUNT(CASE WHEN priority = 'high' THEN 1 END) AS high_priority\nFROM tickets\nGROUP BY category\nORDER BY total DESC;\n",
+      "instructions": [
+        "Run all statements.",
+        "Verify Bug: total=5, open=3, closed=2, high=2.",
+        "Feature: total=3, open=2, closed=1.",
+        "Support: total=2, open=1, closed=1.",
+        "Add a comment: what is the equivalent of CASE WHEN inside aggregate called (conditional aggregation or pivot)?"
+      ],
+      "hint": "CASE WHEN inside COUNT returns 1 when the condition is true, or NULL otherwise. COUNT ignores NULLs, so it effectively counts only rows matching the condition.",
+      "expectedOutput": "Bug: 5 total, 3 open, 2 closed, 2 high\nFeature: 3 total, 2 open, 1 closed\nSupport: 2 total, 1 open, 1 closed"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 53,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Window Functions: Running Totals",
+    "description": {
+      "task": "Use window aggregate functions (SUM OVER, AVG OVER, RANK OVER) to compute running totals and rankings without collapsing rows.",
+      "language": "sql",
+      "context": "Window functions compute aggregates across a set of rows related to the current row — WITHOUT grouping. The result includes one row per input row, unlike GROUP BY which collapses rows.",
+      "starterCode": "CREATE TABLE monthly_sales (\n  month_num  INT PRIMARY KEY,\n  month_name VARCHAR(15),\n  revenue    DECIMAL(10,2)\n);\n\nINSERT INTO monthly_sales VALUES\n  (1, 'January',  15000),\n  (2, 'February', 18000),\n  (3, 'March',    22000),\n  (4, 'April',    19000),\n  (5, 'May',      25000),\n  (6, 'June',     28000);\n\n-- Window function: running total of revenue\nSELECT\n  month_name,\n  revenue,\n  SUM(revenue)  OVER (ORDER BY month_num) AS running_total,\n  AVG(revenue)  OVER (ORDER BY month_num\n    ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS rolling_3mo_avg,\n  RANK()        OVER (ORDER BY revenue DESC) AS revenue_rank\nFROM monthly_sales\nORDER BY month_num;\n",
+      "instructions": [
+        "Run all statements.",
+        "Verify January running_total = 15000, February = 33000, March = 55000...",
+        "Verify June's revenue_rank = 1 (highest revenue).",
+        "January's rolling_3mo_avg = 15000 (only 1 month), February's = (15000+18000)/2 = 16500.",
+        "Add a comment: how is RANK() different from GROUP BY COUNT?"
+      ],
+      "hint": "Window functions use OVER(). ROWS BETWEEN 2 PRECEDING AND CURRENT ROW means include current row plus up to 2 prior rows in the window frame.",
+      "expectedOutput": "Running total: Jan=15000, Feb=33000, Mar=55000, Apr=74000, May=99000, Jun=127000\nRevenue rank: June=1, May=2, March=3..."
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 53,
+    "allowedSubmissionType": "TEXT"
+  }
+]

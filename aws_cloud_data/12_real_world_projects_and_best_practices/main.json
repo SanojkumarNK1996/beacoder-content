@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 249, "title": "AWS Well-Architected Framework", "dataType": "notes", "data": "well_architected_framework.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 250, "title": "Three-Tier Architecture on AWS", "dataType": "notes", "data": "three_tier_architecture.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 251, "title": "Microservices Architecture on AWS", "dataType": "notes", "data": "microservices_on_aws.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 252, "title": "AWS for Startups vs Enterprise", "dataType": "notes", "data": "aws_startups_vs_enterprise.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 253, "title": "AWS Certification Roadmap", "dataType": "notes", "data": "aws_certification_roadmap.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 254, "title": "Building a Real-World Serverless App", "dataType": "notes", "data": "real_world_serverless_app.html", "displayOrder": 6, "verified": false}
+]

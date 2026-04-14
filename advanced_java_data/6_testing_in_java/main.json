@@ -1,0 +1,38 @@
+[
+  {
+    "subtopicId": 99,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Testing Fundamentals",
+    "data": "testing_fundamentals.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 100,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "JUnit 5",
+    "data": "junit5.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 101,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Mockito Framework",
+    "data": "mockito_framework.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 102,
+    "dataType": "notes",
+    "displayOrder": 4,
+    "title": "Spring Boot Testing",
+    "data": "spring_boot_testing.html",
+    "verified": false,
+    "priority": 1
+  }
+]

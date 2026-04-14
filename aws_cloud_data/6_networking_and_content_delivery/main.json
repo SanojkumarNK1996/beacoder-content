@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 217, "title": "AWS VPC Fundamentals", "dataType": "notes", "data": "vpc_fundamentals.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 218, "title": "Subnets Route Tables and Internet Gateway", "dataType": "notes", "data": "subnets_and_routing.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 219, "title": "AWS Route 53", "dataType": "notes", "data": "route_53.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 220, "title": "CloudFront CDN", "dataType": "notes", "data": "cloudfront_cdn.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 221, "title": "Elastic Load Balancer", "dataType": "notes", "data": "elastic_load_balancer.html", "displayOrder": 5, "verified": false}
+]

@@ -1,0 +1,29 @@
+[
+    {
+        "subtopicId": 78,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Enterprise Application Architecture",
+        "data": "enterprise_application_architecture.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 79,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Java EE vs Spring Framework",
+        "data": "java_ee_vs_spring.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 80,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Application Servers vs Embedded Servers",
+        "data": "app_servers_vs_embedded.html",
+        "verified": false,
+        "priority": 1
+    }
+]

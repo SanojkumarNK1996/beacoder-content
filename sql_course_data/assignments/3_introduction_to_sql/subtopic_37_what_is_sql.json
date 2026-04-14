@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Your First SQL SELECT",
+    "description": {
+      "task": "Create a table, insert records, and write your first SQL SELECT statement to retrieve all rows.",
+      "language": "sql",
+      "context": "SQL (Structured Query Language) is the standard language used to communicate with relational databases. It lets you create, read, update, and delete data.",
+      "starterCode": "-- SQL: Structured Query Language\n-- Create a table and test your first queries\n\nCREATE TABLE books (\n  id INT PRIMARY KEY,\n  title VARCHAR(100),\n  author VARCHAR(60),\n  genre VARCHAR(40),\n  year_published INT\n);\n\nINSERT INTO books VALUES\n  (1, 'The Pragmatic Programmer', 'Andrew Hunt',       'Technology', 1999),\n  (2, 'Clean Code',              'Robert C. Martin',  'Technology', 2008),\n  (3, 'To Kill a Mockingbird',   'Harper Lee',         'Fiction',    1960),\n  (4, 'Design Patterns',         'Gang of Four',       'Technology', 1994),\n  (5, 'The Great Gatsby',        'F. Scott Fitzgerald','Fiction',    1925);\n\n-- Query 1: SELECT all columns from books\n\n-- Query 2: SELECT only title and author\n\n-- Query 3: SELECT books published after 1990\n",
+      "instructions": [
+        "Run the CREATE TABLE and INSERT statements.",
+        "Query 1: SELECT * FROM books;",
+        "Query 2: SELECT title, author FROM books;",
+        "Query 3: SELECT * FROM books WHERE year_published > 1990;"
+      ],
+      "hint": "SELECT * means 'all columns'. You can name specific columns separated by commas. WHERE filters rows based on a condition.",
+      "expectedOutput": "Q1: 5 rows, all columns\nQ2: 5 rows, title + author only\nQ3: 3 rows (Pragmatic Programmer, Clean Code, Design Patterns)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 37,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SQL as a Declarative Language",
+    "description": {
+      "task": "Demonstrate why SQL is called declarative by writing queries that describe WHAT you want, not HOW to get it.",
+      "language": "sql",
+      "context": "Unlike procedural languages (Java, Python), SQL is declarative — you specify the desired result, and the database engine figures out the optimal execution plan.",
+      "starterCode": "CREATE TABLE products (\n  id INT PRIMARY KEY,\n  name VARCHAR(80),\n  category VARCHAR(40),\n  price DECIMAL(8,2),\n  stock INT\n);\n\nINSERT INTO products VALUES\n  (1, 'Laptop',       'Electronics', 999.99, 50),\n  (2, 'Mouse',        'Electronics', 19.99, 200),\n  (3, 'Desk',         'Furniture',   250.00, 30),\n  (4, 'Notebook',     'Stationery',   5.99, 500),\n  (5, 'Headphones',   'Electronics',  79.99, 120),\n  (6, 'Office Chair', 'Furniture',   175.00, 15);\n\n-- Declarative: describe WHAT you want\n-- Query 1: \"I want all Electronics products\"\n\n-- Query 2: \"I want the most expensive product\"\n\n-- Query 3: \"I want products with low stock (under 20)\"\n",
+      "instructions": [
+        "Query 1: SELECT * FROM products WHERE category = 'Electronics';",
+        "Query 2: SELECT * FROM products WHERE price = (SELECT MAX(price) FROM products);",
+        "Query 3: SELECT name, stock FROM products WHERE stock < 20 ORDER BY stock ASC;",
+        "Add a comment explaining: in Java, you'd need a loop to find the max price — SQL does it declaratively."
+      ],
+      "hint": "SQL's optimizer chooses whether to use an index, a sequential scan, or any other strategy — you only declare the result you want.",
+      "expectedOutput": "Q1: Laptop, Mouse, Headphones\nQ2: Laptop (999.99)\nQ3: Office Chair(15), Desk(30) [only chair <20]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 37,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SQL vs Application Code",
+    "description": {
+      "task": "Compare retrieving data using SQL versus typical application code logic by writing SQL equivalent of common data-fetching operations.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE employees (\n  id INT PRIMARY KEY,\n  name VARCHAR(60),\n  department VARCHAR(40),\n  salary DECIMAL(10,2),\n  years_experience INT\n);\n\nINSERT INTO employees VALUES\n  (1,  'Alice',   'Engineering', 95000, 5),\n  (2,  'Bob',     'Marketing',   65000, 3),\n  (3,  'Carol',   'Engineering', 88000, 7),\n  (4,  'Dave',    'HR',          55000, 2),\n  (5,  'Eve',     'Engineering',105000, 10),\n  (6,  'Frank',   'Marketing',   70000, 4),\n  (7,  'Grace',   'HR',          58000, 3);\n\n-- Instead of looping in code, one SQL query does it all:\n-- Query 1: Average salary per department (would take 20+ lines in Java loops)\nSELECT department, AVG(salary) AS avg_salary\nFROM employees\nGROUP BY department\nORDER BY avg_salary DESC;\n\n-- Query 2: Top earner per department\nSELECT department, name, salary\nFROM employees e\nWHERE salary = (SELECT MAX(salary) FROM employees WHERE department = e.department)\nORDER BY department;\n\n-- Query 3: Employees with above-average experience\nSELECT name, years_experience\nFROM employees\nWHERE years_experience > (SELECT AVG(years_experience) FROM employees)\nORDER BY years_experience DESC;\n",
+      "instructions": [
+        "Run all three queries.",
+        "Query 1 should show Engineering(~96000), Marketing(67500), HR(56500).",
+        "Query 2 returns the highest earner in each department.",
+        "Query 3 shows employees with above-average experience (avg ≈ 4.86 years).",
+        "Add a comment for each query: how many lines of Python/Java code would be needed to achieve the same result?"
+      ],
+      "hint": "AVG() is an aggregate function. The correlated subquery in Q2 runs once per department row in the outer query.",
+      "expectedOutput": "Q1: Engineering~96000, Marketing~67500, HR~56500\nQ2: Eve(Engineering), Frank(Marketing), Grace(HR)\nQ3: Alice(5yr), Carol(7yr), Eve(10yr), Frank(4yr)?"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 37,
+    "allowedSubmissionType": "TEXT"
+  }
+]

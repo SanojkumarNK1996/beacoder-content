@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Design RESTful Resource URLs",
+    "description": {
+      "task": "Write a Java program that validates and categorizes REST API URLs. Implement a URL validator that checks whether given URLs follow REST naming conventions.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class RestUrlValidator {\n    \n    public boolean isValidResourceUrl(String url) {\n        // REST convention: lowercase, plural nouns, no verbs in URL\n        // Valid: /users, /users/1, /users/1/orders\n        // Invalid: /getUsers, /createUser, /deleteUser/1\n        // TODO: Return false if URL contains verb prefixes: get, create, delete, update, fetch, retrieve\n        // Return true otherwise\n        return false;\n    }\n    \n    public String categorize(String method, String url) {\n        // TODO: Given HTTP method and URL, describe what REST operation it represents\n        // GET /users -> \"List all users\"\n        // GET /users/{id} -> \"Get user by ID\"\n        // POST /users -> \"Create new user\"\n        // PUT /users/{id} -> \"Update user by ID\"\n        // DELETE /users/{id} -> \"Delete user by ID\"\n        // Pattern: if url ends with a path variable like /{id} or /\\d+\n        return \"Unknown operation\";\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        RestUrlValidator validator = new RestUrlValidator();\n        \n        // Test URL validation\n        String[] urls = {\"/users\", \"/users/1\", \"/getUsers\", \"/createUser\", \"/products/5/reviews\"};\n        System.out.println(\"URL Validation:\");\n        for (String url : urls) {\n            System.out.println(\"  \" + url + \" -> \" + (validator.isValidResourceUrl(url) ? \"VALID\" : \"INVALID\"));\n        }\n        \n        // Test operation categorization\n        System.out.println(\"\\nREST Operations:\");\n        System.out.println(\"  \" + validator.categorize(\"GET\", \"/users\"));\n        System.out.println(\"  \" + validator.categorize(\"GET\", \"/users/1\"));\n        System.out.println(\"  \" + validator.categorize(\"POST\", \"/users\"));\n        System.out.println(\"  \" + validator.categorize(\"PUT\", \"/users/1\"));\n        System.out.println(\"  \" + validator.categorize(\"DELETE\", \"/users/1\"));\n    }\n}",
+      "instructions": [
+        "isValidResourceUrl() checks if the URL contains any of the verbs: get, create, delete, update, fetch, retrieve (case-insensitive word boundary check). Returns false if found, true otherwise.",
+        "categorize() checks if URL ends with a path variable (match /\\d+ or /{id} pattern) to determine if it's operating on a specific resource vs a collection.",
+        "Return proper descriptions like 'List all users', 'Get user by ID', etc.",
+        "Run Main as-is."
+      ],
+      "hint": "REST URLs represent resources (nouns), not actions (verbs). HTTP methods define the operation. /deleteUser is wrong; DELETE /users/1 is correct.",
+      "expectedOutput": "URL Validation:\n  /users -> VALID\n  /users/1 -> VALID\n  /getUsers -> INVALID\n  /createUser -> INVALID\n  /products/5/reviews -> VALID\n\nREST Operations:\n  List all users\n  Get user by ID\n  Create new user\n  Update user by ID\n  Delete user by ID"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 94,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "HTTP Status Code Handler",
+    "description": {
+      "task": "Build an HTTP response builder that returns appropriate status codes based on operation results. Implement proper status code selection for all common REST scenarios.",
+      "language": "java",
+      "starterCode": "public class HttpResponse {\n    private int statusCode;\n    private String statusText;\n    private String body;\n    \n    public HttpResponse(int statusCode, String statusText, String body) {\n        this.statusCode = statusCode;\n        this.statusText = statusText;\n        this.body = body;\n    }\n    \n    @Override\n    public String toString() {\n        return \"HTTP \" + statusCode + \" \" + statusText + \": \" + body;\n    }\n}\n\npublic class RestResponseBuilder {\n    public HttpResponse ok(String body) {\n        // TODO: 200 OK\n        return null;\n    }\n    \n    public HttpResponse created(String resourceLocation) {\n        // TODO: 201 Created with Location header simulation\n        return null;\n    }\n    \n    public HttpResponse noContent() {\n        // TODO: 204 No Content (for successful DELETE)\n        return null;\n    }\n    \n    public HttpResponse notFound(String resource) {\n        // TODO: 404 Not Found\n        return null;\n    }\n    \n    public HttpResponse badRequest(String message) {\n        // TODO: 400 Bad Request\n        return null;\n    }\n    \n    public HttpResponse conflict(String message) {\n        // TODO: 409 Conflict (duplicate resource)\n        return null;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        RestResponseBuilder builder = new RestResponseBuilder();\n        \n        System.out.println(builder.ok(\"{\\\"users\\\":[\\\"Alice\\\",\\\"Bob\\\"]}\"));\n        System.out.println(builder.created(\"/users/42\"));\n        System.out.println(builder.noContent());\n        System.out.println(builder.notFound(\"User with id=99\"));\n        System.out.println(builder.badRequest(\"Email field is required\"));\n        System.out.println(builder.conflict(\"User with email already exists\"));\n    }\n}",
+      "instructions": [
+        "ok() returns 200 OK with the given body.",
+        "created() returns 201 Created with body 'Resource created at: [resourceLocation]'.",
+        "noContent() returns 204 No Content with empty body.",
+        "notFound() returns 404 Not Found with body '[resource] not found'.",
+        "badRequest() returns 400 Bad Request with the message.",
+        "conflict() returns 409 Conflict with the message."
+      ],
+      "hint": "Using correct HTTP status codes is critical for REST API usability. 2xx = success, 4xx = client error, 5xx = server error. Never return 200 for errors!",
+      "expectedOutput": "HTTP 200 OK: {\"users\":[\"Alice\",\"Bob\"]}\nHTTP 201 Created: Resource created at: /users/42\nHTTP 204 No Content: \nHTTP 404 Not Found: User with id=99 not found\nHTTP 400 Bad Request: Email field is required\nHTTP 409 Conflict: User with email already exists"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 94,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "HATEOAS Links in REST",
+    "description": {
+      "task": "Implement a simple HATEOAS (Hypermedia As Engine Of Application State) response builder that adds navigation links to REST API responses.",
+      "language": "java",
+      "context": "HATEOAS is a REST constraint where API responses include links to related actions. Spring HATEOAS library provides EntityModel and Link classes for this purpose.",
+      "starterCode": "import java.util.*;\n\npublic class Link {\n    private String rel;\n    private String href;\n    private String method;\n    \n    public Link(String rel, String href, String method) {\n        this.rel = rel; this.href = href; this.method = method;\n    }\n    \n    @Override\n    public String toString() { return \"Link{rel='\" + rel + \"', href='\" + href + \"', method='\" + method + \"'}\"; }\n}\n\npublic class UserResponse {\n    private int id;\n    private String name;\n    private String email;\n    private List<Link> links = new ArrayList<>();\n    \n    public UserResponse(int id, String name, String email) {\n        this.id = id; this.name = name; this.email = email;\n    }\n    \n    public void addLink(Link link) { links.add(link); }\n    public List<Link> getLinks() { return links; }\n    \n    @Override\n    public String toString() {\n        return \"User{id=\" + id + \", name='\" + name + \"', email='\" + email + \"'}\";\n    }\n}\n\npublic class UserController {\n    public UserResponse getUser(int id) {\n        UserResponse user = new UserResponse(id, \"Alice\", \"alice@example.com\");\n        // TODO: Add self link, update link, delete link, and 'users' collection link\n        return user;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        UserController controller = new UserController();\n        UserResponse response = controller.getUser(1);\n        System.out.println(response);\n        System.out.println(\"Links:\");\n        response.getLinks().forEach(l -> System.out.println(\"  \" + l));\n    }\n}",
+      "instructions": [
+        "In getUser(), add 4 links: self (GET /users/1), update (PUT /users/1), delete (DELETE /users/1), collection (GET /users with rel='all-users').",
+        "Run Main as-is.",
+        "Output should show the user details followed by all 4 links."
+      ],
+      "hint": "Spring HATEOAS: return EntityModel.of(user, linkTo(UserController.class).slash(id).withSelfRel()). HATEOAS makes APIs discoverable — clients follow links instead of hardcoding URLs.",
+      "expectedOutput": "User{id=1, name='Alice', email='alice@example.com'}\nLinks:\n  Link{rel='self', href='/users/1', method='GET'}\n  Link{rel='update', href='/users/1', method='PUT'}\n  Link{rel='delete', href='/users/1', method='DELETE'}\n  Link{rel='all-users', href='/users', method='GET'}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 94,
+    "allowedSubmissionType": "TEXT"
+  }
+]

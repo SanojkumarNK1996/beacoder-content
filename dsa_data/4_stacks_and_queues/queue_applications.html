@@ -1,0 +1,32 @@
+<h1>🎯 Queue Applications</h1>
+
+<h2>🌐 Breadth-First Search (BFS)</h2>
+<div class="code-example">
+  <pre>
+void bfs(int start, Map&lt;Integer, List&lt;Integer&gt;&gt; graph) {
+    Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+    Set&lt;Integer&gt; visited = new HashSet&lt;&gt;();
+    queue.offer(start);
+    visited.add(start);
+    while (!queue.isEmpty()) {
+        int node = queue.poll();
+        System.out.print(node + " ");
+        for (int neighbor : graph.getOrDefault(node, List.of())) {
+            if (!visited.contains(neighbor)) {
+                visited.add(neighbor);
+                queue.offer(neighbor);
+            }
+        }
+    }
+}
+  </pre>
+</div>
+
+<h2>📋 Task Scheduling</h2>
+<p>OS schedulers maintain ready queues. Thread pool executors (Java) internally use queues for pending tasks.</p>
+
+<h2>🔄 Buffer Management</h2>
+<p>Queues decouple producers and consumers in streaming/IO pipelines.</p>
+
+<h2>🎯 Summary</h2>
+<p>Queues enable <strong>level-order processing</strong> and are central to BFS, job scheduling, and async communication systems.</p>

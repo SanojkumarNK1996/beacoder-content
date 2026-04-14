@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 205, "title": "Introduction to S3", "dataType": "notes", "data": "intro_to_s3.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 206, "title": "S3 Buckets and Objects", "dataType": "notes", "data": "s3_buckets_and_objects.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 207, "title": "S3 Storage Classes", "dataType": "notes", "data": "s3_storage_classes.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 208, "title": "Introduction to EBS", "dataType": "notes", "data": "intro_to_ebs.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 209, "title": "EBS Volume Types", "dataType": "notes", "data": "ebs_volume_types.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 210, "title": "S3 vs EBS vs EFS", "dataType": "notes", "data": "s3_vs_ebs_vs_efs.html", "displayOrder": 6, "verified": false}
+]

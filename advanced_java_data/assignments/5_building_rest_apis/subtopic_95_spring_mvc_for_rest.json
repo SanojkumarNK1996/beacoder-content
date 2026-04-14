@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Build a REST Controller Dispatcher",
+    "description": {
+      "task": "Build a simplified @RestController dispatcher that routes HTTP requests to the correct handler methods based on method and path annotations.",
+      "language": "java",
+      "starterCode": "import java.lang.annotation.*;\nimport java.lang.reflect.*;\nimport java.util.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface GetMapping { String value(); }\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface PostMapping { String value(); }\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface DeleteMapping { String value(); }\n\npublic class BookController {\n    private List<String> books = new ArrayList<>(Arrays.asList(\"Java\", \"Spring\", \"Docker\"));\n    \n    @GetMapping(\"/books\")\n    public String getAllBooks() {\n        return books.toString();\n    }\n    \n    @PostMapping(\"/books\")\n    public String addBook(String title) {\n        books.add(title);\n        return \"Book '\" + title + \"' added\";\n    }\n    \n    @DeleteMapping(\"/books\")\n    public String clearBooks() {\n        books.clear();\n        return \"All books removed\";\n    }\n}\n\npublic class DispatcherServlet {\n    private Object controller;\n    \n    public DispatcherServlet(Object controller) {\n        this.controller = controller;\n    }\n    \n    public String dispatch(String httpMethod, String path, String... args) throws Exception {\n        // TODO: Scan controller methods for matching annotation and path\n        // For GET: check @GetMapping, for POST: check @PostMapping, etc.\n        // If match found, invoke method (with args if present)\n        // If no match, return \"404: No handler found for \" + httpMethod + \" \" + path\n        return \"404: No handler found\";\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        DispatcherServlet dispatcher = new DispatcherServlet(new BookController());\n        \n        System.out.println(dispatcher.dispatch(\"GET\", \"/books\"));\n        System.out.println(dispatcher.dispatch(\"POST\", \"/books\", \"Kubernetes\"));\n        System.out.println(dispatcher.dispatch(\"GET\", \"/books\"));\n        System.out.println(dispatcher.dispatch(\"DELETE\", \"/books\"));\n        System.out.println(dispatcher.dispatch(\"GET\", \"/authors\"));\n    }\n}",
+      "instructions": [
+        "In dispatch(), iterate all methods of controller via reflection.",
+        "For each method, check for the annotation matching httpMethod (GET -> @GetMapping, POST -> @PostMapping, DELETE -> @DeleteMapping).",
+        "If the annotation's value() matches path, invoke the method. Pass args[0] if args is not empty.",
+        "Run Main as-is."
+      ],
+      "hint": "Spring's DispatcherServlet and HandlerMapping work similarly — they scan @RequestMapping annotations on @Controller classes and dispatch requests to the right method.",
+      "expectedOutput": "[Java, Spring, Docker]\nBook 'Kubernetes' added\n[Java, Spring, Docker, Kubernetes]\nAll books removed\n404: No handler found for GET /authors"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 95,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Path Variable Extraction",
+    "description": {
+      "task": "Implement a path variable extractor that parses URL templates with {variables} and extracts actual values from real URLs.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.regex.*;\n\npublic class PathVariableExtractor {\n    \n    public Map<String, String> extract(String template, String actualPath) {\n        // TODO: Parse template like '/users/{id}/orders/{orderId}'\n        // Match against actualPath like '/users/42/orders/7'\n        // Return map: {id: \"42\", orderId: \"7\"}\n        // Return empty map if paths don't match\n        return new HashMap<>();\n    }\n    \n    public boolean matches(String template, String actualPath) {\n        // TODO: Return true if actualPath matches the template pattern\n        return false;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        PathVariableExtractor extractor = new PathVariableExtractor();\n        \n        // Test 1: Single path variable\n        Map<String, String> vars1 = extractor.extract(\"/users/{id}\", \"/users/42\");\n        System.out.println(\"Single var: \" + vars1);\n        \n        // Test 2: Multiple path variables\n        Map<String, String> vars2 = extractor.extract(\"/users/{userId}/orders/{orderId}\", \"/users/5/orders/99\");\n        System.out.println(\"Multiple vars: \" + vars2);\n        \n        // Test 3: No match\n        Map<String, String> vars3 = extractor.extract(\"/users/{id}\", \"/products/42\");\n        System.out.println(\"No match: \" + vars3);\n        \n        // Test matching\n        System.out.println(\"Matches /users/{id} with /users/10: \" + extractor.matches(\"/users/{id}\", \"/users/10\"));\n        System.out.println(\"Matches /users/{id} with /products/10: \" + extractor.matches(\"/users/{id}\", \"/products/10\"));\n    }\n}",
+      "instructions": [
+        "In extract(), convert the template to a regex pattern by replacing {varName} with named groups (?<varName>[^/]+). Then match actualPath against this regex.",
+        "If matched, extract all named groups and return them as a map. If no match, return empty map.",
+        "Implement matches() using the same pattern generation.",
+        "Run Main as-is."
+      ],
+      "hint": "Spring's @PathVariable extracts URL segments: @GetMapping('/users/{id}') + @PathVariable int id works because Spring uses regex internally to parse path templates.",
+      "expectedOutput": "Single var: {id=42}\nMultiple vars: {userId=5, orderId=99}\nNo match: {}\nMatches /users/{id} with /users/10: true\nMatches /users/{id} with /products/10: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 95,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Query Parameter Binding",
+    "description": {
+      "task": "Implement a query string parser that extracts and binds query parameters from a URL to named parameters, similar to Spring's @RequestParam.",
+      "language": "java",
+      "context": "Spring's @RequestParam binds query strings like ?page=1&size=10 to method parameters. This is essential for filtering, pagination, and search in REST APIs.",
+      "starterCode": "import java.util.*;\n\npublic class QueryStringParser {\n    \n    public Map<String, String> parse(String queryString) {\n        // TODO: Parse 'key1=val1&key2=val2' into a map\n        // Handle empty queryString gracefully\n        return new LinkedHashMap<>();\n    }\n    \n    public String getParam(Map<String, String> params, String key, String defaultValue) {\n        return params.getOrDefault(key, defaultValue);\n    }\n    \n    public int getIntParam(Map<String, String> params, String key, int defaultValue) {\n        String val = params.get(key);\n        if (val == null) return defaultValue;\n        try { return Integer.parseInt(val); }\n        catch (NumberFormatException e) { return defaultValue; }\n    }\n}\n\npublic class ArticleSearchController {\n    private List<String> articles = Arrays.asList(\n        \"Java Guide\", \"Spring Boot Tutorial\", \"Docker Basics\",\n        \"Kubernetes Intro\", \"React Fundamentals\", \"PostgreSQL Tips\"\n    );\n    \n    public List<String> search(Map<String, String> params) {\n        String keyword = params.getOrDefault(\"q\", \"\").toLowerCase();\n        int page = Integer.parseInt(params.getOrDefault(\"page\", \"0\"));\n        int size = Integer.parseInt(params.getOrDefault(\"size\", \"3\"));\n        \n        List<String> filtered = new ArrayList<>();\n        for (String article : articles) {\n            if (keyword.isEmpty() || article.toLowerCase().contains(keyword)) {\n                filtered.add(article);\n            }\n        }\n        \n        int start = page * size;\n        int end = Math.min(start + size, filtered.size());\n        return start >= filtered.size() ? new ArrayList<>() : filtered.subList(start, end);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        QueryStringParser parser = new QueryStringParser();\n        ArticleSearchController controller = new ArticleSearchController();\n        \n        String query1 = \"page=0&size=3\";\n        String query2 = \"q=java&page=0&size=5\";\n        String query3 = \"q=spring&size=2\";\n        \n        System.out.println(\"All (page 0, size 3): \" + controller.search(parser.parse(query1)));\n        System.out.println(\"Search 'java': \" + controller.search(parser.parse(query2)));\n        System.out.println(\"Search 'spring': \" + controller.search(parser.parse(query3)));\n    }\n}",
+      "instructions": [
+        "Implement parse() by splitting on '&', then each part on '=' to build the map.",
+        "Handle empty string input by returning an empty map.",
+        "Run Main as-is.",
+        "Output should show filtered and paginated article results."
+      ],
+      "hint": "In Spring: @GetMapping('/articles') + @RequestParam(defaultValue='0') int page. Spring auto-converts query params to method parameter types.",
+      "expectedOutput": "All (page 0, size 3): [Java Guide, Spring Boot Tutorial, Docker Basics]\nSearch 'java': [Java Guide]\nSearch 'spring': [Spring Boot Tutorial]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 95,
+    "allowedSubmissionType": "TEXT"
+  }
+]

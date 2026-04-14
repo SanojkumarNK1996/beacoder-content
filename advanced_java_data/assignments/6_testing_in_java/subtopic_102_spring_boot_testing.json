@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Spring Boot Test Slice Concepts",
+    "description": {
+      "task": "Simulate different Spring Boot test slices. Create test classes that represent @WebMvcTest (controller only), @DataJpaTest (repository only), and @SpringBootTest (full context).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\n// Simulate test context types\npublic class TestContext {\n    public enum Type { WEB_MVC, DATA_JPA, FULL_SPRING_BOOT }\n    \n    private Type type;\n    private Set<String> loadedBeans = new LinkedHashSet<>();\n    \n    public TestContext(Type type) {\n        this.type = type;\n        initBeans();\n    }\n    \n    private void initBeans() {\n        // All contexts load core beans\n        loadedBeans.add(\"ApplicationContext\");\n        \n        switch (type) {\n            case WEB_MVC:\n                // TODO: Add only web layer beans: DispatcherServlet, UserController, MockMvc\n                break;\n            case DATA_JPA:\n                // TODO: Add only data layer beans: EntityManager, UserRepository, DataSource\n                break;\n            case FULL_SPRING_BOOT:\n                // TODO: Add all beans: DispatcherServlet, UserController, MockMvc,\n                // EntityManager, UserRepository, DataSource, UserService, SecurityFilter\n                break;\n        }\n    }\n    \n    public boolean hasBean(String beanName) { return loadedBeans.contains(beanName); }\n    public Set<String> getLoadedBeans() { return loadedBeans; }\n    public Type getType() { return type; }\n}\n\npublic class TestContextReport {\n    public void printReport(TestContext ctx) {\n        System.out.println(\"=== Test Context: \" + ctx.getType() + \" ===\");\n        System.out.println(\"Loaded beans (\" + ctx.getLoadedBeans().size() + \"): \" + ctx.getLoadedBeans());\n        System.out.println(\"Has Controller: \" + ctx.hasBean(\"UserController\"));\n        System.out.println(\"Has Repository: \" + ctx.hasBean(\"UserRepository\"));\n        System.out.println(\"Has Service: \" + ctx.hasBean(\"UserService\"));\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        TestContextReport report = new TestContextReport();\n        \n        report.printReport(new TestContext(TestContext.Type.WEB_MVC));\n        System.out.println();\n        report.printReport(new TestContext(TestContext.Type.DATA_JPA));\n        System.out.println();\n        report.printReport(new TestContext(TestContext.Type.FULL_SPRING_BOOT));\n    }\n}",
+      "instructions": [
+        "WEB_MVC case: add 'DispatcherServlet', 'UserController', 'MockMvc'.",
+        "DATA_JPA case: add 'EntityManager', 'UserRepository', 'DataSource'.",
+        "FULL_SPRING_BOOT case: add all 8 beans from both cases plus 'UserService' and 'SecurityFilter'.",
+        "Run Main as-is."
+      ],
+      "hint": "@WebMvcTest loads only web layer — faster tests. @DataJpaTest loads only data layer with in-memory H2. @SpringBootTest loads everything — use sparingly as it's slow.",
+      "expectedOutput": "=== Test Context: WEB_MVC ===\nLoaded beans (4): [ApplicationContext, DispatcherServlet, UserController, MockMvc]\nHas Controller: true\nHas Repository: false\nHas Service: false\n\n=== Test Context: DATA_JPA ===\nLoaded beans (4): [ApplicationContext, EntityManager, UserRepository, DataSource]\nHas Controller: false\nHas Repository: true\nHas Service: false\n\n=== Test Context: FULL_SPRING_BOOT ===\nLoaded beans (9): [ApplicationContext, DispatcherServlet, UserController, MockMvc, EntityManager, UserRepository, DataSource, UserService, SecurityFilter]\nHas Controller: true\nHas Repository: true\nHas Service: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 102,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "MockMvc Request Simulation",
+    "description": {
+      "task": "Simulate Spring MockMvc by building a MockHttpClient that performs GET and POST requests to controller methods and captures the HTTP response for assertions.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MockHttpResponse {\n    private int status;\n    private String body;\n    private Map<String, String> headers = new HashMap<>();\n    \n    public MockHttpResponse(int status, String body) {\n        this.status = status; this.body = body;\n    }\n    \n    public void addHeader(String key, String value) { headers.put(key, value); }\n    public int getStatus() { return status; }\n    public String getBody() { return body; }\n    \n    public MockHttpResponse andExpect_status(int expectedStatus) {\n        boolean pass = status == expectedStatus;\n        System.out.println(\"  Status \" + expectedStatus + \": \" + (pass ? \"PASS\" : \"FAIL (was \" + status + \")\"));\n        return this;\n    }\n    \n    public MockHttpResponse andExpect_bodyContains(String text) {\n        boolean pass = body.contains(text);\n        System.out.println(\"  Body contains '\" + text + \"': \" + (pass ? \"PASS\" : \"FAIL\"));\n        return this;\n    }\n    \n    public MockHttpResponse andExpect_contentType(String contentType) {\n        boolean pass = contentType.equals(headers.get(\"Content-Type\"));\n        System.out.println(\"  Content-Type '\" + contentType + \"': \" + (pass ? \"PASS\" : \"FAIL\"));\n        return this;\n    }\n}\n\npublic class TodoController {\n    private List<String> todos = new ArrayList<>(Arrays.asList(\"Learn Spring\", \"Write Tests\"));\n    \n    public MockHttpResponse get(String path) {\n        if (path.equals(\"/todos\")) {\n            MockHttpResponse response = new MockHttpResponse(200, todos.toString());\n            response.addHeader(\"Content-Type\", \"application/json\");\n            return response;\n        }\n        return new MockHttpResponse(404, \"Not found\");\n    }\n    \n    public MockHttpResponse post(String path, String body) {\n        if (path.equals(\"/todos\") && body != null && !body.isBlank()) {\n            todos.add(body);\n            MockHttpResponse response = new MockHttpResponse(201, \"{\\\"message\\\": \\\"Created\\\", \\\"todo\\\": \\\"\" + body + \"\\\"}\");\n            response.addHeader(\"Content-Type\", \"application/json\");\n            return response;\n        }\n        return new MockHttpResponse(400, \"Bad request\");\n    }\n}\n\npublic class MockMvc {\n    private TodoController controller;\n    \n    public MockMvc(TodoController controller) { this.controller = controller; }\n    \n    public MockHttpResponse perform_get(String path) {\n        System.out.println(\"GET \" + path);\n        return controller.get(path);\n    }\n    \n    public MockHttpResponse perform_post(String path, String body) {\n        System.out.println(\"POST \" + path + \" body=\" + body);\n        return controller.post(path, body);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        MockMvc mockMvc = new MockMvc(new TodoController());\n        \n        System.out.println(\"Test: GET /todos\");\n        mockMvc.perform_get(\"/todos\")\n            .andExpect_status(200)\n            .andExpect_bodyContains(\"Learn Spring\")\n            .andExpect_contentType(\"application/json\");\n        \n        System.out.println(\"Test: POST /todos\");\n        mockMvc.perform_post(\"/todos\", \"Read Clean Code\")\n            .andExpect_status(201)\n            .andExpect_bodyContains(\"Created\");\n        \n        System.out.println(\"Test: GET /invalid\");\n        mockMvc.perform_get(\"/invalid\")\n            .andExpect_status(404);\n    }\n}",
+      "instructions": [
+        "Run Main as-is — the implementation is complete.",
+        "Understand the fluent API pattern: .andExpect_status().andExpect_bodyContains().andExpect_contentType().",
+        "Trace each test: GET /todos returns status 200 + JSON; POST /todos creates; GET /invalid returns 404.",
+        "All assertions should PASS."
+      ],
+      "hint": "Spring's MockMvc: mockMvc.perform(get('/todos')).andExpect(status().isOk()).andExpect(jsonPath('$[0]', is('Learn Spring'))).andExpect(content().contentType(MediaType.APPLICATION_JSON));",
+      "expectedOutput": "Test: GET /todos\nGET /todos\n  Status 200: PASS\n  Body contains 'Learn Spring': PASS\n  Content-Type 'application/json': PASS\nTest: POST /todos\nPOST /todos body=Read Clean Code\n  Status 201: PASS\n  Body contains 'Created': PASS\nTest: GET /invalid\nGET /invalid\n  Status 404: PASS"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 102,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Test Data Builders",
+    "description": {
+      "task": "Implement the Builder pattern for creating test objects. Write a ProductTestDataBuilder that creates valid Product objects for testing with sensible defaults that can be overridden.",
+      "language": "java",
+      "context": "Test data builders reduce test setup boilerplate and make tests more readable. Also known as the Object Mother pattern when combined with factory methods.",
+      "starterCode": "import java.util.*;\n\npublic class Product {\n    private final int id;\n    private final String name;\n    private final String category;\n    private final double price;\n    private final int stockCount;\n    private final boolean active;\n    private final List<String> tags;\n    \n    // TODO: Constructor from builder\n    private Product(Builder builder) {\n        this.id = builder.id;\n        this.name = builder.name;\n        this.category = builder.category;\n        this.price = builder.price;\n        this.stockCount = builder.stockCount;\n        this.active = builder.active;\n        this.tags = builder.tags;\n    }\n    \n    public int getId() { return id; }\n    public String getName() { return name; }\n    public String getCategory() { return category; }\n    public double getPrice() { return price; }\n    public int getStockCount() { return stockCount; }\n    public boolean isActive() { return active; }\n    public List<String> getTags() { return tags; }\n    \n    @Override\n    public String toString() {\n        return \"Product{id=\" + id + \", name='\" + name + \"', category='\" + category +\n               \"', price=\" + price + \", stock=\" + stockCount + \", active=\" + active + \", tags=\" + tags + \"}\";\n    }\n    \n    public static class Builder {\n        // Defaults for testing\n        private int id = 1;\n        private String name = \"Test Product\";\n        private String category = \"General\";\n        private double price = 9.99;\n        private int stockCount = 100;\n        private boolean active = true;\n        private List<String> tags = new ArrayList<>();\n        \n        // TODO: Add fluent setter methods for all fields\n        \n        public Product build() { return new Product(this); }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // Default product\n        Product defaultProduct = new Product.Builder().build();\n        System.out.println(\"Default: \" + defaultProduct);\n        \n        // Custom product for price-related test\n        Product expensiveProduct = new Product.Builder()\n            .id(2)\n            .name(\"Luxury Item\")\n            .price(999.99)\n            .category(\"Premium\")\n            .tags(Arrays.asList(\"luxury\", \"premium\"))\n            .build();\n        System.out.println(\"Expensive: \" + expensiveProduct);\n        \n        // Out of stock product\n        Product outOfStock = new Product.Builder()\n            .id(3)\n            .name(\"Popular Item\")\n            .stockCount(0)\n            .active(false)\n            .build();\n        System.out.println(\"Out of stock: \" + outOfStock);\n        \n        // Test assertion\n        System.out.println(\"Is expensive active: \" + expensiveProduct.isActive());\n        System.out.println(\"Is OOS active: \" + outOfStock.isActive());\n    }\n}",
+      "instructions": [
+        "Add fluent setter methods to Builder: id(int), name(String), category(String), price(double), stockCount(int), active(boolean), tags(List<String>). Each returns 'this'.",
+        "Run Main as-is.",
+        "All three products should display correctly."
+      ],
+      "hint": "Test builders make test setup expressive: new Product.Builder().withName('Test').withPrice(50).outOfStock().inactive().build(). Static factory methods like Product.aDefaultProduct() improve readability further.",
+      "expectedOutput": "Default: Product{id=1, name='Test Product', category='General', price=9.99, stock=100, active=true, tags=[]}\nExpensive: Product{id=2, name='Luxury Item', category='Premium', price=999.99, stock=100, active=true, tags=[luxury, premium]}\nOut of stock: Product{id=3, name='Popular Item', category='General', price=9.99, stock=0, active=false, tags=[]}\nIs expensive active: true\nIs OOS active: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 102,
+    "allowedSubmissionType": "TEXT"
+  }
+]

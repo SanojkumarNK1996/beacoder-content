@@ -1,0 +1,22 @@
+<h1>🔍 Binary Search Trees (BST)</h1>
+<h2>🎯 BST Property</h2>
+<p>For every node: all values in the <strong>left subtree &lt; node</strong>, all values in the <strong>right subtree &gt; node</strong>.</p>
+<h2>🔧 Operations</h2>
+<ul>
+  <li><strong>Search</strong>: O(log n) avg, O(n) worst</li>
+  <li><strong>Insert</strong>: O(log n) avg</li>
+  <li><strong>Delete</strong>: O(log n) avg</li>
+</ul>
+<div class="code-example">
+  <pre>
+TreeNode search(TreeNode root, int target) {
+    if (root == null || root.val == target) return root;
+    if (target &lt; root.val) return search(root.left, target);
+    return search(root.right, target);
+}
+  </pre>
+</div>
+<h2>⚠️ Pitfall: Degradation</h2>
+<p>If you insert already-sorted data, a BST degrades to a linked list (O(n) operations). Use a <strong>balanced BST</strong> (AVL, Red-Black) to avoid this.</p>
+<h2>🎯 Summary</h2>
+<p>BSTs provide O(log n) search on average and maintain sorted order. Ensure balance for consistent performance.</p>

@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 211, "title": "Introduction to AWS RDS", "dataType": "notes", "data": "intro_to_rds.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 212, "title": "RDS Database Engines", "dataType": "notes", "data": "rds_database_engines.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 213, "title": "RDS Multi-AZ and Read Replicas", "dataType": "notes", "data": "rds_multi_az_and_replicas.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 214, "title": "Introduction to DynamoDB", "dataType": "notes", "data": "intro_to_dynamodb.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 215, "title": "DynamoDB Tables Keys and Indexes", "dataType": "notes", "data": "dynamodb_tables_keys_indexes.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 216, "title": "RDS vs DynamoDB Comparison", "dataType": "notes", "data": "rds_vs_dynamodb.html", "displayOrder": 6, "verified": false}
+]

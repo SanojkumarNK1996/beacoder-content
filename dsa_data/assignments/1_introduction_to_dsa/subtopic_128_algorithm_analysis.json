@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Big O Complexity Analyzer",
+    "description": {
+      "task": "Implement a ComplexityAnalyzer class that measures and compares the runtime growth of three algorithm patterns: O(1) constant, O(n) linear, and O(n²) quadratic. Run each pattern for increasing input sizes and print the operation counts.",
+      "language": "java",
+      "starterCode": "public class ComplexityAnalyzer {\n\n    // O(1): returns first element regardless of array size\n    public int constantOp(int[] arr) {\n        if (arr == null || arr.length == 0) return -1;\n        return arr[0]; // always one operation\n    }\n\n    // O(n): counts operations while summing the array\n    public long linearOps(int n) {\n        long ops = 0;\n        long sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += i;\n            ops++;\n        }\n        return ops;\n    }\n\n    // O(n^2): counts operations in nested loop\n    public long quadraticOps(int n) {\n        // TODO: implement nested loop, count and return operation count\n        return 0;\n    }\n\n    public void printGrowthTable(int[] sizes) {\n        System.out.printf(\"%-10s %-12s %-12s %-14s%n\", \"n\", \"O(1)\", \"O(n)\", \"O(n^2)\");\n        for (int n : sizes) {\n            System.out.printf(\"%-10d %-12d %-12d %-14d%n\",\n                n, 1, linearOps(n), quadraticOps(n));\n        }\n    }\n\n    public static void main(String[] args) {\n        ComplexityAnalyzer ca = new ComplexityAnalyzer();\n        ca.printGrowthTable(new int[]{1, 10, 100});\n    }\n}",
+      "instructions": [
+        "quadraticOps(n) must use two nested loops each running n times",
+        "Increment and return an ops counter from the inner loop body",
+        "The result of quadraticOps(n) must equal n*n",
+        "printGrowthTable() is already implemented; only quadraticOps() needs to be written",
+        "Output must match the expected table format exactly"
+      ],
+      "hint": "Two nested for loops: for i in 0..n, for j in 0..n, ops++. Return ops. With n=10 this returns 100, n=100 returns 10000.",
+      "expectedOutput": "n          O(1)         O(n)         O(n^2)        \n1          1            1            1             \n10         1            10           100           \n100        1            100          10000         "
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 128,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Space Complexity Calculator",
+    "description": {
+      "task": "Build a SpaceComplexityDemo class with three methods. Each method allocates memory differently: O(1) space (only a few variables), O(n) space (array proportional to n), and O(n²) space (2D array). Compute and print the number of integer slots allocated for each.",
+      "language": "java",
+      "starterCode": "public class SpaceComplexityDemo {\n\n    // O(1) space - only uses a fixed number of variables\n    public int constantSpace(int[] arr) {\n        int max = arr[0];\n        for (int v : arr) {\n            if (v > max) max = v;\n        }\n        return max; // auxiliary space = O(1)\n    }\n\n    // O(n) space - creates a copy of the input\n    public int[] linearSpace(int n) {\n        int[] result = new int[n];\n        for (int i = 0; i < n; i++) result[i] = i * i;\n        return result; // auxiliary space = O(n)\n    }\n\n    // O(n^2) space - creates an n x n matrix\n    public int[][] quadraticSpace(int n) {\n        // TODO: create n x n matrix, fill [i][j] = i * n + j\n        return null;\n    }\n\n    public void printSpaceUsage(int n) {\n        int[] linear = linearSpace(n);\n        int[][] quad = quadraticSpace(n);\n        System.out.println(\"n = \" + n);\n        System.out.println(\"O(1) auxiliary slots: 2\");\n        System.out.println(\"O(n) auxiliary slots: \" + linear.length);\n        System.out.println(\"O(n^2) auxiliary slots: \" + (quad.length * quad[0].length));\n    }\n\n    public static void main(String[] args) {\n        SpaceComplexityDemo demo = new SpaceComplexityDemo();\n        demo.printSpaceUsage(5);\n        demo.printSpaceUsage(10);\n    }\n}",
+      "instructions": [
+        "quadraticSpace(n) must create and return a new int[n][n] matrix",
+        "Fill each cell [i][j] with the value i * n + j",
+        "printSpaceUsage() is already implemented — only quadraticSpace() needs code",
+        "The returned matrix must not be null for printSpaceUsage() to work correctly",
+        "Verify O(n²) slots = n*n for each call"
+      ],
+      "hint": "int[][] matrix = new int[n][n]; Then nested loops: matrix[i][j] = i * n + j; return matrix;",
+      "expectedOutput": "n = 5\nO(1) auxiliary slots: 2\nO(n) auxiliary slots: 5\nO(n^2) auxiliary slots: 25\nn = 10\nO(1) auxiliary slots: 2\nO(n) auxiliary slots: 10\nO(n^2) auxiliary slots: 100"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 128,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Big O Notation Classifier",
+    "description": {
+      "task": "Write a BigOClassifier class that, given a measured operation count relative to input size n, classifies it into the nearest Big O category: O(1), O(log n), O(n), O(n log n), O(n²). Implement classify(long ops, int n) using ratio comparisons.",
+      "language": "java",
+      "starterCode": "public class BigOClassifier {\n\n    public String classify(long ops, int n) {\n        if (n <= 1) return \"O(1)\";\n\n        double logN = Math.log(n) / Math.log(2); // log base 2\n        double ratio = (double) ops / n;\n\n        if (ops <= 2) return \"O(1)\";             // constant\n        if (ops <= logN * 1.5) return \"O(log n)\"; // logarithmic\n        if (ratio <= 1.5) return \"O(n)\";          // linear\n        if (ratio <= logN * 1.5) return \"O(n log n)\"; // linearithmic\n        return \"O(n^2)\";                          // quadratic (fallback)\n    }\n\n    public void demonstrateClassifications() {\n        // TODO: call classify with representative (ops, n) pairs and print results\n        // Test: O(1)->ops=1,n=1000 | O(log n)->ops=10,n=1024 | O(n)->ops=1000,n=1000\n        //       O(n log n)->ops=10000,n=1000 | O(n^2)->ops=1000000,n=1000\n    }\n\n    public static void main(String[] args) {\n        BigOClassifier boc = new BigOClassifier();\n        System.out.println(boc.classify(1, 1000));\n        System.out.println(boc.classify(10, 1024));\n        System.out.println(boc.classify(1000, 1000));\n        System.out.println(boc.classify(10000, 1000));\n        System.out.println(boc.classify(1000000, 1000));\n    }\n}",
+      "instructions": [
+        "The classify() logic is already provided in the skeleton — read it carefully",
+        "demonstrateClassifications() must call classify() at least 5 times with the test pairs specified in the comment",
+        "Print each result in the format: 'classify(ops=X, n=Y) -> Z'",
+        "Do not modify the logic inside classify()",
+        "main() tests are fixed — your demonstrateClassifications() output is additional"
+      ],
+      "hint": "In demonstrateClassifications(), loop through a 2D array of {ops, n} pairs and call classify for each, printing the formatted result string.",
+      "expectedOutput": "O(1)\nO(log n)\nO(n)\nO(n log n)\nO(n^2)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 128,
+    "allowedSubmissionType": "TEXT"
+  }
+]

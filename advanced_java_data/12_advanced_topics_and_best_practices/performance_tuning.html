@@ -1,0 +1,60 @@
+<h1>🚀 Performance Tuning</h1>
+
+<h2>🎯 Goal</h2>
+<p>Make Java/Spring applications <strong>faster and more efficient</strong> by understanding where time and resources are spent, then optimizing based on data.</p>
+
+<h2>🧪 Measure Before You Optimize</h2>
+<ul>
+  <li>Never guess – use <strong>profilers</strong> and <strong>metrics</strong></li>
+  <li>Identify <strong>hot spots</strong>: slow endpoints, heavy queries, high GC activity</li>
+</ul>
+
+<h2>🧠 JVM Tuning Basics</h2>
+<ul>
+  <li>Heap size: <code>-Xms</code>, <code>-Xmx</code></li>
+  <li>Garbage Collectors: G1 (default in modern JVMs) is a good general choice</li>
+  <li>Monitor GC logs for long pauses and frequent collections</li>
+</ul>
+
+<h2>🐢 Common Bottlenecks</h2>
+<ul>
+  <li>Slow database queries (missing indexes, N+1 queries)</li>
+  <li>Excessive remote calls (chatty services)</li>
+  <li>Inefficient algorithms (O(n²) where O(n log n) is enough)</li>
+  <li>Heavy object allocation causing frequent GC</li>
+</ul>
+
+<h2>📊 Profiling Tools</h2>
+<ul>
+  <li>Java Flight Recorder / Mission Control</li>
+  <li>VisualVM</li>
+  <li>JProfiler, YourKit (commercial)</li>
+</ul>
+
+<h2>🗃️ Database Performance</h2>
+<ul>
+  <li>Use proper <strong>indexes</strong> on frequently queried columns</li>
+  <li>Avoid N+1 selects in JPA – use <code>JOIN FETCH</code> or entity graphs</li>
+  <li>Review query plans, avoid SELECT *</li>
+</ul>
+
+<h2>🧵 Threading and Concurrency</h2>
+<ul>
+  <li>Use thread pools (ExecutorService, Spring&apos;s task executors)</li>
+  <li>Avoid blocking calls in reactive pipelines</li>
+  <li>Beware of contention on shared locks/synchronized blocks</li>
+</ul>
+
+<h2>🧮 Caching</h2>
+<ul>
+  <li>Cache expensive computations or frequently accessed data</li>
+  <li>Use Spring Cache abstraction with providers like Redis, Caffeine</li>
+  <li>Be mindful of cache invalidation and memory usage</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Always <strong>measure first</strong>, then optimize</li>
+  <li>Focus on DB queries, remote calls, and memory usage</li>
+  <li>Use JVM tuning, caching, and efficient algorithms to improve performance</li>
+</ul>

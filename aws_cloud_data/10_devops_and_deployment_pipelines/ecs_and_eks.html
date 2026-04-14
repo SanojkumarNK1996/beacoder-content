@@ -1,0 +1,23 @@
+<h1>🐳 Containers on AWS: ECS and EKS</h1>
+<h2>📦 What are Containers?</h2>
+<p>Containers package an application and all its dependencies into a portable unit. Docker is the standard container runtime. AWS offers managed services to run containers at scale.</p>
+<h2>🏗️ Amazon ECS (Elastic Container Service)</h2>
+<p>AWS-native container orchestration service. Run Docker containers without managing servers.</p>
+<ul>
+  <li><strong>Fargate launch type</strong>: Serverless containers — AWS manages underlying compute</li>
+  <li><strong>EC2 launch type</strong>: You manage EC2 cluster, more control</li>
+  <li>Integrates natively with ALB, IAM, CloudWatch, ECR</li>
+</ul>
+<h2>☸️ Amazon EKS (Elastic Kubernetes Service)</h2>
+<p>Managed Kubernetes service. If your team already uses Kubernetes, EKS runs it without managing the control plane.</p>
+<ul>
+  <li>Standard Kubernetes (kubectl, helm charts work unchanged)</li>
+  <li>Higher complexity than ECS but better for multi-cloud portability</li>
+</ul>
+<h2>🎯 ECS vs EKS</h2>
+<ul>
+  <li><strong>ECS</strong>: Simpler, AWS-native, better for AWS-first teams</li>
+  <li><strong>EKS</strong>: Kubernetes ecosystem, better for multi-cloud or existing K8s expertise</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Use ECS Fargate for the simplest managed container experience on AWS. Use EKS if you need full Kubernetes compatibility.</p>

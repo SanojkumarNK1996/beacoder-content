@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Method Overloading Shapes",
+    "description": {
+      "task": "Demonstrate compile-time polymorphism by creating an overloaded printInfo() method that accepts different parameter types (String, int, double).",
+      "language": "java",
+      "starterCode": "public class PolymorphismDemo {\n\n    // Overload 1: printInfo(String value)\n    // Overload 2: printInfo(int value)\n    // Overload 3: printInfo(double value)\n\n    public static void main(String[] args) {\n        printInfo(\"Hello\");\n        printInfo(42);\n        printInfo(3.14);\n    }\n}",
+      "instructions": [
+        "Define three static methods all named printInfo.",
+        "Each should print: 'String value: Hello', 'Integer value: 42', 'Double value: 3.14'.",
+        "Java distinguishes them by the parameter type (compile-time resolution).",
+        "Do NOT change main()."
+      ],
+      "hint": "Compile-time polymorphism (method overloading) is resolved by the compiler based on the number and type of arguments at the call site.",
+      "expectedOutput": "String value: Hello\nInteger value: 42\nDouble value: 3.14"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 16,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Runtime Polymorphism",
+    "description": {
+      "task": "Create a Shape base class and two subclasses (Circle, Rectangle). Use a Shape reference to call the overridden area() method on each object.",
+      "language": "java",
+      "context": "Runtime polymorphism (dynamic dispatch) means the JVM decides which overridden method to call at runtime based on the actual object type, not the reference type.",
+      "starterCode": "class Shape {\n    double area() {\n        return 0;\n    }\n}\n\n// Circle extends Shape: has double radius, override area() = Math.PI * radius * radius\n\n// Rectangle extends Shape: has double width, height, override area() = width * height\n\npublic class RuntimePolymorphism {\n    public static void main(String[] args) {\n        Shape s1 = new Circle(7.0);        // Shape reference, Circle object\n        Shape s2 = new Rectangle(4.0, 5.0); // Shape reference, Rectangle object\n\n        System.out.printf(\"Circle area: %.2f%n\", s1.area());\n        System.out.printf(\"Rectangle area: %.2f%n\", s2.area());\n    }\n}",
+      "instructions": [
+        "Implement Circle with constructor Circle(double radius) and override area().",
+        "Implement Rectangle with constructor Rectangle(double width, double height) and override area().",
+        "Do NOT change RuntimePolymorphism.main().",
+        "The key demonstration: s1 and s2 are of type Shape, but the overridden method of the actual object runs."
+      ],
+      "hint": "Math.PI * 7.0 * 7.0 ≈ 153.94. Use @Override annotation on each area() method.",
+      "expectedOutput": "Circle area: 153.94\nRectangle area: 20.00"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 16,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Polymorphic Array of Shapes",
+    "description": {
+      "task": "Store multiple Shape objects in a Shape array, then iterate and call area() on each. Java will dispatch the correct overridden method at runtime.",
+      "language": "java",
+      "context": "Storing different subtype objects in a parent-type array and calling their overridden methods is a core real-world use of runtime polymorphism.",
+      "starterCode": "// Reuse Shape, Circle, and Rectangle from the previous task\n// (or redefine them here as inner or separate classes)\n\npublic class ShapeArray {\n    public static void main(String[] args) {\n        Shape[] shapes = {\n            new Circle(3.0),\n            new Rectangle(2.0, 8.0),\n            new Circle(5.0),\n            new Rectangle(6.0, 6.0)\n        };\n\n        double totalArea = 0;\n        for (Shape s : shapes) {\n            double a = s.area();\n            System.out.printf(\"Area: %.2f%n\", a);\n            totalArea += a;\n        }\n        System.out.printf(\"Total area: %.2f%n\", totalArea);\n    }\n}",
+      "instructions": [
+        "Define Shape, Circle, and Rectangle classes as in the previous task (can be in the same file).",
+        "Do NOT change ShapeArray.main().",
+        "The for-each loop calls s.area() — the JVM picks Circle.area() or Rectangle.area() based on actual object type."
+      ],
+      "hint": "Math.PI * 3^2 ≈ 28.27, 2*8=16, Math.PI * 5^2 ≈ 78.54, 6*6=36. Total ≈ 158.81.",
+      "expectedOutput": "Area: 28.27\nArea: 16.00\nArea: 78.54\nArea: 36.00\nTotal area: 158.81"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 16,
+    "allowedSubmissionType": "TEXT"
+  }
+]

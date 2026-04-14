@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Encapsulated Person Class",
+    "description": {
+      "task": "Create a Person class with private fields and public getters/setters. Validate that age cannot be set to a negative value.",
+      "language": "java",
+      "starterCode": "public class Person {\n    private String name;\n    private int age;\n\n    // Constructor\n\n    // Getter and setter for name\n\n    // Getter for age\n    // Setter for age: reject negative values (print error, keep old value)\n\n    public void display() {\n        System.out.println(\"Name: \" + name + \", Age: \" + age);\n    }\n\n    public static void main(String[] args) {\n        Person p = new Person(\"Bob\", 25);\n        p.display();\n\n        p.setAge(30);\n        p.display();\n\n        p.setAge(-5);  // should print error and keep age as 30\n        p.display();\n    }\n}",
+      "instructions": [
+        "Declare private fields: String name and int age.",
+        "Write a constructor accepting name and age.",
+        "Write getName() / setName(String name) for name.",
+        "Write getAge() returning the age.",
+        "Write setAge(int age): if age < 0, print 'Error: Age cannot be negative.' and do NOT update the field.",
+        "Do NOT change display() or main()."
+      ],
+      "hint": "Encapsulation protects fields from invalid external changes. The setter acts as a gatekeeper for the private field.",
+      "expectedOutput": "Name: Bob, Age: 25\nName: Bob, Age: 30\nError: Age cannot be negative.\nName: Bob, Age: 30"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 14,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Access Modifier Demonstration",
+    "description": {
+      "task": "Create two classes (Box and BoxDemo) in the same file to demonstrate how private fields cannot be accessed directly, but public methods can expose them safely.",
+      "language": "java",
+      "context": "Access modifiers (private, public, protected) control visibility. Private fields hide implementation; public methods provide controlled access.",
+      "starterCode": "class Box {\n    private double length;\n    private double width;\n    private double height;\n\n    // Constructor\n\n    // getVolume() — public method returning length * width * height\n\n    // toString-style method: describe() — returns a formatted String\n}\n\npublic class BoxDemo {\n    public static void main(String[] args) {\n        Box b = new Box(3.0, 4.0, 5.0);\n\n        // This would NOT compile — private field:\n        // System.out.println(b.length);\n\n        // These work — public methods:\n        System.out.println(b.getVolume());\n        System.out.println(b.describe());\n    }\n}",
+      "instructions": [
+        "Implement the Box constructor accepting length, width, height.",
+        "Implement public double getVolume() returning length * width * height.",
+        "Implement public String describe() returning 'Box[3.0 x 4.0 x 5.0], Volume: 60.0'.",
+        "Do NOT change BoxDemo.main()."
+      ],
+      "hint": "describe() can build the string using: \"Box[\" + length + \" x \" + width + \" x \" + height + \"], Volume: \" + getVolume()",
+      "expectedOutput": "60.0\nBox[3.0 x 4.0 x 5.0], Volume: 60.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 14,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Temperature Class with Validation",
+    "description": {
+      "task": "Build a Temperature class that stores a Celsius value in a private field. The setter must reject values below absolute zero (-273.15°C).",
+      "language": "java",
+      "starterCode": "public class Temperature {\n    private double celsius;\n\n    // Constructor: use the setter to initialise so validation always runs\n\n    // setCelsius(): reject values below -273.15\n\n    // getCelsius()\n\n    // toFahrenheit(): converts and returns the Fahrenheit value\n\n    public static void main(String[] args) {\n        Temperature t = new Temperature(100.0);\n        System.out.println(\"Celsius: \" + t.getCelsius());\n        System.out.println(\"Fahrenheit: \" + t.toFahrenheit());\n\n        t.setCelsius(-300.0); // invalid — below absolute zero\n        System.out.println(\"After invalid set: \" + t.getCelsius());\n    }\n}",
+      "instructions": [
+        "Implement setCelsius(double celsius): if celsius < -273.15, print 'Error: Temperature below absolute zero.' and do NOT update.",
+        "Implement getCelsius() returning the field.",
+        "Implement toFahrenheit() returning (celsius * 9.0 / 5.0) + 32.",
+        "In the constructor, call setCelsius() so the same validation runs.",
+        "Do NOT change main()."
+      ],
+      "hint": "Calling the setter from the constructor: this.setCelsius(celsius); — this avoids duplicating validation logic.",
+      "expectedOutput": "Celsius: 100.0\nFahrenheit: 212.0\nError: Temperature below absolute zero.\nAfter invalid set: 100.0"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 14,
+    "allowedSubmissionType": "TEXT"
+  }
+]

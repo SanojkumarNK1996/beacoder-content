@@ -1,0 +1,34 @@
+[
+  {
+    "subtopicId": 107,
+    "title": "Microservices Architecture",
+    "dataType": "notes",
+    "data": "microservices_architecture.html",
+    "displayOrder": 1,
+    "verified": false
+  },
+  {
+    "subtopicId": 108,
+    "title": "Service Communication",
+    "dataType": "notes",
+    "data": "service_communication.html",
+    "displayOrder": 2,
+    "verified": false
+  },
+  {
+    "subtopicId": 109,
+    "title": "Spring Cloud Overview",
+    "dataType": "notes",
+    "data": "spring_cloud_overview.html",
+    "displayOrder": 3,
+    "verified": false
+  },
+  {
+    "subtopicId": 110,
+    "title": "API Gateway Pattern",
+    "dataType": "notes",
+    "data": "api_gateway_pattern.html",
+    "displayOrder": 4,
+    "verified": false
+  }
+]

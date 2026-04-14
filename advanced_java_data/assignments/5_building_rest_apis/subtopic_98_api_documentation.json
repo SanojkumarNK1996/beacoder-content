@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Generate OpenAPI Spec",
+    "description": {
+      "task": "Build a Java program that generates a simplified OpenAPI 3.0 specification by reading annotated endpoint definitions. Output the spec as structured text.",
+      "language": "java",
+      "starterCode": "import java.lang.annotation.*;\nimport java.lang.reflect.*;\nimport java.util.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface ApiOperation {\n    String summary();\n    String description() default \"\";\n    int responseCode() default 200;\n    String responseDescription() default \"Success\";\n}\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface ApiTag { String value(); }\n\npublic class UserApi {\n    @ApiTag(\"users\")\n    @ApiOperation(summary = \"Get all users\", description = \"Returns a list of all registered users\")\n    public void getUsers() {}\n    \n    @ApiTag(\"users\")\n    @ApiOperation(summary = \"Create user\", description = \"Creates a new user account\", responseCode = 201, responseDescription = \"User created\")\n    public void createUser() {}\n    \n    @ApiTag(\"users\")\n    @ApiOperation(summary = \"Delete user\", description = \"Deletes a user by ID\", responseCode = 204, responseDescription = \"No Content\")\n    public void deleteUser() {}\n}\n\npublic class OpenApiGenerator {\n    public void generateSpec(Class<?> apiClass) throws Exception {\n        System.out.println(\"openapi: 3.0.0\");\n        System.out.println(\"info:\");\n        System.out.println(\"  title: \" + apiClass.getSimpleName() + \" Documentation\");\n        System.out.println(\"  version: 1.0.0\");\n        System.out.println(\"paths:\");\n        \n        // TODO: Iterate methods with @ApiOperation annotation\n        // Print each method as a path entry with summary, description, response code\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        new OpenApiGenerator().generateSpec(UserApi.class);\n    }\n}",
+      "instructions": [
+        "In generateSpec(), iterate all declared methods of apiClass.",
+        "For each method annotated with @ApiOperation, print path entry: method name as endpoint name, summary, description, responseCode, responseDescription.",
+        "Format: each method printed as '  /[methodName]:' followed by indented summary, description, and response.",
+        "Run Main as-is."
+      ],
+      "hint": "Springdoc/Swagger reads @Operation, @ApiResponse from Spring controllers and generates OpenAPI JSON automatically. Access it at /swagger-ui.html or /v3/api-docs.",
+      "expectedOutput": "openapi: 3.0.0\ninfo:\n  title: UserApi Documentation\n  version: 1.0.0\npaths:\n  /getUsers:\n    summary: Get all users\n    description: Returns a list of all registered users\n    response: 200 - Success\n  /createUser:\n    summary: Create user\n    description: Creates a new user account\n    response: 201 - User created\n  /deleteUser:\n    summary: Delete user\n    description: Deletes a user by ID\n    response: 204 - No Content"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 98,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "API Versioning Strategies",
+    "description": {
+      "task": "Implement three API versioning strategies in Java: URL versioning (/api/v1/users), header versioning (Accept: application/vnd.api.v2+json), and query param versioning (?version=3).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ApiRequest {\n    private String url;\n    private Map<String, String> headers;\n    private Map<String, String> queryParams;\n    \n    public ApiRequest(String url, Map<String, String> headers, Map<String, String> queryParams) {\n        this.url = url; this.headers = headers; this.queryParams = queryParams;\n    }\n    \n    public String getUrl() { return url; }\n    public Map<String, String> getHeaders() { return headers; }\n    public Map<String, String> getQueryParams() { return queryParams; }\n}\n\npublic class ApiVersionResolver {\n    \n    public String resolveUrlVersion(ApiRequest request) {\n        // TODO: Extract version from URL pattern /api/v{N}/...\n        // Return \"v1\", \"v2\", etc. or \"unknown\"\n        return \"unknown\";\n    }\n    \n    public String resolveHeaderVersion(ApiRequest request) {\n        // TODO: Extract version from Accept header: 'application/vnd.api.v2+json'\n        return \"unknown\";\n    }\n    \n    public String resolveQueryParamVersion(ApiRequest request) {\n        // TODO: Get 'version' query parameter, prefix with 'v'\n        return \"unknown\";\n    }\n}\n\npublic class VersionedUserController {\n    public String getUser(String version) {\n        return switch (version) {\n            case \"v1\" -> \"{\\\"id\\\": 1, \\\"name\\\": \\\"Alice\\\"}\";\n            case \"v2\" -> \"{\\\"id\\\": 1, \\\"firstName\\\": \\\"Alice\\\", \\\"lastName\\\": \\\"Smith\\\"}\";\n            case \"v3\" -> \"{\\\"userId\\\": 1, \\\"fullName\\\": \\\"Alice Smith\\\", \\\"version\\\": 3}\";\n            default -> \"{\\\"error\\\": \\\"Unknown API version\\\"}\";\n        };\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ApiVersionResolver resolver = new ApiVersionResolver();\n        VersionedUserController controller = new VersionedUserController();\n        \n        ApiRequest urlVersioned = new ApiRequest(\"/api/v1/users/1\", new HashMap<>(), new HashMap<>());\n        ApiRequest headerVersioned = new ApiRequest(\"/api/users/1\",\n            Map.of(\"Accept\", \"application/vnd.api.v2+json\"), new HashMap<>());\n        ApiRequest queryVersioned = new ApiRequest(\"/api/users/1\",\n            new HashMap<>(), Map.of(\"version\", \"3\"));\n        \n        String v1 = resolver.resolveUrlVersion(urlVersioned);\n        String v2 = resolver.resolveHeaderVersion(headerVersioned);\n        String v3 = resolver.resolveQueryParamVersion(queryVersioned);\n        \n        System.out.println(\"URL version: \" + v1 + \" -> \" + controller.getUser(v1));\n        System.out.println(\"Header version: \" + v2 + \" -> \" + controller.getUser(v2));\n        System.out.println(\"Query version: \" + v3 + \" -> \" + controller.getUser(v3));\n    }\n}",
+      "instructions": [
+        "resolveUrlVersion() uses regex to find /v{N}/ in the URL and returns 'vN'.",
+        "resolveHeaderVersion() gets the Accept header value, finds 'vnd.api.v(.+?)\\\\+json' pattern and returns 'v' + the match.",
+        "resolveQueryParamVersion() returns 'v' + queryParams.get('version').",
+        "Run Main as-is."
+      ],
+      "hint": "URL versioning is most common and explicit. Header versioning is 'cleaner' per REST purists but harder to test. Spring supports all three — URL versioning with path variables is simplest.",
+      "expectedOutput": "URL version: v1 -> {\"id\": 1, \"name\": \"Alice\"}\nHeader version: v2 -> {\"id\": 1, \"firstName\": \"Alice\", \"lastName\": \"Smith\"}\nQuery version: v3 -> {\"userId\": 1, \"fullName\": \"Alice Smith\", \"version\": 3}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 98,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Swagger Annotation Documentation",
+    "description": {
+      "task": "Create a Java program that simulates reading Swagger/OpenAPI-like annotations from a REST controller and generating human-readable API documentation.",
+      "language": "java",
+      "context": "Springdoc-openapi generates interactive API docs from @Operation, @Parameter, @ApiResponse annotations. Good API documentation reduces developer onboarding time significantly.",
+      "starterCode": "import java.lang.annotation.*;\nimport java.lang.reflect.*;\nimport java.util.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface Operation {\n    String summary();\n    String description();\n}\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface ApiResponse {\n    int responseCode();\n    String description();\n}\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.PARAMETER)\n@interface Parameter {\n    String name();\n    String description();\n    boolean required() default true;\n}\n\npublic class ProductController {\n    \n    @Operation(summary = \"Get product by ID\", description = \"Retrieves a single product by its unique identifier\")\n    @ApiResponse(responseCode = 200, description = \"Product found\")\n    public void getProduct(@Parameter(name = \"id\", description = \"The product ID\") int id) {}\n    \n    @Operation(summary = \"Search products\", description = \"Search products by name with pagination\")\n    @ApiResponse(responseCode = 200, description = \"Products matching search criteria\")\n    public void searchProducts(\n        @Parameter(name = \"q\", description = \"Search keyword\", required = false) String query,\n        @Parameter(name = \"page\", description = \"Page number (0-based)\", required = false) int page) {}\n}\n\npublic class ApiDocGenerator {\n    public void generate(Class<?> controllerClass) throws Exception {\n        System.out.println(\"=== API Documentation: \" + controllerClass.getSimpleName() + \" ===\");\n        for (Method method : controllerClass.getDeclaredMethods()) {\n            // TODO: Read @Operation and @ApiResponse annotations\n            // TODO: Read @Parameter annotations from method parameters\n            // Print formatted documentation\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        new ApiDocGenerator().generate(ProductController.class);\n    }\n}",
+      "instructions": [
+        "In generate(), for each method with @Operation, print the method name, summary, description.",
+        "If @ApiResponse exists, print the response code and description.",
+        "For each method parameter with @Parameter annotation, print parameter name, description, and required status.",
+        "Run Main as-is."
+      ],
+      "hint": "Add springdoc-openapi-starter-webmvc-ui to pom.xml and your Spring Boot app gets Swagger UI at /swagger-ui.html. No extra code needed — it reads existing annotations.",
+      "expectedOutput": "=== API Documentation: ProductController ===\nEndpoint: getProduct\n  Summary: Get product by ID\n  Description: Retrieves a single product by its unique identifier\n  Response: 200 - Product found\n  Parameters:\n    - id (required): The product ID\nEndpoint: searchProducts\n  Summary: Search products\n  Description: Search products by name with pagination\n  Response: 200 - Products matching search criteria\n  Parameters:\n    - q (optional): Search keyword\n    - page (optional): Page number (0-based)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 98,
+    "allowedSubmissionType": "TEXT"
+  }
+]

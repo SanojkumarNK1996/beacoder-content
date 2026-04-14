@@ -1,0 +1,19 @@
+<h1>🔑 DynamoDB Tables, Keys, and Indexes</h1>
+<h2>📋 Table Structure</h2>
+<ul>
+  <li><strong>Table</strong>: Collection of items (like a database table)</li>
+  <li><strong>Item</strong>: A record (like a row), up to 400 KB</li>
+  <li><strong>Attribute</strong>: Data field on an item (like a column, but flexible)</li>
+</ul>
+<h2>🔑 Primary Key Types</h2>
+<ul>
+  <li><strong>Partition Key (Hash Key)</strong>: Single unique attribute. DynamoDB hashes it to determine the partition.</li>
+  <li><strong>Composite Key (Partition + Sort Key)</strong>: Two-attribute key. Enables multiple items with same partition key (different sort keys). Most flexible.</li>
+</ul>
+<h2>📌 Indexes</h2>
+<ul>
+  <li><strong>GSI (Global Secondary Index)</strong>: Query on any non-primary-key attribute. Has its own capacity units. Can project any attributes.</li>
+  <li><strong>LSI (Local Secondary Index)</strong>: Alternative sort key for the same partition key. Must be created at table creation time.</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Design your access patterns first, then choose partition key + sort key to support them. Add GSIs for additional query patterns.</p>

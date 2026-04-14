@@ -6,14 +6,24 @@ from datetime import datetime
 # ----------------------------
 # CONFIGURATION
 # ----------------------------
-BASE_FOLDER = "java_course_data"  # path containing folders like 1_introduction, 2_java_basics, etc.
+BASE_FOLDERS = [
+    "java_course_data",      # path containing folders like 1_introduction, 2_java_basics, etc.
+    "sql_course_data",       # path containing SQL course folders
+    "advanced_java_data",    # path containing advanced Java topics
+    "dsa_data",              # path containing Data Structures & Algorithms topics
+    "aws_cloud_data",        # path containing AWS Cloud Computing topics
+    "react_data",            # path containing React JS topics
+    "html_course_data",      # path containing HTML course topics
+    "css_course_data",       # path containing CSS course topics
+    "javascript_course_data" # path containing JavaScript course topics
+]
 START_ID = 1              # starting id for ContentBlocks
 DB_CONFIG = {
-    "host": "mydb.cf8g08o8kzdv.ap-south-1.rds.amazonaws.com",
+    "host": "localhost",
     "port": 5432,
-    "dbname": "beacoder",
-    "user": "beacoder_user",
-    "password": "beacoder_password"
+    "dbname": "beacoder",  # Use default postgres database first
+    "user": "sanojkumar.narayanankutty",  # Your system username
+    # "password": "beacoder_password"  # Try without password first
 }
 
 # ----------------------------
@@ -85,25 +95,33 @@ def main():
         log("Connected to database successfully.")
         total_records = 0
 
-        for folder_name in sorted(os.listdir(BASE_FOLDER)):
-            folder_path = os.path.join(BASE_FOLDER, folder_name)
-            if not os.path.isdir(folder_path):
+        # Process each base folder
+        for base_folder in BASE_FOLDERS:
+            if not os.path.exists(base_folder):
+                log(f"Warning: Base folder '{base_folder}' does not exist. Skipping.")
                 continue
+                
+            log(f"Processing base folder: {base_folder}")
 
-            main_json_path = os.path.join(folder_path, "main.json")
-            if not os.path.exists(main_json_path):
-                log(f"Skipping folder {folder_name}: main.json not found.")
-                continue
+            for folder_name in sorted(os.listdir(base_folder)):
+                folder_path = os.path.join(base_folder, folder_name)
+                if not os.path.isdir(folder_path):
+                    continue
 
-            log(f"Processing folder: {folder_name}")
-            records = load_json(main_json_path)
+                main_json_path = os.path.join(folder_path, "main.json")
+                if not os.path.exists(main_json_path):
+                    log(f"Skipping folder {base_folder}/{folder_name}: main.json not found.")
+                    continue
 
-            for record in records:
-                json_data = build_data_json(record, folder_path)
-                insert_content_block(conn, START_ID, record, json_data)
-                log(f"Inserted record ID {START_ID} ({record['dataType']}: {record['title']})")
-                START_ID += 1
-                total_records += 1
+                log(f"Processing subfolder: {base_folder}/{folder_name}")
+                records = load_json(main_json_path)
+
+                for record in records:
+                    json_data = build_data_json(record, folder_path)
+                    insert_content_block(conn, START_ID, record, json_data)
+                    log(f"Inserted record ID {START_ID} ({record['dataType']}: {record['title']})")
+                    START_ID += 1
+                    total_records += 1
 
         conn.commit()
         log(f"✅ Completed successfully. {total_records} records inserted.")

@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 272, "title": "Understanding State in React", "dataType": "notes", "data": "understanding_state.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 273, "title": "useState Hook", "dataType": "notes", "data": "use_state_hook.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 274, "title": "Props and Prop Types", "dataType": "notes", "data": "props_and_proptypes.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 275, "title": "Lifting State Up", "dataType": "notes", "data": "lifting_state_up.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 276, "title": "Controlled vs Uncontrolled Components", "dataType": "notes", "data": "controlled_vs_uncontrolled.html", "displayOrder": 5, "verified": false}
+]

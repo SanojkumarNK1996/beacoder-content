@@ -1,0 +1,31 @@
+<h1>❓ Optional Chaining and Nullish Coalescing</h1>
+<h2>🎯 Optional Chaining (?.)  </h2>
+<p>Safely access deeply nested properties without throwing "Cannot read property of undefined".</p>
+<div class="code-example">
+  <pre>
+const user = { profile: { address: { city: 'London' } } };
+
+// Old way (verbose):
+const city = user &amp;&amp; user.profile &amp;&amp; user.profile.address &amp;&amp; user.profile.address.city;
+
+// Optional chaining:
+const city = user?.profile?.address?.city; // 'London' (or undefined safely)
+
+// With methods:
+const name = user?.getName?.(); // Calls only if method exists
+  </pre>
+</div>
+<h2>🌊 Nullish Coalescing (??)  </h2>
+<p>Returns the right-hand side only if the left side is <code>null</code> or <code>undefined</code> (not 0 or empty string).</p>
+<div class="code-example">
+  <pre>
+const name = user?.name ?? 'Anonymous'; // 'Anonymous' if null/undefined
+const count = data?.count ?? 0;         // 0 if null/undefined
+
+// vs || (breaks for falsy values like 0, '', false)
+const price = product?.price ?? 0;  // Correct: 0 is a valid price
+const price2 = product?.price || 0; // Wrong: treats 0 as falsy!
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Use <code>?.</code> to safely traverse API responses with nullable fields. Use <code>??</code> instead of <code>||</code> for default values to avoid bugs with falsy values like 0 or empty string.</p>

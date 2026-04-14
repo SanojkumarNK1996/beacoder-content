@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Tree Traversal Implementations",
+    "description": {
+      "task": "Implement a TreeTraversals class with inorder, preorder, postorder (all recursive), and level-order (BFS using a queue) traversals. Each method returns the visited node values as a List<Integer>.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TreeTraversals {\n\n    static class Node {\n        int val; Node left, right;\n        Node(int v) { val = v; }\n    }\n\n    public List<Integer> inorder(Node root) {\n        List<Integer> result = new ArrayList<>();\n        inorderHelper(root, result);\n        return result;\n    }\n    private void inorderHelper(Node node, List<Integer> result) {\n        if (node == null) return;\n        inorderHelper(node.left, result);\n        result.add(node.val);\n        inorderHelper(node.right, result);\n    }\n\n    public List<Integer> preorder(Node root) {\n        List<Integer> result = new ArrayList<>();\n        // TODO: root, left, right\n        return result;\n    }\n\n    public List<Integer> postorder(Node root) {\n        List<Integer> result = new ArrayList<>();\n        // TODO: left, right, root\n        return result;\n    }\n\n    public List<Integer> levelOrder(Node root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n        Queue<Node> queue = new LinkedList<>();\n        queue.add(root);\n        // TODO: BFS, add each polled node's val, enqueue non-null children\n        return result;\n    }\n\n    public static void main(String[] args) {\n        Node root = new Node(1);\n        root.left = new Node(2); root.right = new Node(3);\n        root.left.left = new Node(4); root.left.right = new Node(5);\n        TreeTraversals tt = new TreeTraversals();\n        System.out.println(\"Inorder: \" + tt.inorder(root));\n        System.out.println(\"Preorder: \" + tt.preorder(root));\n        System.out.println(\"Postorder: \" + tt.postorder(root));\n        System.out.println(\"Level-order: \" + tt.levelOrder(root));\n    }\n}",
+      "instructions": [
+        "preorder: add root.val first, then recursively preorder left, then right",
+        "postorder: recursively postorder left, then right, then add root.val",
+        "levelOrder: while queue not empty: poll node, add val to result, enqueue left (if not null), enqueue right (if not null)",
+        "inorder is already implemented as reference",
+        "Tree 1→{2{4,5},3}: inorder=[4,2,5,1,3], preorder=[1,2,4,5,3], postorder=[4,5,2,3,1], level=[1,2,3,4,5]"
+      ],
+      "hint": "preorder helper: result.add(node.val); preorderHelper(node.left,result); preorderHelper(node.right,result); levelOrder: while(!queue.isEmpty()){Node n=queue.poll(); result.add(n.val); if(n.left!=null)queue.add(n.left); if(n.right!=null)queue.add(n.right);}",
+      "expectedOutput": "Inorder: [4, 2, 5, 1, 3]\nPreorder: [1, 2, 4, 5, 3]\nPostorder: [4, 5, 2, 3, 1]\nLevel-order: [1, 2, 3, 4, 5]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 149,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Iterative Inorder Traversal",
+    "description": {
+      "task": "Implement an IterativeTraversals class that performs inorder traversal iteratively using an explicit stack (no recursion). Also implement iterative preorder traversal.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class IterativeTraversals {\n\n    static class Node {\n        int val; Node left, right;\n        Node(int v) { val = v; }\n    }\n\n    public List<Integer> inorderIterative(Node root) {\n        List<Integer> result = new ArrayList<>();\n        Deque<Node> stack = new ArrayDeque<>();\n        Node curr = root;\n        while (curr != null || !stack.isEmpty()) {\n            // TODO: go left as far as possible pushing to stack\n            //       pop, add val, move to right\n        }\n        return result;\n    }\n\n    public List<Integer> preorderIterative(Node root) {\n        List<Integer> result = new ArrayList<>();\n        if (root == null) return result;\n        Deque<Node> stack = new ArrayDeque<>();\n        stack.push(root);\n        while (!stack.isEmpty()) {\n            // TODO: pop, add val; push right then left (so left pops first)\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        Node root = new Node(1);\n        root.left = new Node(2); root.right = new Node(3);\n        root.left.left = new Node(4); root.left.right = new Node(5);\n        IterativeTraversals it = new IterativeTraversals();\n        System.out.println(\"Iterative inorder: \" + it.inorderIterative(root));\n        System.out.println(\"Iterative preorder: \" + it.preorderIterative(root));\n    }\n}",
+      "instructions": [
+        "inorderIterative: while curr!=null push curr, curr=curr.left; then curr=stack.pop(); result.add(curr.val); curr=curr.right",
+        "preorderIterative: pop node, add val; if right!=null push right; if left!=null push left (left pushed last so it pops first)",
+        "Both should produce the same output as recursive versions",
+        "Inorder: [4,2,5,1,3], Preorder: [1,2,4,5,3]",
+        "Do not use any recursive calls"
+      ],
+      "hint": "inorderIterative: while(curr!=null||!stack.isEmpty()){while(curr!=null){stack.push(curr);curr=curr.left;} curr=stack.pop(); result.add(curr.val); curr=curr.right;}",
+      "expectedOutput": "Iterative inorder: [4, 2, 5, 1, 3]\nIterative preorder: [1, 2, 4, 5, 3]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 149,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Zigzag Level-Order Traversal",
+    "description": {
+      "task": "Implement a ZigzagTraversal class that traverses a binary tree level by level, alternating direction: left-to-right for even levels and right-to-left for odd levels. Return each level as a list.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ZigzagTraversal {\n\n    static class Node {\n        int val; Node left, right;\n        Node(int v) { val = v; }\n    }\n\n    public List<List<Integer>> zigzag(Node root) {\n        List<List<Integer>> result = new ArrayList<>();\n        if (root == null) return result;\n        Queue<Node> queue = new LinkedList<>();\n        queue.add(root);\n        boolean leftToRight = true;\n\n        while (!queue.isEmpty()) {\n            int size = queue.size();\n            int[] level = new int[size];\n            // TODO: fill 'level' left-to-right if leftToRight==true, else right-to-left\n            //       add children to queue for next level\n            List<Integer> levelList = new ArrayList<>();\n            for (int v : level) levelList.add(v);\n            result.add(levelList);\n            leftToRight = !leftToRight;\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        Node root = new Node(3);\n        root.left = new Node(9); root.right = new Node(20);\n        root.right.left = new Node(15); root.right.right = new Node(7);\n        ZigzagTraversal zt = new ZigzagTraversal();\n        System.out.println(zt.zigzag(root));\n    }\n}",
+      "instructions": [
+        "For each level: poll 'size' nodes, enqueue their children; fill the 'level' int array using index i when leftToRight, or (size-1-i) when right-to-left",
+        "leftToRight: level[i] = dequeued node val (i=0..size-1)",
+        "rightToLeft: level[size-1-i] = dequeued node val",
+        "Tree: 3→{9, 20{15,7}}. Level 0 (L→R): [3], Level 1 (R→L): [20,9], Level 2 (L→R): [15,7]",
+        "Do not use Collections.reverse(); use the index trick instead"
+      ],
+      "hint": "for(int i=0;i<size;i++){Node n=queue.poll(); int idx=leftToRight?i:size-1-i; level[idx]=n.val; if(n.left!=null)queue.add(n.left); if(n.right!=null)queue.add(n.right);}",
+      "expectedOutput": "[[3], [20, 9], [15, 7]]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 149,
+    "allowedSubmissionType": "TEXT"
+  }
+]

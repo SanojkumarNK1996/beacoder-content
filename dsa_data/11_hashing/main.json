@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 179, "title": "Hash Tables Fundamentals", "dataType": "notes", "data": "hash_tables_fundamentals.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 180, "title": "Collision Resolution", "dataType": "notes", "data": "collision_resolution.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 181, "title": "Hash Function Design", "dataType": "notes", "data": "hash_function_design.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 182, "title": "Applications of Hashing", "dataType": "notes", "data": "applications_of_hashing.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 183, "title": "Advanced Hashing", "dataType": "notes", "data": "advanced_hashing.html", "displayOrder": 5, "verified": false}
+]

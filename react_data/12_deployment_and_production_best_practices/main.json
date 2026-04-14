@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 314, "title": "Building for Production", "dataType": "notes", "data": "building_for_production.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 315, "title": "Deploying to Vercel and Netlify", "dataType": "notes", "data": "deploying_vercel_netlify.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 316, "title": "Deploying React to AWS", "dataType": "notes", "data": "deploying_react_to_aws.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 317, "title": "Environment Variables and Configuration", "dataType": "notes", "data": "environment_variables.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 318, "title": "SEO and Accessibility in React", "dataType": "notes", "data": "seo_and_accessibility.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 319, "title": "React Best Practices and Project Structure", "dataType": "notes", "data": "react_best_practices.html", "displayOrder": 6, "verified": false}
+]

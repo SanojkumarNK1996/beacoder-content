@@ -1,0 +1,43 @@
+<h1>⚡ useMemo and useReducer</h1>
+<h2>🧮 useMemo</h2>
+<p>Memoizes an <strong>expensive computed value</strong> — only recomputes when dependencies change.</p>
+<div class="code-example">
+  <pre>
+function FilteredList({ items, filter }) {
+  // Only re-filters when items or filter changes
+  const filtered = useMemo(
+    () =&gt; items.filter(i =&gt; i.name.includes(filter)),
+    [items, filter]
+  );
+  return &lt;ul&gt;{filtered.map(i =&gt; &lt;li key={i.id}&gt;{i.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+  </pre>
+</div>
+<h2>🔄 useReducer</h2>
+<p>An alternative to <code>useState</code> for complex state logic with multiple sub-values or when next state depends on previous.</p>
+<div class="code-example">
+  <pre>
+const initialState = { count: 0, step: 1 };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment': return { ...state, count: state.count + state.step };
+    case 'decrement': return { ...state, count: state.count - state.step };
+    case 'setStep':   return { ...state, step: action.payload };
+    default: return state;
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {state.count}, Step: {state.step}&lt;/p&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'increment' })}&gt;+&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p><code>useMemo</code> for expensive computations. <code>useReducer</code> for complex state with multiple related values — it's a mini Redux inside a component.</p>

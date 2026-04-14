@@ -1,0 +1,75 @@
+[
+  {
+    "title": "INNER JOIN and LEFT JOIN",
+    "description": {
+      "task": "Use INNER JOIN and LEFT JOIN to combine data from two related tables and understand the difference in their results.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE departments (\n  dept_id   INT PRIMARY KEY,\n  dept_name VARCHAR(50)\n);\n\nCREATE TABLE employees (\n  emp_id    INT PRIMARY KEY,\n  name      VARCHAR(60),\n  dept_id   INT,\n  salary    DECIMAL(10,2)\n);\n\nINSERT INTO departments VALUES\n  (1, 'Engineering'), (2, 'Marketing'), (3, 'HR'), (4, 'Finance');\n\nINSERT INTO employees VALUES\n  (101, 'Alice',  1, 95000),\n  (102, 'Bob',    2, 65000),\n  (103, 'Carol',  1, 88000),\n  (104, 'Dave',   3, 55000),\n  (105, 'Eve',    NULL, 70000);  -- Eve has no department\n\n-- INNER JOIN: only rows that match in BOTH tables\nSELECT e.name, d.dept_name, e.salary\nFROM employees e\nINNER JOIN departments d ON e.dept_id = d.dept_id\nORDER BY d.dept_name, e.name;\n\n-- LEFT JOIN: ALL employees, even those without a department\nSELECT e.name, COALESCE(d.dept_name, 'No Department') AS department, e.salary\nFROM employees e\nLEFT JOIN departments d ON e.dept_id = d.dept_id\nORDER BY department, e.name;\n\n-- RIGHT JOIN (all departments, even those without employees)\nSELECT d.dept_name, e.name, e.salary\nFROM employees e\nRIGHT JOIN departments d ON e.dept_id = d.dept_id\nORDER BY d.dept_name;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run INNER JOIN — Eve (NULL dept_id) should NOT appear.",
+        "Run LEFT JOIN — Eve appears as 'No Department'.",
+        "Run RIGHT JOIN — Finance appears with NULL employee (no one in Finance yet).",
+        "Add a comment: when would you choose LEFT JOIN over INNER JOIN?"
+      ],
+      "hint": "LEFT JOIN preserves all rows from the left (FROM) table. RIGHT JOIN preserves all from the right. INNER JOIN only keeps rows matching on both sides.",
+      "expectedOutput": "INNER: 4 rows (Eve excluded)\nLEFT: 5 rows (Eve shown as No Department)\nRIGHT: 5 rows (Finance shown with NULL employee)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 55,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Multi-Table JOIN",
+    "description": {
+      "task": "Join three or more tables in a single query to gather all related information.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE customers (\n  customer_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  country VARCHAR(40)\n);\n\nCREATE TABLE orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  order_date  DATE,\n  FOREIGN KEY (customer_id) REFERENCES customers(customer_id)\n);\n\nCREATE TABLE order_items (\n  item_id   INT PRIMARY KEY,\n  order_id  INT,\n  product   VARCHAR(80),\n  quantity  INT,\n  price     DECIMAL(8,2),\n  FOREIGN KEY (order_id) REFERENCES orders(order_id)\n);\n\nINSERT INTO customers VALUES\n  (1,'Alice','USA'),(2,'Bob','UK'),(3,'Carol','USA');\n\nINSERT INTO orders VALUES\n  (101,1,'2026-01-05'),(102,1,'2026-01-10'),\n  (103,2,'2026-01-12'),(104,3,'2026-01-15');\n\nINSERT INTO order_items VALUES\n  (1,101,'Laptop',    1,999.99),\n  (2,101,'Mouse',     2, 19.99),\n  (3,102,'Keyboard',  1, 59.99),\n  (4,103,'Monitor',   2,299.99),\n  (5,104,'Headphones',1, 79.99),\n  (6,104,'Mouse',     3, 19.99);\n\n-- 3-table JOIN: customer → orders → order_items\nSELECT\n  c.name AS customer,\n  c.country,\n  o.order_id,\n  o.order_date,\n  oi.product,\n  oi.quantity,\n  oi.price,\n  (oi.quantity * oi.price) AS line_total\nFROM customers c\nJOIN orders o      ON c.customer_id = o.customer_id\nJOIN order_items oi ON o.order_id  = oi.order_id\nORDER BY c.name, o.order_date, oi.product;\n\n-- Summary: total spent per customer across all orders\nSELECT c.name, SUM(oi.quantity * oi.price) AS total_spent\nFROM customers c\nJOIN orders o       ON c.customer_id = o.customer_id\nJOIN order_items oi ON o.order_id    = oi.order_id\nGROUP BY c.name\nORDER BY total_spent DESC;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run the 3-table JOIN — should return 6 rows (one per order item).",
+        "Run the summary — Alice total ~1079.96, Bob ~599.98, Carol ~139.96.",
+        "Write a query: find customers who have placed more than 1 order.",
+        "Add a comment: why must alias names be used in multi-table joins?"
+      ],
+      "hint": "Multiple JOINs chain left-to-right. The ON clause specifies how to match the new table to the already-joined result. Table aliases (c, o, oi) prevent ambiguity when multiple tables have columns with the same name.",
+      "expectedOutput": "3-table JOIN: 6 line items\nSummary: Alice spent ~1079.96, Bob ~599.98, Carol ~139.96"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 55,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SELF JOIN",
+    "description": {
+      "task": "Use a self-join to query a hierarchical employee table and find manager-employee pairs.",
+      "language": "sql",
+      "context": "A self-join joins a table to itself. This is useful for hierarchical data (org charts, category trees) where parent-child relationships are stored in the same table.",
+      "starterCode": "CREATE TABLE employees (\n  emp_id     INT PRIMARY KEY,\n  name       VARCHAR(60),\n  role       VARCHAR(50),\n  manager_id INT   -- FK to employees.emp_id\n);\n\nINSERT INTO employees VALUES\n  (1,  'Sarah Chen',   'CEO',         NULL),\n  (2,  'Mark Liu',     'CTO',         1),\n  (3,  'Lisa Park',    'CFO',         1),\n  (4,  'Alice Dev',    'Dev Lead',    2),\n  (5,  'Bob Code',     'Developer',   4),\n  (6,  'Carol Debug',  'Developer',   4),\n  (7,  'Dave Finance', 'Analyst',     3);\n\n-- Self JOIN: show each employee with their manager's name\nSELECT\n  e.name    AS employee,\n  e.role    AS role,\n  m.name    AS manager,\n  m.role    AS manager_role\nFROM employees e\nLEFT JOIN employees m ON e.manager_id = m.emp_id\nORDER BY e.emp_id;\n\n-- Find all people who report to Alice Dev (direct reports)\nSELECT e.name, e.role\nFROM employees e\nJOIN employees mgr ON e.manager_id = mgr.emp_id\nWHERE mgr.name = 'Alice Dev';\n",
+      "instructions": [
+        "Run all INSERT and both JOIN queries.",
+        "First query: 7 rows. CEO Sarah shows NULL manager.",
+        "Second query: Bob and Carol (both report to Alice Dev).",
+        "Write a query: find all employees who ARE managers (appear as manager_id for someone else).",
+        "Add a comment: why must different aliases be used for the two occurrences of the same table?"
+      ],
+      "hint": "Without aliases, the query would be ambiguous — FROM employees JOIN employees ON ... would give a 'table name is ambiguous' error. Aliases (e and m) tell the query planner which instance each column reference belongs to.",
+      "expectedOutput": "7 employees, CEO shows no manager\nAlice's direct reports: Bob and Carol"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 55,
+    "allowedSubmissionType": "TEXT"
+  }
+]

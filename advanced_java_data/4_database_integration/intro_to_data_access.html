@@ -1,0 +1,214 @@
+<h1>🔌 Introduction to Data Access in Java</h1>
+
+<h2>🎯 Why Data Access Matters</h2>
+<p>Most real-world applications are <strong>data-driven</strong> — they read, store, update, and delete data. Data might be stored in:</p>
+<ul>
+  <li>📊 Relational Databases (MySQL, PostgreSQL, Oracle)</li>
+  <li>📁 Files (CSV, JSON, XML)</li>
+  <li>🧠 In-memory caches (Redis, in-memory maps)</li>
+</ul>
+<p><strong>Data Access</strong> is the layer that connects your Java code to these data stores in a clean, reusable, and secure way.</p>
+
+<div class="analogy-card">
+  <h3>🏦 Bank Analogy</h3>
+  <p>Think of your application as a <strong>bank branch</strong> and the database as the <strong>central vault</strong>:</p>
+  <ul>
+    <li>👨‍💼 Tellers = Service layer</li>
+    <li>🚪 Secure tunnel = Data access layer</li>
+    <li>🏦 Vault = Database</li>
+  </ul>
+  <p>The customer (user) never directly touches the vault. They interact through well-defined, secure processes. The same applies to data access.</p>
+</div>
+
+<h2>🧱 Data Access Layer in a Layered Architecture</h2>
+
+<div class="layers-diagram">
+  <pre>
+Client (Browser / Mobile)
+        ↓
+Controller Layer (Web / REST)
+        ↓
+Service Layer (Business Logic)
+        ↓
+<strong>Data Access Layer (Repositories / DAOs)</strong>
+        ↓
+Database (MySQL, PostgreSQL, etc.)
+  </pre>
+</div>
+
+<ul>
+  <li>🔹 <strong>Controller</strong>: Handles HTTP/web requests</li>
+  <li>🔹 <strong>Service</strong>: Contains business rules</li>
+  <li>🔹 <strong>Data Access</strong>: Talks to the database</li>
+</ul>
+
+<p>Separating these layers makes your application <strong>easier to test, maintain, and evolve</strong>.</p>
+
+<h2>⚖️ JDBC vs ORM vs Spring Data</h2>
+
+<h3>1️⃣ JDBC (Java Database Connectivity)</h3>
+<p><strong>JDBC</strong> is the low-level, standard Java API for interacting with relational databases.</p>
+<ul>
+  <li>✅ Advantages: Full control, standard API, no magic</li>
+  <li>❌ Disadvantages: Lots of boilerplate code, manual mapping, error-prone</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+// Classic JDBC example
+String sql = "SELECT id, name, email FROM users WHERE id = ?";
+
+try (Connection connection = dataSource.getConnection();
+     PreparedStatement statement = connection.prepareStatement(sql)) {
+
+    statement.setLong(1, 1L);
+    ResultSet rs = statement.executeQuery();
+
+    if (rs.next()) {
+        Long id = rs.getLong("id");
+        String name = rs.getString("name");
+        String email = rs.getString("email");
+        // Map to User object manually
+    }
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+  </pre>
+</div>
+
+<h3>2️⃣ ORM (Object-Relational Mapping)</h3>
+<p><strong>ORM frameworks</strong> like <strong>Hibernate</strong> and <strong>JPA</strong> map Java objects to database tables:</p>
+<ul>
+  <li>🧱 Class = Table</li>
+  <li>📌 Field = Column</li>
+  <li>📄 Object instance = Row</li>
+</ul>
+
+<p>Benefits:</p>
+<ul>
+  <li>✅ Less SQL boilerplate</li>
+  <li>✅ Type-safe queries (with JPA Criteria / query methods)</li>
+  <li>✅ Works across different databases (portable)</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+@Entity
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String email;
+
+    // getters/setters
+}
+  </pre>
+</div>
+
+<h3>3️⃣ Spring Data (JPA, JDBC, etc.)</h3>
+<p><strong>Spring Data</strong> is a high-level abstraction built on top of JPA/JDBC that:</p>
+<ul>
+  <li>🧾 Generates queries from method names</li>
+  <li>📦 Provides ready-made repository interfaces</li>
+  <li>🚀 Minimizes boilerplate to just <strong>interfaces</strong></li>
+</ul>
+
+<div class="code-example">
+  <pre>
+public interface UserRepository extends JpaRepository&lt;User, Long&gt; {
+    
+    // Spring Data derives query from method name
+    List&lt;User&gt; findByEmail(String email);
+    List&lt;User&gt; findByNameContainingIgnoreCase(String name);
+}
+  </pre>
+</div>
+
+<h2>🏗️ Typical Data Access Patterns</h2>
+
+<h3>🧩 DAO / Repository Pattern</h3>
+<p>The <strong>DAO (Data Access Object)</strong> or <strong>Repository</strong> pattern encapsulates all database operations for a specific entity.</p>
+
+<div class="layers-diagram">
+  <pre>
+@Controller
+@Service
+<strong>@Repository (DAO)</strong>
+Database
+  </pre>
+</div>
+
+<p>Example manual repository (without Spring Data JPA):</p>
+
+<div class="code-example">
+  <pre>
+@Repository
+public class UserRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public UserRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List&lt;User&gt; findAll() {
+        String sql = "SELECT id, name, email FROM users";
+        return jdbcTemplate.query(sql, new UserRowMapper());
+    }
+
+    public User findById(Long id) {
+        String sql = "SELECT id, name, email FROM users WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+    }
+}
+  </pre>
+</div>
+
+<h2>🔐 Key Concerns in Data Access</h2>
+
+<ul>
+  <li>🔒 <strong>Security</strong>: Prevent SQL injection, protect credentials</li>
+  <li>⚡ <strong>Performance</strong>: Use indexes, optimize queries, avoid N+1 problems</li>
+  <li>🔁 <strong>Transactions</strong>: Ensure data consistency across multiple operations</li>
+  <li>🧪 <strong>Testability</strong>: Mock repositories/services for unit tests</li>
+</ul>
+
+<h3>🛡️ Preventing SQL Injection</h3>
+<p><strong>Never</strong> concatenate user input directly into SQL strings. Use <strong>prepared statements</strong> or frameworks like JdbcTemplate / JPA.</p>
+
+<div class="code-example">
+  <pre>
+// ❌ Dangerous
+String sql = "SELECT * FROM users WHERE email = '" + userInput + "'";
+
+// ✅ Safe with placeholders
+String sql = "SELECT * FROM users WHERE email = ?";
+jdbcTemplate.queryForObject(sql, rowMapper, userInput);
+  </pre>
+</div>
+
+<h2>🧩 Where Spring Fits In</h2>
+
+<p>Spring provides multiple options for data access:</p>
+<ul>
+  <li>🧪 <strong>Spring JDBC</strong> – Thin layer over JDBC, less boilerplate</li>
+  <li>📚 <strong>Spring Data JPA</strong> – High-level abstraction for JPA</li>
+  <li>📦 <strong>Spring Data JDBC</strong> – Simpler than JPA, no lazy loading</li>
+</ul>
+
+<p>In this topic, you will:</p>
+<ol>
+  <li>Understand <strong>Spring JDBC Template</strong> for direct SQL with less boilerplate</li>
+  <li>Learn <strong>JPA</strong> for ORM-based data modeling</li>
+  <li>Use <strong>Spring Data JPA</strong> for repository-based development</li>
+  <li>Manage <strong>transactions</strong> using Spring's @Transactional support</li>
+</ol>
+
+<div class="key-takeaway">
+  <h3>🎯 Key Takeaway</h3>
+  <p>Data access is the <strong>bridge</strong> between your Java application and the database. Spring provides multiple abstraction levels so you can choose between <strong>full control (JDBC)</strong> and <strong>high productivity (Spring Data JPA)</strong>. Understanding all three layers (JDBC, JPA, Spring Data) makes you a strong enterprise Java developer.</p>
+</div>

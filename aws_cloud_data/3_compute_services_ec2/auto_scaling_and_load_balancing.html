@@ -1,0 +1,18 @@
+<h1>📈 Auto Scaling and Load Balancing</h1>
+<h2>⚖️ Elastic Load Balancer (ELB)</h2>
+<p>Distributes incoming traffic across multiple EC2 instances. Types:</p>
+<ul>
+  <li><strong>ALB (Application Load Balancer)</strong>: HTTP/HTTPS, path-based routing, best for web apps and microservices</li>
+  <li><strong>NLB (Network Load Balancer)</strong>: TCP/UDP, ultra low latency, millions of requests/second</li>
+  <li><strong>CLB (Classic Load Balancer)</strong>: Legacy, not recommended for new apps</li>
+</ul>
+<h2>📊 EC2 Auto Scaling</h2>
+<p>Automatically adjust the number of EC2 instances based on demand.</p>
+<ul>
+  <li><strong>Scaling out</strong>: Add instances when CPU &gt; 70%</li>
+  <li><strong>Scaling in</strong>: Remove instances when CPU &lt; 30%</li>
+  <li><strong>Launch Template</strong>: Defines instance configuration for Auto Scaling</li>
+  <li><strong>Min/Max/Desired capacity</strong>: Control the fleet size bounds</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>ALB + Auto Scaling = highly available, elastic architecture. Your app handles any load and only pays for what it uses.</p>

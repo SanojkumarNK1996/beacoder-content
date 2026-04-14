@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 222, "title": "Introduction to IAM", "dataType": "notes", "data": "intro_to_iam.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 223, "title": "IAM Users Groups and Roles", "dataType": "notes", "data": "iam_users_groups_roles.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 224, "title": "IAM Policies and Permissions", "dataType": "notes", "data": "iam_policies_and_permissions.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 225, "title": "AWS Security Best Practices", "dataType": "notes", "data": "aws_security_best_practices.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 226, "title": "AWS KMS and Secrets Manager", "dataType": "notes", "data": "kms_and_secrets_manager.html", "displayOrder": 5, "verified": false}
+]

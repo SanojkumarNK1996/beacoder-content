@@ -1,0 +1,26 @@
+<h1>🗺️ Navigation Patterns and Best Practices</h1>
+<h2>📋 Common Navigation Patterns</h2>
+<h3>1. App Shell with Nested Routes</h3>
+<p>Top-level routes define layouts (Header, Sidebar) using <code>&lt;Outlet /&gt;</code>. Child routes render inside the layout.</p>
+<h3>2. Modal Routing</h3>
+<p>Show a modal when navigating to a URL (e.g., Instagram-style /photos/:id), fall back to full page if accessed directly.</p>
+<h3>3. Scroll Restoration</h3>
+<div class="code-example">
+  <pre>
+// Scroll to top on route change
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() =&gt; { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+  </pre>
+</div>
+<h2>🔍 Useful Router Hooks</h2>
+<ul>
+  <li><code>useLocation()</code>: Get current URL pathname, search, state</li>
+  <li><code>useParams()</code>: Get URL parameters</li>
+  <li><code>useNavigate()</code>: Programmatic navigation</li>
+  <li><code>useSearchParams()</code>: Read/write URL query string</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Design routes to mirror your app's information architecture. Use nested routes for shared layouts. Scroll to top on navigation as a UX best practice.</p>

@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Two-Pointer Technique",
+    "description": {
+      "task": "Apply the two-pointer technique to solve classic problems efficiently. (1) Find a pair in a sorted array that sums to a target. (2) Remove duplicates from a sorted array in-place. Both run in O(n) time.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class TwoPointer {\n\n    static int[] pairSum(int[] arr, int target) {\n        int l = 0, r = arr.length - 1;\n        // TODO: while l < r:\n        //   if arr[l]+arr[r] == target, return {arr[l],arr[r]}\n        //   else if sum < target, l++\n        //   else r--\n        //   return null if no pair found\n        return null;\n    }\n\n    static int removeDuplicates(int[] arr) {\n        if (arr.length == 0) return 0;\n        int slow = 0;\n        // TODO: fast pointer from index 1;\n        //       if arr[fast] != arr[slow], increment slow, copy arr[fast] to arr[slow]\n        for (int fast = 1; fast < arr.length; fast++) {\n            // TODO\n        }\n        return slow + 1;\n    }\n\n    public static void main(String[] args) {\n        int[] sorted = {1, 3, 5, 7, 9, 11};\n        int[] pair = pairSum(sorted, 12);\n        System.out.println(\"Pair summing to 12: \" + Arrays.toString(pair));\n\n        int[] withDups = {0, 0, 1, 1, 2, 3, 3};\n        int len = removeDuplicates(withDups);\n        System.out.println(\"After remove duplicates, len=\" + len);\n        System.out.println(\"Unique elements: \" + Arrays.toString(Arrays.copyOf(withDups, len)));\n    }\n}",
+      "instructions": [
+        "pairSum: while(l<r){int s=arr[l]+arr[r];if(s==target)return new int[]{arr[l],arr[r]};else if(s<target)l++;else r--;}",
+        "removeDuplicates: if(arr[fast]!=arr[slow]){slow++;arr[slow]=arr[fast];}",
+        "pairSum on [1,3,5,7,9,11] for target 12: tries 1+11=12 → found immediately → {1,11}",
+        "removeDuplicates on [0,0,1,1,2,3,3]: unique = [0,1,2,3] → length 4",
+        "Two-pointer avoids nested loops, reducing time complexity from O(n²) to O(n)"
+      ],
+      "hint": "pairSum: if(s==target)return new int[]{arr[l],arr[r]};else if(s<target)l++;else r--; removeDups: if(arr[fast]!=arr[slow]){slow++;arr[slow]=arr[fast];}",
+      "expectedOutput": "Pair summing to 12: [1, 11]\nAfter remove duplicates, len=4\nUnique elements: [0, 1, 2, 3]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 188,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Sliding Window Technique",
+    "description": {
+      "task": "Apply the sliding window technique to two classic problems: (1) Maximum sum subarray of fixed size k. (2) Length of longest substring without repeating characters (variable window). Both run in O(n).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SlidingWindow {\n\n    static int maxSumFixed(int[] arr, int k) {\n        int sum = 0;\n        for (int i = 0; i < k; i++) sum += arr[i];\n        int maxSum = sum;\n        // TODO: slide the window — add arr[i], remove arr[i-k], update maxSum\n        for (int i = k; i < arr.length; i++) {\n            // TODO\n        }\n        return maxSum;\n    }\n\n    static int longestUniqueSubstr(String s) {\n        Map<Character, Integer> last = new HashMap<>();\n        int maxLen = 0, left = 0;\n        for (int right = 0; right < s.length(); right++) {\n            char c = s.charAt(right);\n            // TODO: if c is in map and last[c] >= left, move left to last[c]+1\n            // TODO: update last[c] = right; maxLen = max(maxLen, right-left+1)\n        }\n        return maxLen;\n    }\n\n    public static void main(String[] args) {\n        int[] arr = {2, 1, 5, 1, 3, 2};\n        System.out.println(\"Max sum (k=3): \" + maxSumFixed(arr, 3));\n\n        System.out.println(\"Longest unique 'abcabcbb': \" + longestUniqueSubstr(\"abcabcbb\"));\n        System.out.println(\"Longest unique 'pwwkew':   \" + longestUniqueSubstr(\"pwwkew\"));\n    }\n}",
+      "instructions": [
+        "maxSumFixed: sum+=arr[i];sum-=arr[i-k];maxSum=Math.max(maxSum,sum);",
+        "longestUniqueSubstr: if(last.containsKey(c)&&last.get(c)>=left)left=last.get(c)+1; last.put(c,right); maxLen=Math.max(maxLen,right-left+1);",
+        "Max sum fixed k=3 in [2,1,5,1,3,2]: windows are {2,1,5}=8, {1,5,1}=7, {5,1,3}=9, {1,3,2}=6 → max=9",
+        "longestUniqueSubstr('abcabcbb') = 3 ('abc')",
+        "longestUniqueSubstr('pwwkew') = 3 ('wke')"
+      ],
+      "hint": "maxSumFixed: sum+=arr[i]-arr[i-k];maxSum=Math.max(maxSum,sum); longestUnique: if(last.containsKey(c)&&last.get(c)>=left)left=last.get(c)+1;last.put(c,right);maxLen=Math.max(maxLen,right-left+1);",
+      "expectedOutput": "Max sum (k=3): 9\nLongest unique 'abcabcbb': 3\nLongest unique 'pwwkew':   3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 188,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Problem Pattern Recognition",
+    "description": {
+      "task": "Demonstrate recognizing algorithm patterns. Implement: (1) Interval merging (sort + sweep) — merge overlapping intervals. (2) Prefix sum for O(1) range queries. Both are core patterns that appear repeatedly across problems.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class PatternRecognition {\n\n    static int[][] mergeIntervals(int[][] intervals) {\n        if (intervals.length == 0) return intervals;\n        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);\n        List<int[]> merged = new ArrayList<>();\n        merged.add(intervals[0]);\n        for (int i = 1; i < intervals.length; i++) {\n            int[] last = merged.get(merged.size() - 1);\n            // TODO: if intervals[i][0] <= last[1], merge by updating last[1]=max(last[1],intervals[i][1])\n            //       else add intervals[i] to merged\n        }\n        return merged.toArray(new int[0][]);\n    }\n\n    static int[] buildPrefix(int[] arr) {\n        int[] prefix = new int[arr.length + 1];\n        // TODO: prefix[i+1] = prefix[i] + arr[i]\n        for (int i = 0; i < arr.length; i++) {\n            // TODO\n        }\n        return prefix;\n    }\n\n    static int rangeSum(int[] prefix, int l, int r) {\n        // TODO: return prefix[r+1] - prefix[l]  (sum from index l to r inclusive)\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        int[][] intervals = {{1,3},{2,6},{8,10},{15,18}};\n        int[][] result = mergeIntervals(intervals);\n        System.out.print(\"Merged intervals: \");\n        for (int[] iv : result) System.out.print(Arrays.toString(iv) + \" \");\n        System.out.println();\n\n        int[] arr = {1,2,3,4,5,6,7,8,9,10};\n        int[] prefix = buildPrefix(arr);\n        System.out.println(\"Sum [0,4]: \"  + rangeSum(prefix, 0, 4));\n        System.out.println(\"Sum [2,7]: \"  + rangeSum(prefix, 2, 7));\n        System.out.println(\"Sum [5,9]: \"  + rangeSum(prefix, 5, 9));\n    }\n}",
+      "instructions": [
+        "mergeIntervals: if(intervals[i][0]<=last[1])last[1]=Math.max(last[1],intervals[i][1]);else merged.add(intervals[i]);",
+        "buildPrefix: prefix[i+1]=prefix[i]+arr[i];",
+        "rangeSum: return prefix[r+1]-prefix[l];",
+        "Merge {1,3} and {2,6} → {1,6}; {8,10} and {15,18} are separate → [[1,6],[8,10],[15,18]]",
+        "Prefix sum on [1..10]: sum[0..4]=1+2+3+4+5=15; sum[2..7]=3+4+5+6+7+8=33; sum[5..9]=6+7+8+9+10=40"
+      ],
+      "hint": "merge: last[1]=Math.max(last[1],intervals[i][1]); prefix: prefix[i+1]=prefix[i]+arr[i]; rangeSum: return prefix[r+1]-prefix[l];",
+      "expectedOutput": "Merged intervals: [1, 6] [8, 10] [15, 18] \nSum [0,4]: 15\nSum [2,7]: 33\nSum [5,9]: 40"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 188,
+    "allowedSubmissionType": "TEXT"
+  }
+]

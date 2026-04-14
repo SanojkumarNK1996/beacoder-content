@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Index Creation and Benefits",
+    "description": {
+      "task": "Create indexes on a large data simulation and use EXPLAIN to see how the query planner uses them.",
+      "language": "sql",
+      "context": "An index is a data structure (typically a B-tree) that the database maintains alongside a table to speed up lookups. Think of it as a book's index: instead of scanning every page, you jump directly to the right location.",
+      "starterCode": "CREATE TABLE customers (\n  customer_id  INT PRIMARY KEY,\n  email        VARCHAR(80),\n  last_name    VARCHAR(50),\n  country      VARCHAR(40),\n  signup_date  DATE\n);\n\nINSERT INTO customers VALUES\n  (1,  'alice@mail.com',   'Smith',    'USA', '2024-01-15'),\n  (2,  'bob@mail.com',     'Jones',    'UK',  '2024-02-20'),\n  (3,  'carol@mail.com',  'Williams', 'USA', '2024-03-10'),\n  (4,  'dave@mail.com',   'Brown',    'CA',  '2024-04-05'),\n  (5,  'eve@mail.com',    'Davis',    'USA', '2024-05-22'),\n  (6,  'frank@mail.com',  'Miller',   'AU',  '2024-06-11'),\n  (7,  'grace@mail.com',  'Wilson',   'USA', '2024-07-30'),\n  (8,  'henry@mail.com',  'Moore',    'UK',  '2024-08-14'),\n  (9,  'iris@mail.com',   'Taylor',   'USA', '2024-09-01'),\n  (10, 'jack@mail.com',   'Anderson', 'CA',  '2024-10-19');\n\n-- Create an index on email for fast lookups\nCREATE INDEX idx_customers_email ON customers(email);\n\n-- Create an index on country for filtering\nCREATE INDEX idx_customers_country ON customers(country);\n\n-- Query 1: Lookup by email (index should be used)\nSELECT * FROM customers WHERE email = 'carol@mail.com';\n\n-- Query 2: Filter by country\nSELECT customer_id, last_name, country FROM customers WHERE country = 'USA' ORDER BY last_name;\n\n-- View existing indexes on the table (PostgreSQL)\nSELECT indexname, indexdef FROM pg_indexes WHERE tablename = 'customers';\n",
+      "instructions": [
+        "Run CREATE TABLE, INSERT, and CREATE INDEX statements.",
+        "Run Query 1 and Query 2.",
+        "Run the pg_indexes query to list all indexes (including the primary key index).",
+        "Add a comment: for which type of queries does an index NOT help (e.g., full table scan patterns)?",
+        "Add a comment: what is the trade-off of adding too many indexes?"
+      ],
+      "hint": "Indexes speed up SELECT WHERE queries but slow down INSERT/UPDATE/DELETE slightly, because the index must also be updated. They also consume disk space.",
+      "expectedOutput": "Q1: Carol/Williams/USA row\nQ2: 5 USA customers alphabetically by last name\npg_indexes: shows primary key index + 2 custom indexes"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 43,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Composite and Unique Indexes",
+    "description": {
+      "task": "Create a composite index on multiple columns and a unique index, then test how they enforce uniqueness and speed up multi-column searches.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  product_id  INT,\n  order_date  DATE,\n  status      VARCHAR(20),\n  amount      DECIMAL(8,2)\n);\n\nINSERT INTO orders VALUES\n  (1, 101, 5, '2026-01-05', 'shipped',    199.99),\n  (2, 102, 3, '2026-01-06', 'delivered',  49.99),\n  (3, 101, 7, '2026-01-07', 'processing', 99.99),\n  (4, 103, 5, '2026-01-08', 'shipped',   299.99),\n  (5, 101, 3, '2026-01-09', 'delivered',  49.99),\n  (6, 104, 9, '2026-01-10', 'new',        15.00);\n\n-- Composite index: speeds up queries filtering by customer AND date\nCREATE INDEX idx_orders_customer_date ON orders(customer_id, order_date);\n\n-- Composite index: speeds up status + date queries for reporting  \nCREATE INDEX idx_orders_status_date ON orders(status, order_date);\n\n-- Query 1: All orders for customer 101 in date range (uses composite index)\nSELECT order_id, product_id, order_date, amount\nFROM orders\nWHERE customer_id = 101\nAND   order_date BETWEEN '2026-01-01' AND '2026-01-31'\nORDER BY order_date;\n\n-- Query 2: All shipped orders this month\nSELECT order_id, customer_id, amount FROM orders\nWHERE status = 'shipped'\nAND   order_date >= '2026-01-01'\nORDER BY order_date;\n",
+      "instructions": [
+        "Run all CREATE TABLE, INSERT, and CREATE INDEX statements.",
+        "Run Query 1 — should return 3 orders for customer 101.",
+        "Run Query 2 — should return 2 shipped orders.",
+        "In a comment, explain: why does the ORDER of columns in a composite index matter? (customer_id, order_date) vs (order_date, customer_id)."
+      ],
+      "hint": "A composite index (A, B) helps queries that: filter by A alone, or filter by A AND B. It does NOT help queries that filter by B alone because the index is sorted by A first.",
+      "expectedOutput": "Q1: 3 orders for customer 101\nQ2: orders 1 and 4 (both shipped)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 43,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "When NOT to Use an Index",
+    "description": {
+      "task": "Analyse scenarios where indexes would help vs. harm and write appropriate SQL for each case.",
+      "language": "sql",
+      "context": "Indexes are powerful but not always beneficial. Understanding when to add — and when to avoid — indexes is a critical database design skill.",
+      "starterCode": "CREATE TABLE large_log (\n  log_id      SERIAL PRIMARY KEY,\n  event_type  VARCHAR(20),  -- low cardinality: only 'info','warn','error'\n  user_id     INT,\n  message     TEXT,\n  logged_at   TIMESTAMP\n);\n\nINSERT INTO large_log (event_type, user_id, message, logged_at) VALUES\n  ('info',  101, 'User logged in',           NOW() - INTERVAL '1 hour'),\n  ('warn',  102, 'Slow query detected',       NOW() - INTERVAL '2 hours'),\n  ('error', 103, 'Connection timeout',        NOW() - INTERVAL '3 hours'),\n  ('info',  104, 'File uploaded',             NOW() - INTERVAL '4 hours'),\n  ('error', 101, 'Disk space low',            NOW() - INTERVAL '5 hours'),\n  ('info',  105, 'Report generated',          NOW() - INTERVAL '6 hours'),\n  ('warn',  106, 'High memory usage',         NOW() - INTERVAL '7 hours'),\n  ('info',  107, 'Backup completed',          NOW() - INTERVAL '8 hours');\n\n-- GOOD index: high cardinality column (user_id)\nCREATE INDEX idx_log_user ON large_log(user_id);\n\n-- GOOD index: timestamp range queries\nCREATE INDEX idx_log_time ON large_log(logged_at);\n\n-- BAD idea: low cardinality (only 3 values — index rarely helps)\n-- CREATE INDEX idx_log_type ON large_log(event_type); -- usually skipped\n\n-- Query: Good use of index — filter by specific user_id\nSELECT event_type, message, logged_at FROM large_log WHERE user_id = 101 ORDER BY logged_at;\n\n-- Query: Good use of index — recent logs within time range\nSELECT * FROM large_log WHERE logged_at >= NOW() - INTERVAL '5 hours' ORDER BY logged_at;\n\n-- Query: Why event_type index doesn't help much\nSELECT COUNT(*) AS info_count FROM large_log WHERE event_type = 'info';\n",
+      "instructions": [
+        "Run all CREATE, INSERT, and CREATE INDEX statements.",
+        "Run all three queries.",
+        "In a comment, explain cardinality: why is a Boolean or status column (few distinct values) a poor index candidate?",
+        "List 3 scenarios where you SHOULD add an index and 2 where you should NOT.",
+        "Add a comment: what is a covering index and when would it eliminate a table lookup entirely?"
+      ],
+      "hint": "Low cardinality = few distinct values (like 'info'/'warn'/'error'). When 30% of rows match, a full table scan is often faster than an index scan. High cardinality = user_id — each value narrows down to just a few rows.",
+      "expectedOutput": "User 101 query: 2 events (login + disk space)\nTime range query: last 5 hours events\nInfo count: 4"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 43,
+    "allowedSubmissionType": "TEXT"
+  }
+]

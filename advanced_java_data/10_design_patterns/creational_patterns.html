@@ -1,0 +1,149 @@
+<h1>🏗️ Creational Patterns</h1>
+
+<h2>🎯 Goal</h2>
+<p><strong>Creational design patterns</strong> deal with <strong>object creation</strong>. They help you create objects in a flexible, controlled way instead of scattering <code>new</code> everywhere.</p>
+
+<h2>🔑 Why Creational Patterns?</h2>
+<ul>
+  <li>Hide complex construction logic</li>
+  <li>Improve testability (e.g., easier to mock)</li>
+  <li>Reduce coupling between client code and concrete classes</li>
+  <li>Support different creation strategies (lazy, pooled, cached, etc.)</li>
+</ul>
+
+<h2>🧱 Singleton Pattern</h2>
+<p>Ensures there is <strong>only one instance</strong> of a class, and it&apos;s globally accessible.</p>
+
+<h3>Use Cases</h3>
+<ul>
+  <li>Configuration manager</li>
+  <li>Logger</li>
+  <li>Connection pool (though frameworks usually handle this)</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+public class AppConfig {
+
+    private static final AppConfig INSTANCE = new AppConfig();
+
+    private AppConfig() {
+    }
+
+    public static AppConfig getInstance() {
+        return INSTANCE;
+    }
+}
+  </pre>
+</div>
+
+<p>In Spring, you rarely implement Singletons manually—<strong>Spring beans are singleton-scoped by default</strong>.</p>
+
+<h2>🧪 Factory Method Pattern</h2>
+<p>Defines an <strong>interface for creating objects</strong>, but lets subclasses decide which class to instantiate.</p>
+
+<h3>Example</h3>
+<div class="code-example">
+  <pre>
+public interface Notification {
+    void send(String message);
+}
+
+public class EmailNotification implements Notification {
+    public void send(String message) { /* ... */ }
+}
+
+public class SmsNotification implements Notification {
+    public void send(String message) { /* ... */ }
+}
+
+public class NotificationFactory {
+    public static Notification create(String type) {
+        return switch (type) {
+            case "email" -&gt; new EmailNotification();
+            case "sms" -&gt; new SmsNotification();
+            default -&gt; throw new IllegalArgumentException("Unknown type" + type);
+        };
+    }
+}
+  </pre>
+</div>
+
+<p>Client code depends on the <strong>Notification</strong> interface, not concrete classes.</p>
+
+<h2>🏭 Abstract Factory Pattern</h2>
+<p>Provides an interface for creating <strong>families of related objects</strong> without specifying their concrete classes.</p>
+
+<p>Example: creating UI components for different platforms (Windows, Mac, Web) with consistent look and feel.</p>
+
+<h2>🧱 Builder Pattern</h2>
+<p>Separates object construction from its representation. Great for building complex objects with many optional parameters.</p>
+
+<div class="code-example">
+  <pre>
+public class User {
+    private final String username;
+    private final String email;
+    private final String phone;
+
+    private User(Builder builder) {
+        this.username = builder.username;
+        this.email = builder.email;
+        this.phone = builder.phone;
+    }
+
+    public static class Builder {
+        private String username;
+        private String email;
+        private String phone;
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder phone(String phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
+}
+
+// Usage
+User user = new User.Builder()
+        .username("alice")
+        .email("alice@example.com")
+        .build();
+  </pre>
+</div>
+
+<h2>📦 Prototype Pattern</h2>
+<p>Creates new objects by <strong>cloning existing instances</strong>.</p>
+
+<ul>
+  <li>Useful when object creation is expensive</li>
+  <li>Defines a <strong>clone()</strong> operation to copy objects</li>
+</ul>
+
+<h2>🔁 Object Pool Pattern (Bonus)</h2>
+<p>Maintains a pool of reusable objects instead of creating/destroying them frequently. Common for:</p>
+<ul>
+  <li>Database connections</li>
+  <li>Thread pools</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Creational patterns control <strong>how objects are created</strong></li>
+  <li>They help reduce coupling and support flexible construction</li>
+  <li>In enterprise Java, frameworks like Spring embody many of these patterns for you (Singleton, Factory, Builder via builders APIs, etc.)</li>
+</ul>

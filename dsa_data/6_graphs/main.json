@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 153, "title": "Graph Fundamentals", "dataType": "notes", "data": "graph_fundamentals.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 154, "title": "Graph Representation", "dataType": "notes", "data": "graph_representation.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 155, "title": "Graph Traversal", "dataType": "notes", "data": "graph_traversal.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 156, "title": "Shortest Path Algorithms", "dataType": "notes", "data": "shortest_path_algorithms.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 157, "title": "Minimum Spanning Tree", "dataType": "notes", "data": "minimum_spanning_tree.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 158, "title": "Graph Applications", "dataType": "notes", "data": "graph_applications.html", "displayOrder": 6, "verified": false}
+]

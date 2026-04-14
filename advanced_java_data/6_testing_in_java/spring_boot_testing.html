@@ -1,0 +1,206 @@
+<h1>🌱 Spring Boot Testing</h1>
+
+<h2>🎯 Goal</h2>
+<p>Learn how to test <strong>Spring Boot</strong> applications using Spring&apos;s testing support: <strong>@SpringBootTest</strong>, <strong>slice tests</strong>, and <strong>MockMvc</strong>.</p>
+
+<h2>🧰 spring-boot-starter-test</h2>
+<p>Spring Boot provides a convenient starter that bundles common testing libraries:</p>
+
+<ul>
+  <li>JUnit 5</li>
+  <li>Mockito</li>
+  <li>Spring Test &amp; Spring Boot Test</li>
+  <li>AssertJ, Hamcrest, JSONassert, etc.</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<h2>🏗️ Testing Levels in Spring Boot</h2>
+
+<ul>
+  <li><strong>Unit tests</strong> – Test a single class (e.g., service) with mocks</li>
+  <li><strong>Slice tests</strong> – Test a layer (web, data) with minimal context</li>
+  <li><strong>Full integration tests</strong> – Start entire application context</li>
+</ul>
+
+<h2>🧪 @SpringBootTest – Full Integration Test</h2>
+
+<div class="code-example">
+  <pre>
+@SpringBootTest
+class BookManagementApplicationTests {
+
+    @Test
+    void contextLoads() {
+        // Verifies the Spring context starts successfully
+    }
+}
+  </pre>
+</div>
+
+<p><code>@SpringBootTest</code> loads the full application context – ideal for integration tests where you want to test components together.</p>
+
+<h3>Example: Service Integration Test</h3>
+
+<div class="code-example">
+  <pre>
+@SpringBootTest
+class BookServiceIntegrationTest {
+
+    @Autowired
+    private BookService bookService;
+
+    @Test
+    void createAndFindBook_shouldWorkThroughRealBeans() {
+        CreateBookRequest request = new CreateBookRequest();
+        request.setTitle("Spring Boot in Action");
+        request.setAuthor("Craig Walls");
+
+        Book created = bookService.createBook(request);
+
+        Book found = bookService.getBookById(created.getId());
+
+        assertEquals("Spring Boot in Action", found.getTitle());
+    }
+}
+  </pre>
+</div>
+
+<h2>🌐 Testing REST Controllers with @WebMvcTest</h2>
+<p><code>@WebMvcTest</code> loads only the <strong>web layer</strong> (controllers, filters, etc.) and uses <strong>MockMvc</strong> to simulate HTTP calls.</p>
+
+<div class="code-example">
+  <pre>
+@WebMvcTest(BookController.class)
+class BookControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private BookService bookService;  // mocked dependency
+
+    @Test
+    void getAllBooks_shouldReturnJsonList() throws Exception {
+        BookResponse book = new BookResponse();
+        book.setId(1L);
+        book.setTitle("Spring in Action");
+
+        when(bookService.getAllBooks()).thenReturn(List.of(book));
+
+        mockMvc.perform(get("/api/books"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].title").value("Spring in Action"));
+    }
+}
+  </pre>
+</div>
+
+<h2>💾 Testing Repositories with @DataJpaTest</h2>
+<p><code>@DataJpaTest</code> configures an in-memory database (like H2) and scans for JPA repositories.</p>
+
+<div class="code-example">
+  <pre>
+@DataJpaTest
+class BookRepositoryTest {
+
+    @Autowired
+    private TestEntityManager entityManager;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Test
+    void findByTitle_shouldReturnMatchingBooks() {
+        Book book = new Book();
+        book.setTitle("Spring Boot 3");
+        book.setAuthor("John Doe");
+
+        entityManager.persist(book);
+        entityManager.flush();
+
+        List&lt;Book&gt; result = bookRepository.findByTitle("Spring Boot 3");
+
+        assertEquals(1, result.size());
+        assertEquals("John Doe", result.get(0).getAuthor());
+    }
+}
+  </pre>
+</div>
+
+<h2>🔌 Using Test Slices</h2>
+<p>Spring Boot provides specialized test annotations (slices):</p>
+<ul>
+  <li><code>@WebMvcTest</code> – Web layer</li>
+  <li><code>@DataJpaTest</code> – JPA repositories</li>
+  <li><code>@JsonTest</code> – JSON serialization/deserialization</li>
+  <li><code>@WebFluxTest</code> – WebFlux controllers</li>
+</ul>
+
+<h2>🧪 Example: JSON Test</h2>
+
+<div class="code-example">
+  <pre>
+@JsonTest
+class BookJsonTest {
+
+    @Autowired
+    private JacksonTester&lt;Book&gt; json;
+
+    @Test
+    void serializeBook() throws Exception {
+        Book book = new Book();
+        book.setTitle("Spring Boot");
+        book.setAuthor("Craig Walls");
+
+        assertThat(json.write(book)).isEqualToJson("{" +
+                "  'title': 'Spring Boot'," +
+                "  'author': 'Craig Walls'" +
+                "}");
+    }
+}
+  </pre>
+</div>
+
+<h2>🚀 Test Configuration Tips</h2>
+
+<ul>
+  <li>Use <strong>application-test.yml</strong> with an <strong>in-memory database</strong> for tests</li>
+  <li>Keep integration tests <strong>isolated</strong> and reset DB state between tests</li>
+  <li>Use <strong>profiles</strong> (e.g., <code>test</code>) to separate test configuration from production</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+# application-test.yml
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li><strong>@SpringBootTest</strong> – for full integration tests</li>
+  <li><strong>@WebMvcTest</strong> + <strong>MockMvc</strong> – for controller (web layer) tests</li>
+  <li><strong>@DataJpaTest</strong> – for repository (data layer) tests</li>
+  <li>Use <strong>profiles</strong> and <strong>test slices</strong> to keep tests fast and focused</li>
+</ul>
+
+<p>With JUnit, Mockito, and Spring Boot&apos;s testing support, you can build a <strong>comprehensive test suite</strong> that covers your Java applications end-to-end.</p>

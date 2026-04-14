@@ -1,0 +1,14 @@
+<h1>💡 Cost Optimization Best Practices</h1>
+<h2>🎯 AWS Cost Optimization Pillars</h2>
+<ol>
+  <li><strong>Right-size instances</strong>: Use CloudWatch metrics to identify over-provisioned instances. Downsize EC2 if CPU &lt; 20% sustained.</li>
+  <li><strong>Reduce unused resources</strong>: Delete unattached EBS volumes, idle load balancers, unused Elastic IPs (charged when unattached), outdated snapshots.</li>
+  <li><strong>Use Savings Plans/RIs</strong>: For steady-state workloads running 24/7.</li>
+  <li><strong>Use Spot Instances</strong>: For fault-tolerant batch, dev/test, CI/CD runners.</li>
+  <li><strong>S3 Lifecycle Policies</strong>: Move old data to Glacier automatically.</li>
+  <li><strong>Transfer costs</strong>: Data transfer out of AWS is costly. Use CloudFront for delivery, keep compute close to data.</li>
+</ol>
+<h2>🏆 AWS Trusted Advisor</h2>
+<p>Free-tier checks include: idle EC2 instances, unused RDS instances, S3 bucket permissions, security group risks.</p>
+<h2>🎯 Summary</h2>
+<p>Cost optimization is ongoing. Monthly review: right-size, stop waste, commit to savings plans for stable workloads, use spot for batch jobs.</p>

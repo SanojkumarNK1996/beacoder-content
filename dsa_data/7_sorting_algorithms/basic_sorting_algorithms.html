@@ -1,0 +1,24 @@
+<h1>🫧 Bubble, Selection & Insertion Sort</h1>
+<h2>🫧 Bubble Sort</h2>
+<p>Repeatedly swaps adjacent elements that are out of order. O(n²) — <strong>only useful for educational purposes</strong>.</p>
+<h2>🔢 Selection Sort</h2>
+<p>Finds the minimum element and places it at the correct position each pass. O(n²) — not stable.</p>
+<h2>📌 Insertion Sort</h2>
+<p>Builds the sorted array one element at a time by inserting each into its correct position.</p>
+<ul>
+  <li>O(n²) worst case, <strong>O(n) best case</strong> (nearly sorted input)</li>
+  <li>Stable, in-place — great for small or nearly-sorted arrays</li>
+</ul>
+<div class="code-example">
+  <pre>
+void insertionSort(int[] arr) {
+    for (int i = 1; i &lt; arr.length; i++) {
+        int key = arr[i], j = i - 1;
+        while (j >= 0 &amp;&amp; arr[j] &gt; key) arr[j + 1] = arr[j--];
+        arr[j + 1] = key;
+    }
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>These O(n²) algorithms are simple but slow. Use insertion sort for small arrays — Java's <code>Arrays.sort()</code> uses it as a base case.</p>

@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Constructor Injection Pattern",
+    "description": {
+      "task": "Implement constructor injection in Java. Build a ReportService that requires both a DataSource and an EmailSender injected through its constructor.",
+      "language": "java",
+      "starterCode": "public interface DataSource {\n    String fetchData(String query);\n}\n\npublic interface EmailSender {\n    void send(String recipient, String content);\n}\n\npublic class PostgresDataSource implements DataSource {\n    @Override\n    public String fetchData(String query) {\n        return \"Data: [result of '\" + query + \"']\";\n    }\n}\n\npublic class SmtpEmailSender implements EmailSender {\n    @Override\n    public void send(String recipient, String content) {\n        System.out.println(\"SMTP -> \" + recipient + \": \" + content);\n    }\n}\n\npublic class ReportService {\n    private final DataSource dataSource;\n    private final EmailSender emailSender;\n    \n    // TODO: Constructor injection\n    \n    public void generateAndEmailReport(String query, String recipient) {\n        // TODO: Fetch data and email it\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Create dependencies then inject via constructor\n    }\n}",
+      "instructions": [
+        "Add a constructor to ReportService that takes DataSource and EmailSender as parameters and assigns them to final fields.",
+        "generateAndEmailReport() fetches data from dataSource and sends it via emailSender.",
+        "In Main, create PostgresDataSource and SmtpEmailSender, inject them into ReportService, then call generateAndEmailReport().",
+        "Use query 'SELECT sales' and recipient 'manager@company.com'."
+      ],
+      "hint": "Constructor injection is the preferred Spring DI method — it makes dependencies explicit and supports immutability (final fields).",
+      "expectedOutput": "SMTP -> manager@company.com: Data: [result of 'SELECT sales']"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 83,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Setter Injection Pattern",
+    "description": {
+      "task": "Implement setter injection in Java. Build a NotificationManager that allows optional dependencies to be set via setters after construction.",
+      "language": "java",
+      "starterCode": "public interface Logger {\n    void log(String message);\n}\n\npublic class ConsoleLogger implements Logger {\n    public void log(String message) {\n        System.out.println(\"[LOG] \" + message);\n    }\n}\n\npublic class NotificationManager {\n    private Logger logger;\n    private String serviceName;\n    \n    public NotificationManager(String serviceName) {\n        this.serviceName = serviceName;\n    }\n    \n    // TODO: Setter for logger (setter injection)\n    \n    public void sendNotification(String message) {\n        // TODO: Log if logger is available, then print the notification\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Demonstrate with and without logger set\n    }\n}",
+      "instructions": [
+        "Add setLogger(Logger logger) method to NotificationManager.",
+        "sendNotification() calls logger.log() only if logger is not null, then prints '[serviceName] Notification: [message]'.",
+        "In Main, first create NotificationManager without logger and send a notification.",
+        "Then set ConsoleLogger and send another notification."
+      ],
+      "hint": "Setter injection is useful for optional dependencies. Spring uses @Autowired on setter methods for this pattern.",
+      "expectedOutput": "AlertService Notification: Server started\n[LOG] Sending notification: Disk usage critical\nAlertService Notification: Disk usage critical"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 83,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Field Injection via Reflection",
+    "description": {
+      "task": "Implement a simple field injection mechanism using Java Reflection. Create a custom @Inject annotation and a minimal injector that sets annotated fields.",
+      "language": "java",
+      "context": "Spring's @Autowired field injection uses reflection internally. Understanding this helps you understand how Spring works under the hood.",
+      "starterCode": "import java.lang.annotation.*;\nimport java.lang.reflect.*;\nimport java.util.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.FIELD)\n@interface Inject {}\n\npublic class ProductRepository {\n    public String find(int id) { return \"Product[\" + id + \"]\"; }\n}\n\npublic class ProductService {\n    @Inject\n    private ProductRepository repository;\n    \n    public void display(int id) {\n        if (repository == null) throw new RuntimeException(\"Repository not injected!\");\n        System.out.println(\"Found: \" + repository.find(id));\n    }\n}\n\npublic class Injector {\n    private Map<Class<?>, Object> registry = new HashMap<>();\n    \n    public void register(Class<?> type, Object instance) {\n        registry.put(type, instance);\n    }\n    \n    public void inject(Object target) throws Exception {\n        // TODO: Use reflection to find @Inject fields and set them\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        // TODO: Use Injector to inject ProductRepository into ProductService\n    }\n}",
+      "instructions": [
+        "In inject(), iterate all declared fields, check for @Inject annotation, look up the field type in registry, and set the value using field.setAccessible(true).",
+        "In Main, create Injector, register ProductRepository, create ProductService, inject, then call display(5).",
+        "Print 'Injection complete' after calling inject().",
+        "Output should show the found product."
+      ],
+      "hint": "Use field.setAccessible(true) to access private fields via reflection. Then field.set(target, value) to inject the dependency.",
+      "expectedOutput": "Injection complete\nFound: Product[5]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 83,
+    "allowedSubmissionType": "TEXT"
+  }
+]

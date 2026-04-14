@@ -1,0 +1,42 @@
+<h1>📋 React Hook Form Library</h1>
+<h2>🎯 Why React Hook Form?</h2>
+<p><strong>React Hook Form</strong> (RHF) is the most popular form library for React. It manages forms with minimal re-renders, built-in validation, and very little code.</p>
+<div class="code-example">
+  <pre>
+npm install react-hook-form
+  </pre>
+</div>
+<h2>🔧 Basic Usage</h2>
+<div class="code-example">
+  <pre>
+import { useForm } from 'react-hook-form';
+
+function LoginForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const onSubmit = (data) =&gt; console.log(data);  // Called only if valid
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;input
+        {...register('email', {
+          required: 'Email is required',
+          pattern: { value: /\S+@\S+\.\S+/, message: 'Invalid email' }
+        })}
+      /&gt;
+      {errors.email &amp;&amp; &lt;p&gt;{errors.email.message}&lt;/p&gt;}
+
+      &lt;input
+        type="password"
+        {...register('password', { required: 'Password required', minLength: { value: 8, message: 'Min 8 chars' } })}
+      /&gt;
+      {errors.password &amp;&amp; &lt;p&gt;{errors.password.message}&lt;/p&gt;}
+
+      &lt;button type="submit"&gt;Login&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>React Hook Form is the go-to for production forms: zero re-renders during typing, easy validation, integrates with Zod/Yup for schema validation. Use it for any form beyond a simple search input.</p>

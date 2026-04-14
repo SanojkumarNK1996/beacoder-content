@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 299, "title": "Context API Deep Dive", "dataType": "notes", "data": "context_api_deep_dive.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 300, "title": "Introduction to Redux", "dataType": "notes", "data": "intro_to_redux.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 301, "title": "Redux Toolkit", "dataType": "notes", "data": "redux_toolkit.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 302, "title": "Zustand State Management", "dataType": "notes", "data": "zustand.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 303, "title": "Choosing a State Management Solution", "dataType": "notes", "data": "choosing_state_management.html", "displayOrder": 5, "verified": false}
+]

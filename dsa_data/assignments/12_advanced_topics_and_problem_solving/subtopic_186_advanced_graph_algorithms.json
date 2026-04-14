@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Topological Sort — DFS-Based",
+    "description": {
+      "task": "Implement DFS-based topological sorting for a Directed Acyclic Graph (DAG). After fully exploring each vertex, push it onto a stack. Pop the stack for topological order. Use the graph: 5→2, 5→0, 4→0, 4→1, 2→3, 3→1.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TopologicalSort {\n    private int V;\n    private List<List<Integer>> adj;\n\n    TopologicalSort(int v) {\n        V = v;\n        adj = new ArrayList<>();\n        for (int i = 0; i < v; i++) adj.add(new ArrayList<>());\n    }\n\n    void addEdge(int u, int v) { adj.get(u).add(v); }\n\n    void dfs(int v, boolean[] visited, Stack<Integer> stack) {\n        visited[v] = true;\n        for (int neighbor : adj.get(v)) {\n            // TODO: if not visited, recurse\n        }\n        // TODO: push v onto stack after all neighbors are processed\n    }\n\n    void topoSort() {\n        Stack<Integer> stack = new Stack<>();\n        boolean[] visited = new boolean[V];\n        // TODO: for each vertex 0..V-1, if not visited call dfs(v, visited, stack)\n        System.out.print(\"Topological order: \");\n        while (!stack.isEmpty()) System.out.print(stack.pop() + \" \");\n        System.out.println();\n    }\n\n    public static void main(String[] args) {\n        TopologicalSort g = new TopologicalSort(6);\n        g.addEdge(5,2); g.addEdge(5,0);\n        g.addEdge(4,0); g.addEdge(4,1);\n        g.addEdge(2,3); g.addEdge(3,1);\n        g.topoSort();\n    }\n}",
+      "instructions": [
+        "dfs: for(int n:adj.get(v))if(!visited[n])dfs(n,visited,stack); then stack.push(v);",
+        "topoSort: for(int i=0;i<V;i++)if(!visited[i])dfs(i,visited,stack);",
+        "Valid topological order: vertices 4 and 5 must appear before 0, 1, 2, 3",
+        "One valid output: 5 4 2 3 1 0 (but exact order depends on DFS traversal sequence)",
+        "Topological sort only works on DAGs — cycles would cause infinite recursion"
+      ],
+      "hint": "dfs: if(!visited[n])dfs(n,visited,stack); stack.push(v); topoSort: if(!visited[i])dfs(i,visited,stack);",
+      "expectedOutput": "Topological order: 5 4 2 3 1 0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 186,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Strongly Connected Components — Kosaraju's Algorithm",
+    "description": {
+      "task": "Implement Kosaraju's algorithm to find Strongly Connected Components (SCCs) in a directed graph. Step 1: DFS on original graph, push finish order to stack. Step 2: DFS on transposed graph in stack order.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class KosarajuSCC {\n    int V;\n    List<List<Integer>> adj, radj;\n\n    KosarajuSCC(int v) {\n        V = v;\n        adj  = new ArrayList<>();\n        radj = new ArrayList<>();\n        for (int i = 0; i < v; i++) { adj.add(new ArrayList<>()); radj.add(new ArrayList<>()); }\n    }\n\n    void addEdge(int u, int v) {\n        adj.get(u).add(v);    // original\n        radj.get(v).add(u);   // reversed\n    }\n\n    void dfs1(int v, boolean[] vis, Stack<Integer> st) {\n        vis[v] = true;\n        for (int n : adj.get(v)) if (!vis[n]) dfs1(n, vis, st);\n        st.push(v);\n    }\n\n    void dfs2(int v, boolean[] vis, List<Integer> component) {\n        vis[v] = true;\n        component.add(v);\n        // TODO: recurse into radj neighbors not yet visited\n        for (int n : radj.get(v)) {\n            // TODO\n        }\n    }\n\n    void findSCCs() {\n        Stack<Integer> st = new Stack<>();\n        boolean[] vis = new boolean[V];\n        // Pass 1: fill finish-order stack using dfs1 on original graph\n        for (int i = 0; i < V; i++) if (!vis[i]) dfs1(i, vis, st);\n        // Pass 2: process vertices in finish order on reversed graph\n        boolean[] vis2 = new boolean[V];\n        int count = 0;\n        while (!st.isEmpty()) {\n            int v = st.pop();\n            if (!vis2[v]) {\n                List<Integer> comp = new ArrayList<>();\n                // TODO: call dfs2(v, vis2, comp); print the component\n                count++;\n            }\n        }\n        System.out.println(\"Total SCCs: \" + count);\n    }\n\n    public static void main(String[] args) {\n        KosarajuSCC g = new KosarajuSCC(5);\n        g.addEdge(0,1); g.addEdge(1,2); g.addEdge(2,0);\n        g.addEdge(1,3); g.addEdge(3,4);\n        g.findSCCs();\n    }\n}",
+      "instructions": [
+        "dfs2: for(int n:radj.get(v))if(!vis[n])dfs2(n,vis,component);",
+        "In findSCCs pass 2: dfs2(v,vis2,comp); Collections.sort(comp); System.out.println(\"SCC: \"+comp);",
+        "Graph has 3 SCCs: {0,1,2} (cycle), {3}, {4}",
+        "Pass 1 uses original adjacency; Pass 2 uses reversed adjacency",
+        "Kosaraju runs in O(V+E) time — two DFS passes"
+      ],
+      "hint": "dfs2:if(!vis[n])dfs2(n,vis,component); findSCCs pass2: dfs2(v,vis2,comp);System.out.println(\"SCC: \"+comp);",
+      "expectedOutput": "SCC: [0, 1, 2]\nSCC: [3]\nSCC: [4]\nTotal SCCs: 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 186,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Cycle Detection in Directed Graph",
+    "description": {
+      "task": "Detect cycles in a directed graph using DFS with a recursion stack. Maintain a 'recStack' boolean array to track vertices in the current DFS path. A back edge (to a node in recStack) indicates a cycle.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class CycleDetection {\n    int V;\n    List<List<Integer>> adj;\n\n    CycleDetection(int v) {\n        V = v;\n        adj = new ArrayList<>();\n        for (int i = 0; i < v; i++) adj.add(new ArrayList<>());\n    }\n\n    void addEdge(int u, int v) { adj.get(u).add(v); }\n\n    boolean dfsHasCycle(int v, boolean[] visited, boolean[] recStack) {\n        visited[v] = true;\n        recStack[v] = true;\n        for (int n : adj.get(v)) {\n            // TODO: if not visited and dfsHasCycle returns true, return true\n            // TODO: if already in recStack, return true (back edge found)\n        }\n        recStack[v] = false; // remove from recursion path\n        return false;\n    }\n\n    boolean hasCycle() {\n        boolean[] visited  = new boolean[V];\n        boolean[] recStack = new boolean[V];\n        for (int i = 0; i < V; i++) {\n            if (!visited[i] && dfsHasCycle(i, visited, recStack)) return true;\n        }\n        return false;\n    }\n\n    public static void main(String[] args) {\n        CycleDetection g1 = new CycleDetection(4);\n        g1.addEdge(0,1); g1.addEdge(1,2); g1.addEdge(2,3);\n        System.out.println(\"Graph1 has cycle: \" + g1.hasCycle());\n\n        CycleDetection g2 = new CycleDetection(4);\n        g2.addEdge(0,1); g2.addEdge(1,2); g2.addEdge(2,0); g2.addEdge(2,3);\n        System.out.println(\"Graph2 has cycle: \" + g2.hasCycle());\n    }\n}",
+      "instructions": [
+        "if(!visited[n]){if(dfsHasCycle(n,visited,recStack))return true;}else if(recStack[n])return true;",
+        "recStack tracks the current DFS path; if we revisit a node in the current path, it's a cycle",
+        "Graph1 (0→1→2→3, no back edges) = no cycle → false",
+        "Graph2 (0→1→2→0 forms a cycle) → true",
+        "Must set recStack[v]=false when backtracking to avoid false positives from other DFS paths"
+      ],
+      "hint": "if(!visited[n]){if(dfsHasCycle(n,visited,recStack))return true;}else if(recStack[n])return true;",
+      "expectedOutput": "Graph1 has cycle: false\nGraph2 has cycle: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 45,
+    "subtopicId": 186,
+    "allowedSubmissionType": "TEXT"
+  }
+]

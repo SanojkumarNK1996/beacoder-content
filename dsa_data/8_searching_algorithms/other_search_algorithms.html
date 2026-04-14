@@ -1,0 +1,11 @@
+<h1>🌐 Other Search Algorithms</h1>
+<h2>📈 Interpolation Search</h2>
+<p>Like binary search but uses the value distribution to estimate position. Better than binary search for <strong>uniformly distributed</strong> sorted data: O(log log n) average.</p>
+<h2>🏃 Jump Search</h2>
+<p>Jump ahead by √n steps, then do linear search backward. O(√n). Works on sorted arrays without random access being too expensive.</p>
+<h2>📌 Exponential Search</h2>
+<p>Find range by doubling index, then binary search within it. Useful when the target is near the beginning of an unbounded/infinite array. O(log n).</p>
+<h2>📋 Search in 2D Matrix</h2>
+<p>In a row-sorted + column-sorted matrix, start from top-right; go left if too big, down if too small. O(m + n).</p>
+<h2>🎯 Summary</h2>
+<p>Binary search is the workhorse. These variants optimize specific scenarios — interpolation, jump, exponential, and matrix search all have their niche.</p>

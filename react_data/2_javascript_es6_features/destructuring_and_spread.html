@@ -1,0 +1,38 @@
+<h1>🔬 Destructuring and Spread Operator</h1>
+<h2>📦 Array Destructuring</h2>
+<div class="code-example">
+  <pre>
+const [a, b] = [1, 2];           // a=1, b=2
+const [first, ...rest] = [1,2,3]; // first=1, rest=[2,3]
+
+// In React:
+const [count, setCount] = useState(0);
+  </pre>
+</div>
+<h2>🔑 Object Destructuring</h2>
+<div class="code-example">
+  <pre>
+const user = { name: 'Alice', age: 30, city: 'London' };
+const { name, age } = user;          // name='Alice', age=30
+const { name: userName } = user;    // Rename: userName='Alice'
+
+// In React (function props):
+function Profile({ name, age }) {   // Destructure props
+  return &lt;p&gt;{name}, {age}&lt;/p&gt;;
+}
+  </pre>
+</div>
+<h2>✨ Spread Operator</h2>
+<div class="code-example">
+  <pre>
+// Spread arrays
+const nums = [1, 2, 3];
+const more = [...nums, 4, 5];  // [1, 2, 3, 4, 5]
+
+// Spread objects (used in state updates)
+const user = { name: 'Alice', age: 30 };
+const updated = { ...user, age: 31 }; // Replace age only
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Destructuring makes props cleaner; spread is essential for immutable state updates in React. Both are used constantly.</p>

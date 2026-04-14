@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Build a Car Class",
+    "description": {
+      "task": "Define a Car class with three fields (make, model, year), a constructor, and a displayInfo() method. Create two Car objects in main().",
+      "language": "java",
+      "starterCode": "public class Car {\n    // Declare three fields: String make, String model, int year\n\n    // Constructor: accepts make, model, year and assigns them\n\n    // displayInfo() method: prints the car details\n\n    public static void main(String[] args) {\n        // Create two Car objects and call displayInfo() on each\n    }\n}",
+      "instructions": [
+        "Declare three fields: String make, String model, int year.",
+        "Write a constructor that accepts all three values and assigns them to the fields.",
+        "Write a displayInfo() method that prints: 'Make: Toyota | Model: Corolla | Year: 2022'.",
+        "In main(), create two Car objects: Car1 (Toyota, Corolla, 2022) and Car2 (Honda, Civic, 2021), call displayInfo() on both."
+      ],
+      "hint": "Use 'this.make = make' in the constructor to assign parameter values to instance fields when they share the same name.",
+      "expectedOutput": "Make: Toyota | Model: Corolla | Year: 2022\nMake: Honda | Model: Civic | Year: 2021"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 12,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Default vs Parameterized Constructors",
+    "description": {
+      "task": "Create a Student class with both a default constructor and a parameterized constructor. Demonstrate both constructors in main().",
+      "language": "java",
+      "context": "A default constructor takes no arguments and sets default values. A parameterized constructor allows custom values at object creation time.",
+      "starterCode": "public class Student {\n    String name;\n    int age;\n\n    // Default constructor: sets name to \"Unknown\" and age to 0\n\n    // Parameterized constructor: accepts name and age\n\n    public void display() {\n        System.out.println(\"Name: \" + name + \", Age: \" + age);\n    }\n\n    public static void main(String[] args) {\n        Student s1 = new Student();           // uses default constructor\n        Student s2 = new Student(\"Alice\", 20); // uses parameterized constructor\n        s1.display();\n        s2.display();\n    }\n}",
+      "instructions": [
+        "Write a default constructor (no parameters) that sets name = \"Unknown\" and age = 0.",
+        "Write a parameterized constructor that accepts String name and int age.",
+        "Do NOT change display() or main()."
+      ],
+      "hint": "When you define any constructor, Java no longer provides the default one automatically — you must define both explicitly.",
+      "expectedOutput": "Name: Unknown, Age: 0\nName: Alice, Age: 20"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 12,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Counter Object",
+    "description": {
+      "task": "Write a Counter class that tracks a count value. Create two independent Counter objects and show that they each maintain their own state.",
+      "language": "java",
+      "context": "Each object in Java has its own copy of instance fields. Changes to one object's state do not affect another object of the same class.",
+      "starterCode": "public class Counter {\n    int count;\n\n    // Constructor: initialise count to 0\n\n    // increment(): adds 1 to count\n\n    // display(): prints \"Counter: <count>\"\n\n    public static void main(String[] args) {\n        Counter c1 = new Counter();\n        Counter c2 = new Counter();\n\n        c1.increment();\n        c1.increment();\n        c1.increment();\n\n        c2.increment();\n\n        c1.display(); // Expected: Counter: 3\n        c2.display(); // Expected: Counter: 1\n    }\n}",
+      "instructions": [
+        "Implement the constructor, increment(), and display() methods.",
+        "increment() must add 1 to the instance field 'count'.",
+        "display() must print 'Counter: <count>'.",
+        "Do NOT change main()."
+      ],
+      "hint": "Each 'new Counter()' call creates a fresh object with its own count field — c1 and c2 are completely independent.",
+      "expectedOutput": "Counter: 3\nCounter: 1"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 12,
+    "allowedSubmissionType": "TEXT"
+  }
+]

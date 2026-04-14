@@ -1,0 +1,202 @@
+<h1>📦 Maven Fundamentals</h1>
+
+<h2>🎯 What is Maven?</h2>
+<p><strong>Maven</strong> is a popular Java build and project management tool that emphasizes:</p>
+<ul>
+  <li>📐 <strong>Convention over configuration</strong></li>
+  <li>📦 <strong>Dependency management</strong></li>
+  <li>📈 <strong>Standardized builds</strong> across projects</li>
+</ul>
+
+<h2>📄 The POM File (pom.xml)</h2>
+<p>Maven is driven by a single XML file: <strong>pom.xml</strong> (Project Object Model).</p>
+
+<div class="code-example">
+  <pre>
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.example&lt;/groupId&gt;
+  &lt;artifactId&gt;my-app&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+  &lt;packaging&gt;jar&lt;/packaging&gt;
+
+  &lt;name&gt;My App&lt;/name&gt;
+
+  &lt;properties&gt;
+    &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+&lt;/project&gt;
+  </pre>
+</div>
+
+<h2>🔑 Key POM Elements</h2>
+
+<ul>
+  <li><strong>groupId</strong> – Organization or domain (reverse DNS style)</li>
+  <li><strong>artifactId</strong> – Project name</li>
+  <li><strong>version</strong> – Project version (e.g., 1.0.0-SNAPSHOT)</li>
+  <li><strong>packaging</strong> – <code>jar</code>, <code>war</code>, <code>pom</code>, etc.</li>
+  <li><strong>dependencies</strong> – External libraries your project uses</li>
+  <li><strong>build</strong> – Plugins and build configuration</li>
+</ul>
+
+<h2>📦 Dependency Management</h2>
+
+<div class="code-example">
+  <pre>
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+  &lt;/dependency&gt;
+
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+    &lt;version&gt;1.18.30&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+  </pre>
+</div>
+
+<h3>Dependency Scope</h3>
+<ul>
+  <li><strong>compile</strong> (default) – Available everywhere (main + test + runtime)</li>
+  <li><strong>provided</strong> – Provided by container at runtime (e.g., servlet API)</li>
+  <li><strong>runtime</strong> – Needed only at runtime (e.g., JDBC drivers)</li>
+  <li><strong>test</strong> – Used only for tests (e.g., JUnit, Mockito)</li>
+</ul>
+
+<h2>🧱 Maven Lifecycle & Phases</h2>
+
+<p>Maven defines a standard build lifecycle with phases:</p>
+<ul>
+  <li><strong>validate</strong> – Check project structure</li>
+  <li><strong>compile</strong> – Compile source</li>
+  <li><strong>test</strong> – Run unit tests</li>
+  <li><strong>package</strong> – Package (JAR/WAR)</li>
+  <li><strong>verify</strong> – Run additional checks</li>
+  <li><strong>install</strong> – Install to local repository</li>
+  <li><strong>deploy</strong> – Deploy to remote repository</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+# Run specific phase (and all previous phases)
+mvn compile
+mvn test
+mvn package
+mvn install
+  </pre>
+</div>
+
+<h2>🔌 Plugins</h2>
+<p>Plugins extend Maven with additional capabilities: building, testing, packaging, code generation, etc.</p>
+
+<div class="code-example">
+  <pre>
+&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+      &lt;version&gt;3.11.0&lt;/version&gt;
+      &lt;configuration&gt;
+        &lt;source&gt;17&lt;/source&gt;
+        &lt;target&gt;17&lt;/target&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+      &lt;version&gt;3.1.2&lt;/version&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;
+  </pre>
+</div>
+
+<h2>👪 Parent POM and Inheritance</h2>
+<p>Maven supports <strong>parent-child projects</strong>. Common configuration can be defined in a parent POM.</p>
+
+<div class="code-example">
+  <pre>
+&lt;parent&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+  &lt;version&gt;3.2.0&lt;/version&gt;
+  &lt;relativePath/&gt;
+&lt;/parent&gt;
+  </pre>
+</div>
+
+<p>This is common in Spring Boot apps—Spring Boot&apos;s parent POM provides:</p>
+<ul>
+  <li>Managed dependency versions</li>
+  <li>Useful plugin defaults</li>
+  <li>Java version config (via properties)</li>
+</ul>
+
+<h2>📊 Dependency Management & BOM</h2>
+<p>A <strong>BOM (Bill of Materials)</strong> is a special POM that defines consistent versions for a set of related dependencies.</p>
+
+<div class="code-example">
+  <pre>
+&lt;dependencyManagement&gt;
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+      &lt;version&gt;2023.0.0&lt;/version&gt;
+      &lt;type&gt;pom&lt;/type&gt;
+      &lt;scope&gt;import&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+  </pre>
+</div>
+
+<p>Once imported, you can omit versions for those dependencies in <code>&lt;dependencies&gt;</code>.</p>
+
+<h2>🧪 Useful Maven Commands</h2>
+
+<div class="code-example">
+  <pre>
+# Clean build
+mvn clean install
+
+# Skip tests
+mvn clean install -DskipTests
+
+# Run a specific test class
+mvn -Dtest=UserServiceTest test
+
+# View dependency tree
+mvn dependency:tree
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Maven uses a <strong>pom.xml</strong> file to define project metadata, dependencies, and build config</li>
+  <li>It follows a well-defined <strong>lifecycle with phases</strong> like compile, test, package, install</li>
+  <li>Parent POMs and BOMs help manage <strong>consistent dependency versions</strong> across projects</li>
+</ul>
+
+<p>Next, you&apos;ll explore <strong>Gradle basics</strong> and compare its approach to Maven&apos;s.</p>

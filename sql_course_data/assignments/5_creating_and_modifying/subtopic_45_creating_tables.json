@@ -1,0 +1,74 @@
+[
+  {
+    "title": "CREATE TABLE from Scratch",
+    "description": {
+      "task": "Create a complete database schema for a school system — including the database selection, table creation, and required constraints.",
+      "language": "sql",
+      "starterCode": "-- Step 1: Create tables for a school system\n\nCREATE TABLE teachers (\n  teacher_id    INT PRIMARY KEY,\n  first_name    VARCHAR(50) NOT NULL,\n  last_name     VARCHAR(50) NOT NULL,\n  email         VARCHAR(80) UNIQUE NOT NULL,\n  hire_date     DATE NOT NULL,\n  subject       VARCHAR(60)\n);\n\nCREATE TABLE classrooms (\n  room_id       INT PRIMARY KEY,\n  room_number   VARCHAR(10) UNIQUE,\n  capacity      INT CHECK (capacity > 0),\n  building      VARCHAR(40)\n);\n\nCREATE TABLE students (\n  student_id    INT PRIMARY KEY,\n  first_name    VARCHAR(50) NOT NULL,\n  last_name     VARCHAR(50) NOT NULL,\n  date_of_birth DATE,\n  grade_level   INT CHECK (grade_level BETWEEN 1 AND 12),\n  teacher_id    INT,\n  FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id)\n);\n\n-- Insert test data\nINSERT INTO teachers VALUES (1,'Jane','Smith','jane.smith@school.edu','2020-08-01','Mathematics');\nINSERT INTO teachers VALUES (2,'John','Doe','john.doe@school.edu','2019-05-15','Science');\nINSERT INTO classrooms VALUES (1,'101A',30,'Main Building');\nINSERT INTO classrooms VALUES (2,'205B',25,'Science Hall');\nINSERT INTO students VALUES\n  (1,'Alice','Brown','2010-03-12',5,1),\n  (2,'Bob','Green','2011-07-08',4,1),\n  (3,'Carol','White','2009-11-22',6,2);\n\n-- Verify all three tables\nSELECT * FROM teachers;\nSELECT * FROM classrooms;\nSELECT * FROM students;\n",
+      "instructions": [
+        "Run all CREATE TABLE statements.",
+        "Run all INSERT statements.",
+        "Run all three SELECT statements to verify the data.",
+        "Add a comment for each constraint (NOT NULL, UNIQUE, CHECK, FOREIGN KEY) explaining what it enforces.",
+        "Write a query that shows each student with their teacher's full name."
+      ],
+      "hint": "For the bonus query: SELECT s.first_name, t.first_name || ' ' || t.last_name AS teacher FROM students s JOIN teachers t ON s.teacher_id = t.teacher_id.",
+      "expectedOutput": "teachers: 2 rows\nclassrooms: 2 rows\nstudents: 3 rows with foreign key to teachers"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 45,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "CREATE TABLE AS SELECT",
+    "description": {
+      "task": "Use CREATE TABLE AS SELECT (CTAS) to create derived tables from existing data.",
+      "language": "sql",
+      "context": "CREATE TABLE ... AS SELECT creates a new table populated with the result of a query. This is useful for creating summary tables, backups, or filtered copies.",
+      "starterCode": "CREATE TABLE employees (\n  emp_id     INT PRIMARY KEY,\n  name       VARCHAR(60),\n  department VARCHAR(40),\n  salary     DECIMAL(10,2),\n  hire_date  DATE,\n  status     VARCHAR(20) DEFAULT 'active'\n);\n\nINSERT INTO employees VALUES\n  (1,  'Alice',   'Engineering', 95000, '2020-01-15', 'active'),\n  (2,  'Bob',     'Marketing',   65000, '2021-03-20', 'active'),\n  (3,  'Carol',   'Engineering', 88000, '2019-06-10', 'active'),\n  (4,  'Dave',    'HR',          55000, '2022-08-01', 'active'),\n  (5,  'Eve',     'Engineering',105000, '2018-04-05', 'active'),\n  (6,  'Frank',   'Marketing',   70000, '2023-01-12', 'active'),\n  (7,  'Grace',   'HR',          58000, '2020-11-30', 'inactive');\n\n-- Create a summary table for active employees only\nCREATE TABLE active_employees AS\n  SELECT emp_id, name, department, salary\n  FROM employees\n  WHERE status = 'active';\n\n-- Create a department summary table\nCREATE TABLE dept_salary_summary AS\n  SELECT department,\n         COUNT(*) AS headcount,\n         AVG(salary) AS avg_salary,\n         MAX(salary) AS max_salary\n  FROM employees\n  WHERE status = 'active'\n  GROUP BY department;\n\n-- Query both derived tables\nSELECT * FROM active_employees ORDER BY name;\nSELECT * FROM dept_salary_summary ORDER BY avg_salary DESC;\n",
+      "instructions": [
+        "Run the original employees CREATE and INSERT.",
+        "Run both CTAS statements.",
+        "Run both SELECT queries.",
+        "In a comment: what constraint is NOT automatically copied with CTAS (primary key, indexes)?"
+      ],
+      "hint": "CTAS copies only the data and column definitions. Primary keys, unique constraints, indexes, and foreign keys are NOT copied to the new table.",
+      "expectedOutput": "active_employees: 6 rows (Grace excluded)\ndept_salary_summary: Engineering avg~96000, Marketing avg~67500, HR avg~55000"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 45,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Temporary Tables",
+    "description": {
+      "task": "Create and use a temporary table to stage data within a session, then demonstrate that it disappears after the session/transaction.",
+      "language": "sql",
+      "context": "Temporary tables (CREATE TEMP TABLE or CREATE TEMPORARY TABLE) exist only for the duration of a database session. They are useful for intermediate calculations in complex queries.",
+      "starterCode": "-- Create a temporary table for intermediate sales calculations\nCREATE TEMP TABLE temp_sales_staging (\n  sale_id    INT,\n  product    VARCHAR(80),\n  quantity   INT,\n  unit_price DECIMAL(8,2),\n  total      DECIMAL(10,2)\n);\n\n-- Insert raw data\nINSERT INTO temp_sales_staging VALUES\n  (1, 'Laptop',    2, 999.99, 0),\n  (2, 'Mouse',    10,  19.99, 0),\n  (3, 'Keyboard',  5,  49.99, 0),\n  (4, 'Monitor',   3, 299.99, 0);\n\n-- Calculate totals (update the staging table)\nUPDATE temp_sales_staging\nSET total = quantity * unit_price;\n\n-- Query the staged data\nSELECT product, quantity, unit_price, total FROM temp_sales_staging ORDER BY total DESC;\n\n-- Use the temp table for a summary\nSELECT\n  COUNT(*) AS line_items,\n  SUM(total) AS order_total,\n  AVG(unit_price) AS avg_unit_price\nFROM temp_sales_staging;\n",
+      "instructions": [
+        "Run all statements including the UPDATE and both SELECT queries.",
+        "Verify totals: Laptop=1999.98, Mouse=199.90, Keyboard=249.95, Monitor=899.97.",
+        "Order total should be 3349.80.",
+        "Add a comment: when would you use a temp table vs a CTE (WITH clause) in a complex query?"
+      ],
+      "hint": "Temp tables are useful when you need to query/modify intermediate data multiple times. CTEs (WITH clause) are better for single-use sub-results within one query.",
+      "expectedOutput": "After UPDATE: totals calculated correctly\nSummary: 4 items, order total ~3349.80"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 14,
+    "subtopicId": 45,
+    "allowedSubmissionType": "TEXT"
+  }
+]

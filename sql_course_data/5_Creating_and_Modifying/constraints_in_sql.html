@@ -17,82 +17,82 @@ They ensure that your data stays accurate and consistent over time.</p>
 
 <h2>2️⃣ Why Are Constraints Important?</h2>
 
-<ul>
-  <li>✅ They maintain data accuracy.</li>
-  <li>✅ They prevent invalid data from being inserted.</li>
-  <li>✅ They enforce relationships between tables.</li>
-  <li>✅ They protect data integrity and consistency.</li>
-</ul>
+<h1>Constraints in SQL: 10-Part Beginner-Friendly Guide</h1>
 
-<hr>
+<h2>1. Why Does This Topic Exist?</h2>
+<p>Imagine a bank in India allowing two accounts with the same account number, or a school database with students missing names. <b>Constraints</b> prevent such mistakes by enforcing rules on your data.</p>
 
-<h2>3️⃣ Common Types of Constraints</h2>
+<h2>2. What Is This?</h2>
+<p>Constraints are rules you set on tables and columns to ensure data is correct, unique, and reliable. They help prevent errors like duplicates, missing values, or invalid data.</p>
 
-<p>SQL provides several types of constraints. Let’s explore each one with simple examples.</p>
-
-<hr>
-
-<h3>🔹 NOT NULL Constraint</h3>
-
-<p>This ensures that a column <strong>cannot have a NULL (empty) value</strong>.</p>
-
+<h2>3. Syntax/Structure</h2>
 <pre>
 CREATE TABLE Students (
-  StudentID INT,
+  StudentID INT PRIMARY KEY,
   Name VARCHAR(50) NOT NULL,
-  Age INT
-);
-</pre>
-
-<p>In this example, every student <strong>must have a name</strong>.  
-If you try to insert a record without a name, SQL will reject it.</p>
-
-<pre>
-INSERT INTO Students (StudentID, Age) VALUES (1, 18);
--- ❌ Error: Column 'Name' cannot be null
-</pre>
-
-<hr>
-
-<h3>🔹 UNIQUE Constraint</h3>
-
-<p>The <strong>UNIQUE</strong> constraint makes sure that all values in a column are different.</p>
-
-<pre>
-CREATE TABLE Users (
-  UserID INT,
+  Age INT CHECK (Age >= 5),
   Email VARCHAR(100) UNIQUE
 );
-</pre>
 
-<p>This ensures that no two users can have the same email address.</p>
-
-<pre>
-INSERT INTO Users VALUES (1, 'john@example.com');
-INSERT INTO Users VALUES (2, 'john@example.com');
--- ❌ Error: Duplicate entry 'john@example.com'
-</pre>
-
-<hr>
-
-<h3>🔹 PRIMARY KEY Constraint</h3>
-
-<p>The <strong>PRIMARY KEY</strong> uniquely identifies each record in a table.  
-It automatically combines the behavior of <strong>NOT NULL</strong> and <strong>UNIQUE</strong>.</p>
-
-<pre>
-CREATE TABLE Employees (
-  EmpID INT PRIMARY KEY,
-  Name VARCHAR(50)
+CREATE TABLE Enrollments (
+  EnrollmentID INT PRIMARY KEY,
+  StudentID INT,
+  CourseID INT,
+  FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+  FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
 );
 </pre>
 
-<p>This ensures that:</p>
+<h2>4. Step-by-Step: How It Works</h2>
+<ol>
+  <li>Decide what rules your data must follow (e.g., age must be at least 5, email must be unique).</li>
+  <li>Add the appropriate constraint (PRIMARY KEY, NOT NULL, UNIQUE, CHECK, FOREIGN KEY, DEFAULT) when creating or altering a table.</li>
+  <li>Try inserting data—SQL will block anything that breaks your rules.</li>
+</ol>
+
+<h2>5. When to Use</h2>
 <ul>
-  <li>Each employee has a unique ID.</li>
-  <li>No employee can have a NULL (empty) ID.</li>
+  <li>When you want to prevent duplicate or missing data (e.g., Aadhaar number, email, roll number).</li>
+  <li>When you want to enforce business rules (e.g., age must be 18+ for a driving license).</li>
 </ul>
 
+<h2>6. When Not to Use</h2>
+<ul>
+  <li>For temporary or test tables where strict rules are not needed.</li>
+  <li>When you want to allow any value (rare in real-world apps).</li>
+</ul>
+
+<h2>7. Minimum to Remember</h2>
+<ul>
+  <li>PRIMARY KEY: Unique, not null identifier for each row.</li>
+  <li>FOREIGN KEY: Links to another table’s primary key.</li>
+  <li>UNIQUE: All values must be different.</li>
+  <li>NOT NULL: Column must have a value.</li>
+  <li>CHECK: Value must meet a condition.</li>
+  <li>DEFAULT: Sets a default value.</li>
+</ul>
+
+<h2>8. Common Mistakes</h2>
+<ul>
+  <li>Forgetting to set PRIMARY KEY (leads to duplicate rows).</li>
+  <li>Trying to insert NULL into a NOT NULL column.</li>
+  <li>Violating a FOREIGN KEY constraint (e.g., enrolling a student who doesn’t exist).</li>
+</ul>
+
+<h2>9. Interviewer’s Perspective</h2>
+<ul>
+  <li>“What is the difference between PRIMARY KEY and UNIQUE?”</li>
+  <li>“How does FOREIGN KEY maintain data integrity?”</li>
+  <li>“Give an example of a CHECK constraint in an Indian context.”</li>
+</ul>
+
+<h2>10. Practice Questions</h2>
+<ol>
+  <li>Create a table <code>Employees</code> with a unique <code>Email</code> and <code>Age</code> at least 18.</li>
+  <li>Add a <code>NOT NULL</code> constraint to the <code>Name</code> column in <code>Students</code>.</li>
+  <li>What happens if you try to insert a duplicate <code>StudentID</code>?</li>
+  <li>How does a <code>FOREIGN KEY</code> help maintain data integrity?</li>
+</ol>
 <hr>
 
 <h3>🔹 FOREIGN KEY Constraint</h3>

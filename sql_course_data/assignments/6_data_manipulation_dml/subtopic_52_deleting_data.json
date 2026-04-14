@@ -1,0 +1,75 @@
+[
+  {
+    "title": "DELETE with WHERE Conditions",
+    "description": {
+      "task": "Practice safe DELETE statements with WHERE conditions to remove specific rows.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE logs (\n  log_id     INT PRIMARY KEY,\n  log_level  VARCHAR(10),\n  message    VARCHAR(200),\n  created_at TIMESTAMP\n);\n\nINSERT INTO logs VALUES\n  (1,  'INFO',  'User logged in',           '2026-01-01 08:00:00'),\n  (2,  'DEBUG', 'Query executed in 5ms',     '2026-01-01 08:01:00'),\n  (3,  'ERROR', 'Connection timeout',        '2026-01-01 08:05:00'),\n  (4,  'INFO',  'File uploaded',             '2026-01-02 09:00:00'),\n  (5,  'DEBUG', 'Cache miss for key:user_5', '2026-01-02 09:01:00'),\n  (6,  'WARN',  'High memory usage 85%',     '2026-01-02 10:00:00'),\n  (7,  'DEBUG', 'SQL query plan computed',   '2026-01-03 11:00:00'),\n  (8,  'INFO',  'Report generated',          '2026-01-03 11:30:00'),\n  (9,  'ERROR', 'Disk space critical',       '2026-01-03 12:00:00'),\n  (10, 'INFO',  'Backup completed',          '2026-01-04 02:00:00');\n\nSELECT log_level, COUNT(*) AS count FROM logs GROUP BY log_level;\n\n-- Delete all DEBUG logs (verbose, not needed for archiving)\nDELETE FROM logs WHERE log_level = 'DEBUG';\n\n-- Delete old INFO logs older than Jan 3\nDELETE FROM logs\nWHERE log_level = 'INFO' AND created_at < '2026-01-03 00:00:00';\n\n-- Verify remaining logs\nSELECT * FROM logs ORDER BY created_at;\nSELECT log_level, COUNT(*) AS count FROM logs GROUP BY log_level ORDER BY count DESC;\n",
+      "instructions": [
+        "Run INSERT and initial GROUP BY count.",
+        "Run both DELETE statements.",
+        "Run both verification queries.",
+        "Expected remaining: 1 WARN, 2 ERROR, 1 INFO (from Jan 3), 1 INFO (Jan 4 backup).",
+        "Add a comment: how would you archive old logs to a separate table BEFORE deleting them?"
+      ],
+      "hint": "To archive before deleting: first INSERT INTO logs_archive SELECT * FROM logs WHERE log_level = 'DEBUG'; then DELETE FROM logs WHERE log_level = 'DEBUG';",
+      "expectedOutput": "After deletes: ~5 rows remain (2 ERROR, 1 WARN, 2 INFO from Jan 3+)\nDEBUG and old INFO rows removed"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 52,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "DELETE with Subquery",
+    "description": {
+      "task": "Use DELETE with a subquery to remove rows based on conditions in a related table.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE customers (\n  customer_id INT PRIMARY KEY,\n  name        VARCHAR(60),\n  email       VARCHAR(80),\n  status      VARCHAR(20) DEFAULT 'active'\n);\n\nCREATE TABLE orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  total       DECIMAL(8,2),\n  order_date  DATE,\n  FOREIGN KEY (customer_id) REFERENCES customers(customer_id)\n);\n\nINSERT INTO customers VALUES\n  (1, 'Alice', 'alice@mail.com', 'active'),\n  (2, 'Bob',   'bob@mail.com',   'inactive'),\n  (3, 'Carol', 'carol@mail.com', 'active'),\n  (4, 'Dave',  'dave@mail.com',  'inactive'),\n  (5, 'Eve',   'eve@mail.com',   'active');\n\nINSERT INTO orders VALUES\n  (101, 1, 150.00, '2026-01-05'),\n  (102, 3, 200.00, '2026-01-06'),\n  (103, 2,  80.00, '2026-01-07'),   -- Bob (inactive)\n  (104, 5, 120.00, '2026-01-08'),\n  (105, 4,  50.00, '2026-01-09');   -- Dave (inactive)\n\n-- Find orders belonging to inactive customers\nSELECT o.order_id, c.name, c.status, o.total\nFROM orders o JOIN customers c ON o.customer_id = c.customer_id\nWHERE c.status = 'inactive';\n\n-- Delete those orders using a subquery\nDELETE FROM orders\nWHERE customer_id IN (\n  SELECT customer_id FROM customers WHERE status = 'inactive'\n);\n\n-- Verify only active customer orders remain\nSELECT order_id, customer_id, total FROM orders ORDER BY order_id;\n",
+      "instructions": [
+        "Run all CREATE TABLE and INSERT statements.",
+        "Run the pre-delete SELECT to see inactive customer orders.",
+        "Run the DELETE with subquery.",
+        "Run the final SELECT — only orders 101, 102, 104 should remain.",
+        "Write another DELETE: remove all inactive customers (now safe since their orders are gone)."
+      ],
+      "hint": "DELETE with IN subquery: the subquery returns a list of customer_ids, and the outer DELETE removes all orders where customer_id matches any in that list.",
+      "expectedOutput": "Pre-delete: orders 103 (Bob) and 105 (Dave) identified\nPost-delete: 3 orders remain (101, 102, 104)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 52,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Soft Delete Pattern",
+    "description": {
+      "task": "Implement the soft-delete pattern: instead of physically deleting rows, mark them as deleted with a flag column.",
+      "language": "sql",
+      "context": "In production systems, hard deletes are often replaced by soft deletes — setting is_deleted=TRUE or deleted_at=NOW(). This preserves audit history and allows recovery.",
+      "starterCode": "CREATE TABLE tasks (\n  task_id     INT PRIMARY KEY,\n  title       VARCHAR(100),\n  assignee    VARCHAR(50),\n  status      VARCHAR(20) DEFAULT 'open',\n  created_at  TIMESTAMP DEFAULT NOW(),\n  deleted_at  TIMESTAMP DEFAULT NULL,  -- NULL = not deleted\n  is_deleted  BOOLEAN DEFAULT FALSE\n);\n\nINSERT INTO tasks VALUES\n  (1, 'Fix login bug',          'Alice', 'done',        NOW()-INTERVAL '10 days', NULL, FALSE),\n  (2, 'Write documentation',   'Bob',   'open',        NOW()-INTERVAL '5 days',  NULL, FALSE),\n  (3, 'Deploy to staging',     'Carol', 'in_progress', NOW()-INTERVAL '2 days',  NULL, FALSE),\n  (4, 'Review PR #42',         'Alice', 'open',        NOW()-INTERVAL '1 day',   NULL, FALSE),\n  (5, 'Old task from 2024',    'Dave',  'open',        NOW()-INTERVAL '100 days',NULL, FALSE);\n\n-- Soft-delete task 5 (old task)\nUPDATE tasks\nSET is_deleted = TRUE, deleted_at = NOW()\nWHERE task_id = 5;\n\n-- Active view: exclude soft-deleted rows\nSELECT task_id, title, assignee, status\nFROM tasks\nWHERE is_deleted = FALSE\nORDER BY created_at;\n\n-- Admin view: all tasks including deleted\nSELECT task_id, title, is_deleted, deleted_at\nFROM tasks\nORDER BY task_id;\n\n-- Restore a soft-deleted task\nUPDATE tasks SET is_deleted = FALSE, deleted_at = NULL WHERE task_id = 5;\n\nSELECT COUNT(*) AS active_tasks FROM tasks WHERE is_deleted = FALSE;\n",
+      "instructions": [
+        "Run all INSERT and soft-delete UPDATE statements.",
+        "Run the active view — task 5 should not appear.",
+        "Run the admin view — task 5 appears with is_deleted=TRUE.",
+        "Run the restore UPDATE and verify active_tasks count goes back to 5.",
+        "Add a comment: what are two business advantages of soft delete over hard delete?"
+      ],
+      "hint": "Advantages of soft delete: (1) Audit trail — you know when and what was deleted. (2) Recovery — you can undo accidental deletions. Disadvantages: table grows over time; queries must always filter is_deleted=FALSE.",
+      "expectedOutput": "Active view: 4 tasks (task 5 excluded)\nAdmin view: 5 tasks, task 5 shows is_deleted=TRUE\nAfter restore: active_tasks = 5"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 52,
+    "allowedSubmissionType": "TEXT"
+  }
+]

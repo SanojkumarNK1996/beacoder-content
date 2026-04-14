@@ -1,0 +1,217 @@
+<h1>🕵️ Mockito Framework</h1>
+
+<h2>🎯 Why Use Mocks?</h2>
+<p>In unit tests, you want to test <strong>one class in isolation</strong>, without involving:</p>
+<ul>
+  <li>Real databases</li>
+  <li>External services (HTTP, messaging)</li>
+  <li>Slow or flaky dependencies</li>
+</ul>
+
+<p><strong>Mockito</strong> lets you create <strong>mock objects</strong> that simulate the behavior of dependencies.</p>
+
+<div class="analogy-card">
+  <h3>🎭 Theater Analogy</h3>
+  <p>Real dependencies are like full actors; mocks are like <strong>stand-ins</strong> that behave just enough for rehearsal. They help you test your scene (class) without the full cast.</p>
+</div>
+
+<h2>⚙️ Adding Mockito</h2>
+
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.mockito&lt;/groupId&gt;
+  &lt;artifactId&gt;mockito-core&lt;/artifactId&gt;
+  &lt;version&gt;5.8.0&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+
+&lt;!-- With JUnit 5 integration --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.mockito&lt;/groupId&gt;
+  &lt;artifactId&gt;mockito-junit-jupiter&lt;/artifactId&gt;
+  &lt;version&gt;5.8.0&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<h2>🧪 Basic Mockito Example</h2>
+
+<h3>1️⃣ Service to Test</h3>
+
+<div class="code-example">
+  <pre>
+public class OrderService {
+
+    private final PaymentGateway paymentGateway;
+
+    public OrderService(PaymentGateway paymentGateway) {
+        this.paymentGateway = paymentGateway;
+    }
+
+    public boolean placeOrder(double amount) {
+        PaymentResponse response = paymentGateway.charge(amount);
+        return response.getStatus() == PaymentStatus.SUCCESS;
+    }
+}
+
+public interface PaymentGateway {
+    PaymentResponse charge(double amount);
+}
+
+public class PaymentResponse {
+    private PaymentStatus status;
+    // constructor, getters, setters
+}
+
+public enum PaymentStatus { SUCCESS, FAILURE }
+  </pre>
+</div>
+
+<h3>2️⃣ Unit Test with Mockito</h3>
+
+<div class="code-example">
+  <pre>
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class OrderServiceTest {
+
+    @Test
+    void placeOrder_successfulPayment_returnsTrue() {
+        // Arrange: create mock
+        PaymentGateway paymentGateway = mock(PaymentGateway.class);
+        OrderService orderService = new OrderService(paymentGateway);
+
+        // Define mock behavior
+        when(paymentGateway.charge(1000.0))
+                .thenReturn(new PaymentResponse(PaymentStatus.SUCCESS));
+
+        // Act
+        boolean result = orderService.placeOrder(1000.0);
+
+        // Assert
+        assertTrue(result);
+        verify(paymentGateway, times(1)).charge(1000.0);
+    }
+}
+  </pre>
+</div>
+
+<h2>🔑 Key Mockito Concepts</h2>
+
+<ul>
+  <li><code>mock(Class)</code> – Create a mock object</li>
+  <li><code>when(...).thenReturn(...)</code> – Stub method behavior</li>
+  <li><code>verify(mock)</code> – Verify interactions (method calls)</li>
+  <li><code>ArgumentMatchers</code> – Match any / specific arguments</li>
+</ul>
+
+<h2>🧪 Using Mockito with JUnit 5 Annotations</h2>
+
+<div class="code-example">
+  <pre>
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class NotificationServiceTest {
+
+    @Mock
+    private EmailClient emailClient;   // mock dependency
+
+    @InjectMocks
+    private NotificationService notificationService; // class under test
+
+    @Test
+    void sendWelcomeEmail_shouldUseEmailClient() {
+        // Arrange
+        String email = "user@example.com";
+
+        // Act
+        notificationService.sendWelcomeEmail(email);
+
+        // Assert / Verify
+        verify(emailClient).sendEmail(eq(email), anyString(), anyString());
+    }
+}
+  </pre>
+</div>
+
+<h2>🎯 Verifying Interactions</h2>
+
+<div class="code-example">
+  <pre>
+verify(emailClient).sendEmail(anyString(), anyString(), anyString());
+verify(emailClient, times(1)).sendEmail(...);
+verify(emailClient, never()).sendEmail(...);
+verifyNoMoreInteractions(emailClient);
+  </pre>
+</div>
+
+<h2>🎭 Stubbing with Different Answers</h2>
+
+<div class="code-example">
+  <pre>
+// Return different values
+when(repository.count()).thenReturn(0L, 1L, 2L);
+
+// Throw exception
+when(paymentGateway.charge(anyDouble()))
+        .thenThrow(new RuntimeException("Payment system down"));
+
+// Custom Answer
+when(clock.now()).thenAnswer(invocation -&gt; LocalDateTime.of(2026, 3, 19, 10, 0));
+  </pre>
+</div>
+
+<h2>🧩 Argument Matchers</h2>
+
+<div class="code-example">
+  <pre>
+when(userRepository.findByEmail(eq("test@example.com")))
+        .thenReturn(user);
+
+when(orderRepository.findByStatusAndDate(eq("PAID"), any(LocalDate.class)))
+        .thenReturn(List.of(order));
+  </pre>
+</div>
+
+<p><strong>Important:</strong> When using matchers like <code>any()</code>, use them for <strong>all</strong> parameters of that method call.</p>
+
+<h2>🧪 Spies vs Mocks</h2>
+
+<ul>
+  <li><strong>Mock</strong> – No real behavior unless stubbed</li>
+  <li><strong>Spy</strong> – Wraps a real object, but you can stub or verify certain methods</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+List&lt;String&gt; list = new ArrayList&lt;&gt;();
+List&lt;String&gt; spyList = spy(list);
+
+spyList.add("one");
+spyList.add("two");
+
+verify(spyList).add("one");
+verify(spyList).add("two");
+
+assertEquals(2, spyList.size());
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Mockito helps you <strong>isolate</strong> the class under test by mocking dependencies</li>
+  <li>Use <strong>when/thenReturn</strong> for stubbing and <strong>verify()</strong> for interaction testing</li>
+  <li>Integrates seamlessly with <strong>JUnit 5</strong> and <strong>Spring Boot</strong> tests</li>
+</ul>
+
+<p>Next, you&apos;ll learn how to use these tools together in <strong>Spring Boot Testing</strong> for services, controllers, and repositories.</p>

@@ -1,113 +1,67 @@
 <h1>Transactions in SQL</h1>
-
-<p>In a database, a <strong>transaction</strong> is a group of one or more operations that are treated as a single logical unit of work.  
-This means that either all the operations in the transaction are completed successfully, or none of them are applied to the database.</p>
-
-<p>Transactions are used to maintain <strong>data consistency</strong> and <strong>integrity</strong>, especially when multiple users or systems are interacting with the database at the same time.</p>
-
 <hr>
+<h2>1️⃣ Why Does This Topic Exist?</h2>
+<p>Transactions are used to keep data safe and consistent, especially when multiple people or systems are using the database at the same time. In Indian banks, railway bookings, and e-commerce, transactions prevent money loss or double bookings.</p>
 
-<h2>1️⃣ What Is a Transaction?</h2>
+<h2>2️⃣ What Is a Transaction?</h2>
+<p>A transaction is a group of one or more operations (like insert, update, delete) that are treated as a single unit. Either all changes happen, or none do. This prevents partial updates and keeps data correct.</p>
 
-<p>Think of a transaction as a process that must be completed fully or not at all.</p>
-
-<p><strong>Example:</strong> Imagine transferring ₹100 from Account A to Account B.</p>
-
-<ul>
-  <li>Step 1: Deduct ₹100 from Account A</li>
-  <li>Step 2: Add ₹100 to Account B</li>
-</ul>
-
-<p>If something goes wrong after Step 1 (like a power failure or network error), the transaction should not be completed —  
-otherwise, ₹100 will be lost. SQL transactions ensure that both steps happen together, or neither happens at all.</p>
-
-<hr>
-
-<h2>2️⃣ Why Are Transactions Important?</h2>
-
-<p>Transactions help maintain the <strong>ACID properties</strong> of a database:</p>
-<ul>
-  <li><strong>A</strong>tomicity — All or nothing.</li>
-  <li><strong>C</strong>onsistency — Data remains valid before and after the transaction.</li>
-  <li><strong>I</strong>solation — One transaction doesn’t interfere with another.</li>
-  <li><strong>D</strong>urability — Once committed, the data is permanently saved.</li>
-</ul>
-
-<p>These properties ensure reliability even when multiple users are working with the same data at the same time.</p>
-
-<hr>
-
-<h2>3️⃣ Basic Transaction Commands in SQL</h2>
-
-<p>SQL provides three main commands to manage transactions:</p>
-
-<ul>
-  <li><strong>BEGIN</strong> — Starts a new transaction.</li>
-  <li><strong>COMMIT</strong> — Saves all the changes made during the transaction permanently.</li>
-  <li><strong>ROLLBACK</strong> — Cancels the transaction and restores the database to its previous state.</li>
-</ul>
-
-<hr>
-
-<h2>4️⃣ Example of a Transaction</h2>
-
-<p>Let’s see how these commands are used in a real example:</p>
-
+<h2>3️⃣ Syntax/Structure</h2>
 <pre>
 BEGIN;
-
-UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
-UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
-
-COMMIT;
+-- SQL statements
+COMMIT;   -- or ROLLBACK;
 </pre>
 
-<p>Here’s what happens:</p>
+<h2>4️⃣ Step-by-Step Execution</h2>
+<ol>
+  <li>Start a transaction with <code>BEGIN</code>.</li>
+  <li>Make your changes (INSERT, UPDATE, DELETE).</li>
+  <li>If everything is correct, use <code>COMMIT</code> to save changes.</li>
+  <li>If there is an error, use <code>ROLLBACK</code> to undo all changes.</li>
+</ol>
+
+<h2>5️⃣ When to Use</h2>
 <ul>
-  <li>The <code>BEGIN</code> command starts the transaction.</li>
-  <li>The two <code>UPDATE</code> statements transfer ₹100 between accounts.</li>
-  <li>If everything works correctly, <code>COMMIT</code> saves the changes permanently.</li>
+  <li>Transferring money between accounts.</li>
+  <li>Booking tickets and updating seat availability.</li>
+  <li>Making orders and updating inventory together.</li>
+  <li>Any situation where all steps must succeed together.</li>
 </ul>
 
-<p>If an error occurs during the process, you can cancel everything using:</p>
-
-<pre>
-ROLLBACK;
-</pre>
-
-<p>This ensures that no partial updates remain — both accounts stay as they were before.</p>
-
-<hr>
-
-<h2>5️⃣ Real-Life Analogy</h2>
-
-<p>Think of a bank transfer as a transaction.  
-If the debit happens but the credit fails, it would cause an error in your account balances.  
-That’s why the system ensures that both steps are completed successfully — otherwise, it reverts everything back.</p>
-
-<p>Transactions in SQL help databases work exactly like that — ensuring <strong>accuracy, reliability, and safety</strong> of data.</p>
-
-<hr>
-
-<h2>6️⃣ When to Use Transactions</h2>
-
-<p>Transactions are especially useful when:</p>
+<h2>6️⃣ When Not to Use</h2>
 <ul>
-  <li>You are transferring money between accounts.</li>
-  <li>Making an order and updating inventory at the same time.</li>
-  <li>Processing multiple changes that must all succeed together.</li>
-  <li>Preventing partial updates during errors or power failures.</li>
+  <li>For single, simple queries that do not affect multiple rows or tables.</li>
+  <li>When performance is more important than strict consistency (rare in real-world Indian business).</li>
 </ul>
 
-<hr>
-
-<h2>7️⃣ Summary</h2>
-
+<h2>7️⃣ Minimum to Remember</h2>
 <ul>
-  <li>A transaction is a set of operations that act as one unit.</li>
-  <li>It ensures consistency and prevents data corruption.</li>
-  <li>Use <code>BEGIN</code>, <code>COMMIT</code>, and <code>ROLLBACK</code> to manage transactions.</li>
+  <li>Transactions = all or nothing.</li>
+  <li>Use <code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code>.</li>
+  <li>Prevents data corruption and partial updates.</li>
 </ul>
 
-<p>Next, let’s learn more about these commands in detail — starting with  
-<strong>BEGIN, COMMIT, and ROLLBACK</strong>.</p>
+<h2>8️⃣ Common Mistakes</h2>
+<ul>
+  <li>Forgetting to use <code>COMMIT</code> or <code>ROLLBACK</code> at the end.</li>
+  <li>Leaving transactions open, which can lock tables and slow down the system.</li>
+  <li>Not handling errors, so partial changes remain.</li>
+</ul>
+
+<h2>9️⃣ Interviewer’s Perspective</h2>
+<ul>
+  <li>What is a transaction? Why is it important?</li>
+  <li>Explain ACID properties with examples.</li>
+  <li>Give a real-life Indian example where transactions are critical (e.g., UPI money transfer).</li>
+  <li>What happens if a transaction fails halfway?</li>
+</ul>
+
+<h2>🔟 Practice Questions</h2>
+<ol>
+  <li>Write SQL to transfer ₹500 from one account to another using transactions.</li>
+  <li>What is the difference between COMMIT and ROLLBACK?</li>
+  <li>Explain ACID properties with an example.</li>
+  <li>Why are transactions important in online shopping?</li>
+  <li>What happens if you forget to commit a transaction?</li>
+</ol>

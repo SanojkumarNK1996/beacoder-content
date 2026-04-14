@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Grade Classifier",
+    "description": {
+      "task": "Write a Java program that takes a numeric score and prints the corresponding letter grade using if-else-if logic.",
+      "language": "java",
+      "starterCode": "public class GradeClassifier {\n    public static void main(String[] args) {\n        int score = 82;\n\n        // Use if-else-if to classify the score:\n        // 90-100 → A, 80-89 → B, 70-79 → C, 60-69 → D, below 60 → F\n        String grade;\n\n        System.out.println(\"Score: \" + score);\n        System.out.println(\"Grade: \" + grade);\n    }\n}",
+      "instructions": [
+        "Use the score variable already declared as 82.",
+        "Use an if-else-if chain to assign the correct grade letter to 'grade'.",
+        "Ranges: 90-100 → A, 80-89 → B, 70-79 → C, 60-69 → D, below 60 → F.",
+        "Print both lines in the exact format shown."
+      ],
+      "hint": "Use >= and <= operators to check ranges: if (score >= 80 && score <= 89) sets grade = \"B\".",
+      "expectedOutput": "Score: 82\nGrade: B"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 8,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Day Name with switch-case",
+    "description": {
+      "task": "Write a Java program that maps an integer (1–7) to its day name using a switch-case statement.",
+      "language": "java",
+      "starterCode": "public class DayName {\n    public static void main(String[] args) {\n        int day = 4;\n        String dayName;\n\n        // Use switch-case to map 1=Monday ... 7=Sunday\n        // Include a default case for invalid input\n\n        System.out.println(\"Day \" + day + \" is: \" + dayName);\n    }\n}",
+      "instructions": [
+        "Use a switch statement on the 'day' variable.",
+        "Map 1 → Monday, 2 → Tuesday, 3 → Wednesday, 4 → Thursday, 5 → Friday, 6 → Saturday, 7 → Sunday.",
+        "Add a default case that sets dayName to 'Invalid day'.",
+        "Print the output in the exact format shown."
+      ],
+      "hint": "Each case must end with a break statement to prevent fall-through. The default case does not need break.",
+      "expectedOutput": "Day 4 is: Thursday"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 8,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Leap Year Checker",
+    "description": {
+      "task": "Write a Java program that checks whether a given year is a leap year using nested if-else logic.",
+      "language": "java",
+      "context": "A year is a leap year if it is divisible by 4, except for century years which must also be divisible by 400.",
+      "starterCode": "public class LeapYear {\n    public static void main(String[] args) {\n        int year = 2024;\n\n        // Check leap year conditions using if-else\n        boolean isLeap;\n\n        if (isLeap) {\n            System.out.println(year + \" is a Leap Year\");\n        } else {\n            System.out.println(year + \" is NOT a Leap Year\");\n        }\n    }\n}",
+      "instructions": [
+        "A year is a leap year if: (divisible by 4 AND not divisible by 100) OR (divisible by 400).",
+        "Use the modulo operator (%) to check divisibility.",
+        "Assign the boolean result to 'isLeap' before the if-else block.",
+        "Test with year = 2024 (should be a leap year) and year = 1900 (should NOT be)."
+      ],
+      "hint": "The compound condition is: isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);",
+      "expectedOutput": "2024 is a Leap Year"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 8,
+    "allowedSubmissionType": "TEXT"
+  }
+]

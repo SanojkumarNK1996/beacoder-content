@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Spring Cloud Configuration Properties",
+    "description": {
+      "task": "Create a CloudConfigSimulator class that models Spring Cloud Config's centralized configuration mechanism. Services request their configuration by name and profile (e.g., 'payment-service', 'production'). The config server returns profile-specific properties with fallback to default properties.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class CloudConfigSimulator {\n\n    // config store: serviceName -> profile -> key -> value\n    private final Map<String, Map<String, Map<String, String>>> configStore = new HashMap<>();\n\n    public void setProperty(String service, String profile, String key, String value) {\n        configStore\n            .computeIfAbsent(service, s -> new HashMap<>())\n            .computeIfAbsent(profile, p -> new HashMap<>())\n            .put(key, value);\n    }\n\n    public String getProperty(String service, String profile, String key) {\n        // Return profile-specific value; fall back to 'default' profile; return null if not found\n        return null;\n    }\n\n    public Map<String, String> getAllProperties(String service, String profile) {\n        // Merge 'default' profile properties with profile-specific ones\n        // Profile-specific properties override defaults\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        CloudConfigSimulator config = new CloudConfigSimulator();\n        config.setProperty(\"payment-service\", \"default\", \"db.url\", \"jdbc:h2:mem:test\");\n        config.setProperty(\"payment-service\", \"default\", \"timeout\", \"30\");\n        config.setProperty(\"payment-service\", \"production\", \"db.url\", \"jdbc:postgresql://prod-db:5432/payments\");\n\n        System.out.println(config.getProperty(\"payment-service\", \"production\", \"db.url\"));\n        System.out.println(config.getProperty(\"payment-service\", \"production\", \"timeout\"));\n        System.out.println(config.getAllProperties(\"payment-service\", \"production\").size());\n    }\n}",
+      "instructions": [
+        "setProperty() uses nested computeIfAbsent to navigate the 3-level map structure",
+        "getProperty() first checks the specified profile, then falls back to 'default' profile",
+        "getProperty() returns null if the key is not found in either profile",
+        "getAllProperties() starts with a copy of 'default' profile properties, then overrides with profile-specific ones",
+        "getAllProperties() returns an empty map if the service is not in the config store"
+      ],
+      "hint": "For getProperty(), use Optional or simple null checks: first check configStore.get(service).get(profile).get(key), then fall back to 'default'. For getAllProperties(), use new HashMap<>(defaults) then putAll(profileProps).",
+      "expectedOutput": "jdbc:postgresql://prod-db:5432/payments\n30\n2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 109,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Load Balancer Round Robin",
+    "description": {
+      "task": "Implement a RoundRobinLoadBalancer class that simulates Spring Cloud LoadBalancer's round-robin strategy. The balancer routes incoming requests to registered service instances in order, cycling through them evenly.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class RoundRobinLoadBalancer {\n\n    private final List<String> instances = new ArrayList<>();\n    private int currentIndex = 0;\n\n    public void addInstance(String instanceAddress) {\n        instances.add(instanceAddress);\n    }\n\n    public void removeInstance(String instanceAddress) {\n        int idx = instances.indexOf(instanceAddress);\n        if (idx >= 0) {\n            instances.remove(idx);\n            if (currentIndex >= instances.size() && !instances.isEmpty()) {\n                currentIndex = 0;\n            }\n        }\n    }\n\n    public String chooseInstance() {\n        // Return the next instance in round-robin order\n        // Return null if no instances are registered\n        return null;\n    }\n\n    public List<String> simulateRequests(int count) {\n        // Return list of instance addresses chosen for 'count' sequential requests\n        List<String> chosen = new ArrayList<>();\n        for (int i = 0; i < count; i++) {\n            chosen.add(chooseInstance());\n        }\n        return chosen;\n    }\n\n    public static void main(String[] args) {\n        RoundRobinLoadBalancer lb = new RoundRobinLoadBalancer();\n        lb.addInstance(\"10.0.0.1:8080\");\n        lb.addInstance(\"10.0.0.2:8080\");\n        lb.addInstance(\"10.0.0.3:8080\");\n\n        List<String> results = lb.simulateRequests(6);\n        results.forEach(System.out::println);\n    }\n}",
+      "instructions": [
+        "addInstance() appends the address to the instances list",
+        "chooseInstance() returns instances.get(currentIndex) and then increments currentIndex",
+        "currentIndex wraps around using modulo: currentIndex = (currentIndex + 1) % instances.size()",
+        "chooseInstance() returns null when instances list is empty",
+        "simulateRequests() calls chooseInstance() exactly 'count' times and collects results"
+      ],
+      "hint": "In chooseInstance(), get the current instance first, then set currentIndex = (currentIndex + 1) % instances.size(). Guard against empty list with an early null return.",
+      "expectedOutput": "10.0.0.1:8080\n10.0.0.2:8080\n10.0.0.3:8080\n10.0.0.1:8080\n10.0.0.2:8080\n10.0.0.3:8080"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 109,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Distributed Tracing Span Builder",
+    "description": {
+      "task": "Build a DistributedTracer class that simulates Spring Cloud Sleuth's distributed tracing. Each request gets a trace ID; each service call within that trace creates a span with a span ID. Implement methods to start and finish spans and build a trace timeline.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class DistributedTracer {\n\n    public record Span(\n        String traceId,\n        String spanId,\n        String serviceName,\n        long startMs,\n        long endMs\n    ) {\n        public long duration() { return endMs - startMs; }\n    }\n\n    private final Map<String, Span> activeSpans = new HashMap<>();\n    private final List<Span> completedSpans = new ArrayList<>();\n    private int spanCounter = 0;\n\n    public String startSpan(String traceId, String serviceName, long startMs) {\n        // Create a new span, store in activeSpans, return the generated spanId\n        String spanId = \"span-\" + (++spanCounter);\n        // TODO: create Span with endMs=0 and store in activeSpans\n        return spanId;\n    }\n\n    public void finishSpan(String spanId, long endMs) {\n        // Move the span from activeSpans to completedSpans with the given endMs\n    }\n\n    public List<Span> getTrace(String traceId) {\n        // Return all completed spans for the given traceId, ordered by startMs\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        DistributedTracer tracer = new DistributedTracer();\n        String traceId = \"trace-abc\";\n\n        String s1 = tracer.startSpan(traceId, \"gateway\", 0);\n        String s2 = tracer.startSpan(traceId, \"user-service\", 10);\n        tracer.finishSpan(s2, 50);\n        tracer.finishSpan(s1, 60);\n\n        List<Span> trace = tracer.getTrace(traceId);\n        System.out.println(\"Spans in trace: \" + trace.size());\n        System.out.println(\"First service: \" + trace.get(0).serviceName());\n        System.out.println(\"Total duration: \" + trace.get(0).duration());\n    }\n}",
+      "instructions": [
+        "startSpan() creates a Span with the provided traceId, generated spanId, serviceName, startMs, and endMs=0",
+        "startSpan() stores the span in activeSpans keyed by spanId, and returns the spanId",
+        "finishSpan() looks up the span by spanId, creates a completed version with the given endMs, moves it to completedSpans",
+        "getTrace() filters completedSpans by traceId and sorts by startMs ascending",
+        "Spans not yet finished (still in activeSpans) are not returned by getTrace()"
+      ],
+      "hint": "In finishSpan(), get the incomplete span from activeSpans, remove it, then create a new Span record with the correct endMs and add to completedSpans. Use Comparator.comparingLong(Span::startMs) in getTrace().",
+      "expectedOutput": "Spans in trace: 2\nFirst service: gateway\nTotal duration: 60"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 109,
+    "allowedSubmissionType": "TEXT"
+  }
+]

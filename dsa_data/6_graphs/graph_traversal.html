@@ -1,0 +1,23 @@
+<h1>🔍 Graph Traversal</h1>
+<h2>🔁 Depth-First Search (DFS)</h2>
+<p>Explore as deep as possible down each branch before backtracking. Uses a stack (or recursion).</p>
+<div class="code-example">
+  <pre>
+void dfs(int node, Set&lt;Integer&gt; visited, Map&lt;Integer, List&lt;Integer&gt;&gt; graph) {
+    visited.add(node);
+    System.out.print(node + " ");
+    for (int neighbor : graph.getOrDefault(node, List.of())) {
+        if (!visited.contains(neighbor)) dfs(neighbor, visited, graph);
+    }
+}
+  </pre>
+</div>
+<h2>🌊 Breadth-First Search (BFS)</h2>
+<p>Explore all neighbors at current depth before going deeper. Uses a queue. Finds <strong>shortest path</strong> in unweighted graphs.</p>
+<h2>⚖️ DFS vs BFS</h2>
+<ul>
+  <li><strong>DFS</strong>: Better for cycle detection, path existence, topological sort</li>
+  <li><strong>BFS</strong>: Better for shortest path, level-order exploration</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Both run in O(V + E). Choose DFS for deep exploration, BFS for shortest paths and layer-by-layer processing.</p>

@@ -1,103 +1,67 @@
-<h1>Updating Data (UPDATE)</h1>
+<h1>Updating Data (UPDATE): 10-Part Beginner-Friendly Guide</h1>
 
-<p>The <strong>UPDATE</strong> statement is used to <strong>modify existing records</strong> in a table.  
-You can update one or more columns, and you can also control which rows are updated using a <code>WHERE</code> clause.</p>
+<h2>1. Why Does This Topic Exist?</h2>
+<p>In real life, data changes—students get new marks, customers update their address, or an order status changes. The <b>UPDATE</b> command lets you modify existing records in your database.</p>
 
-<hr>
+<h2>2. What Is This?</h2>
+<p><b>UPDATE</b> is an SQL command used to change values in one or more columns for existing rows in a table.</p>
 
-<h2>1️⃣ Basic UPDATE Syntax</h2>
-
+<h2>3. Syntax/Structure</h2>
 <pre>
+-- Update specific columns for matching rows
 UPDATE table_name
-SET column1 = value1, column2 = value2, ...
+SET column1 = value1, column2 = value2
 WHERE condition;
 </pre>
 
-<p>This command updates specific columns for the rows that match the given condition.</p>
+<h2>4. Step-by-Step: How It Works</h2>
+<ol>
+  <li>Decide which table and rows you want to update.</li>
+  <li>Write the <code>UPDATE</code> statement with <code>SET</code> for new values and <code>WHERE</code> for the condition.</li>
+  <li>Run the command in your SQL tool.</li>
+  <li>Check your table with <code>SELECT</code> to confirm the update.</li>
+</ol>
 
-<hr>
+<h2>5. When to Use</h2>
+<ul>
+  <li>When a student’s marks change after revaluation.</li>
+  <li>When a customer updates their phone number.</li>
+  <li>When you want to change any existing record.</li>
+</ul>
 
-<h2>2️⃣ Example: Updating One Column</h2>
+<h2>6. When Not to Use</h2>
+<ul>
+  <li>When you want to add new data (use <code>INSERT</code> instead).</li>
+  <li>When you want to remove data (use <code>DELETE</code> instead).</li>
+</ul>
 
-<pre>
-UPDATE Students
-SET Age = 20
-WHERE Name = 'John';
-</pre>
+<h2>7. Minimum to Remember</h2>
+<ul>
+  <li>Always use <code>WHERE</code> to avoid updating all rows by mistake.</li>
+  <li>You can update one or many columns at once.</li>
+  <li>Use expressions in <code>SET</code> (e.g., <code>Age = Age + 1</code>).</li>
+</ul>
 
-<p>This command changes John’s age to 20 — only for the record where <code>Name</code> equals <code>'John'</code>.</p>
+<h2>8. Common Mistakes</h2>
+<ul>
+  <li>Forgetting <code>WHERE</code> (updates every row!).</li>
+  <li>Misspelling column names.</li>
+  <li>Setting wrong values or data types.</li>
+</ul>
 
-<hr>
+<h2>9. Interviewer’s Perspective</h2>
+<ul>
+  <li>“How do you update only one record in SQL?”</li>
+  <li>“What happens if you omit WHERE in UPDATE?”</li>
+  <li>“How can you increase all employees’ salaries by 10%?”</li>
+</ul>
 
-<h2>3️⃣ Example: Updating Multiple Columns</h2>
-
-<pre>
-UPDATE Students
-SET Age = 21, Grade = 'A'
-WHERE StudentID = 101;
-</pre>
-
-<p>This changes both the <code>Age</code> and <code>Grade</code> columns for the student whose ID is <code>101</code>.</p>
-
-<hr>
-
-<h2>4️⃣ Important: Always Use WHERE!</h2>
-
-<p>If you don’t include a <code>WHERE</code> clause, <strong>all rows in the table will be updated</strong>.</p>
-
-<pre>
-UPDATE Students
-SET Grade = 'B';
-</pre>
-
-<p>This will set the <code>Grade</code> to <code>'B'</code> for <strong>every student</strong> in the table.  
-Always double-check your <code>WHERE</code> condition before running an UPDATE!</p>
-
-<hr>
-
-<h2>5️⃣ Updating with Expressions</h2>
-
-<p>You can also use mathematical expressions when updating values.</p>
-
-<pre>
-UPDATE Students
-SET Age = Age + 1
-WHERE Class = '10A';
-</pre>
-
-<p>This increases the <code>Age</code> of all students in class 10A by 1.</p>
-
-<hr>
-
-<h2>6️⃣ Using UPDATE with Conditions</h2>
-
-<p>You can combine multiple conditions using <code>AND</code> and <code>OR</code>.</p>
-
-<pre>
-UPDATE Students
-SET Grade = 'A'
-WHERE Age > 18 AND Attendance > 90;
-</pre>
-
-<p>This updates the <code>Grade</code> to 'A' for students older than 18 who have over 90% attendance.</p>
-
-<hr>
-
-<h2>7️⃣ Updating from Another Table (Advanced)</h2>
-
-<p>Sometimes, you may need to update values based on another table’s data.  
-This is often done using a <code>JOIN</code> or a subquery.</p>
-
-<p>Example (MySQL style):</p>
-
-<pre>
-UPDATE Students s
-JOIN Classes c ON s.ClassID = c.ClassID
-SET s.TeacherName = c.ClassTeacher
-WHERE c.ClassName = '10B';
-</pre>
-
-<p>This updates each student’s <code>TeacherName</code> based on data from the <code>Classes</code> table.</p>
+<h2>10. Practice Questions</h2>
+<ol>
+  <li>Write SQL to update the address of a customer with CustomerID = 5.</li>
+  <li>How would you set all students’ attendance to 100% in the Students table?</li>
+  <li>What happens if you run UPDATE Students SET Age = 20; without WHERE?</li>
+</ol>
 
 <hr>
 

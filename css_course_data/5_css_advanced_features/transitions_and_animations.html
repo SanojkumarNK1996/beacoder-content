@@ -1,0 +1,63 @@
+<h1>Transitions and Animations</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>Subtle animations improve user experience in navbars, buttons, modals, and loaders on modern Indian apps and websites.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>Transitions smoothly change property values over time.</li>
+  <li>Animations use keyframes to define complex multi-step changes.</li>
+</ul>
+
+<h2>Syntax / Basic usage</h2>
+<pre><code>.button {
+  background-color: blue;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: darkblue;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.box {
+  animation: fade-in 1s ease-in-out;
+}
+</code></pre>
+
+<h2>How it works</h2>
+<ol>
+  <li>transition defines which properties should animate and how long they take.</li>
+  <li>When the property changes (like hover), the browser interpolates values over time.</li>
+  <li>@keyframes defines steps in an animation; animation applies it to an element.</li>
+</ol>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>transition: property duration timing-function.</li>
+  <li>animation: name duration timing-function other-options.</li>
+</ul>
+
+<h2>Common mistakes</h2>
+<ul>
+  <li>Overusing animations causing distraction or performance issues.</li>
+  <li>Animating expensive properties like width and height instead of transform/opacity.</li>
+</ul>
+
+<h2>Interviewer perspective</h2>
+<ul>
+  <li>Difference between transitions and animations.</li>
+  <li>Which CSS properties are best for performant animations?</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Create a button with a hover transition effect.</li>
+  <li>Build a simple loading spinner animation using keyframes.</li>
+</ol>

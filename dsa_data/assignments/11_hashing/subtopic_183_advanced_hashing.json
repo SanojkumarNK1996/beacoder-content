@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Bloom Filter Implementation",
+    "description": {
+      "task": "Implement a probabilistic Bloom filter that can definitively say an element is NOT in the set, or probably IS in the set. Use a bit array with multiple hash functions. Demonstrate false positives.",
+      "language": "java",
+      "starterCode": "import java.util.BitSet;\n\npublic class BloomFilter {\n    private final BitSet bits;\n    private final int size;\n    private final int numHashes;\n\n    public BloomFilter(int size, int numHashes) {\n        this.size = size;\n        this.numHashes = numHashes;\n        bits = new BitSet(size);\n    }\n\n    private int hash(String s, int seed) {\n        int h = seed;\n        for (char c : s.toCharArray()) h = h * 31 + c;\n        return Math.abs(h) % size;\n    }\n\n    public void add(String element) {\n        // TODO: for each seed 0..numHashes-1, compute hash(element, seed) and set the bit\n        for (int i = 0; i < numHashes; i++) {\n            // TODO: bits.set(hash(element, i))\n        }\n    }\n\n    public boolean mightContain(String element) {\n        // TODO: for each seed 0..numHashes-1, if any bit is NOT set, return false;\n        //       if all bits are set, return true (might contain)\n        for (int i = 0; i < numHashes; i++) {\n            // TODO: if(!bits.get(hash(element,i))) return false;\n        }\n        return true;\n    }\n\n    public static void main(String[] args) {\n        BloomFilter bf = new BloomFilter(100, 3);\n        bf.add(\"apple\"); bf.add(\"banana\"); bf.add(\"cherry\");\n\n        System.out.println(\"apple:   \" + bf.mightContain(\"apple\"));\n        System.out.println(\"banana:  \" + bf.mightContain(\"banana\"));\n        System.out.println(\"cherry:  \" + bf.mightContain(\"cherry\"));\n        System.out.println(\"durian:  \" + bf.mightContain(\"durian\"));\n        System.out.println(\"elderberry: \" + bf.mightContain(\"elderberry\"));\n        // No false negatives: added items must return true\n        System.out.println(\"No false negatives: \" +\n            (bf.mightContain(\"apple\") && bf.mightContain(\"banana\") && bf.mightContain(\"cherry\")));\n    }\n}",
+      "instructions": [
+        "add: for(int i=0;i<numHashes;i++) bits.set(hash(element,i));",
+        "mightContain: for(int i=0;i<numHashes;i++) if(!bits.get(hash(element,i))) return false;",
+        "Added elements (apple, banana, cherry) always return true (no false negatives — guaranteed property)",
+        "durian and elderberry will likely return false (not in filter)",
+        "A Bloom filter can have false positives (thinks item is there when it's not) but never false negatives"
+      ],
+      "hint": "add: bits.set(hash(element,i)); mightContain: if(!bits.get(hash(element,i)))return false;",
+      "expectedOutput": "apple:   true\nbanana:  true\ncherry:  true\ndurian:  false\nelderberry: false\nNo false negatives: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 183,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Count-Min Sketch Frequency Estimation",
+    "description": {
+      "task": "Implement a Count-Min Sketch, a probabilistic data structure for frequency estimation. It uses a 2D counter table with multiple hash functions. Overestimates are possible but never underestimates. Estimate element frequencies.",
+      "language": "java",
+      "starterCode": "public class CountMinSketch {\n    private final int width, depth;\n    private final int[][] table;\n    private final int[] seeds;\n\n    public CountMinSketch(int width, int depth) {\n        this.width = width; this.depth = depth;\n        table = new int[depth][width];\n        seeds = new int[depth];\n        for (int i = 0; i < depth; i++) seeds[i] = (i + 1) * 31;\n    }\n\n    private int hash(String s, int seed) {\n        int h = seed;\n        for (char c : s.toCharArray()) h = h * 31 + c;\n        return Math.abs(h) % width;\n    }\n\n    public void add(String element) {\n        // TODO: for each row i, increment table[i][hash(element, seeds[i])]\n        for (int i = 0; i < depth; i++) {\n            // table[i][hash(element, seeds[i])]++;\n        }\n    }\n\n    public int estimate(String element) {\n        // TODO: return the minimum across all rows: min of table[i][hash(element,seeds[i])]\n        int min = Integer.MAX_VALUE;\n        return min;\n    }\n\n    public static void main(String[] args) {\n        CountMinSketch cms = new CountMinSketch(20, 4);\n        String[] stream = {\"a\",\"b\",\"a\",\"c\",\"a\",\"b\",\"d\",\"a\",\"c\",\"a\"}; // a=5,b=2,c=2,d=1\n        for (String s : stream) cms.add(s);\n\n        System.out.println(\"Estimated a: \" + cms.estimate(\"a\") + \" (true=5)\");\n        System.out.println(\"Estimated b: \" + cms.estimate(\"b\") + \" (true=2)\");\n        System.out.println(\"Estimated c: \" + cms.estimate(\"c\") + \" (true=2)\");\n        System.out.println(\"Estimated d: \" + cms.estimate(\"d\") + \" (true=1)\");\n        System.out.println(\"Never underestimates: \" + (cms.estimate(\"a\")>=5 && cms.estimate(\"b\")>=2));\n    }\n}",
+      "instructions": [
+        "add: for(int i=0;i<depth;i++) table[i][hash(element,seeds[i])]++;",
+        "estimate: for(int i=0;i<depth;i++) min=Math.min(min,table[i][hash(element,seeds[i])]);",
+        "With width=20 and depth=4, estimates should be very accurate for small datasets",
+        "Count-Min Sketch may overestimate but never underestimate",
+        "Typical output: estimates equal true counts (for small stream with large width)"
+      ],
+      "hint": "add: table[i][hash(element,seeds[i])]++; estimate: min=Math.min(min,table[i][hash(element,seeds[i])]);",
+      "expectedOutput": "Estimated a: 5 (true=5)\nEstimated b: 2 (true=2)\nEstimated c: 2 (true=2)\nEstimated d: 1 (true=1)\nNever underestimates: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 183,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "HashMap vs HashSet Performance",
+    "description": {
+      "task": "Demonstrate practical performance of HashMap and HashSet for membership testing and counting. Compare O(1) hash lookup vs O(n) linear search for large datasets. Measure approximate relative lookup counts.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class HashPerformance {\n\n    public boolean linearContains(List<Integer> list, int target) {\n        for (int x : list) if (x == target) return true;\n        return false;\n    }\n\n    public boolean hashContains(Set<Integer> set, int target) {\n        return set.contains(target);\n    }\n\n    public Map<Integer, Integer> linearFrequency(int[] arr) {\n        Map<Integer, Integer> map = new HashMap<>();\n        // TODO: count frequency without using merge/getOrDefault tricks — explicit loop\n        for (int x : arr) {\n            // TODO: if not in map, put 1; else increment\n        }\n        return map;\n    }\n\n    public static void main(String[] args) {\n        HashPerformance hp = new HashPerformance();\n        int N = 10000;\n        List<Integer> list = new ArrayList<>();\n        Set<Integer>  set  = new HashSet<>();\n        for (int i = 0; i < N; i++) { list.add(i); set.add(i); }\n\n        // Search for last element (worst case for linear)\n        long t1 = System.nanoTime();\n        for (int i = 0; i < 1000; i++) hp.linearContains(list, N-1);\n        long linearTime = System.nanoTime() - t1;\n\n        long t2 = System.nanoTime();\n        for (int i = 0; i < 1000; i++) hp.hashContains(set, N-1);\n        long hashTime = System.nanoTime() - t2;\n\n        System.out.println(\"Linear search ms: \" + linearTime/1_000_000);\n        System.out.println(\"Hash lookup ms:   \" + hashTime/1_000_000);\n        System.out.println(\"Hash is faster: \" + (hashTime < linearTime));\n\n        int[] arr = {3,1,4,1,5,9,2,6,5,3,5};\n        System.out.println(\"Frequency: \" + hp.linearFrequency(arr));\n    }\n}",
+      "instructions": [
+        "linearFrequency: if(map.containsKey(x))map.put(x,map.get(x)+1);else map.put(x,1);",
+        "Hash lookup is O(1) while linear is O(n); for n=10000 the speedup should be significant",
+        "The timing confirms hash structures dramatically outperform linear search",
+        "Frequency of {3,1,4,1,5,9,2,6,5,3,5}: 1→2, 2→1, 3→2, 4→1, 5→3, 6→1, 9→1",
+        "The exact timing values will vary — only the relative comparison (hashTime < linearTime) matters"
+      ],
+      "hint": "if(map.containsKey(x))map.put(x,map.get(x)+1);else map.put(x,1);",
+      "expectedOutput": "Linear search ms: 15\nHash lookup ms:   0\nHash is faster: true\nFrequency: {1=2, 2=1, 3=2, 4=1, 5=3, 6=1, 9=1}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 183,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Transaction Commit and Rollback",
+    "description": {
+      "task": "Implement a transaction manager that supports commit and rollback. Demonstrate what happens when a multi-step operation fails halfway through — with and without rollback.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BankAccount {\n    private String owner;\n    private double balance;\n    \n    public BankAccount(String owner, double balance) {\n        this.owner = owner; this.balance = balance;\n    }\n    \n    public String getOwner() { return owner; }\n    public double getBalance() { return balance; }\n    public void setBalance(double balance) { this.balance = balance; }\n    \n    @Override\n    public String toString() { return owner + \": $\" + balance; }\n}\n\npublic class TransactionManager {\n    private Map<String, Double> snapshot = new HashMap<>();\n    \n    public void begin(BankAccount... accounts) {\n        snapshot.clear();\n        for (BankAccount acc : accounts) {\n            snapshot.put(acc.getOwner(), acc.getBalance());\n        }\n        System.out.println(\"Transaction started.\");\n    }\n    \n    public void commit() {\n        snapshot.clear();\n        System.out.println(\"Transaction committed.\");\n    }\n    \n    public void rollback(BankAccount... accounts) {\n        // TODO: Restore all accounts to their snapshot balances and print message\n    }\n}\n\npublic class TransferService {\n    private TransactionManager txManager;\n    \n    public TransferService(TransactionManager txManager) {\n        this.txManager = txManager;\n    }\n    \n    public void transfer(BankAccount from, BankAccount to, double amount) {\n        txManager.begin(from, to);\n        try {\n            System.out.println(\"Deducting $\" + amount + \" from \" + from.getOwner());\n            if (from.getBalance() < amount) throw new RuntimeException(\"Insufficient funds!\");\n            from.setBalance(from.getBalance() - amount);\n            \n            System.out.println(\"Crediting $\" + amount + \" to \" + to.getOwner());\n            to.setBalance(to.getBalance() + amount);\n            \n            txManager.commit();\n        } catch (RuntimeException e) {\n            System.out.println(\"ERROR: \" + e.getMessage());\n            txManager.rollback(from, to);\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        BankAccount alice = new BankAccount(\"Alice\", 1000.0);\n        BankAccount bob = new BankAccount(\"Bob\", 500.0);\n        TransferService service = new TransferService(new TransactionManager());\n        \n        System.out.println(\"--- Successful Transfer ---\");\n        service.transfer(alice, bob, 200.0);\n        System.out.println(alice + \" | \" + bob);\n        \n        System.out.println(\"--- Failed Transfer (insufficient funds) ---\");\n        service.transfer(bob, alice, 1000.0);\n        System.out.println(alice + \" | \" + bob);\n    }\n}",
+      "instructions": [
+        "Implement rollback() to restore each account's balance from the snapshot map and print 'Transaction rolled back.'.",
+        "Run Main as-is.",
+        "Verify the first transfer succeeds (commit) and the second reverts (rollback leaves balances unchanged)."
+      ],
+      "hint": "Spring's @Transactional wraps methods in transactions automatically. On RuntimeException, it rolls back changes. This ensures data consistency even when failures occur.",
+      "expectedOutput": "--- Successful Transfer ---\nTransaction started.\nDeducting $200.0 from Alice\nCrediting $200.0 to Bob\nTransaction committed.\nAlice: $800.0 | Bob: $700.0\n--- Failed Transfer (insufficient funds) ---\nTransaction started.\nDeducting $1000.0 from Bob\nERROR: Insufficient funds!\nTransaction rolled back.\nAlice: $800.0 | Bob: $700.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 93,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Declarative Transaction with Annotation",
+    "description": {
+      "task": "Implement a custom @Transactional annotation processor that wraps annotated methods in try-commit/catch-rollback blocks using Java Reflection and dynamic proxies.",
+      "language": "java",
+      "starterCode": "import java.lang.annotation.*;\nimport java.lang.reflect.*;\nimport java.util.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface Transactional {}\n\npublic class TransactionContext {\n    private static final List<String> log = new ArrayList<>();\n    \n    public static void begin() { log.add(\"BEGIN\"); System.out.println(\"[TX] BEGIN\"); }\n    public static void commit() { log.add(\"COMMIT\"); System.out.println(\"[TX] COMMIT\"); }\n    public static void rollback() { log.add(\"ROLLBACK\"); System.out.println(\"[TX] ROLLBACK\"); }\n    public static List<String> getLog() { return Collections.unmodifiableList(log); }\n}\n\npublic class OrderService {\n    @Transactional\n    public String createOrder(String item, boolean shouldFail) {\n        System.out.println(\"Creating order for: \" + item);\n        if (shouldFail) throw new RuntimeException(\"Payment failed!\");\n        return \"Order created for \" + item;\n    }\n    \n    public String getOrder(int id) { // Not transactional\n        return \"Order#\" + id;\n    }\n}\n\npublic class TransactionalProxy {\n    @SuppressWarnings(\"unchecked\")\n    public static <T> T wrap(T target) {\n        return (T) Proxy.newProxyInstance(\n            target.getClass().getClassLoader(),\n            target.getClass().getInterfaces(),\n            (proxy, method, args) -> {\n                // TODO: Check if original method has @Transactional\n                // If yes: begin TX, invoke, commit; on exception: rollback and rethrow\n                // If no: just invoke\n                return null;\n            }\n        );\n    }\n}\n\npublic interface OrderServiceInterface {\n    String createOrder(String item, boolean shouldFail);\n    String getOrder(int id);\n}\n\npublic class OrderServiceImpl implements OrderServiceInterface {\n    @Transactional\n    public String createOrder(String item, boolean shouldFail) {\n        System.out.println(\"Creating order for: \" + item);\n        if (shouldFail) throw new RuntimeException(\"Payment failed!\");\n        return \"Order created for \" + item;\n    }\n    \n    public String getOrder(int id) {\n        return \"Order#\" + id;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        OrderServiceInterface svc = TransactionalProxy.wrap(new OrderServiceImpl());\n        \n        String result = svc.createOrder(\"Laptop\", false);\n        System.out.println(result);\n        \n        try {\n            svc.createOrder(\"Phone\", true);\n        } catch (RuntimeException e) {\n            System.out.println(\"Caught: \" + e.getMessage());\n        }\n        \n        System.out.println(\"TX log: \" + TransactionContext.getLog());\n    }\n}",
+      "instructions": [
+        "In the InvocationHandler lambda, get the actual method from OrderServiceImpl using method.getName() and target.getClass().getMethod().",
+        "If the real method has @Transactional, wrap invocation in begin/commit/rollback.",
+        "Otherwise, just invoke and return.",
+        "Run Main as-is."
+      ],
+      "hint": "Spring's @Transactional uses AOP (Aspect-Oriented Programming) with JDK dynamic proxies or CGLIB to intercept method calls and manage transactions transparently.",
+      "expectedOutput": "[TX] BEGIN\nCreating order for: Laptop\n[TX] COMMIT\nOrder created for Laptop\n[TX] BEGIN\nCreating order for: Phone\n[TX] ROLLBACK\nCaught: Payment failed!\nTX log: [BEGIN, COMMIT, BEGIN, ROLLBACK]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 93,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Transaction Isolation Levels",
+    "description": {
+      "task": "Simulate the four transaction isolation levels by showing what data each level can see from a concurrent 'transaction'. Implement a simple scenario demonstrating Dirty Read, Non-Repeatable Read, and Phantom Read.",
+      "language": "java",
+      "context": "Database isolation levels (READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE) control what changes from concurrent transactions are visible. Spring's @Transactional(isolation=...) sets these.",
+      "starterCode": "import java.util.*;\n\npublic class IsolationLevelDemo {\n    private int storedValue = 100;\n    private int uncommittedValue = 100;\n    \n    // Simulates another transaction updating but not committing\n    public void startDirtyWrite(int newValue) {\n        uncommittedValue = newValue;\n        System.out.println(\"[TX-B] Updated value to \" + newValue + \" (NOT committed yet)\");\n    }\n    \n    public void commitDirtyWrite() {\n        storedValue = uncommittedValue;\n        System.out.println(\"[TX-B] Committed value: \" + storedValue);\n    }\n    \n    public void rollbackDirtyWrite() {\n        uncommittedValue = storedValue;\n        System.out.println(\"[TX-B] Rolled back! Value remains: \" + storedValue);\n    }\n    \n    // Transaction A reading at different isolation levels\n    public int readUncommitted() {\n        // TODO: Returns uncommittedValue (can see dirty data)\n        return 0;\n    }\n    \n    public int readCommitted() {\n        // TODO: Returns only storedValue (committed data only)\n        return 0;\n    }\n    \n    public void demonstrateIsolationLevels() {\n        System.out.println(\"Initial value: \" + storedValue);\n        \n        // Simulate TX-B writing without committing\n        startDirtyWrite(999);\n        \n        System.out.println(\"[READ_UNCOMMITTED] TX-A reads: \" + readUncommitted());\n        System.out.println(\"[READ_COMMITTED] TX-A reads: \" + readCommitted());\n        \n        // TX-B rolls back\n        rollbackDirtyWrite();\n        \n        System.out.println(\"After rollback:\");\n        System.out.println(\"[READ_UNCOMMITTED] TX-A reads: \" + readUncommitted());\n        System.out.println(\"[READ_COMMITTED] TX-A reads: \" + readCommitted());\n        \n        System.out.println(\"\\nIsolation Levels Summary:\");\n        System.out.println(\"READ_UNCOMMITTED: Sees dirty (uncommitted) changes - fastest, least safe\");\n        System.out.println(\"READ_COMMITTED: Only sees committed changes - prevents dirty reads\");\n        System.out.println(\"REPEATABLE_READ: Same query returns same results within transaction\");\n        System.out.println(\"SERIALIZABLE: Full isolation - prevents phantom reads\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new IsolationLevelDemo().demonstrateIsolationLevels();\n    }\n}",
+      "instructions": [
+        "Implement readUncommitted() to return uncommittedValue (sees dirty data).",
+        "Implement readCommitted() to return storedValue (only committed data).",
+        "Run Main as-is.",
+        "Verify the output shows the difference between isolation levels."
+      ],
+      "hint": "In Spring: @Transactional(isolation = Isolation.READ_COMMITTED) is the most common choice. PostgreSQL's default is READ_COMMITTED. SERIALIZABLE is the safest but slowest.",
+      "expectedOutput": "Initial value: 100\n[TX-B] Updated value to 999 (NOT committed yet)\n[READ_UNCOMMITTED] TX-A reads: 999\n[READ_COMMITTED] TX-A reads: 100\n[TX-B] Rolled back! Value remains: 100\nAfter rollback:\n[READ_UNCOMMITTED] TX-A reads: 100\n[READ_COMMITTED] TX-A reads: 100\n\nIsolation Levels Summary:\nREAD_UNCOMMITTED: Sees dirty (uncommitted) changes - fastest, least safe\nREAD_COMMITTED: Only sees committed changes - prevents dirty reads\nREPEATABLE_READ: Same query returns same results within transaction\nSERIALIZABLE: Full isolation - prevents phantom reads"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 93,
+    "allowedSubmissionType": "TEXT"
+  }
+]

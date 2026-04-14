@@ -75,211 +75,87 @@ Let’s go through them one by one with examples.</p>
   <li>Every non-key column depends on the <strong>entire primary key</strong>, not just part of it.</li>
 </ul>
 
-<p>2NF mainly applies when you have a <strong>composite key</strong> (a key made of two or more columns).</p>
+-----------+-----------+---------+
+-----------+-----------+--------------+
+---------+---------------+
+-----------+---------+
+-----------+-----------+--------------+------------+
+------------+--------------+
+-----------+-----------+------------+
+-----------+-----------+-----------+
+-----------+-----------+
+-----------+-----------+
+<h1>Database Normalization: 10-Part Beginner-Friendly Guide</h1>
 
-<h3>Example:</h3>
+<h2>1. Why Does This Topic Exist?</h2>
+<p>In Indian colleges, you often see the same student’s name and details repeated in different registers—marks, attendance, hostel, etc. This leads to mistakes and confusion. <b>Database normalization</b> helps organize data so there’s no unnecessary repetition, making updates and searches easy and error-free.</p>
 
-<p>In our 1NF table, the combination of (StudentID + Course) could be the primary key.</p>
-<p>If we add more columns, say “StudentPhone” and “CourseDuration”, we notice:</p>
+<h2>2. What Is This?</h2>
+<p>Normalization is a step-by-step process to organize tables in a database so that data is stored efficiently, with no duplication or confusion. It uses “normal forms” (1NF, 2NF, 3NF, BCNF) to guide the process.</p>
+
+<h2>3. Syntax/Structure</h2>
+<pre>
+-- Example: Unnormalized table
+| StudentID | Name  | Courses         |
+|-----------|-------|----------------|
+| 1         | Riya  | Math, English  |
+| 2         | Arjun | Science, Math  |
+
+-- 1NF: Split Courses into separate rows
+| StudentID | Name  | Course  |
+|-----------|-------|---------|
+| 1         | Riya  | Math    |
+| 1         | Riya  | English |
+</pre>
+
+<h2>4. Step-by-Step: How It Works</h2>
+<ol>
+  <li><b>1NF:</b> Make sure each cell has only one value (no lists or commas).</li>
+  <li><b>2NF:</b> Remove partial dependencies—split data so each non-key column depends on the whole key.</li>
+  <li><b>3NF:</b> Remove transitive dependencies—no non-key column should depend on another non-key column.</li>
+  <li><b>BCNF:</b> Make sure every determinant is a candidate key (advanced, but removes all anomalies).</li>
+</ol>
+
+<h2>5. When to Use</h2>
 <ul>
-  <li>“StudentPhone” depends only on StudentID</li>
-  <li>“CourseDuration” depends only on Course</li>
+  <li>When designing a new database for a school, hospital, or business.</li>
+  <li>When you notice repeated or inconsistent data in your tables.</li>
+  <li>When you want to avoid update and delete mistakes.</li>
 </ul>
 
-<p>So, we split the data into two tables to remove partial dependency:</p>
-
-<h3>Students Table:</h3>
-<pre>
-+-----------+-----------+--------------+
-| StudentID | Name      | Phone        |
-+-----------+-----------+--------------+
-| 1         | Riya      | 9876543210   |
-| 2         | Arjun     | 8765432109   |
-| 3         | Meera     | 7654321098   |
-+-----------+-----------+--------------+
-</pre>
-
-<h3>Courses Table:</h3>
-<pre>
-+---------+---------------+
-| Course  | Duration      |
-+---------+---------------+
-| Math    | 3 Months      |
-| English | 2 Months      |
-| Science | 4 Months      |
-+---------+---------------+
-</pre>
-
-<h3>Enrollment Table (linking both):</h3>
-<pre>
-+-----------+---------+
-| StudentID | Course  |
-+-----------+---------+
-| 1         | Math    |
-| 1         | English |
-| 2         | Science |
-| 2         | Math    |
-| 3         | English |
-+-----------+---------+
-</pre>
-
-<p>Now, each table focuses on one subject — students, courses, and their relationship.</p>
-
-<hr>
-
-<h2>3. Third Normal Form (3NF)</h2>
-
-<p>A table is in <strong>3NF</strong> if:</p>
+<h2>6. When Not to Use</h2>
 <ul>
-  <li>It is in 2NF, and</li>
-  <li>There are <strong>no transitive dependencies</strong> (no non-key column depends on another non-key column).</li>
+  <li>For very small or temporary tables (like a quick Excel sheet).</li>
+  <li>When performance is more important than perfect organization (rare in beginner projects).</li>
 </ul>
 
-<h3>Example:</h3>
+<h2>7. Minimum to Remember</h2>
+<ul>
+  <li>1NF: No lists in cells.</li>
+  <li>2NF: No partial dependency on part of a composite key.</li>
+  <li>3NF: No non-key column depends on another non-key column.</li>
+  <li>BCNF: Every determinant is a candidate key.</li>
+</ul>
 
-<p>Suppose in the Students table, we have:</p>
+<h2>8. Common Mistakes</h2>
+<ul>
+  <li>Storing multiple values in one cell (like “Math, English”).</li>
+  <li>Repeating the same information in many places (like student phone in every table).</li>
+  <li>Not splitting tables when there are hidden dependencies.</li>
+</ul>
 
-<pre>
-+-----------+-----------+--------------+------------+
-| StudentID | Name      | City         | Pincode    |
-+-----------+-----------+--------------+------------+
-| 1         | Riya      | Delhi        | 110001     |
-| 2         | Arjun     | Mumbai       | 400001     |
-| 3         | Meera     | Delhi        | 110001     |
-+-----------+-----------+--------------+------------+
-</pre>
+<h2>9. Interviewer’s Perspective</h2>
+<ul>
+  <li>“Explain 1NF, 2NF, 3NF with examples.”</li>
+  <li>“Why is normalization important in a banking or hospital database?”</li>
+  <li>“What is the difference between 3NF and BCNF?”</li>
+</ul>
 
-<p>Here, “City” and “Pincode” are related — knowing the Pincode tells us the City.  
-So, “City” depends on another non-key column “Pincode”.</p>
-
-<p>This violates 3NF.  
-To fix it, we create a new table for city details.</p>
-
-<h3>City Table:</h3>
-<pre>
-+------------+--------------+
+<h2>10. Practice Questions</h2>
+<ol>
+  <li>Convert this table to 1NF:<br> | EmpID | Name | Skills |<br> | 1 | Ravi | Java, SQL |</li>
+  <li>Give a real-life Indian example where normalization prevents mistakes.</li>
+  <li>What happens if you don’t normalize a student database?</li>
+  <li>Explain BCNF in your own words with a simple example.</li>
+</ol>
 | Pincode    | City         |
-+------------+--------------+
-| 110001     | Delhi        |
-| 400001     | Mumbai       |
-+------------+--------------+
-</pre>
-
-<p>Now the Students table becomes:</p>
-
-<pre>
-+-----------+-----------+------------+
-| StudentID | Name      | Pincode    |
-+-----------+-----------+------------+
-| 1         | Riya      | 110001     |
-| 2         | Arjun     | 400001     |
-| 3         | Meera     | 110001     |
-+-----------+-----------+------------+
-</pre>
-
-<p>Now all non-key columns depend only on the key — the table is in 3NF.</p>
-
-<hr>
-
-<h2>4. Boyce-Codd Normal Form (BCNF)</h2>
-
-<p><strong>BCNF</strong> is an advanced version of 3NF.  
-It removes certain anomalies that 3NF doesn’t handle.</p>
-
-<p>A table is in BCNF if:</p>
-<ul>
-  <li>It is in 3NF, and</li>
-  <li>For every dependency (A → B), A should be a candidate key.</li>
-</ul>
-
-<h3>Example:</h3>
-
-<p>Suppose we have a table that stores which <strong>teacher</strong> teaches which <strong>subject</strong> in which <strong>classroom</strong>:</p>
-
-<pre>
-+-----------+-----------+-----------+
-| Teacher   | Subject   | Classroom |
-+-----------+-----------+-----------+
-| Meena     | Math      | 101       |
-| Arjun     | Science   | 102       |
-| Meena     | English   | 101       |
-+-----------+-----------+-----------+
-</pre>
-
-<p>Here, a classroom can have only one teacher, but a teacher can teach multiple subjects.  
-So, “Classroom → Teacher” (classroom determines teacher), but Teacher is not a candidate key.</p>
-
-<p>To bring this to BCNF, we split the table:</p>
-
-<h3>Classroom Table:</h3>
-<pre>
-+-----------+-----------+
-| Classroom | Teacher   |
-+-----------+-----------+
-| 101       | Meena     |
-| 102       | Arjun     |
-+-----------+-----------+
-</pre>
-
-<h3>Teaching Table:</h3>
-<pre>
-+-----------+-----------+
-| Teacher   | Subject   |
-+-----------+-----------+
-| Meena     | Math      |
-| Meena     | English   |
-| Arjun     | Science   |
-+-----------+-----------+
-</pre>
-
-<p>Now both tables are properly structured with no anomalies.</p>
-
-<hr>
-
-<h2>Summary of Normal Forms</h2>
-
-<table border="1" cellpadding="6" cellspacing="0">
-  <thead>
-    <tr>
-      <th>Normal Form</th>
-      <th>Main Rule</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>1NF</strong></td>
-      <td>Each cell has a single value</td>
-      <td>Remove repeating groups or lists</td>
-    </tr>
-    <tr>
-      <td><strong>2NF</strong></td>
-      <td>No partial dependency</td>
-      <td>Ensure all columns depend on the whole key</td>
-    </tr>
-    <tr>
-      <td><strong>3NF</strong></td>
-      <td>No transitive dependency</td>
-      <td>Remove indirect dependencies between non-key columns</td>
-    </tr>
-    <tr>
-      <td><strong>BCNF</strong></td>
-      <td>Every determinant must be a candidate key</td>
-      <td>Stronger version of 3NF — removes all anomalies</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr>
-
-<h2>Real-Life Analogy</h2>
-
-<p>Think of normalization like organizing your wardrobe:</p>
-<ul>
-  <li><strong>1NF:</strong> Don’t mix different types of clothes in one drawer.</li>
-  <li><strong>2NF:</strong> Separate clothes by category — shirts, pants, etc.</li>
-  <li><strong>3NF:</strong> Don’t store unrelated items (like books) in your wardrobe.</li>
-  <li><strong>BCNF:</strong> Each drawer is used only for one type of item and no confusion remains.</li>
-</ul>
-
-<p>Normalization makes your database “neat and tidy,” just like an organized wardrobe!</p>

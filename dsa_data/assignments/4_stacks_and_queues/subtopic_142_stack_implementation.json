@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Array-Based Stack Implementation",
+    "description": {
+      "task": "Implement a full generic-style ArrayStack class backed by a resizable int array. When the array fills up, double its capacity. Support push, pop, peek, and size operations.",
+      "language": "java",
+      "starterCode": "public class ArrayStack {\n\n    private int[] data;\n    private int top = -1;\n\n    public ArrayStack() {\n        data = new int[4]; // initial capacity\n    }\n\n    private void resize() {\n        int[] newData = new int[data.length * 2];\n        System.arraycopy(data, 0, newData, 0, data.length);\n        data = newData;\n    }\n\n    public void push(int val) {\n        if (top == data.length - 1) resize();\n        // TODO: increment top and store val\n    }\n\n    public int pop() {\n        // TODO: if empty throw RuntimeException; decrement top and return removed value\n        return -1;\n    }\n\n    public int peek() {\n        if (top == -1) throw new RuntimeException(\"Empty\");\n        return data[top];\n    }\n\n    public int size() { return top + 1; }\n\n    public static void main(String[] args) {\n        ArrayStack stack = new ArrayStack();\n        for (int i = 1; i <= 6; i++) stack.push(i * 10);\n        System.out.println(\"Size: \" + stack.size());\n        System.out.println(\"Peek: \" + stack.peek());\n        System.out.println(\"Pop: \" + stack.pop());\n        System.out.println(\"Pop: \" + stack.pop());\n        System.out.println(\"Size after pops: \" + stack.size());\n    }\n}",
+      "instructions": [
+        "push: call resize() if full (already done above TODO), then data[++top]=val",
+        "pop: if top==-1, throw new RuntimeException('Stack is empty'); return data[top--]",
+        "resize() is already implemented — it doubles capacity using System.arraycopy",
+        "Initial capacity is 4; pushing 6 elements triggers one resize to capacity 8",
+        "After push(10..60): size=6, peek=60, pop=60, pop=50, size=4"
+      ],
+      "hint": "push: data[++top]=val; pop: if(top==-1) throw new RuntimeException('Stack is empty'); return data[top--];",
+      "expectedOutput": "Size: 6\nPeek: 60\nPop: 60\nPop: 50\nSize after pops: 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 142,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Linked List-Based Stack",
+    "description": {
+      "task": "Implement a LinkedStack class backed by a singly linked list of nodes. Each push adds a node at the head and each pop removes from the head. Demonstrate that size is unlimited (no capacity constraint).",
+      "language": "java",
+      "starterCode": "public class LinkedStack {\n\n    private static class Node {\n        int val; Node next;\n        Node(int v, Node n) { val = v; next = n; }\n    }\n\n    private Node top;\n    private int size;\n\n    public void push(int val) {\n        // TODO: top = new Node(val, top); size++\n    }\n\n    public int pop() {\n        // TODO: if top==null throw RuntimeException; save top.val, advance top, size--, return val\n        return -1;\n    }\n\n    public int peek() {\n        if (top == null) throw new RuntimeException(\"Empty\");\n        return top.val;\n    }\n\n    public boolean isEmpty() { return top == null; }\n    public int size() { return size; }\n\n    public void print() {\n        Node c = top;\n        StringBuilder sb = new StringBuilder(\"TOP -> \");\n        while (c != null) { sb.append(c.val); if (c.next != null) sb.append(\" -> \"); c = c.next; }\n        System.out.println(sb);\n    }\n\n    public static void main(String[] args) {\n        LinkedStack ls = new LinkedStack();\n        ls.push(1); ls.push(2); ls.push(3);\n        ls.print();\n        System.out.println(\"Peek: \" + ls.peek());\n        System.out.println(\"Pop: \" + ls.pop());\n        ls.print();\n        System.out.println(\"Size: \" + ls.size());\n    }\n}",
+      "instructions": [
+        "push: top = new Node(val, top); size++;",
+        "pop: if(top==null) throw RuntimeException; int v=top.val; top=top.next; size--; return v;",
+        "peek(), isEmpty(), size(), and print() are already implemented",
+        "After push(1,2,3): print shows TOP -> 3 -> 2 -> 1; peek=3",
+        "After pop() removes 3: print shows TOP -> 2 -> 1; size=2"
+      ],
+      "hint": "push: top=new Node(val,top); size++. pop: if(top==null) throw new RuntimeException('Empty'); int v=top.val; top=top.next; size--; return v;",
+      "expectedOutput": "TOP -> 3 -> 2 -> 1\nPeek: 3\nPop: 3\nTOP -> 2 -> 1\nSize: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 142,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Two Stacks in One Array",
+    "description": {
+      "task": "Implement a TwoStacksInArray class that fits two stacks into a single fixed-size array. Stack 1 grows from the left (index 0), Stack 2 grows from the right (index n-1). Push/pop operations must specify which stack.",
+      "language": "java",
+      "starterCode": "public class TwoStacksInArray {\n\n    private int[] data;\n    private int top1, top2;\n\n    public TwoStacksInArray(int capacity) {\n        data = new int[capacity];\n        top1 = -1;\n        top2 = capacity;\n    }\n\n    public void push(int stackNum, int val) {\n        if (top1 + 1 == top2) throw new RuntimeException(\"Both stacks full\");\n        if (stackNum == 1) {\n            data[++top1] = val;\n        } else {\n            // TODO: stack 2 grows rightward, decrement top2, store val\n        }\n    }\n\n    public int pop(int stackNum) {\n        if (stackNum == 1) {\n            if (top1 == -1) throw new RuntimeException(\"Stack 1 empty\");\n            return data[top1--];\n        } else {\n            // TODO: stack 2 pop\n            return -1;\n        }\n    }\n\n    public int peek(int stackNum) {\n        if (stackNum == 1) return data[top1];\n        return data[top2];\n    }\n\n    public static void main(String[] args) {\n        TwoStacksInArray ts = new TwoStacksInArray(10);\n        ts.push(1, 10); ts.push(1, 20);\n        ts.push(2, 100); ts.push(2, 200);\n        System.out.println(\"S1 peek: \" + ts.peek(1));\n        System.out.println(\"S2 peek: \" + ts.peek(2));\n        System.out.println(\"S1 pop: \" + ts.pop(1));\n        System.out.println(\"S2 pop: \" + ts.pop(2));\n    }\n}",
+      "instructions": [
+        "push stack 2: data[--top2]=val (top2 starts at capacity, decrements inward)",
+        "pop stack 2: if top2==data.length throw RuntimeException; return data[top2++]",
+        "The guard in push (top1+1==top2) prevents overlap — do not modify it",
+        "After push(1,10), push(1,20): top1=1, data[0]=10, data[1]=20",
+        "After push(2,100), push(2,200): top2=8, data[9]=100, data[8]=200"
+      ],
+      "hint": "push2: data[--top2]=val. pop2: if(top2==data.length) throw RuntimeException; return data[top2++];",
+      "expectedOutput": "S1 peek: 20\nS2 peek: 200\nS1 pop: 20\nS2 pop: 200"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 142,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,29 @@
+<h1>↔️ Doubly Linked Lists</h1>
+
+<h2>🎯 Structure</h2>
+<p>Each node has <strong>data</strong>, a <strong>next</strong> pointer, and a <strong>prev</strong> pointer.</p>
+
+<div class="code-example">
+  <pre>
+class DNode {
+    int data;
+    DNode next, prev;
+    DNode(int data) { this.data = data; }
+}
+  </pre>
+</div>
+
+<h2>✅ Advantages</h2>
+<ul>
+  <li>Can traverse <strong>both forward and backward</strong></li>
+  <li>Easier deletion of a node when you have a reference to it (no need to find previous node)</li>
+</ul>
+
+<h2>⚠️ Disadvantages</h2>
+<ul>
+  <li>Extra memory per node (two pointers vs one)</li>
+  <li>More complex insertion/deletion logic</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<p>Doubly linked lists are used in <strong>LRU caches, browser history, undo/redo</strong> — anywhere you need backward traversal.</p>

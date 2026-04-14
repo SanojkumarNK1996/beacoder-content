@@ -1,0 +1,20 @@
+<h1>🆚 RDS vs DynamoDB</h1>
+<h2>📊 Comparison</h2>
+<table border="1" style="border-collapse:collapse; width:100%">
+  <tr><th>Feature</th><th>RDS</th><th>DynamoDB</th></tr>
+  <tr><td>Type</td><td>Relational (SQL)</td><td>NoSQL (Key-Value/Document)</td></tr>
+  <tr><td>Schema</td><td>Fixed (tables, columns)</td><td>Flexible (per item)</td></tr>
+  <tr><td>Queries</td><td>Rich SQL (JOINs, aggregations)</td><td>Key-based (partition + sort key)</td></tr>
+  <tr><td>Scale</td><td>Vertical + some horizontal</td><td>Horizontal, infinite</td></tr>
+  <tr><td>Latency</td><td>Milliseconds</td><td>Single-digit milliseconds</td></tr>
+  <tr><td>ACID</td><td>Full ACID transactions</td><td>Transactions (limited)</td></tr>
+  <tr><td>Best for</td><td>Complex queries, reporting, ERP</td><td>High-scale, simple access patterns</td></tr>
+</table>
+<h2>📌 Decision Guide</h2>
+<ul>
+  <li>Complex relationships + SQL joins → <strong>RDS</strong></li>
+  <li>Massive scale + consistent low latency → <strong>DynamoDB</strong></li>
+  <li>Mixed workload → Consider both (polyglot persistence)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>There's no single "best" database. Match the tool to the access pattern and scalability requirement.</p>

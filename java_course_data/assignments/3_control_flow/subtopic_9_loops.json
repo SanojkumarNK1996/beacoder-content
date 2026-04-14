@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Multiplication Table",
+    "description": {
+      "task": "Write a Java program that prints the multiplication table of a given number using a for loop.",
+      "language": "java",
+      "starterCode": "public class MultiplicationTable {\n    public static void main(String[] args) {\n        int number = 7;\n\n        // Use a for loop to print the table from 1 to 10\n    }\n}",
+      "instructions": [
+        "Use the for loop to iterate from 1 to 10 (inclusive).",
+        "Print each row in the format: '7 x 1 = 7'.",
+        "Use the variable 'number' — do not hardcode 7 inside the loop."
+      ],
+      "hint": "Loop structure: for (int i = 1; i <= 10; i++) { ... }. Concatenate number, \" x \", i, \" = \", and the product.",
+      "expectedOutput": "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 9,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Digit Sum with while",
+    "description": {
+      "task": "Write a Java program that uses a while loop to calculate the sum of all digits of a given integer.",
+      "language": "java",
+      "context": "Extracting and summing digits is a classic loop problem. The modulo operator gives the last digit; dividing by 10 removes it.",
+      "starterCode": "public class DigitSum {\n    public static void main(String[] args) {\n        int number = 4736;\n        int sum = 0;\n\n        // Use a while loop to extract each digit and add to sum\n\n        System.out.println(\"Number: 4736\");\n        System.out.println(\"Sum of digits: \" + sum);\n    }\n}",
+      "instructions": [
+        "Use a while loop that runs as long as 'number' is greater than 0.",
+        "Inside the loop: extract the last digit with number % 10, add to sum, then remove the last digit with number = number / 10.",
+        "Print both output lines in the exact format shown.",
+        "Expected: 4 + 7 + 3 + 6 = 20."
+      ],
+      "hint": "Each iteration: int digit = number % 10; sum += digit; number /= 10;",
+      "expectedOutput": "Number: 4736\nSum of digits: 20"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 9,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Menu with do-while",
+    "description": {
+      "task": "Write a Java program that simulates a simple menu using a do-while loop. The loop must execute at least once before checking the exit condition.",
+      "language": "java",
+      "context": "do-while guarantees the loop body runs at least once, making it ideal for menu-driven programs.",
+      "starterCode": "public class MenuLoop {\n    public static void main(String[] args) {\n        int choice = 0;\n        int iteration = 1;\n\n        do {\n            System.out.println(\"--- Menu (iteration \" + iteration + \") ---\");\n            System.out.println(\"1. Start\");\n            System.out.println(\"2. Help\");\n            System.out.println(\"3. Exit\");\n\n            // Simulate menu choices: first 2 iterations use choices 1,2; on 3rd use 3 to exit\n            if (iteration == 1) choice = 1;\n            else if (iteration == 2) choice = 2;\n            else choice = 3;\n\n            System.out.println(\"Selected: \" + choice);\n            iteration++;\n\n        } while (choice != 3);\n\n        System.out.println(\"Exited menu.\");\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is — do not change it.",
+        "Observe that the menu prints 3 times (iterations 1, 2, 3) before exiting when choice == 3.",
+        "In a comment, explain why using a while loop instead of do-while would produce the same output here.",
+        "Submit the code with the comment."
+      ],
+      "hint": "The key difference: do-while always runs the body at least once even if the condition is false from the start. If choice were initialized to 3, a while loop would skip completely; do-while would still run once.",
+      "expectedOutput": "--- Menu (iteration 1) ---\n1. Start\n2. Help\n3. Exit\nSelected: 1\n--- Menu (iteration 2) ---\n1. Start\n2. Help\n3. Exit\nSelected: 2\n--- Menu (iteration 3) ---\n1. Start\n2. Help\n3. Exit\nSelected: 3\nExited menu."
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 9,
+    "allowedSubmissionType": "TEXT"
+  }
+]

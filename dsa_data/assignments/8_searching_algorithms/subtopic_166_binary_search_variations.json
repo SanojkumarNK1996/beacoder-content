@@ -1,0 +1,74 @@
+[
+  {
+    "title": "First and Last Occurrence",
+    "description": {
+      "task": "Implement binary search variations to find the first occurrence and last occurrence of a target in a sorted array with duplicates. Use two separate binary search passes.",
+      "language": "java",
+      "starterCode": "public class BinarySearchVariants {\n\n    public int firstOccurrence(int[] arr, int target) {\n        int low = 0, high = arr.length - 1, result = -1;\n        while (low <= high) {\n            int mid = low + (high - low) / 2;\n            if (arr[mid] == target) {\n                result = mid;\n                // TODO: continue searching left: high = mid - 1\n            } else if (arr[mid] < target) {\n                low = mid + 1;\n            } else {\n                high = mid - 1;\n            }\n        }\n        return result;\n    }\n\n    public int lastOccurrence(int[] arr, int target) {\n        int low = 0, high = arr.length - 1, result = -1;\n        while (low <= high) {\n            int mid = low + (high - low) / 2;\n            if (arr[mid] == target) {\n                result = mid;\n                // TODO: continue searching right: low = mid + 1\n            } else if (arr[mid] < target) {\n                low = mid + 1;\n            } else {\n                high = mid - 1;\n            }\n        }\n        return result;\n    }\n\n    public int countOccurrences(int[] arr, int target) {\n        int first = firstOccurrence(arr, target);\n        if (first == -1) return 0;\n        return lastOccurrence(arr, target) - first + 1;\n    }\n\n    public static void main(String[] args) {\n        BinarySearchVariants bsv = new BinarySearchVariants();\n        int[] arr = {1, 2, 2, 2, 3, 4, 4, 5};\n        System.out.println(\"First 2: \" + bsv.firstOccurrence(arr, 2));\n        System.out.println(\"Last  2: \" + bsv.lastOccurrence(arr, 2));\n        System.out.println(\"Count 2: \" + bsv.countOccurrences(arr, 2));\n        System.out.println(\"Count 4: \" + bsv.countOccurrences(arr, 4));\n        System.out.println(\"Count 6: \" + bsv.countOccurrences(arr, 6));\n    }\n}",
+      "instructions": [
+        "firstOccurrence when match: high=mid-1; (keep searching left)",
+        "lastOccurrence when match: low=mid+1; (keep searching right)",
+        "arr={1,2,2,2,3,4,4,5}: first 2 is index 1, last 2 is index 3, count=3",
+        "4 appears at indices 5 and 6, count=2; 6 not found, count=0",
+        "countOccurrences formula: lastOccurrence - firstOccurrence + 1"
+      ],
+      "hint": "firstOccurrence match: high=mid-1; lastOccurrence match: low=mid+1;",
+      "expectedOutput": "First 2: 1\nLast  2: 3\nCount 2: 3\nCount 4: 2\nCount 6: 0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 166,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Ceiling and Floor via Binary Search",
+    "description": {
+      "task": "Implement ceiling (smallest element >= target) and floor (largest element <= target) search using binary search on a sorted array. These are fundamental operations for range queries.",
+      "language": "java",
+      "starterCode": "public class CeilingFloorSearch {\n\n    public int ceiling(int[] arr, int target) {\n        int low = 0, high = arr.length - 1;\n        int result = -1;\n        while (low <= high) {\n            int mid = low + (high - low) / 2;\n            if (arr[mid] == target) return arr[mid];\n            else if (arr[mid] < target) {\n                low = mid + 1;\n            } else {\n                // arr[mid] > target: potential ceiling\n                // TODO: set result = arr[mid] and search left for smaller ceiling\n            }\n        }\n        return result;\n    }\n\n    public int floor(int[] arr, int target) {\n        int low = 0, high = arr.length - 1;\n        int result = -1;\n        while (low <= high) {\n            int mid = low + (high - low) / 2;\n            if (arr[mid] == target) return arr[mid];\n            else if (arr[mid] > target) {\n                high = mid - 1;\n            } else {\n                // arr[mid] < target: potential floor\n                // TODO: set result = arr[mid] and search right for larger floor\n            }\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        CeilingFloorSearch cfs = new CeilingFloorSearch();\n        int[] arr = {1, 3, 7, 8, 15, 22, 30};\n\n        System.out.println(\"Ceiling of 6:  \" + cfs.ceiling(arr, 6));\n        System.out.println(\"Ceiling of 7:  \" + cfs.ceiling(arr, 7));\n        System.out.println(\"Ceiling of 31: \" + cfs.ceiling(arr, 31));\n        System.out.println(\"Floor of 6:    \" + cfs.floor(arr, 6));\n        System.out.println(\"Floor of 7:    \" + cfs.floor(arr, 7));\n        System.out.println(\"Floor of 0:    \" + cfs.floor(arr, 0));\n    }\n}",
+      "instructions": [
+        "ceiling when arr[mid]>target: result=arr[mid]; high=mid-1; (search left for smaller ceiling)",
+        "floor when arr[mid]<target: result=arr[mid]; low=mid+1; (search right for larger floor)",
+        "ceiling(6)=7 (smallest >= 6); ceiling(7)=7 (exact match); ceiling(31)=-1 (none >= 31)",
+        "floor(6)=3 (largest <= 6); floor(7)=7 (exact match); floor(0)=-1 (none <= 0)",
+        "-1 means not found (target out of range)"
+      ],
+      "hint": "ceiling: result=arr[mid]; high=mid-1; floor: result=arr[mid]; low=mid+1;",
+      "expectedOutput": "Ceiling of 6:  7\nCeiling of 7:  7\nCeiling of 31: -1\nFloor of 6:    3\nFloor of 7:    7\nFloor of 0:    -1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 166,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Search in Rotated Sorted Array",
+    "description": {
+      "task": "Implement binary search in a rotated sorted array (e.g., {4,5,6,7,0,1,2} rotated from {0,1,2,4,5,6,7}). At each step, determine which half is sorted and decide which half contains the target.",
+      "language": "java",
+      "starterCode": "public class RotatedArraySearch {\n\n    public int search(int[] arr, int target) {\n        int low = 0, high = arr.length - 1;\n        while (low <= high) {\n            int mid = low + (high - low) / 2;\n            if (arr[mid] == target) return mid;\n\n            // TODO: Determine which half is sorted:\n            // If left half is sorted: arr[low] <= arr[mid]\n            //   if target is in [arr[low], arr[mid]), go left; else go right\n            // Else right half is sorted: arr[mid] <= arr[high]\n            //   if target is in (arr[mid], arr[high]], go right; else go left\n        }\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        RotatedArraySearch ras = new RotatedArraySearch();\n        int[] rotated = {4, 5, 6, 7, 0, 1, 2};\n        System.out.println(\"Search 0: \" + ras.search(rotated, 0));\n        System.out.println(\"Search 4: \" + ras.search(rotated, 4));\n        System.out.println(\"Search 3: \" + ras.search(rotated, 3));\n\n        int[] rotated2 = {5, 1, 3};\n        System.out.println(\"Search 3: \" + ras.search(rotated2, 3));\n        System.out.println(\"Search 5: \" + ras.search(rotated2, 5));\n    }\n}",
+      "instructions": [
+        "if(arr[low]<=arr[mid]){ if(arr[low]<=target&&target<arr[mid]) high=mid-1; else low=mid+1; }",
+        "else { if(arr[mid]<target&&target<=arr[high]) low=mid+1; else high=mid-1; }",
+        "rotated={4,5,6,7,0,1,2}: 0 is at index 4, 4 is at index 0, 3 not present",
+        "rotated2={5,1,3}: 3 is at index 2, 5 is at index 0",
+        "This approach ensures O(log n) time even for rotated arrays"
+      ],
+      "hint": "if(arr[low]<=arr[mid]){if(arr[low]<=target&&target<arr[mid])high=mid-1;else low=mid+1;}else{if(arr[mid]<target&&target<=arr[high])low=mid+1;else high=mid-1;}",
+      "expectedOutput": "Search 0: 4\nSearch 4: 0\nSearch 3: -1\nSearch 3: 2\nSearch 5: 0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 166,
+    "allowedSubmissionType": "TEXT"
+  }
+]

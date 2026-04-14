@@ -1,0 +1,74 @@
+[
+  {
+    "title": "DFS Graph Traversal",
+    "description": {
+      "task": "Implement a GraphDFS class that performs depth-first search on an undirected graph (adjacency list). Return the visited order, detect if a path exists between two nodes, and find all nodes reachable from a source.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GraphDFS {\n\n    public List<Integer> dfs(Map<Integer, List<Integer>> graph, int start) {\n        List<Integer> order = new ArrayList<>();\n        Set<Integer> visited = new HashSet<>();\n        dfsHelper(graph, start, visited, order);\n        return order;\n    }\n\n    private void dfsHelper(Map<Integer, List<Integer>> graph, int node,\n                           Set<Integer> visited, List<Integer> order) {\n        visited.add(node);\n        order.add(node);\n        for (int neighbor : graph.getOrDefault(node, Collections.emptyList())) {\n            if (!visited.contains(neighbor)) dfsHelper(graph, neighbor, visited, order);\n        }\n    }\n\n    public boolean hasPath(Map<Integer, List<Integer>> graph, int src, int dst) {\n        // TODO: DFS from src, return true if dst is reached\n        return false;\n    }\n\n    public Set<Integer> reachable(Map<Integer, List<Integer>> graph, int src) {\n        // TODO: return set of all nodes reachable from src (not including src itself)\n        return new HashSet<>();\n    }\n\n    public static void main(String[] args) {\n        Map<Integer, List<Integer>> g = new LinkedHashMap<>();\n        g.put(0, Arrays.asList(1, 2));\n        g.put(1, Arrays.asList(0, 3, 4));\n        g.put(2, Arrays.asList(0));\n        g.put(3, Arrays.asList(1));\n        g.put(4, Arrays.asList(1));\n        GraphDFS gd = new GraphDFS();\n        System.out.println(\"DFS from 0: \" + gd.dfs(g, 0));\n        System.out.println(\"hasPath(0,4): \" + gd.hasPath(g, 0, 4));\n        System.out.println(\"hasPath(2,3): \" + gd.hasPath(g, 2, 3));\n        System.out.println(\"Reachable from 0: \" + new TreeSet<>(gd.reachable(g, 0)));\n    }\n}",
+      "instructions": [
+        "hasPath: run DFS from src; return whether dst appears in the visited set",
+        "reachable: run DFS from src; return visited set minus the src node itself",
+        "dfs and dfsHelper are already implemented — use them as helpers or model",
+        "DFS from 0: visits 0,1,3,4,2 (depth-first)",
+        "hasPath(0,4)=true, hasPath(2,3)=true (via 2→0→1→3), reachable from 0 = {1,2,3,4}"
+      ],
+      "hint": "hasPath: Set<Integer> visited=new HashSet<>(); dfsHelper(graph,src,visited,new ArrayList<>()); return visited.contains(dst); reachable: same, then visited.remove(src); return visited;",
+      "expectedOutput": "DFS from 0: [0, 1, 3, 4, 2]\nhasPath(0,4): true\nhasPath(2,3): true\nReachable from 0: [1, 2, 3, 4]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 155,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "BFS Shortest Path",
+    "description": {
+      "task": "Implement a GraphBFS class that uses BFS to find the shortest path (by hop count) between two nodes in an unweighted graph, and to find the minimum number of hops from source to all reachable nodes.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GraphBFS {\n\n    public List<Integer> shortestPath(Map<Integer, List<Integer>> graph, int src, int dst) {\n        Map<Integer, Integer> parent = new HashMap<>();\n        Queue<Integer> queue = new LinkedList<>();\n        Set<Integer> visited = new HashSet<>();\n        queue.add(src); visited.add(src); parent.put(src, -1);\n\n        while (!queue.isEmpty()) {\n            int curr = queue.poll();\n            if (curr == dst) break;\n            for (int nb : graph.getOrDefault(curr, Collections.emptyList())) {\n                if (!visited.contains(nb)) {\n                    visited.add(nb); queue.add(nb); parent.put(nb, curr);\n                }\n            }\n        }\n        // TODO: reconstruct path from dst back to src using parent map\n        return new ArrayList<>();\n    }\n\n    public Map<Integer, Integer> bfsDistances(Map<Integer, List<Integer>> graph, int src) {\n        // TODO: return map of vertex -> distance from src (BFS level)\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        Map<Integer, List<Integer>> g = new LinkedHashMap<>();\n        g.put(1, Arrays.asList(2, 3));\n        g.put(2, Arrays.asList(1, 4));\n        g.put(3, Arrays.asList(1, 4, 5));\n        g.put(4, Arrays.asList(2, 3, 6));\n        g.put(5, Arrays.asList(3));\n        g.put(6, Arrays.asList(4));\n        GraphBFS gb = new GraphBFS();\n        System.out.println(\"Path 1->6: \" + gb.shortestPath(g, 1, 6));\n        System.out.println(\"Distances from 1: \" + new TreeMap<>(gb.bfsDistances(g, 1)));\n    }\n}",
+      "instructions": [
+        "shortestPath: after BFS fills parent map, reconstruct by traversing from dst to src using parent; reverse the path and return",
+        "bfsDistances: standard BFS; for each dequeued node, set dist[neighbor]=dist[curr]+1 for unseen neighbors; return dist map",
+        "If dst not reachable, return empty list",
+        "Shortest path from 1 to 6: 1→3→4→6 (3 edges) or 1→2→4→6",
+        "Distances from 1: {1=0, 2=1, 3=1, 4=2, 5=2, 6=3}"
+      ],
+      "hint": "Reconstruct: List<Integer> path=new ArrayList<>(); int curr=dst; while(curr!=-1){path.add(0,curr); curr=parent.get(curr);} return path; bfsDistances: Map<Integer,Integer> dist=new HashMap<>(); dist.put(src,0); BFS adding dist[nb]=dist[curr]+1;",
+      "expectedOutput": "Path 1->6: [1, 3, 4, 6]\nDistances from 1: {1=0, 2=1, 3=1, 4=2, 5=2, 6=3}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 155,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Cycle Detection in Undirected Graph",
+    "description": {
+      "task": "Implement a CycleDetector class that uses DFS to detect if an undirected graph contains a cycle. For each node, track the parent to avoid false positives from the same edge traversal.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class CycleDetector {\n\n    public boolean hasCycle(Map<Integer, List<Integer>> graph) {\n        Set<Integer> visited = new HashSet<>();\n        for (int vertex : graph.keySet()) {\n            if (!visited.contains(vertex)) {\n                if (dfs(graph, vertex, -1, visited)) return true;\n            }\n        }\n        return false;\n    }\n\n    private boolean dfs(Map<Integer, List<Integer>> graph, int node, int parent,\n                        Set<Integer> visited) {\n        visited.add(node);\n        for (int neighbor : graph.getOrDefault(node, Collections.emptyList())) {\n            if (!visited.contains(neighbor)) {\n                if (dfs(graph, neighbor, node, visited)) return true;\n            } else if (neighbor != parent) {\n                // TODO: found a back edge -> cycle exists, return true\n            }\n        }\n        return false;\n    }\n\n    public static void main(String[] args) {\n        CycleDetector cd = new CycleDetector();\n        // Cyclic graph: 0-1-2-0\n        Map<Integer, List<Integer>> cyclic = new LinkedHashMap<>();\n        cyclic.put(0, Arrays.asList(1, 2));\n        cyclic.put(1, Arrays.asList(0, 2));\n        cyclic.put(2, Arrays.asList(1, 0));\n        System.out.println(\"Cyclic: \" + cd.hasCycle(cyclic));\n        // Acyclic graph: tree 0-1, 0-2, 1-3\n        Map<Integer, List<Integer>> tree = new LinkedHashMap<>();\n        tree.put(0, Arrays.asList(1, 2));\n        tree.put(1, Arrays.asList(0, 3));\n        tree.put(2, Arrays.asList(0));\n        tree.put(3, Arrays.asList(1));\n        System.out.println(\"Tree (acyclic): \" + cd.hasCycle(tree));\n    }\n}",
+      "instructions": [
+        "In the else if (neighbor != parent) branch: return true; (a back edge to a non-parent visited node means a cycle)",
+        "The parent parameter prevents the algorithm from treating the undirected edge as a back edge",
+        "hasCycle and the dfs skeleton are already provided",
+        "Cyclic graph 0-1-2-0: hasCycle=true; tree 0-{1-3, 2}: hasCycle=false",
+        "Just add 'return true;' inside the empty else-if block"
+      ],
+      "hint": "else if (neighbor != parent) { return true; }",
+      "expectedOutput": "Cyclic: true\nTree (acyclic): false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 155,
+    "allowedSubmissionType": "TEXT"
+  }
+]

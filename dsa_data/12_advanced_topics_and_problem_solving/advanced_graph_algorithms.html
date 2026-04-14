@@ -1,0 +1,11 @@
+<h1>🌐 Advanced Graph Algorithms</h1>
+<h2>🔍 Strongly Connected Components (SCC)</h2>
+<p>In a directed graph, an SCC is a maximal set of vertices where every vertex can reach every other. Algorithms: <strong>Kosaraju's</strong> or <strong>Tarjan's</strong> (O(V+E)).</p>
+<h2>🌉 Bridges and Articulation Points</h2>
+<p>A <strong>bridge</strong> is an edge whose removal disconnects the graph. An <strong>articulation point</strong> is a vertex whose removal disconnects the graph. Both found via DFS with low-link values (Tarjan's algorithm).</p>
+<h2>🔀 Topological Sort (BFS-based: Kahn's Algorithm)</h2>
+<p>In a DAG, repeatedly remove vertices with in-degree 0. Also detects cycles: if result doesn't include all vertices, a cycle exists.</p>
+<h2>🔢 Network Flow (Ford-Fulkerson)</h2>
+<p>Find maximum flow from source to sink. Used in matching, scheduling, circulation problems. O(V × E²) with Edmonds-Karp (BFS-based).</p>
+<h2>🎯 Summary</h2>
+<p>Advanced graph algorithms tackle harder problems: SCCs for web crawling / compiler analysis, bridges for network reliability, max-flow for assignment and scheduling.</p>

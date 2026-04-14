@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Code Smell Detector",
+    "description": {
+      "task": "Implement a CodeSmellDetector class that analyzes simplified method signatures and class metrics to identify common code smells: Long Method (too many lines), Large Class (too many methods), and Feature Envy (method accesses more other-class fields than its own class).",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class CodeSmellDetector {\n\n    public record MethodInfo(String name, int lineCount, String ownerClass,\n                              List<String> accessedClasses) {}\n    public record ClassInfo(String name, int methodCount, int fieldCount) {}\n\n    private final List<MethodInfo> methods = new ArrayList<>();\n    private final List<ClassInfo> classes = new ArrayList<>();\n\n    public void addMethod(MethodInfo method) { methods.add(method); }\n    public void addClass(ClassInfo clazz) { classes.add(clazz); }\n\n    public List<String> detectLongMethods(int threshold) {\n        // Return names of methods with lineCount > threshold\n        return methods.stream()\n            .filter(m -> m.lineCount() > threshold)\n            .map(MethodInfo::name)\n            .collect(Collectors.toList());\n    }\n\n    public List<String> detectLargeClasses(int methodThreshold) {\n        // Return names of classes with methodCount > methodThreshold\n        return new ArrayList<>(); // TODO\n    }\n\n    public List<String> detectFeatureEnvy() {\n        // Feature envy: method accesses more unique OTHER classes than its own class\n        // A method has feature envy if accessedClasses contains more entries != ownerClass than entries == ownerClass\n        return new ArrayList<>(); // TODO\n    }\n\n    public static void main(String[] args) {\n        CodeSmellDetector detector = new CodeSmellDetector();\n\n        detector.addMethod(new MethodInfo(\"processOrder\", 120, \"OrderService\",\n            List.of(\"OrderService\", \"UserService\", \"PaymentService\", \"InventoryService\", \"EmailService\")));\n        detector.addMethod(new MethodInfo(\"calculateTax\", 15, \"TaxService\",\n            List.of(\"TaxService\", \"TaxService\", \"TaxService\")));\n        detector.addMethod(new MethodInfo(\"sendEmail\", 80, \"NotificationService\",\n            List.of(\"UserService\", \"TemplateService\")));\n\n        detector.addClass(new ClassInfo(\"GodClass\", 45, 20));\n        detector.addClass(new ClassInfo(\"ServiceClass\", 8, 5));\n\n        System.out.println(\"Long methods (>50): \" + detector.detectLongMethods(50));\n        System.out.println(\"Large classes (>10): \" + detector.detectLargeClasses(10));\n        System.out.println(\"Feature envy: \" + detector.detectFeatureEnvy());\n    }\n}",
+      "instructions": [
+        "detectLongMethods() is already implemented — do not change it",
+        "detectLargeClasses() filters classes where methodCount > methodThreshold and returns their names",
+        "detectFeatureEnvy() counts accessedClasses entries equal to ownerClass (own access) vs different (other access)",
+        "A method has Feature Envy when other-class access count > own-class access count",
+        "detectFeatureEnvy() returns the names of methods that exhibit Feature Envy"
+      ],
+      "hint": "For detectFeatureEnvy(): for each method, long ownCount = method.accessedClasses().stream().filter(c -> c.equals(method.ownerClass())).count(); long otherCount = method.accessedClasses().size() - ownCount; if (otherCount > ownCount) add to result.",
+      "expectedOutput": "Long methods (>50): [processOrder, sendEmail]\nLarge classes (>10): [GodClass]\nFeature envy: [processOrder, sendEmail]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 126,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SOLID Principles Validator",
+    "description": {
+      "task": "Create a SolidPrinciplesChecker class that evaluates class designs against SOLID principle metrics. Check Single Responsibility (one primary concern), Open-Closed (extension via interface), Dependency Inversion (depends on abstractions), and report compliance scores.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SolidPrinciplesChecker {\n\n    public record ClassDesign(\n        String name,\n        int responsibilityCount,      // how many distinct concerns the class handles\n        boolean implementsInterface,   // whether it implements an interface\n        boolean dependsOnConcretes,    // true if it directly instantiates dependencies (new FooImpl())\n        int publicMethodCount\n    ) {}\n\n    public record ComplianceReport(\n        String className,\n        boolean srp,   // Single Responsibility\n        boolean ocp,   // Open/Closed (via interface)\n        boolean dip,   // Dependency Inversion\n        int score      // 0-3, one point per passed check\n    ) {}\n\n    public ComplianceReport check(ClassDesign design) {\n        boolean srp = design.responsibilityCount() <= 1;\n        boolean ocp = design.implementsInterface();\n        boolean dip = !design.dependsOnConcretes();\n        int score = (srp ? 1 : 0) + (ocp ? 1 : 0) + (dip ? 1 : 0);\n        return new ComplianceReport(design.name(), srp, ocp, dip, score);\n    }\n\n    public List<ComplianceReport> checkAll(List<ClassDesign> designs) {\n        // Return compliance report for each design\n        return new ArrayList<>(); // TODO\n    }\n\n    public double averageScore(List<ClassDesign> designs) {\n        // Return average compliance score across all designs\n        return 0.0; // TODO\n    }\n\n    public static void main(String[] args) {\n        SolidPrinciplesChecker checker = new SolidPrinciplesChecker();\n\n        List<ClassDesign> designs = List.of(\n            new ClassDesign(\"UserService\", 1, true, false, 5),\n            new ClassDesign(\"GodClass\", 5, false, true, 30),\n            new ClassDesign(\"OrderProcessor\", 1, true, true, 8)\n        );\n\n        List<ComplianceReport> reports = checker.checkAll(designs);\n        reports.forEach(r -> System.out.println(r.className() + \": \" + r.score() + \"/3\"));\n        System.out.printf(\"Average: %.1f%n\", checker.averageScore(designs));\n    }\n}",
+      "instructions": [
+        "check() is already implemented — do not change it",
+        "checkAll() maps each ClassDesign to a ComplianceReport using check()",
+        "averageScore() calls checkAll() and computes the average of all report scores",
+        "averageScore() returns 0.0 when the input list is empty",
+        "Both methods should work correctly for any list size"
+      ],
+      "hint": "checkAll(): return designs.stream().map(this::check).collect(Collectors.toList()). averageScore(): return checkAll(designs).stream().mapToInt(ComplianceReport::score).average().orElse(0.0).",
+      "expectedOutput": "UserService: 3/3\nGodClass: 0/3\nOrderProcessor: 2/3\nAverage: 1.7"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 126,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Technical Debt Tracker",
+    "description": {
+      "task": "Build a TechnicalDebtTracker class that models and quantifies technical debt items in a codebase. Each debt item has a type (CODE_SMELL, MISSING_TEST, OUTDATED_DEPENDENCY, SECURITY_VULNERABILITY), effort to fix (in hours), and priority. Calculate total debt hours and prioritize what to fix first.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class TechnicalDebtTracker {\n\n    public enum DebtType { CODE_SMELL, MISSING_TEST, OUTDATED_DEPENDENCY, SECURITY_VULNERABILITY }\n    public enum Priority { LOW, MEDIUM, HIGH, CRITICAL }\n\n    public record DebtItem(\n        String id,\n        String description,\n        DebtType type,\n        Priority priority,\n        double effortHours\n    ) {}\n\n    private final List<DebtItem> items = new ArrayList<>();\n\n    public void addDebt(DebtItem item) {\n        items.add(item);\n    }\n\n    public double totalDebtHours() {\n        return items.stream().mapToDouble(DebtItem::effortHours).sum();\n    }\n\n    public List<DebtItem> prioritized() {\n        // Return items sorted by: Priority (CRITICAL first) then effortHours ascending\n        return new ArrayList<>(); // TODO\n    }\n\n    public Map<DebtType, Double> debtByType() {\n        // Return total effort hours per DebtType\n        return new HashMap<>(); // TODO\n    }\n\n    public List<DebtItem> quickWins(double maxHours) {\n        // Return CRITICAL or HIGH priority items with effortHours <= maxHours\n        // Sorted by priority desc then effort asc\n        return new ArrayList<>(); // TODO\n    }\n\n    public static void main(String[] args) {\n        TechnicalDebtTracker tracker = new TechnicalDebtTracker();\n        tracker.addDebt(new DebtItem(\"D1\", \"SQL injection risk\", DebtType.SECURITY_VULNERABILITY, Priority.CRITICAL, 4.0));\n        tracker.addDebt(new DebtItem(\"D2\", \"Missing unit tests\", DebtType.MISSING_TEST, Priority.HIGH, 8.0));\n        tracker.addDebt(new DebtItem(\"D3\", \"God class refactor\", DebtType.CODE_SMELL, Priority.MEDIUM, 16.0));\n        tracker.addDebt(new DebtItem(\"D4\", \"Upgrade Spring Boot\", DebtType.OUTDATED_DEPENDENCY, Priority.HIGH, 3.0));\n\n        System.out.println(\"Total debt: \" + tracker.totalDebtHours() + \"h\");\n        System.out.println(\"Top item: \" + tracker.prioritized().get(0).id());\n        System.out.println(\"Quick wins (<= 5h): \" + tracker.quickWins(5.0).stream().map(DebtItem::id).collect(Collectors.toList()));\n    }\n}",
+      "instructions": [
+        "totalDebtHours() sums all effortHours — already implemented, do not change",
+        "prioritized() sorts by priority descending (CRITICAL=3, HIGH=2, MEDIUM=1, LOW=0) then by effortHours ascending",
+        "debtByType() groups items by DebtType and sums effortHours per group using Collectors.groupingBy and summingDouble",
+        "quickWins() filters items where priority is CRITICAL or HIGH and effortHours <= maxHours, then sorts by priority desc and effort asc",
+        "Priority enum ordinal order: LOW=0, MEDIUM=1, HIGH=2, CRITICAL=3 — higher ordinal = higher priority"
+      ],
+      "hint": "prioritized(): Comparator.comparing(DebtItem::priority).reversed().thenComparingDouble(DebtItem::effortHours). quickWins(): filter Set.of(Priority.CRITICAL, Priority.HIGH).contains(priority) && effortHours <= maxHours, then apply same comparator.",
+      "expectedOutput": "Total debt: 31.0h\nTop item: D1\nQuick wins (<= 5h): [D1, D4]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 126,
+    "allowedSubmissionType": "TEXT"
+  }
+]

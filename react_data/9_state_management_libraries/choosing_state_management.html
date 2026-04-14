@@ -1,0 +1,20 @@
+<h1>🤔 Choosing the Right State Management</h1>
+<h2>📋 Types of State</h2>
+<ul>
+  <li><strong>Local state</strong>: UI in one component (form values, toggles) → <code>useState</code></li>
+  <li><strong>Shared state</strong>: Multiple components need same data → <code>useState</code> lifted up or Context</li>
+  <li><strong>Server state</strong>: Data fetched from APIs → React Query / RTK Query</li>
+  <li><strong>Global app state</strong>: Shopping cart, auth, user preferences → Zustand / Redux Toolkit</li>
+  <li><strong>URL state</strong>: Filters, pagination → <code>useSearchParams</code></li>
+</ul>
+<h2>🗺️ Decision Guide</h2>
+<ul>
+  <li>Simple app, single dev: <strong>useState + Context + React Query</strong></li>
+  <li>Medium app, small team: <strong>Zustand + React Query</strong></li>
+  <li>Large app, large team, strict conventions: <strong>Redux Toolkit + RTK Query</strong></li>
+  <li>Server-heavy app (Next.js): <strong>Server Components + React Query</strong></li>
+</ul>
+<h2>⚠️ Common Mistake</h2>
+<p>Putting server/API data into global state (Redux/Zustand). That's what React Query is for. Global state should only hold client-side UI state (cart, preferences, modal open state).</p>
+<h2>🎯 Summary</h2>
+<p>Don't over-engineer state management. Start with <code>useState</code> and React Query. Add Zustand when you genuinely need cross-component state sharing. Reserve Redux for team-wide conventions.</p>

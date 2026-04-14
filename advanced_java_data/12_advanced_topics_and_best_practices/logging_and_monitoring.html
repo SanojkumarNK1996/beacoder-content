@@ -1,0 +1,41 @@
+<h1>📜 Logging and Monitoring</h1>
+
+<h2>🎯 Why Logging & Monitoring?</h2>
+<p>Once your app is in production, you need <strong>visibility</strong> into what it&apos;s doing:</p>
+<ul>
+  <li>Diagnose bugs and performance issues</li>
+  <li>Detect security incidents</li>
+  <li>Understand usage patterns</li>
+</ul>
+
+<h2>🧾 Logging Basics</h2>
+<ul>
+  <li>Use logging frameworks (SLF4J + Logback/Log4j2)</li>
+  <li>Avoid <code>System.out.println</code> in production code</li>
+  <li>Use appropriate levels: TRACE, DEBUG, INFO, WARN, ERROR</li>
+</ul>
+
+<h2>🧱 Structured Logging</h2>
+<ul>
+  <li>Log in a <strong>structured format</strong> (JSON) for easier parsing</li>
+  <li>Include correlation IDs, user IDs, request IDs</li>
+</ul>
+
+<h2>📈 Metrics and Health</h2>
+<ul>
+  <li>Use Spring Boot Actuator for <strong>health checks</strong> and <strong>metrics</strong></li>
+  <li>Expose endpoints like <code>/actuator/health</code>, <code>/actuator/metrics</code></li>
+  <li>Integrate with Prometheus, Grafana, CloudWatch, etc.</li>
+</ul>
+
+<h2>🔍 Distributed Tracing</h2>
+<ul>
+  <li>Trace requests across microservices</li>
+  <li>Use OpenTelemetry, Zipkin, Jaeger, etc.</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Good logging and monitoring are essential for operating production systems</li>
+  <li>Combine logs, metrics, and traces for full observability</li>
+</ul>

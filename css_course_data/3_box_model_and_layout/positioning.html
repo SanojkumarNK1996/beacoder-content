@@ -1,0 +1,59 @@
+<h1>Positioning</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>Positioning allows elements like headers, floating buttons, and sticky navbars to appear exactly where needed.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>CSS positioning defines how an element is placed in the document.</li>
+  <li>Main values: static, relative, absolute, fixed, sticky.</li>
+</ul>
+
+<h2>Syntax / Basic usage</h2>
+<pre><code>.box {
+  position: relative;
+  top: 10px;
+  left: 20px;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+</code></pre>
+
+<h2>How it works</h2>
+<ol>
+  <li>static: default, element follows normal document flow.</li>
+  <li>relative: moves relative to its original position.</li>
+  <li>absolute: positioned relative to the nearest positioned ancestor.</li>
+  <li>fixed: anchored relative to the viewport (screen).</li>
+  <li>sticky: behaves like relative until a scroll threshold, then sticks.</li>
+</ol>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>absolute needs a positioned ancestor (not static) to behave predictably.</li>
+  <li>fixed elements stay in place even when the page is scrolled.</li>
+</ul>
+
+<h2>Common mistakes</h2>
+<ul>
+  <li>Using absolute everywhere and breaking the layout.</li>
+  <li>Not understanding how stacking context and z-index work.</li>
+</ul>
+
+<h2>Interviewer perspective</h2>
+<ul>
+  <li>Difference between relative and absolute positioning.</li>
+  <li>How would you create a sticky header?</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Create a fixed navbar that stays at the top during scroll.</li>
+  <li>Build a tooltip using absolute positioning.</li>
+</ol>

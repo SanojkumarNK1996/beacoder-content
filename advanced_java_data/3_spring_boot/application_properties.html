@@ -1,0 +1,707 @@
+<h1>⚙️ Application Properties</h1>
+
+<h2>🎯 What are Application Properties?</h2>
+<p>Application Properties are <strong>external configuration files</strong> that allow you to customize your Spring Boot application behavior without changing code. They follow the <strong>"externalize configuration"</strong> principle for different environments.</p>
+
+<div class="properties-intro">
+    <div class="analogy-card">
+        <h3>🏠 Home Settings Analogy</h3>
+        <p>Think of application properties like <strong>home settings</strong>:</p>
+        <ul>
+            <li>🌡️ <strong>Thermostat:</strong> Database connection settings</li>
+            <li>🔊 <strong>Volume Control:</strong> Logging levels</li>
+            <li>🚪 <strong>Security System:</strong> Authentication settings</li>
+            <li>💡 <strong>Light Switches:</strong> Feature toggles</li>
+        </ul>
+        <p><em>Change settings without rewiring the house!</em></p>
+    </div>
+</div>
+
+<h2>📁 Configuration File Formats</h2>
+
+<div class="format-comparison">
+    <div class="format-card">
+        <h3>📄 application.properties</h3>
+        <p><strong>Key-Value format</strong> - Traditional Java properties</p>
+        <div class="code-example">
+            <pre>
+# Server configuration
+server.port=8081
+server.servlet.context-path=/api
+
+# Database configuration  
+spring.datasource.url=jdbc:mysql://localhost:3306/mydb
+spring.datasource.username=user
+spring.datasource.password=secret
+
+# JPA configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+
+# Logging
+logging.level.com.example=DEBUG
+logging.level.org.springframework.web=INFO
+logging.file.name=application.log
+            </pre>
+        </div>
+    </div>
+
+    <div class="format-card preferred">
+        <h3>📄 application.yml (Recommended)</h3>
+        <p><strong>YAML format</strong> - More readable and concise</p>
+        <div class="code-example">
+            <pre>
+# Server configuration
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+
+# Database configuration
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydb
+    username: user
+    password: secret
+  
+  # JPA configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+# Logging
+logging:
+  level:
+    com.example: DEBUG
+    org.springframework.web: INFO
+  file:
+    name: application.log
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>🌍 Environment-Specific Configuration</h2>
+
+<h3>📁 Profile-Based Configuration Files</h3>
+<div class="profile-structure">
+    <div class="file-structure">
+        <h4>Project Structure:</h4>
+        <pre>
+src/main/resources/
+├── application.yml              # Common settings
+├── application-dev.yml          # Development settings
+├── application-test.yml         # Testing settings
+├── application-prod.yml         # Production settings
+└── application-local.yml        # Local development
+        </pre>
+    </div>
+
+    <div class="profile-examples">
+        <div class="profile-example">
+            <h4>📄 application.yml (Common Settings)</h4>
+            <div class="code-example">
+                <pre>
+# Common configuration for all environments
+spring:
+  application:
+    name: my-awesome-app
+  
+  jpa:
+    show-sql: false
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+# Default server port
+server:
+  port: 8080
+
+# Common logging
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+                </pre>
+            </div>
+        </div>
+
+        <div class="profile-example">
+            <h4>🔧 application-dev.yml (Development)</h4>
+            <div class="code-example">
+                <pre>
+# Development environment settings
+spring:
+  datasource:
+    url: jdbc:h2:mem:devdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+  
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+# Development server
+server:
+  port: 8080
+
+# Debug logging
+logging:
+  level:
+    com.example: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+                </pre>
+            </div>
+        </div>
+
+        <div class="profile-example">
+            <h4>🧪 application-test.yml (Testing)</h4>
+            <div class="code-example">
+                <pre>
+# Test environment settings
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+# Random port for parallel test execution
+server:
+  port: 0
+
+# Minimal logging for tests
+logging:
+  level:
+    com.example: WARN
+    org.springframework: WARN
+                </pre>
+            </div>
+        </div>
+
+        <div class="profile-example">
+            <h4>🏭 application-prod.yml (Production)</h4>
+            <div class="code-example">
+                <pre>
+# Production environment settings
+spring:
+  datasource:
+    url: jdbc:mysql://prod-db-server:3306/proddb
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+# Production server
+server:
+  port: ${PORT:8080}
+  compression:
+    enabled: true
+
+# Production logging
+logging:
+  level:
+    com.example: INFO
+    org.springframework: WARN
+  file:
+    name: /var/log/myapp.log
+    max-size: 100MB
+                </pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>🔧 Activating Profiles</h2>
+
+<div class="profile-activation">
+    <div class="activation-method">
+        <h3>1️⃣ In application.yml</h3>
+        <div class="code-example">
+            <pre>
+# Set default active profile
+spring:
+  profiles:
+    active: dev
+            </pre>
+        </div>
+    </div>
+
+    <div class="activation-method">
+        <h3>2️⃣ Command Line Arguments</h3>
+        <div class="code-example">
+            <pre>
+# Run with specific profile
+java -jar myapp.jar --spring.profiles.active=prod
+
+# Multiple profiles
+java -jar myapp.jar --spring.profiles.active=prod,mysql
+            </pre>
+        </div>
+    </div>
+
+    <div class="activation-method">
+        <h3>3️⃣ Environment Variables</h3>
+        <div class="code-example">
+            <pre>
+# Set environment variable
+export SPRING_PROFILES_ACTIVE=prod
+
+# Run application
+java -jar myapp.jar
+
+# Docker environment
+docker run -e SPRING_PROFILES_ACTIVE=prod myapp:latest
+            </pre>
+        </div>
+    </div>
+
+    <div class="activation-method">
+        <h3>4️⃣ JVM System Properties</h3>
+        <div class="code-example">
+            <pre>
+# JVM system property
+java -Dspring.profiles.active=prod -jar myapp.jar
+
+# IDE configuration
+-Dspring.profiles.active=dev
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>💉 Property Injection in Code</h2>
+
+<h3>1️⃣ @Value Annotation</h3>
+<div class="injection-example">
+    <div class="code-example">
+        <pre>
+@Service
+public class EmailService {
+    
+    // Simple property injection
+    @Value("${app.email.from}")
+    private String fromEmail;
+    
+    // With default value
+    @Value("${app.email.enabled:true}")
+    private boolean emailEnabled;
+    
+    // System properties
+    @Value("${java.home}")
+    private String javaHome;
+    
+    // Expression evaluation
+    @Value("#{systemProperties['user.name']}")
+    private String userName;
+    
+    // List injection
+    @Value("${app.features}")
+    private List&lt;String&gt; features;
+    
+    public void sendEmail(String to, String message) {
+        if (emailEnabled) {
+            System.out.println("Sending email from: " + fromEmail);
+            System.out.println("To: " + to);
+            System.out.println("Message: " + message);
+        }
+    }
+}
+        </pre>
+    </div>
+    
+    <div class="code-example">
+        <pre>
+# application.yml for above service
+app:
+  email:
+    from: noreply@mycompany.com
+    enabled: true
+  features:
+    - user-registration
+    - email-notifications
+    - payment-processing
+        </pre>
+    </div>
+</div>
+
+<h3>2️⃣ @ConfigurationProperties (Recommended)</h3>
+<div class="injection-example">
+    <div class="code-example">
+        <pre>
+// Type-safe configuration properties class
+@ConfigurationProperties(prefix = "app.email")
+@Data  // Lombok for getters/setters
+@Component
+public class EmailProperties {
+    
+    private String from = "noreply@example.com";
+    private boolean enabled = true;
+    private int timeout = 5000;
+    private List&lt;String&gt; allowedDomains = new ArrayList&lt;&gt;();
+    private Smtp smtp = new Smtp();
+    
+    @Data
+    public static class Smtp {
+        private String host = "localhost";
+        private int port = 587;
+        private boolean auth = true;
+        private boolean starttls = true;
+    }
+}
+
+// Usage in service
+@Service
+public class EmailService {
+    
+    private final EmailProperties emailProperties;
+    
+    public EmailService(EmailProperties emailProperties) {
+        this.emailProperties = emailProperties;
+    }
+    
+    public void sendEmail(String to, String message) {
+        if (emailProperties.isEnabled()) {
+            System.out.println("SMTP Host: " + emailProperties.getSmtp().getHost());
+            System.out.println("SMTP Port: " + emailProperties.getSmtp().getPort());
+            System.out.println("From: " + emailProperties.getFrom());
+            // Send email logic...
+        }
+    }
+}
+        </pre>
+    </div>
+    
+    <div class="code-example">
+        <pre>
+# application.yml for type-safe properties
+app:
+  email:
+    from: support@mycompany.com
+    enabled: true
+    timeout: 10000
+    allowed-domains:
+      - mycompany.com
+      - partner.com
+    smtp:
+      host: smtp.gmail.com
+      port: 587
+      auth: true
+      starttls: true
+        </pre>
+    </div>
+</div>
+
+<h2>🌟 Common Configuration Properties</h2>
+
+<div class="common-properties">
+    <div class="property-section">
+        <h3>🌐 Server Configuration</h3>
+        <div class="code-example">
+            <pre>
+server:
+  port: 8080                          # Server port
+  servlet:
+    context-path: /api                # Application context path
+    session:
+      timeout: 60m                    # Session timeout
+  compression:
+    enabled: true                     # Enable response compression
+  error:
+    include-message: always           # Include error messages
+    include-stacktrace: on_param      # Include stack trace on parameter
+            </pre>
+        </div>
+    </div>
+
+    <div class="property-section">
+        <h3>💾 Database Configuration</h3>
+        <div class="code-example">
+            <pre>
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydb
+    username: user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:                           # Connection pool settings
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 60000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update                # create, update, validate, create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+            </pre>
+        </div>
+    </div>
+
+    <div class="property-section">
+        <h3>📊 Logging Configuration</h3>
+        <div class="code-example">
+            <pre>
+logging:
+  level:
+    com.example: DEBUG                # Package-specific log levels
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  
+  file:
+    name: logs/application.log        # Log file location
+    max-size: 100MB                   # Maximum file size
+    max-history: 30                   # Keep 30 days of logs
+            </pre>
+        </div>
+    </div>
+
+    <div class="property-section">
+        <h3>🔒 Security Configuration</h3>
+        <div class="code-example">
+            <pre>
+spring:
+  security:
+    user:
+      name: admin                     # Default user
+      password: secret                # Default password
+      roles: ADMIN                    # Default roles
+    
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid, profile, email
+
+# JWT configuration (custom properties)
+jwt:
+  secret: ${JWT_SECRET:mySecretKey}
+  expiration: 86400000                # 24 hours in milliseconds
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>🔐 Environment Variables & Secrets</h2>
+
+<h3>1️⃣ Environment Variable Substitution</h3>
+<div class="code-example">
+    <pre>
+# Use environment variables for sensitive data
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mydb}
+    username: ${DB_USERNAME:user}
+    password: ${DB_PASSWORD:password}
+
+# Custom application properties
+app:
+  api-key: ${API_KEY}                 # Required environment variable
+  debug: ${DEBUG_MODE:false}          # Optional with default
+  version: ${APP_VERSION:1.0.0}
+    </pre>
+</div>
+
+<h3>2️⃣ Docker Environment Example</h3>
+<div class="code-example">
+    <pre>
+# docker-compose.yml
+services:
+  app:
+    image: myapp:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=mysql-server
+      - DB_USERNAME=myuser
+      - DB_PASSWORD=mypassword
+      - API_KEY=abc123xyz
+      - DEBUG_MODE=false
+    ports:
+      - "8080:8080"
+  
+  mysql-server:
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypassword
+    </pre>
+</div>
+
+<h2>🎯 Property Validation</h2>
+
+<div class="validation-example">
+    <h3>Using @Validated and Bean Validation</h3>
+    <div class="code-example">
+        <pre>
+@ConfigurationProperties(prefix = "app")
+@Validated
+@Data
+@Component
+public class AppProperties {
+    
+    @NotBlank(message = "Application name is required")
+    private String name;
+    
+    @Min(value = 1, message = "Port must be greater than 0")
+    @Max(value = 65535, message = "Port must be less than 65536")
+    private int port = 8080;
+    
+    @Email(message = "Admin email must be valid")
+    private String adminEmail;
+    
+    @Valid
+    private Database database = new Database();
+    
+    @Data
+    public static class Database {
+        @NotBlank
+        @Pattern(regexp = "^jdbc:.*", message = "Must be a valid JDBC URL")
+        private String url;
+        
+        @NotBlank
+        private String username;
+        
+        @Size(min = 8, message = "Password must be at least 8 characters")
+        private String password;
+    }
+}
+        </pre>
+    </div>
+    
+    <div class="code-example">
+        <pre>
+# application.yml with validation
+app:
+  name: "My Awesome App"              # Required
+  port: 8080                          # Must be 1-65535
+  admin-email: admin@example.com      # Must be valid email
+  database:
+    url: jdbc:mysql://localhost:3306/mydb  # Must start with jdbc:
+    username: user                    # Required
+    password: secretpassword123       # Min 8 characters
+        </pre>
+    </div>
+</div>
+
+<h2>🔧 Advanced Configuration Techniques</h2>
+
+<h3>1️⃣ Conditional Properties</h3>
+<div class="code-example">
+    <pre>
+# Enable features based on conditions
+spring:
+  profiles:
+    active: dev
+  
+---
+# Development profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+app:
+  features:
+    debug-mode: true
+    fake-payment: true
+    email-enabled: false
+
+---
+# Production profile  
+spring:
+  config:
+    activate:
+      on-profile: prod
+app:
+  features:
+    debug-mode: false
+    fake-payment: false
+    email-enabled: true
+    </pre>
+</div>
+
+<h3>2️⃣ Custom Property Sources</h3>
+<div class="code-example">
+    <pre>
+@Configuration
+@PropertySource("classpath:custom.properties")
+@PropertySource(value = "classpath:optional.properties", ignoreResourceNotFound = true)
+public class CustomPropertiesConfig {
+    
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyPlaceholder() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+}
+    </pre>
+</div>
+
+<h2>📊 Property Precedence Order</h2>
+<div class="precedence-order">
+    <p><strong>Spring Boot resolves properties in this order (highest to lowest priority):</strong></p>
+    <ol>
+        <li>🔧 Command line arguments</li>
+        <li>🌍 OS environment variables</li>
+        <li>☕ Java System properties</li>
+        <li>📁 application-{profile}.properties outside jar</li>
+        <li>📁 application-{profile}.properties inside jar</li>
+        <li>📄 application.properties outside jar</li>
+        <li>📄 application.properties inside jar</li>
+        <li>⚙️ @PropertySource annotations</li>
+        <li>🔧 Default properties</li>
+    </ol>
+</div>
+
+<div class="key-takeaway">
+    <h3>🎯 Key Takeaway</h3>
+    <p>Application Properties are the <strong>control center</strong> of your Spring Boot application. They enable <strong>environment-specific configuration</strong> without code changes, following the <strong>12-Factor App methodology</strong>.</p>
+    
+    <p>💡 <strong>Best Practice:</strong> Use YAML format for readability, @ConfigurationProperties for type safety, and environment variables for secrets. Always externalize configuration for different environments.</p>
+</div>
+
+<h2>🛤️ Next Steps</h2>
+<p>Mastering Application Properties prepares you for:</p>
+<ul>
+    <li>🏗️ Building your first complete Spring Boot application</li>
+    <li>🔄 Creating different deployment configurations</li>
+    <li>☁️ Deploying applications to various environments</li>
+    <li>🐳 Containerizing applications with environment-specific settings</li>
+    <li>🔒 Implementing secure configuration management</li>
+</ul>

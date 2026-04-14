@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Starter Dependency Simulation",
+    "description": {
+      "task": "Simulate how Spring Boot Starters bundle multiple dependencies. Create a StarterPackage system that groups related libraries and resolves transitive dependencies.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class Dependency {\n    private String name;\n    private String version;\n    \n    public Dependency(String name, String version) {\n        this.name = name;\n        this.version = version;\n    }\n    \n    @Override\n    public String toString() { return name + \":\" + version; }\n}\n\npublic class SpringBootStarter {\n    private String starterName;\n    private List<Dependency> bundledDeps;\n    \n    public SpringBootStarter(String name, List<Dependency> deps) {\n        this.starterName = name;\n        this.bundledDeps = deps;\n    }\n    \n    public void printStarterContents() {\n        System.out.println(\"Starter: \" + starterName);\n        bundledDeps.forEach(d -> System.out.println(\"  + \" + d));\n    }\n}\n\npublic class ProjectDependencies {\n    private Set<Dependency> resolvedDeps = new LinkedHashSet<>();\n    \n    public void addStarter(SpringBootStarter starter) {\n        // TODO: Add all starter's bundled deps to resolvedDeps\n    }\n    \n    public void printResolved() {\n        System.out.println(\"Resolved dependencies (\" + resolvedDeps.size() + \" total):\");\n        resolvedDeps.forEach(d -> System.out.println(\"  \" + d));\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // Create spring-boot-starter-web starter\n        SpringBootStarter webStarter = new SpringBootStarter(\"spring-boot-starter-web\",\n            Arrays.asList(\n                new Dependency(\"spring-webmvc\", \"6.1.0\"),\n                new Dependency(\"tomcat-embed-core\", \"10.1.0\"),\n                new Dependency(\"jackson-databind\", \"2.15.0\")\n            ));\n        \n        SpringBootStarter testStarter = new SpringBootStarter(\"spring-boot-starter-test\",\n            Arrays.asList(\n                new Dependency(\"junit-jupiter\", \"5.10.0\"),\n                new Dependency(\"mockito-core\", \"5.4.0\"),\n                new Dependency(\"spring-test\", \"6.1.0\")\n            ));\n        \n        webStarter.printStarterContents();\n        testStarter.printStarterContents();\n        \n        ProjectDependencies project = new ProjectDependencies();\n        project.addStarter(webStarter);\n        project.addStarter(testStarter);\n        project.printResolved();\n    }\n}",
+      "instructions": [
+        "Implement addStarter() to add all bundledDeps from the starter into resolvedDeps.",
+        "Run the Main method as provided — do not change Main.",
+        "Ensure printResolved() shows the correct total count (6 dependencies).",
+        "Output should list both starters and then all resolved dependencies."
+      ],
+      "hint": "Spring Boot Starters like spring-boot-starter-web pull in all required libraries with compatible versions, eliminating dependency management headaches.",
+      "expectedOutput": "Starter: spring-boot-starter-web\n  + spring-webmvc:6.1.0\n  + tomcat-embed-core:10.1.0\n  + jackson-databind:2.15.0\nStarter: spring-boot-starter-test\n  + junit-jupiter:5.10.0\n  + mockito-core:5.4.0\n  + spring-test:6.1.0\nResolved dependencies (6 total):\n  spring-webmvc:6.1.0\n  tomcat-embed-core:10.1.0\n  jackson-databind:2.15.0\n  junit-jupiter:5.10.0\n  mockito-core:5.4.0\n  spring-test:6.1.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 86,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Web Starter Features",
+    "description": {
+      "task": "Simulate the features provided by spring-boot-starter-web: a DispatcherServlet, handler mapper, and JSON response support. Build a minimal HTTP handler dispatcher in Java.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MockRequest {\n    private String method;\n    private String path;\n    public MockRequest(String method, String path) { this.method = method; this.path = path; }\n    public String getMethod() { return method; }\n    public String getPath() { return path; }\n}\n\npublic class MockResponse {\n    private int statusCode = 200;\n    private String body;\n    public void setStatus(int code) { this.statusCode = code; }\n    public void setBody(String body) { this.body = body; }\n    public String toString() { return \"HTTP \" + statusCode + \": \" + body; }\n}\n\npublic interface RequestHandler {\n    MockResponse handle(MockRequest req);\n}\n\npublic class DispatcherServlet {\n    private Map<String, RequestHandler> handlerMap = new HashMap<>();\n    \n    public void registerHandler(String method, String path, RequestHandler handler) {\n        handlerMap.put(method + \":\" + path, handler);\n    }\n    \n    public void dispatch(MockRequest req) {\n        // TODO: Find handler for method+path, call it, print response\n        // If not found, return 404: Not Found\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        DispatcherServlet servlet = new DispatcherServlet();\n        // TODO: Register handlers for GET /users, POST /users, GET /health\n        // TODO: Dispatch several requests including one that 404s\n    }\n}",
+      "instructions": [
+        "dispatch() looks up 'method:path' in handlerMap. If found, calls handler.handle(req) and prints the response. If not found, prints 'HTTP 404: Not Found'.",
+        "Register: GET /users returns '{\"users\":[\"Alice\",\"Bob\"]}', POST /users returns '{\"message\":\"User created\"}', GET /health returns '{\"status\":\"UP\"}'.",
+        "Dispatch requests: GET /users, POST /users, GET /health, GET /orders (should 404)."
+      ],
+      "hint": "Spring's DispatcherServlet is the front controller that routes all HTTP requests to the appropriate @Controller methods using HandlerMapping.",
+      "expectedOutput": "HTTP 200: {\"users\":[\"Alice\",\"Bob\"]}\nHTTP 200: {\"message\":\"User created\"}\nHTTP 200: {\"status\":\"UP\"}\nHTTP 404: Not Found"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 86,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Data Starter Repository Pattern",
+    "description": {
+      "task": "Simulate the Repository pattern provided by spring-boot-starter-data-jpa. Implement a generic in-memory repository with CRUD operations.",
+      "language": "java",
+      "context": "spring-boot-starter-data-jpa provides auto-configured repositories. Spring Data JPA generates implementations for your repository interfaces automatically.",
+      "starterCode": "import java.util.*;\n\npublic interface Repository<T, ID> {\n    T save(T entity);\n    Optional<T> findById(ID id);\n    List<T> findAll();\n    void deleteById(ID id);\n    long count();\n}\n\npublic class Product {\n    private int id;\n    private String name;\n    private double price;\n    \n    public Product(int id, String name, double price) {\n        this.id = id; this.name = name; this.price = price;\n    }\n    \n    public int getId() { return id; }\n    public String getName() { return name; }\n    public double getPrice() { return price; }\n    \n    @Override\n    public String toString() { return \"Product{id=\" + id + \", name='\" + name + \"', price=\" + price + \"}\"; }\n}\n\npublic class ProductRepository implements Repository<Product, Integer> {\n    private Map<Integer, Product> store = new LinkedHashMap<>();\n    \n    // TODO: Implement all 5 interface methods\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ProductRepository repo = new ProductRepository();\n        // TODO: Save 3 products, find by id, list all, delete one, count\n    }\n}",
+      "instructions": [
+        "Implement all 5 Repository methods using the store map.",
+        "In Main, save Laptop(1, 'Laptop', 999.99), Mouse(2, 'Mouse', 29.99), Keyboard(3, 'Keyboard', 79.99).",
+        "Find product with id=2 and print it.",
+        "List all products, delete id=1, print count."
+      ],
+      "hint": "Spring Data JPA's CrudRepository provides these exact methods. You just define an interface and Spring generates the implementation at runtime.",
+      "expectedOutput": "Found: Optional[Product{id=2, name='Mouse', price=29.99}]\nAll products:\n  Product{id=1, name='Laptop', price=999.99}\n  Product{id=2, name='Mouse', price=29.99}\n  Product{id=3, name='Keyboard', price=79.99}\nAfter delete, count: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 86,
+    "allowedSubmissionType": "TEXT"
+  }
+]

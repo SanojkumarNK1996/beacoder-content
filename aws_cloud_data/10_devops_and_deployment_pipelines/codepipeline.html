@@ -1,0 +1,25 @@
+<h1>🔄 AWS CodePipeline</h1>
+<h2>🎯 What is CodePipeline?</h2>
+<p><strong>AWS CodePipeline</strong> is a fully managed CI/CD service that orchestrates your end-to-end release pipeline — from source code change to production deployment — automatically.</p>
+<h2>📋 Pipeline Stages</h2>
+<div class="code-example">
+  <pre>
+Source Stage → Build Stage → Test Stage → Deploy Stage
+  GitHub push → CodeBuild → Test Suite → Deploy to ECS/EC2/Lambda
+  </pre>
+</div>
+<h2>🔧 Integrations</h2>
+<ul>
+  <li><strong>Source</strong>: GitHub, CodeCommit, ECR, S3</li>
+  <li><strong>Build</strong>: CodeBuild, Jenkins</li>
+  <li><strong>Deploy</strong>: CodeDeploy, ECS, Elastic Beanstalk, CloudFormation, Lambda</li>
+  <li><strong>Approval</strong>: Manual gate before promoting to production</li>
+</ul>
+<h2>📌 Benefits</h2>
+<ul>
+  <li>Every code change automatically flows through the pipeline</li>
+  <li>Consistent, repeatable deployments</li>
+  <li>Faster delivery with less manual work</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>CodePipeline glues your CI/CD tools together. Define once, then every commit automatically tests and deploys — with manual approval gates before production.</p>

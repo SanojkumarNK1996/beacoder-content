@@ -1,0 +1,204 @@
+<h1>🧪 Testing Fundamentals</h1>
+
+<h2>🎯 Why Testing Matters</h2>
+<p>Testing ensures your code is <strong>correct</strong>, <strong>reliable</strong>, and <strong>maintainable</strong>. In enterprise Java applications, tests help you:</p>
+<ul>
+  <li>🛡️ Catch bugs early (before production)</li>
+  <li>🔁 Refactor code with confidence</li>
+  <li>📦 Prevent regressions when adding new features</li>
+  <li>🤝 Improve collaboration (others can trust your code)</li>
+</ul>
+
+<div class="analogy-card">
+  <h3>🏗️ Building Safety Analogy</h3>
+  <p>Testing is like <strong>inspecting a building</strong>:</p>
+  <ul>
+    <li>Structural checks = Unit tests for core logic</li>
+    <li>Fire drills = Integration tests for end-to-end flows</li>
+    <li>Daily maintenance = Regression tests</li>
+  </ul>
+  <p>Without tests, you&apos;re &quot;building skyscrapers without safety checks&quot;.</p>
+</div>
+
+<h2>🏛️ Types of Tests</h2>
+
+<h3>1️⃣ Unit Tests</h3>
+<ul>
+  <li>Test <strong>small pieces</strong> of code (methods/classes) in isolation</li>
+  <li>Use <strong>mocks</strong> for external dependencies (database, network, etc.)</li>
+  <li>Fast, reliable, run frequently (every build / commit)</li>
+</ul>
+
+<h3>2️⃣ Integration Tests</h3>
+<ul>
+  <li>Test how multiple components work <strong>together</strong></li>
+  <li>May involve real database, messaging, or external systems (or test doubles)</li>
+  <li>Slower than unit tests but more realistic</li>
+</ul>
+
+<h3>3️⃣ End-to-End (E2E) / System Tests</h3>
+<ul>
+  <li>Simulate <strong>real user flows</strong> across the full system</li>
+  <li>Often involve UI, backend, and database</li>
+  <li>Slowest, but closest to real-world behavior</li>
+</ul>
+
+<h3>4️⃣ Other Types</h3>
+<ul>
+  <li>⚡ Performance tests</li>
+  <li>🔒 Security tests</li>
+  <li>📈 Load and stress tests</li>
+</ul>
+
+<h2>📐 The Test Pyramid</h2>
+
+<div class="diagram">
+  <pre>
+          UI / E2E Tests (few)
+       Integration Tests (some)
+    Unit Tests (many, fast, cheap)
+  </pre>
+</div>
+
+<p>Most tests should be <strong>unit tests</strong>, with fewer integration and E2E tests.</p>
+
+<h2>✅ Characteristics of Good Tests</h2>
+
+<ul>
+  <li><strong>Fast</strong> – Run quickly so you execute them often</li>
+  <li><strong>Independent</strong> – Tests don&apos;t depend on each other</li>
+  <li><strong>Repeatable</strong> – Same result every time (no randomness / time dependency)</li>
+  <li><strong>Readable</strong> – Clearly express the intention</li>
+  <li><strong>Maintainable</strong> – Easy to update when code changes</li>
+</ul>
+
+<h2>🧪 Basic Structure of a Test (AAA)</h2>
+
+<p>Most tests follow the <strong>Arrange–Act–Assert</strong> pattern:</p>
+
+<ul>
+  <li><strong>Arrange</strong> – Set up data and dependencies</li>
+  <li><strong>Act</strong> – Call the method under test</li>
+  <li><strong>Assert</strong> – Verify the result</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+// Pseudo-code
+@Test
+void calculateTotalPrice_shouldIncludeTax() {
+    // Arrange
+    ShoppingCart cart = new ShoppingCart();
+    cart.addItem("Book", 100.0);
+
+    // Act
+    double total = cart.calculateTotalPrice();
+
+    // Assert
+    assertEquals(118.0, total); // 18% tax
+}
+  </pre>
+</div>
+
+<h2>🧰 Testing Tools in Java</h2>
+
+<ul>
+  <li>🧪 <strong>JUnit 5</strong> – Standard testing framework for Java</li>
+  <li>🕵️ <strong>Mockito</strong> – Mocking framework for replacing dependencies</li>
+  <li>🌱 <strong>Spring Test / Spring Boot Test</strong> – Testing Spring applications</li>
+</ul>
+
+<h2>⚙️ Adding JUnit to a Maven Project</h2>
+
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+  &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
+  &lt;version&gt;5.10.0&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+
+&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+      &lt;version&gt;3.1.2&lt;/version&gt;
+      &lt;configuration&gt;
+        &lt;useModulePath&gt;false&lt;/useModulePath&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;
+  </pre>
+</div>
+
+<p>With Spring Boot, JUnit 5 is already included via <code>spring-boot-starter-test</code>.</p>
+
+<h2>🧪 Example: Simple Unit Test with JUnit 5</h2>
+
+<div class="code-example">
+  <pre>
+// Production code
+public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+// Test code
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class CalculatorTest {
+
+    @Test
+    void add_shouldReturnSumOfTwoNumbers() {
+        // Arrange
+        Calculator calculator = new Calculator();
+
+        // Act
+        int result = calculator.add(2, 3);
+
+        // Assert
+        assertEquals(5, result);
+    }
+}
+  </pre>
+</div>
+
+<h2>📦 Test Naming Conventions</h2>
+
+<ul>
+  <li>Class-level: <code>CalculatorTest</code> tests <code>Calculator</code></li>
+  <li>Method-level: <code>methodName_condition_expectedResult</code></li>
+</ul>
+
+<p>Examples:</p>
+<ul>
+  <li><code>add_twoPositiveNumbers_returnsCorrectSum</code></li>
+  <li><code>withdraw_insufficientBalance_throwsException</code></li>
+</ul>
+
+<h2>🔁 Regression Testing</h2>
+<p>When you find a bug:</p>
+<ol>
+  <li>Write a test that <strong>fails</strong> because of the bug</li>
+  <li>Fix the bug</li>
+  <li>Ensure the test now <strong>passes</strong></li>
+</ol>
+<p>This prevents the same bug from silently returning later.</p>
+
+<h2>🧪 Test Pyramid in Practice for Spring Apps</h2>
+
+<ul>
+  <li>Many <strong>JUnit + Mockito</strong> tests for services and utilities</li>
+  <li>Some <strong>Spring Boot integration tests</strong> for REST APIs and repositories</li>
+  <li>Few <strong>end-to-end tests</strong> using tools like Selenium, Cypress, etc.</li>
+</ul>
+
+<div class="key-takeaway">
+  <h3>🎯 Key Takeaway</h3>
+  <p>Testing is a <strong>core skill</strong> for any Java developer. Understanding test types, the test pyramid, and the basics of JUnit will prepare you for more advanced tools like Mockito and Spring Boot Testing in the next lessons.</p>
+</div>

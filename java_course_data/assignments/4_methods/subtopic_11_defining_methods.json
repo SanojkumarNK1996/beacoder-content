@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Temperature Converter Methods",
+    "description": {
+      "task": "Write a Java program with a static method that accepts a Celsius value as a parameter, converts it to Fahrenheit, and returns the result.",
+      "language": "java",
+      "starterCode": "public class TemperatureMethods {\n\n    // Define a static method: celsiusToFahrenheit\n    // It takes a double parameter and returns a double\n\n    public static void main(String[] args) {\n        System.out.println(\"0C = \" + celsiusToFahrenheit(0) + \"F\");\n        System.out.println(\"100C = \" + celsiusToFahrenheit(100) + \"F\");\n        System.out.println(\"37C = \" + celsiusToFahrenheit(37) + \"F\");\n    }\n}",
+      "instructions": [
+        "Define a static method named 'celsiusToFahrenheit' that takes a double parameter 'celsius'.",
+        "Inside the method, apply the formula: (celsius * 9.0 / 5.0) + 32 and return the result.",
+        "Do NOT change the main() method.",
+        "The method must have return type double."
+      ],
+      "hint": "Method signature: public static double celsiusToFahrenheit(double celsius) { ... }",
+      "expectedOutput": "0C = 32.0F\n100C = 212.0F\n37C = 98.6F"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 4,
+    "subtopicId": 11,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Method Overloading: Area Calculator",
+    "description": {
+      "task": "Write a Java class with three overloaded versions of an 'area' method: one for a circle, one for a rectangle, and one for a triangle.",
+      "language": "java",
+      "context": "Method overloading allows the same method name to work with different parameter lists. Java distinguishes overloaded methods by their parameter count and types.",
+      "starterCode": "public class AreaCalculator {\n\n    // Overload 1: area of circle — takes one double (radius)\n\n    // Overload 2: area of rectangle — takes two doubles (length, width)\n\n    // Overload 3: area of triangle — takes two doubles (base, height)\n\n    public static void main(String[] args) {\n        System.out.println(\"Circle area (r=5): \" + area(5.0));\n        System.out.println(\"Rectangle area (4x6): \" + area(4.0, 6.0));\n        System.out.println(\"Triangle area (base=8, h=3): \" + area(8.0, 3.0));\n    }\n}",
+      "instructions": [
+        "Define three static methods all named 'area'.",
+        "Circle: area(double radius) — formula: Math.PI * radius * radius.",
+        "Rectangle: area(double length, double width) — formula: length * width.",
+        "Triangle: area(double base, double height) — formula: 0.5 * base * height.",
+        "Do NOT change main()."
+      ],
+      "hint": "Java differentiates overloads by parameter count and types. The circle and rectangle methods both take doubles but different counts (1 vs 2), so they are distinct. Rectangle and triangle both take two doubles — Java cannot distinguish them purely by type, so consider parameter naming for your own clarity, but the compiler resolves them by count here since circle takes 1.",
+      "expectedOutput": "Circle area (r=5): 78.53981633974483\nRectangle area (4x6): 24.0\nTriangle area (base=8, h=3): 12.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 4,
+    "subtopicId": 11,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Recursive Factorial",
+    "description": {
+      "task": "Write a Java program with a recursive method that calculates the factorial of a non-negative integer.",
+      "language": "java",
+      "context": "Recursion is when a method calls itself. A base case stops the recursion; the recursive case breaks the problem into a smaller sub-problem.",
+      "starterCode": "public class RecursiveFactorial {\n\n    public static long factorial(int n) {\n        // Base case: factorial of 0 or 1 is 1\n        // Recursive case: n * factorial(n - 1)\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"0! = \" + factorial(0));\n        System.out.println(\"1! = \" + factorial(1));\n        System.out.println(\"5! = \" + factorial(5));\n        System.out.println(\"10! = \" + factorial(10));\n    }\n}",
+      "instructions": [
+        "Implement the factorial() method body.",
+        "Base case: if n == 0 or n == 1, return 1.",
+        "Recursive case: return n * factorial(n - 1).",
+        "Use return type long to handle larger values like 10!.",
+        "Do NOT change main()."
+      ],
+      "hint": "10! = 3628800. The call chain for factorial(5) is: 5 * factorial(4) → 5 * 4 * factorial(3) → ... → 5*4*3*2*1.",
+      "expectedOutput": "0! = 1\n1! = 1\n5! = 120\n10! = 3628800"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 4,
+    "subtopicId": 11,
+    "allowedSubmissionType": "TEXT"
+  }
+]

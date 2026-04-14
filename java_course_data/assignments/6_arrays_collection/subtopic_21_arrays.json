@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Array Statistics",
+    "description": {
+      "task": "Write a Java program that finds the minimum, maximum, and average of a given integer array.",
+      "language": "java",
+      "starterCode": "public class ArrayStats {\n    public static void main(String[] args) {\n        int[] scores = {78, 92, 45, 88, 61, 99, 37, 74};\n\n        // Find min, max, and average\n        int min = scores[0];\n        int max = scores[0];\n        int sum = 0;\n\n        // Your loop here\n\n        double average = (double) sum / scores.length;\n\n        System.out.println(\"Min: \" + min);\n        System.out.println(\"Max: \" + max);\n        System.out.printf(\"Average: %.2f%n\", average);\n    }\n}",
+      "instructions": [
+        "Use a single for loop to compute sum, min, and max simultaneously.",
+        "Use scores.length to get the array size — do not hardcode 8.",
+        "Cast to double before dividing to get a decimal average.",
+        "Print all three lines in the exact format shown."
+      ],
+      "hint": "Inside the loop: if (scores[i] < min) min = scores[i]; similarly for max. Add scores[i] to sum on every iteration.",
+      "expectedOutput": "Min: 37\nMax: 99\nAverage: 71.75"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 21,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "2D Matrix Print",
+    "description": {
+      "task": "Write a Java program that declares a 3x3 integer matrix and prints it in a grid format using nested for loops.",
+      "language": "java",
+      "starterCode": "public class MatrixPrint {\n    public static void main(String[] args) {\n        int[][] matrix = {\n            {1, 2, 3},\n            {4, 5, 6},\n            {7, 8, 9}\n        };\n\n        // Use nested loops to print the matrix\n        // Each row on a new line, values separated by a tab or space\n    }\n}",
+      "instructions": [
+        "Use nested for loops: outer loop for rows, inner loop for columns.",
+        "Use System.out.print(matrix[i][j] + \"\\t\") for each element.",
+        "After each row, use System.out.println() to move to the next line.",
+        "Print all 9 values in 3 rows of 3."
+      ],
+      "hint": "Outer loop: for (int i = 0; i < matrix.length; i++). Inner loop: for (int j = 0; j < matrix[i].length; j++).",
+      "expectedOutput": "1\t2\t3\t\n4\t5\t6\t\n7\t8\t9\t"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 21,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Sort and Search an Array",
+    "description": {
+      "task": "Write a Java program that sorts an integer array using Arrays.sort() and then uses Arrays.binarySearch() to find a target value.",
+      "language": "java",
+      "context": "java.util.Arrays provides utility methods for array operations. binarySearch() only works correctly on sorted arrays.",
+      "starterCode": "import java.util.Arrays;\n\npublic class SortSearch {\n    public static void main(String[] args) {\n        int[] numbers = {64, 12, 99, 3, 47, 28, 55};\n\n        System.out.println(\"Before sort: \" + Arrays.toString(numbers));\n\n        // Sort the array\n\n        System.out.println(\"After sort: \" + Arrays.toString(numbers));\n\n        // Binary search for 47\n        int index = Arrays.binarySearch(numbers, 47);\n        System.out.println(\"Index of 47: \" + index);\n    }\n}",
+      "instructions": [
+        "Call Arrays.sort(numbers) to sort the array in-place.",
+        "Call Arrays.binarySearch(numbers, 47) and store the result in 'index'.",
+        "Print all three lines in the exact format shown.",
+        "Do NOT change the initial array values."
+      ],
+      "hint": "After sorting, numbers becomes [3, 12, 28, 47, 55, 64, 99]. 47 is at index 3.",
+      "expectedOutput": "Before sort: [64, 12, 99, 3, 47, 28, 55]\nAfter sort: [3, 12, 28, 47, 55, 64, 99]\nIndex of 47: 3"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 21,
+    "allowedSubmissionType": "TEXT"
+  }
+]

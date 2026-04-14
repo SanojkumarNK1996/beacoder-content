@@ -1,0 +1,102 @@
+<h1>🏗️ Microservices Architecture</h1>
+
+<h2>🎯 What Are Microservices?</h2>
+<p><strong>Microservices architecture</strong> is a way of building applications as a <strong>set of small, independent services</strong>, each focused on a specific business capability.</p>
+
+<ul>
+  <li>Each service runs in its <strong>own process</strong></li>
+  <li>Services communicate over <strong>lightweight protocols</strong> (usually HTTP/REST or messaging)</li>
+  <li>Each service can be <strong>developed, deployed, and scaled independently</strong></li>
+</ul>
+
+<div class="analogy-card">
+  <h3>🏢 Company Analogy</h3>
+  <p>A monolith is like one huge department doing everything. Microservices are like separate departments: Sales, Billing, Inventory, etc.—each with its own team and processes, collaborating via clear contracts.</p>
+</div>
+
+<h2>🧱 Monolith vs Microservices</h2>
+
+<h3>Monolithic Architecture</h3>
+<ul>
+  <li>Single deployable unit (JAR/WAR)</li>
+  <li>All modules (auth, orders, inventory) live in one codebase</li>
+  <li>Easier to start, but becomes hard to change and scale as it grows</li>
+</ul>
+
+<h3>Microservices Architecture</h3>
+<ul>
+  <li>Multiple smaller services (Auth Service, Order Service, Payment Service)</li>
+  <li>Each has its own codebase and often its own database</li>
+  <li>Services communicate over HTTP or messaging</li>
+</ul>
+
+<h2>✅ Benefits of Microservices</h2>
+<ul>
+  <li>📈 <strong>Independent scaling</strong> – Scale only the hot services (e.g., Order Service on Black Friday)</li>
+  <li>🚀 <strong>Independent deployments</strong> – Deploy a single service without redeploying the entire system</li>
+  <li>🧩 <strong>Technology diversity</strong> – Different services can use different tech stacks (Java, Node.js, etc.)</li>
+  <li>👥 <strong>Team autonomy</strong> – Teams own services end-to-end</li>
+  <li>🔒 <strong>Better isolation</strong> – Failures can be contained within a single service</li>
+</ul>
+
+<h2>⚠️ Challenges of Microservices</h2>
+<ul>
+  <li>📡 <strong>Distributed system complexity</strong> – Network failures, latency, retries, timeouts</li>
+  <li>🧪 <strong>Testing is harder</strong> – Need contract tests, integration tests across services</li>
+  <li>📊 <strong>Observability</strong> – Logging, metrics, tracing across many services</li>
+  <li>💽 <strong>Data consistency</strong> – No single database; need patterns like Sagas and eventual consistency</li>
+  <li>🛠️ <strong>DevOps overhead</strong> – CI/CD, containers, orchestration (Kubernetes)</li>
+</ul>
+
+<h2>📌 When to Use Microservices</h2>
+
+<p>Good candidates:</p>
+<ul>
+  <li>Large, complex applications with many domains</li>
+  <li>Multiple teams working on different parts of the system</li>
+  <li>Need for independent scaling and deployment</li>
+</ul>
+
+<p>Not ideal for:</p>
+<ul>
+  <li>Very small apps or early-stage prototypes</li>
+  <li>Teams without strong DevOps and distributed systems experience</li>
+</ul>
+
+<h2>🏛️ Typical Microservices Architecture</h2>
+
+<ul>
+  <li>API Gateway at the edge</li>
+  <li>Multiple backend microservices (User, Orders, Catalog, Payment)</li>
+  <li>Service discovery (Eureka, Consul, etc.)</li>
+  <li>Centralized configuration</li>
+  <li>Message broker (Kafka, RabbitMQ) for async communication</li>
+</ul>
+
+<h2>📂 Example: E‑Commerce System</h2>
+
+<ul>
+  <li><strong>Product Service</strong> – Manages product catalog</li>
+  <li><strong>Order Service</strong> – Handles customer orders</li>
+  <li><strong>Inventory Service</strong> – Tracks stock</li>
+  <li><strong>Payment Service</strong> – Processes payments</li>
+  <li><strong>Notification Service</strong> – Sends emails/SMS</li>
+</ul>
+
+<p>Each service has its <strong>own database</strong> and exposes a <strong>REST API</strong> or consumes messages.</p>
+
+<h2>🧠 Domain-Driven Design (DDD) Connection</h2>
+<p>Microservices often align with <strong>bounded contexts</strong> from Domain-Driven Design:</p>
+<ul>
+  <li>Each service owns a well-defined domain</li>
+  <li>Clear boundaries and contracts between domains</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Microservices break a large system into <strong>small, independent services</strong></li>
+  <li>They bring benefits in <strong>scalability, deployment, and team autonomy</strong>, but add <strong>operational and architectural complexity</strong></li>
+  <li>Success requires good practices in <strong>communication, observability, and data consistency</strong></li>
+</ul>
+
+<p>Next, you&apos;ll explore <strong>service communication patterns</strong> in microservices systems.</p>

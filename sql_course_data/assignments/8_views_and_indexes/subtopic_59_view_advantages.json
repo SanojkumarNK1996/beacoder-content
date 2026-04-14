@@ -1,0 +1,77 @@
+[
+  {
+    "title": "Security and Access Control with Views",
+    "description": {
+      "task": "Create views that restrict sensitive column access — demonstrating how views serve as a security layer.",
+      "language": "sql",
+      "context": "Views can hide sensitive columns (like salary, SSN, password hash) from users who should only see a subset of the data. You GRANT SELECT on the view instead of the base table.",
+      "starterCode": "CREATE TABLE users (\n  user_id      INT PRIMARY KEY,\n  username     VARCHAR(30),\n  email        VARCHAR(80),\n  password_hash VARCHAR(100),  -- SENSITIVE: never expose\n  salary       DECIMAL(10,2),  -- SENSITIVE: HR only\n  role         VARCHAR(20),\n  created_at   TIMESTAMP DEFAULT NOW()\n);\n\nINSERT INTO users VALUES\n  (1, 'alice', 'alice@co.com', '$2b$10$abc123hashedpassword1', 95000, 'admin', NOW()),\n  (2, 'bob',   'bob@co.com',   '$2b$10$abc123hashedpassword2', 65000, 'user',  NOW()),\n  (3, 'carol', 'carol@co.com', '$2b$10$abc123hashedpassword3', 88000, 'user',  NOW());\n\n-- Public view: safe columns for general app use\nCREATE VIEW public_users AS\n  SELECT user_id, username, email, role, created_at\n  FROM users;\n\n-- HR view: hides password but shows salary\nCREATE VIEW hr_users AS\n  SELECT user_id, username, email, salary, role\n  FROM users;\n\n-- Query both views\nSELECT * FROM public_users;\nSELECT * FROM hr_users;\n\n-- In production: GRANT SELECT ON public_users TO app_role;\n-- GRANT SELECT ON hr_users TO hr_manager_role;\n",
+      "instructions": [
+        "Run all CREATE TABLE, INSERT, CREATE VIEW statements.",
+        "Query public_users — confirm password_hash and salary are NOT visible.",
+        "Query hr_users — confirm salary is visible but password_hash is NOT.",
+        "Add a comment: why is it safer to query through views than granting direct table access?",
+        "Add a comment: can you update data through public_users view? Does the base table change?"
+      ],
+      "hint": "Views act as a permission boundary. Even if a user has SELECT on the view, they cannot access columns the view doesn't expose — unless they also have direct table access.",
+      "expectedOutput": "public_users: 5 columns, no password or salary\nhr_users: includes salary, no password_hash"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 59,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Views for Query Simplification",
+    "description": {
+      "task": "Replace a complex multi-join query with a view to simplify application code and reduce query duplication.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE customers (id INT PRIMARY KEY, name VARCHAR(50), country VARCHAR(30));\nCREATE TABLE orders    (id INT PRIMARY KEY, customer_id INT, order_date DATE);\nCREATE TABLE order_items (id INT PRIMARY KEY, order_id INT, product VARCHAR(60), quantity INT, price DECIMAL(8,2));\n\nINSERT INTO customers VALUES (1,'Alice','USA'),(2,'Bob','UK'),(3,'Carol','USA');\nINSERT INTO orders VALUES (101,1,'2026-01-05'),(102,1,'2026-01-10'),(103,2,'2026-01-12'),(104,3,'2026-01-15');\nINSERT INTO order_items VALUES\n  (1,101,'Laptop',1,999.99),(2,101,'Mouse',2,19.99),\n  (3,102,'Keyboard',1,59.99),(4,103,'Monitor',2,299.99),\n  (5,104,'Headphones',1,79.99),(6,104,'Mouse',3,19.99);\n\n-- Without view: this complex query must be repeated everywhere\n-- WITH view: define it once\nCREATE VIEW order_summary AS\n  SELECT\n    o.id AS order_id,\n    c.name AS customer,\n    c.country,\n    o.order_date,\n    COUNT(oi.id)              AS line_count,\n    SUM(oi.quantity * oi.price) AS order_total\n  FROM orders o\n  JOIN customers c ON o.customer_id = c.id\n  JOIN order_items oi ON o.id = oi.order_id\n  GROUP BY o.id, c.name, c.country, o.order_date;\n\n-- Now application code can use simple queries\nSELECT * FROM order_summary ORDER BY order_total DESC;\nSELECT customer, SUM(order_total) AS lifetime_value FROM order_summary GROUP BY customer;\nSELECT * FROM order_summary WHERE country = 'USA';\n",
+      "instructions": [
+        "Run all CREATE TABLE, INSERT, CREATE VIEW statements.",
+        "Run all three view queries.",
+        "First query: 4 orders ordered by total, largest first.",
+        "Second query: Alice and Carol (USA), Bob (UK) lifetime values.",
+        "Third query: Alice's 2 orders + Carol's 1 order.",
+        "Add a comment: how many duplicate JOIN queries does this view eliminate?"
+      ],
+      "hint": "Without the view, every application query that needs customer+order+items data must repeat the 3-table JOIN. The view defines it once — queries become simple SELECTs.",
+      "expectedOutput": "4 orders: Alice order1 ~1039.97, Carol ~139.96, Bob ~599.98, Alice order2 ~59.99\nLifetime: Alice~1099.96, Bob~599.98, Carol~139.96"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 59,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "DROP and ALTER Views",
+    "description": {
+      "task": "Modify an existing view using CREATE OR REPLACE VIEW, then drop views cleanly.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE products (\n  id INT PRIMARY KEY, name VARCHAR(80), category VARCHAR(40),\n  price DECIMAL(8,2), active BOOLEAN DEFAULT TRUE\n);\n\nINSERT INTO products VALUES\n  (1,'Laptop','Electronics',999.99,TRUE),\n  (2,'Mouse','Electronics',19.99,TRUE),\n  (3,'Desk','Furniture',250.00,TRUE),\n  (4,'Old Model','Electronics',79.99,FALSE);\n\n-- Create initial view\nCREATE VIEW active_products AS\n  SELECT id, name, category, price FROM products WHERE active = TRUE;\n\nSELECT * FROM active_products;\n\n-- Modify the view: add calculated column (discounted price)\n-- CREATE OR REPLACE replaces without needing DROP first\nCREATE OR REPLACE VIEW active_products AS\n  SELECT\n    id,\n    name,\n    category,\n    price,\n    ROUND(price * 0.9, 2) AS discounted_price  -- 10% off\n  FROM products\n  WHERE active = TRUE;\n\nSELECT * FROM active_products;\n\n-- Drop the view when no longer needed\nDROP VIEW IF EXISTS active_products;\n\n-- Confirm it's gone\nSELECT viewname FROM pg_views WHERE schemaname = 'public' AND viewname = 'active_products';\n",
+      "instructions": [
+        "Run CREATE TABLE, INSERT, initial CREATE VIEW, first SELECT.",
+        "Run CREATE OR REPLACE VIEW with the discounted_price column.",
+        "Run SELECT again — view now has 5 columns.",
+        "Run DROP VIEW IF EXISTS.",
+        "Run the pg_views query to confirm the view is gone.",
+        "Add a comment: what is the difference between DROP VIEW and DROP VIEW IF EXISTS?"
+      ],
+      "hint": "CREATE OR REPLACE VIEW updates the view definition without needing to DROP it first. If dependent objects (other views) reference it, DROP VIEW will fail unless CASCADE is used.",
+      "expectedOutput": "Initial view: 4 columns\nReplaced view: 5 columns with discounted_price\nAfter DROP: 0 rows in pg_views for active_products"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 59,
+    "allowedSubmissionType": "TEXT"
+  }
+]

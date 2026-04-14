@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Activity Selection Problem",
+    "description": {
+      "task": "Given a list of activities with start and end times, select the maximum number of non-overlapping activities. Use the greedy strategy: always select the activity that ends earliest and is compatible with the last selected activity.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ActivitySelection {\n\n    public List<int[]> selectActivities(int[] start, int[] end) {\n        int n = start.length;\n        Integer[] idx = new Integer[n];\n        for (int i = 0; i < n; i++) idx[i] = i;\n        // Sort by end time\n        Arrays.sort(idx, (a, b) -> end[a] - end[b]);\n\n        List<int[]> selected = new ArrayList<>();\n        int lastEnd = -1;\n\n        for (int i : idx) {\n            // TODO: if start[i] >= lastEnd, select this activity\n            //       add {start[i], end[i]} to selected, update lastEnd = end[i]\n        }\n        return selected;\n    }\n\n    public static void main(String[] args) {\n        ActivitySelection as = new ActivitySelection();\n        int[] s = {1, 3, 0, 5, 8, 5};\n        int[] e = {2, 4, 6, 7, 9, 9};\n        List<int[]> result = as.selectActivities(s, e);\n        System.out.println(\"Selected \" + result.size() + \" activities:\");\n        for (int[] a : result)\n            System.out.println(\"  [\" + a[0] + \", \" + a[1] + \"]\");\n    }\n}",
+      "instructions": [
+        "if(start[i]>=lastEnd){selected.add(new int[]{start[i],end[i]});lastEnd=end[i];}",
+        "Sorted by end time: {1,2},{3,4},{0,6},{5,7},{8,9},{5,9}",
+        "Select {1,2} → lastEnd=2; {3,4} → lastEnd=4; {5,7} → lastEnd=7; {8,9} → lastEnd=9",
+        "Total 4 activities selected: [1,2],[3,4],[5,7],[8,9]",
+        "Greedy proves optimal here: choosing earliest-ending activity maximizes remaining time"
+      ],
+      "hint": "if(start[i]>=lastEnd){selected.add(new int[]{start[i],end[i]});lastEnd=end[i];}",
+      "expectedOutput": "Selected 4 activities:\n  [1, 2]\n  [3, 4]\n  [5, 7]\n  [8, 9]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 175,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Interval Scheduling Maximization",
+    "description": {
+      "task": "Solve the Meeting Rooms problem: given a list of meeting intervals, find the minimum number of meeting rooms required so all meetings can happen simultaneously. Use a priority queue (min-heap) to track meeting end times.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MeetingRooms {\n\n    public int minRooms(int[][] intervals) {\n        if (intervals.length == 0) return 0;\n        // Sort by start time\n        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);\n        // Min-heap of end times\n        PriorityQueue<Integer> endTimes = new PriorityQueue<>();\n        endTimes.add(intervals[0][1]);\n\n        for (int i = 1; i < intervals.length; i++) {\n            // TODO: if the earliest-ending room is free (its end <= current start),\n            //       reuse it by polling from endTimes; else a new room is needed\n            //       then add current interval's end time to endTimes\n        }\n        return endTimes.size();\n    }\n\n    public static void main(String[] args) {\n        MeetingRooms mr = new MeetingRooms();\n        int[][] m1 = {{0,30},{5,10},{15,20}};\n        System.out.println(\"[[0,30],[5,10],[15,20]]: \" + mr.minRooms(m1) + \" rooms\");\n\n        int[][] m2 = {{7,10},{2,4}};\n        System.out.println(\"[[7,10],[2,4]]: \" + mr.minRooms(m2) + \" rooms\");\n\n        int[][] m3 = {{1,4},{2,5},{3,6}};\n        System.out.println(\"[[1,4],[2,5],[3,6]]: \" + mr.minRooms(m3) + \" rooms\");\n    }\n}",
+      "instructions": [
+        "if(endTimes.peek()<=intervals[i][0]) endTimes.poll(); // reuse room",
+        "endTimes.add(intervals[i][1]); // assign this meeting to a room",
+        "m1={[0,30],[5,10],[15,20]}: [5,10] conflicts with [0,30]; [15,20] doesn't conflict with [5,10] but conflicts with [0,30] → 2 rooms",
+        "m2={[7,10],[2,4]}: after sort=[2,4],[7,10]; 7>=4 so reuse → 1 room",
+        "m3={[1,4],[2,5],[3,6]}: all overlap → 3 rooms"
+      ],
+      "hint": "if(endTimes.peek()<=intervals[i][0]) endTimes.poll(); endTimes.add(intervals[i][1]);",
+      "expectedOutput": "[[0,30],[5,10],[15,20]]: 2 rooms\n[[7,10],[2,4]]: 1 rooms\n[[1,4],[2,5],[3,6]]: 3 rooms"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 175,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Non-overlapping Intervals — Minimum Removals",
+    "description": {
+      "task": "Given a list of intervals, find the minimum number of intervals to remove so the remaining intervals are non-overlapping. Use the greedy approach: sort by end time and greedily keep intervals that don't overlap with the last kept one.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class NonOverlapIntervals {\n\n    public int minRemovals(int[][] intervals) {\n        if (intervals.length == 0) return 0;\n        // Sort by end time\n        Arrays.sort(intervals, (a, b) -> a[1] - b[1]);\n\n        int kept = 1;\n        int lastEnd = intervals[0][1];\n\n        for (int i = 1; i < intervals.length; i++) {\n            // TODO: if intervals[i][0] >= lastEnd, keep this interval\n            //       increment kept and update lastEnd = intervals[i][1]\n        }\n        return intervals.length - kept;\n    }\n\n    public static void main(String[] args) {\n        NonOverlapIntervals noi = new NonOverlapIntervals();\n        System.out.println(\"[[1,2],[2,3],[3,4],[1,3]]: \" + noi.minRemovals(new int[][]{{1,2},{2,3},{3,4},{1,3}}));\n        System.out.println(\"[[1,2],[1,2],[1,2]]:        \" + noi.minRemovals(new int[][]{{1,2},{1,2},{1,2}}));\n        System.out.println(\"[[1,2],[2,3]]:               \" + noi.minRemovals(new int[][]{{1,2},{2,3}}));\n    }\n}",
+      "instructions": [
+        "if(intervals[i][0]>=lastEnd){kept++;lastEnd=intervals[i][1];}",
+        "[[1,2],[2,3],[3,4],[1,3]]: sorted by end=[1,2],[1,3],[2,3],[3,4]; keep [1,2],[2,3],[3,4]=3; remove [1,3]=1",
+        "[[1,2],[1,2],[1,2]]: all same, keep 1, remove 2",
+        "[[1,2],[2,3]]: no overlap, keep both, remove 0",
+        "minRemovals = total intervals - max non-overlapping intervals"
+      ],
+      "hint": "if(intervals[i][0]>=lastEnd){kept++;lastEnd=intervals[i][1];}",
+      "expectedOutput": "[[1,2],[2,3],[3,4],[1,3]]: 1\n[[1,2],[1,2],[1,2]]:        2\n[[1,2],[2,3]]:               0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 175,
+    "allowedSubmissionType": "TEXT"
+  }
+]

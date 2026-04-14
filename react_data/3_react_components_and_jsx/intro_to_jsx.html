@@ -1,0 +1,26 @@
+<h1>📝 Introduction to JSX</h1>
+<h2>🎯 What is JSX?</h2>
+<p><strong>JSX</strong> (JavaScript XML) is a syntax extension that lets you write HTML-like code in JavaScript. React components use JSX to describe the UI. Babel compiles JSX to <code>React.createElement()</code> calls.</p>
+<h2>📋 JSX Rules</h2>
+<ul>
+  <li>Return a <strong>single root element</strong> (use <code>&lt;div&gt;</code> or <code>&lt;&gt;&lt;/&gt;</code> Fragment)</li>
+  <li>Close <strong>all tags</strong>: <code>&lt;img /&gt;</code>, <code>&lt;input /&gt;</code></li>
+  <li>Use <strong>camelCase</strong> for attributes: <code>className</code> not <code>class</code>, <code>onClick</code> not <code>onclick</code></li>
+  <li>JavaScript expressions in curly braces: <code>{user.name}</code>, <code>{2 + 2}</code></li>
+</ul>
+<div class="code-example">
+  <pre>
+function Welcome() {
+  const name = "Alice";
+  const isLoggedIn = true;
+  return (
+    &lt;&gt;
+      &lt;h1 className="header"&gt;Hello, {name}!&lt;/h1&gt;
+      {isLoggedIn &amp;&amp; &lt;p&gt;Welcome back.&lt;/p&gt;}
+    &lt;/&gt;
+  );
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>JSX is not HTML — it's syntactic sugar over JavaScript. The curly braces <code>{}</code> are where JavaScript lives inside your Component's template.</p>

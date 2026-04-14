@@ -1,0 +1,26 @@
+<h1>🔢 DP: Fibonacci & Memoization</h1>
+<h2>🎯 Classic Problem: Fibonacci</h2>
+<p>Naive recursion is O(2ⁿ). DP reduces it to O(n).</p>
+<div class="code-example">
+  <pre>
+// Top-Down (Memoization)
+Map&lt;Integer, Long&gt; memo = new HashMap&lt;&gt;();
+long fib(int n) {
+    if (n &lt;= 1) return n;
+    if (memo.containsKey(n)) return memo.get(n);
+    long result = fib(n - 1) + fib(n - 2);
+    memo.put(n, result);
+    return result;
+}
+
+// Bottom-Up (Tabulation)
+long fibTable(int n) {
+    long[] dp = new long[n + 1];
+    dp[1] = 1;
+    for (int i = 2; i &lt;= n; i++) dp[i] = dp[i-1] + dp[i-2];
+    return dp[n];
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Fibonacci is the "Hello World" of DP. The memoization pattern — cache and return — applies to hundreds of DP problems.</p>

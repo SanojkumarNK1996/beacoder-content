@@ -1,0 +1,29 @@
+<h1>🔐 Environment Variables in React</h1>
+<h2>🎯 What are Environment Variables?</h2>
+<p>Configuration values that change between environments (development, staging, production): API URLs, API keys, feature flags.</p>
+<h2>🔧 Vite Environment Variables</h2>
+<div class="code-example">
+  <pre>
+# .env (defaults — commit to git, no secrets)
+VITE_API_URL=http://localhost:4000
+
+# .env.local (local overrides — in .gitignore!)
+VITE_API_URL=http://localhost:3000
+
+# .env.production (production values — no secrets!)
+VITE_API_URL=https://api.myapp.com
+
+# Access in code (only VITE_ prefix vars are exposed to browser):
+const apiUrl = import.meta.env.VITE_API_URL;
+const isProd = import.meta.env.PROD;   // Built-in Vite variable
+  </pre>
+</div>
+<h2>⚠️ Security Critical Rule</h2>
+<p><strong>Never put secrets (private API keys, DB passwords) in frontend env vars.</strong> All Vite/CRA env vars are embedded in the JS bundle — anyone can read them in the browser devtools.</p>
+<ul>
+  <li>Frontend: public API keys (publishable Stripe key, public Firebase config) ✅</li>
+  <li>Frontend: API URL, feature flags ✅</li>
+  <li>Frontend: private API keys, OAuth secrets, database URLs ❌</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Prefix env vars with <code>VITE_</code> (Vite) or <code>REACT_APP_</code> (CRA) to expose them to the browser. Never put secrets in frontend env vars — they end up in the compiled JS.</p>

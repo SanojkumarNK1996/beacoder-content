@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Merge Sort Implementation",
+    "description": {
+      "task": "Implement Merge Sort from scratch using the divide-and-conquer strategy. Split the array in half, recursively sort each half, then merge them. Use an auxiliary array for the merge step.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class MergeSort {\n\n    public void mergeSort(int[] arr, int left, int right) {\n        if (left >= right) return;\n        int mid = (left + right) / 2;\n        mergeSort(arr, left, mid);\n        mergeSort(arr, mid + 1, right);\n        merge(arr, left, mid, right);\n    }\n\n    private void merge(int[] arr, int left, int mid, int right) {\n        int[] temp = new int[right - left + 1];\n        int i = left, j = mid + 1, k = 0;\n        // TODO: while both halves have elements, pick the smaller one into temp\n        // TODO: copy remaining elements from left half\n        // TODO: copy remaining elements from right half\n        // Copy temp back to arr[left..right]\n        for (int x = 0; x < temp.length; x++) arr[left + x] = temp[x];\n    }\n\n    public static void main(String[] args) {\n        MergeSort ms = new MergeSort();\n        int[] arr = {38, 27, 43, 3, 9, 82, 10};\n        System.out.println(\"Before: \" + Arrays.toString(arr));\n        ms.mergeSort(arr, 0, arr.length - 1);\n        System.out.println(\"After:  \" + Arrays.toString(arr));\n\n        int[] single = {1};\n        ms.mergeSort(single, 0, 0);\n        System.out.println(\"Single: \" + Arrays.toString(single));\n    }\n}",
+      "instructions": [
+        "While both halves: while(i<=mid&&j<=right){temp[k++]=(arr[i]<=arr[j])?arr[i++]:arr[j++];}",
+        "Remaining left: while(i<=mid) temp[k++]=arr[i++];",
+        "Remaining right: while(j<=right) temp[k++]=arr[j++];",
+        "The copy-back loop is already provided",
+        "Merge sort is O(n log n) in all cases and is stable"
+      ],
+      "hint": "while(i<=mid&&j<=right){temp[k++]=(arr[i]<=arr[j])?arr[i++]:arr[j++];} while(i<=mid)temp[k++]=arr[i++]; while(j<=right)temp[k++]=arr[j++];",
+      "expectedOutput": "Before: [38, 27, 43, 3, 9, 82, 10]\nAfter:  [3, 9, 10, 27, 38, 43, 82]\nSingle: [1]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 161,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Quick Sort with Partition",
+    "description": {
+      "task": "Implement Quick Sort using the Lomuto partition scheme. Choose the last element as the pivot, partition the array, and recursively sort the two partitions. Print the pivot and partition result at each step.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class QuickSort {\n\n    public void quickSort(int[] arr, int low, int high) {\n        if (low < high) {\n            int pi = partition(arr, low, high);\n            quickSort(arr, low, pi - 1);\n            quickSort(arr, pi + 1, high);\n        }\n    }\n\n    private int partition(int[] arr, int low, int high) {\n        int pivot = arr[high];\n        int i = low - 1;\n        for (int j = low; j < high; j++) {\n            // TODO: if arr[j] <= pivot, increment i and swap arr[i] with arr[j]\n        }\n        // TODO: swap arr[i+1] with arr[high] (place pivot in correct position)\n        // TODO: return i+1\n        return -1; // replace this\n    }\n\n    public static void main(String[] args) {\n        QuickSort qs = new QuickSort();\n        int[] arr = {10, 80, 30, 90, 40, 50, 70};\n        System.out.println(\"Before: \" + Arrays.toString(arr));\n        qs.quickSort(arr, 0, arr.length - 1);\n        System.out.println(\"After:  \" + Arrays.toString(arr));\n\n        int[] arr2 = {5, 1, 9, 3, 7, 2, 8};\n        qs.quickSort(arr2, 0, arr2.length - 1);\n        System.out.println(\"Sorted: \" + Arrays.toString(arr2));\n    }\n}",
+      "instructions": [
+        "Inner swap: if(arr[j]<=pivot){i++; int t=arr[i];arr[i]=arr[j];arr[j]=t;}",
+        "Place pivot: int t=arr[i+1];arr[i+1]=arr[high];arr[high]=t; return i+1;",
+        "Pivot is arr[high]=70 for arr1; after partition, 70 ends up at its correct sorted position",
+        "Quick sort is O(n log n) on average but O(n²) worst case (sorted input with last-element pivot)",
+        "Remove the return -1 line and replace with the correct return statement"
+      ],
+      "hint": "if(arr[j]<=pivot){i++;int t=arr[i];arr[i]=arr[j];arr[j]=t;} Then: int t=arr[i+1];arr[i+1]=arr[high];arr[high]=t; return i+1;",
+      "expectedOutput": "Before: [10, 80, 30, 90, 40, 50, 70]\nAfter:  [10, 30, 40, 50, 70, 80, 90]\nSorted: [1, 2, 3, 5, 7, 8, 9]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 161,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Heap Sort Using Max-Heap",
+    "description": {
+      "task": "Implement Heap Sort. First build a max-heap from the array, then repeatedly extract the maximum (swap root with last unsorted element) and heapify down. Implement the heapify helper method.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class HeapSort {\n\n    public void heapSort(int[] arr) {\n        int n = arr.length;\n        // Build max-heap (heapify from last non-leaf downward)\n        for (int i = n / 2 - 1; i >= 0; i--)\n            heapify(arr, n, i);\n        // Extract elements one by one\n        for (int i = n - 1; i > 0; i--) {\n            // Move current root (max) to end\n            int temp = arr[0]; arr[0] = arr[i]; arr[i] = temp;\n            heapify(arr, i, 0); // heapify reduced heap\n        }\n    }\n\n    private void heapify(int[] arr, int n, int i) {\n        int largest = i;\n        int left  = 2 * i + 1;\n        int right = 2 * i + 2;\n        // TODO: if left child exists and is larger than largest, update largest\n        // TODO: if right child exists and is larger than largest, update largest\n        // TODO: if largest != i, swap arr[i] with arr[largest] and recursively heapify\n    }\n\n    public static void main(String[] args) {\n        HeapSort hs = new HeapSort();\n        int[] arr = {12, 11, 13, 5, 6, 7};\n        System.out.println(\"Before: \" + Arrays.toString(arr));\n        hs.heapSort(arr);\n        System.out.println(\"After:  \" + Arrays.toString(arr));\n\n        int[] arr2 = {1};\n        hs.heapSort(arr2);\n        System.out.println(\"Single: \" + Arrays.toString(arr2));\n    }\n}",
+      "instructions": [
+        "if(left<n&&arr[left]>arr[largest]) largest=left;",
+        "if(right<n&&arr[right]>arr[largest]) largest=right;",
+        "if(largest!=i){int t=arr[i];arr[i]=arr[largest];arr[largest]=t;heapify(arr,n,largest);}",
+        "Build-heap pass converts: {12,11,13,5,6,7} into a max-heap",
+        "Heap sort is O(n log n) in all cases and sorts in-place but is NOT stable"
+      ],
+      "hint": "if(left<n&&arr[left]>arr[largest])largest=left; if(right<n&&arr[right]>arr[largest])largest=right; if(largest!=i){int t=arr[i];arr[i]=arr[largest];arr[largest]=t;heapify(arr,n,largest);}",
+      "expectedOutput": "Before: [12, 11, 13, 5, 6, 7]\nAfter:  [5, 6, 7, 11, 12, 13]\nSingle: [1]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 161,
+    "allowedSubmissionType": "TEXT"
+  }
+]

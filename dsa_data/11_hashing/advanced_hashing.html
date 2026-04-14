@@ -1,0 +1,14 @@
+<h1>🌐 Advanced Hashing</h1>
+<h2>🌀 Rolling Hash</h2>
+<p>A technique to efficiently compute hash values of subarrings/substrings as a sliding window moves. Used in string matching (Rabin-Karp algorithm).</p>
+<h2>🔐 Cryptographic Hash Functions</h2>
+<p>MD5, SHA-256 etc. — designed for security (not speed-critical). Properties: one-way (hard to reverse), collision-resistant. Used in: passwords, digital signatures, file integrity.</p>
+<h2>🎯 Consistent Hashing</h2>
+<p>Used in distributed systems. Maps both keys and nodes to a hash ring so that adding/removing a node only affects nearby keys — minimizes data movement.</p>
+<div class="highlight">
+  <p><strong>Used in:</strong> Apache Cassandra, Amazon DynamoDB, Elasticsearch, CDNs</p>
+</div>
+<h2>🗣️ Bloom Filters</h2>
+<p>A space-efficient probabilistic data structure using multiple hash functions. Answers "possibly in set" or "definitely not in set". Zero false negatives, possible false positives.</p>
+<h2>🎯 Summary</h2>
+<p>Advanced hashing techniques solve real distributed-systems problems. Consistent hashing enables scalable distributed caches and databases.</p>

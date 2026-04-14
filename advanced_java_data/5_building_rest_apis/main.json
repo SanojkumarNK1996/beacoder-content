@@ -1,0 +1,47 @@
+[
+  {
+    "subtopicId": 94,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "REST Architecture Principles",
+    "data": "rest_architecture_principles.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 95,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Spring MVC for REST",
+    "data": "spring_mvc_for_rest.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 96,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Request and Response Handling",
+    "data": "request_and_response_handling.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 97,
+    "dataType": "notes",
+    "displayOrder": 4,
+    "title": "Exception Handling in REST APIs",
+    "data": "exception_handling_rest_apis.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 98,
+    "dataType": "notes",
+    "displayOrder": 5,
+    "title": "API Documentation",
+    "data": "api_documentation.html",
+    "verified": false,
+    "priority": 1
+  }
+]

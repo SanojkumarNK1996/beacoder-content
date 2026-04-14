@@ -1,0 +1,31 @@
+<h1>🔧 Functional Components</h1>
+<h2>🎯 The Modern Standard</h2>
+<p>A <strong>functional component</strong> is a JavaScript function that accepts <code>props</code> and returns JSX. Since React Hooks (v16.8), functional components handle ALL use cases — class components are no longer needed.</p>
+<div class="code-example">
+  <pre>
+// Simple functional component
+function Greeting({ name, age }) {
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Hello, {name}!&lt;/h2&gt;
+      &lt;p&gt;Age: {age}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Arrow function style (common in modern codebases)
+const Button = ({ children, onClick, disabled = false }) =&gt; (
+  &lt;button onClick={onClick} disabled={disabled}&gt;
+    {children}
+  &lt;/button&gt;
+);
+
+// Usage
+&lt;Greeting name="Alice" age={30} /&gt;
+&lt;Button onClick={handleSubmit}&gt;Submit&lt;/Button&gt;
+  </pre>
+</div>
+<h2>📌 Default Props</h2>
+<p>Use default parameters: <code>function Btn({ size = 'medium' })</code></p>
+<h2>🎯 Summary</h2>
+<p>Always use functional components for new React code. They're simpler, shorter, and support hooks.</p>

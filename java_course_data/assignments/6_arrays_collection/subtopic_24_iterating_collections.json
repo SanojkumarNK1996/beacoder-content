@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Iterate a List Three Ways",
+    "description": {
+      "task": "Iterate over an ArrayList of cities using three different approaches: traditional for loop, for-each loop, and Iterator.",
+      "language": "java",
+      "starterCode": "import java.util.ArrayList;\nimport java.util.Iterator;\n\npublic class IterateMethods {\n    public static void main(String[] args) {\n        ArrayList<String> cities = new ArrayList<>();\n        cities.add(\"Paris\");\n        cities.add(\"Tokyo\");\n        cities.add(\"New York\");\n        cities.add(\"Sydney\");\n\n        // Method 1: Traditional index-based for loop\n        System.out.println(\"--- Index for loop ---\");\n        // your code\n\n        // Method 2: Enhanced for-each loop\n        System.out.println(\"--- For-each loop ---\");\n        // your code\n\n        // Method 3: Iterator\n        System.out.println(\"--- Iterator ---\");\n        // your code\n    }\n}",
+      "instructions": [
+        "Method 1: for (int i = 0; i < cities.size(); i++) { System.out.println(cities.get(i)); }",
+        "Method 2: for (String city : cities) { System.out.println(city); }",
+        "Method 3: Create an Iterator<String>, use hasNext() and next() to print each city.",
+        "All three should print the same 4 cities in order."
+      ],
+      "hint": "Iterator: Iterator<String> it = cities.iterator(); while (it.hasNext()) { System.out.println(it.next()); }",
+      "expectedOutput": "--- Index for loop ---\nParis\nTokyo\nNew York\nSydney\n--- For-each loop ---\nParis\nTokyo\nNew York\nSydney\n--- Iterator ---\nParis\nTokyo\nNew York\nSydney"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 24,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Filter with Iterator.remove()",
+    "description": {
+      "task": "Use an Iterator to safely remove elements from an ArrayList while iterating — remove all numbers less than 10.",
+      "language": "java",
+      "context": "Modifying a list while iterating with a for-each loop causes ConcurrentModificationException. The Iterator.remove() method is the safe way to remove during iteration.",
+      "starterCode": "import java.util.ArrayList;\nimport java.util.Iterator;\n\npublic class SafeRemove {\n    public static void main(String[] args) {\n        ArrayList<Integer> numbers = new ArrayList<>();\n        for (int i = 1; i <= 15; i++) numbers.add(i);\n\n        System.out.println(\"Before: \" + numbers);\n\n        // Use an Iterator to remove all numbers less than 10\n        Iterator<Integer> it = numbers.iterator();\n        while (it.hasNext()) {\n            // your code\n        }\n\n        System.out.println(\"After (>= 10 only): \" + numbers);\n    }\n}",
+      "instructions": [
+        "Inside the while loop, get the next element with it.next().",
+        "If the element is less than 10, call it.remove() to safely remove it.",
+        "Do NOT modify the list directly inside the loop.",
+        "Do NOT change the println statements outside the loop."
+      ],
+      "hint": "int val = it.next(); if (val < 10) { it.remove(); } — Never call list.remove() inside a for-each loop; always use the Iterator's own remove().",
+      "expectedOutput": "Before: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]\nAfter (>= 10 only): [10, 11, 12, 13, 14, 15]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 24,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Iterate a HashMap with entrySet()",
+    "description": {
+      "task": "Iterate over a HashMap using entrySet() to print both keys and values, then use values() to calculate the total.",
+      "language": "java",
+      "context": "HashMap iteration is typically done via keySet(), values(), or entrySet(). entrySet() is most efficient when you need both key and value.",
+      "starterCode": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class MapIteration {\n    public static void main(String[] args) {\n        HashMap<String, Integer> scores = new HashMap<>();\n        scores.put(\"Alice\", 88);\n        scores.put(\"Bob\", 75);\n        scores.put(\"Carol\", 92);\n        scores.put(\"Dave\", 65);\n\n        System.out.println(\"--- Scores ---\");\n        // Use entrySet() to iterate and print each: \"Alice: 88\"\n\n        int total = 0;\n        // Use values() collection to sum all scores\n        System.out.println(\"Total: \" + total);\n        System.out.printf(\"Average: %.2f%n\", (double) total / scores.size());\n    }\n}",
+      "instructions": [
+        "Use for (Map.Entry<String, Integer> entry : scores.entrySet()) to iterate.",
+        "Print each entry as 'Alice: 88' using entry.getKey() and entry.getValue().",
+        "Use for (int s : scores.values()) { total += s; } to compute the total.",
+        "Print total and average (order of name-score pairs may vary due to HashMap)."
+      ],
+      "hint": "Map.Entry is part of java.util.Map. Import both Map and HashMap. entrySet() provides key-value pairs as Entry objects.",
+      "expectedOutput": "--- Scores ---\nAlice: 88\nBob: 75\nCarol: 92\nDave: 65\nTotal: 320\nAverage: 80.00"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 24,
+    "allowedSubmissionType": "TEXT"
+  }
+]

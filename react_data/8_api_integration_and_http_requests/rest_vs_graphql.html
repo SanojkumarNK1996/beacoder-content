@@ -1,0 +1,31 @@
+<h1>🆚 REST vs GraphQL in React</h1>
+<h2>📋 REST API (Standard)</h2>
+<ul>
+  <li>Multiple endpoints: GET /users, GET /posts, GET /comments</li>
+  <li>Fixed data shapes per endpoint</li>
+  <li>Can over-fetch (too much data) or under-fetch (need multiple requests)</li>
+  <li>Simple, well-understood, supported by all backends</li>
+</ul>
+<h2>📊 GraphQL</h2>
+<ul>
+  <li>Single endpoint: POST /graphql</li>
+  <li>Client specifies exactly what data it needs</li>
+  <li>No over/under fetching</li>
+  <li>Great for complex, nested data and multiple clients with different data needs</li>
+  <li>Steeper learning curve, requires more backend setup</li>
+</ul>
+<h2>🔧 GraphQL in React</h2>
+<div class="code-example">
+  <pre>
+// Apollo Client
+import { gql, useQuery } from '@apollo/client';
+const GET_USERS = gql`query { users { id name email } }`;
+
+function Users() {
+  const { loading, error, data } = useQuery(GET_USERS);
+  // ...
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Use REST for standard CRUD APIs. Choose GraphQL when you have complex data relationships, multiple clients with different data needs, or a large team wanting API-first development.</p>

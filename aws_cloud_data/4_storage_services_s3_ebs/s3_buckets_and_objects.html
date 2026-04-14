@@ -1,0 +1,21 @@
+<h1>🪣 S3 Buckets and Objects</h1>
+<h2>🪣 Buckets</h2>
+<p>A <strong>bucket</strong> is a container for objects. Each bucket has a globally unique name and belongs to a specific region. Naming rules: lowercase, 3–63 chars, no underscores or uppercase.</p>
+<h2>📄 Objects</h2>
+<p>An <strong>object</strong> is a file + metadata stored in a bucket. Identified by a <strong>key</strong> (the full path in the bucket).</p>
+<div class="code-example">
+  <pre>
+# S3 URI format
+s3://my-bucket/folder/subfolder/file.txt
+# Key = folder/subfolder/file.txt
+  </pre>
+</div>
+<h2>🔒 Access Control</h2>
+<ul>
+  <li><strong>Bucket Policy</strong>: JSON policy on the bucket (recommended)</li>
+  <li><strong>IAM Policies</strong>: Attach to users/roles to grant S3 access</li>
+  <li><strong>ACLs</strong>: Legacy per-object access control (avoid for new setups)</li>
+  <li><strong>Block Public Access</strong>: Account-level protection against accidental public exposure</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Buckets organize objects. Always enable "Block Public Access" by default — make things public intentionally via bucket policy, not by accident.</p>

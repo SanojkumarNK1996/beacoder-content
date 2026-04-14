@@ -1,0 +1,33 @@
+<h1>Event Handling</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>All interactivity (button clicks, typing, scrolling) is handled via events in JavaScript.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>Listening for events like click, input, submit, keydown and running code in response.</li>
+</ul>
+
+<h2>Basic example</h2>
+<pre><code>// HTML: &lt;button id="btn"&gt;Click me&lt;/button&gt;
+
+const btn = document.getElementById('btn');
+
+btn.addEventListener('click', function () {
+  alert('Button clicked!');
+});
+</code></pre>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>Use addEventListener instead of inline onclick attributes.</li>
+  <li>Event handlers receive an event object with details.</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Show an alert when a user hovers over an element.</li>
+  <li>Log every key press in an input field to the console.</li>
+</ol>

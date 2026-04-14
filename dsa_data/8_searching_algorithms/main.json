@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 164, "title": "Linear Search", "dataType": "notes", "data": "intro_to_searching.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 165, "title": "Binary Search", "dataType": "notes", "data": "binary_search.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 166, "title": "Binary Search Variations", "dataType": "notes", "data": "binary_search_variants.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 167, "title": "Search in Specialized Structures", "dataType": "notes", "data": "other_search_algorithms.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 168, "title": "String Searching", "dataType": "notes", "data": "searching_in_practice.html", "displayOrder": 5, "verified": false}
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "title": "SQL Clauses in Order",
+    "description": {
+      "task": "Write a complete SQL SELECT statement using all major clauses in their correct order: SELECT, FROM, WHERE, ORDER BY, LIMIT.",
+      "language": "sql",
+      "context": "The order of SQL clauses matters. The syntax order is: SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT. Deviating from this order causes a syntax error.",
+      "starterCode": "CREATE TABLE movies (\n  id INT PRIMARY KEY,\n  title VARCHAR(100),\n  genre VARCHAR(40),\n  rating DECIMAL(3,1),\n  release_year INT,\n  box_office_millions DECIMAL(8,2)\n);\n\nINSERT INTO movies VALUES\n  (1, 'Inception',          'Sci-Fi',   8.8, 2010, 836.8),\n  (2, 'The Dark Knight',    'Action',   9.0, 2008, 1004.6),\n  (3, 'Interstellar',       'Sci-Fi',   8.6, 2014, 677.5),\n  (4, 'The Matrix',         'Sci-Fi',   8.7, 1999, 463.5),\n  (5, 'Avengers: Endgame',  'Action',   8.4, 2019, 2797.8),\n  (6, 'Parasite',           'Thriller', 8.6, 2019, 263.1),\n  (7, 'Dune',               'Sci-Fi',   8.0, 2021, 401.7);\n\n-- Full query with all main clauses:\nSELECT title, genre, rating, box_office_millions\nFROM movies\nWHERE release_year >= 2010\nORDER BY rating DESC\nLIMIT 3;\n",
+      "instructions": [
+        "Run the full query with all clauses and note the result.",
+        "Modify: change WHERE to release_year >= 2000 and run again.",
+        "Write a NEW query: SELECT genre, COUNT(*) as movie_count FROM movies GROUP BY genre ORDER BY movie_count DESC.",
+        "Add a comment labelling each SQL clause type above each keyword (e.g., -- Projection clause)."
+      ],
+      "hint": "Clause order: SELECT (what columns), FROM (which table), WHERE (filter rows BEFORE grouping), GROUP BY (aggregate), HAVING (filter AFTER grouping), ORDER BY (sort), LIMIT (cap).",
+      "expectedOutput": "Original query: Inception(8.8), Interstellar(8.6), Parasite(8.6) — top 3 from 2010+\nGenre count: Sci-Fi:4, Action:2, Thriller:1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 39,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SQL Identifiers and Naming Rules",
+    "description": {
+      "task": "Practice SQL naming conventions: valid/invalid identifiers, using double-quotes for reserved words, and aliasing with AS.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE \"order\" (          -- 'order' is a reserved word, quoted\n  id INT PRIMARY KEY,\n  customer_name VARCHAR(60),    -- snake_case convention\n  \"total amount\" DECIMAL(8,2), -- space in column name, must be quoted\n  created_at TIMESTAMP DEFAULT NOW()\n);\n\nINSERT INTO \"order\" VALUES\n  (1, 'Alice', 150.00, '2026-01-15 10:00:00'),\n  (2, 'Bob',   200.00, '2026-01-16 11:30:00'),\n  (3, 'Carol',  80.00, '2026-01-17 09:45:00');\n\n-- Query using AS aliases to rename columns in output\nSELECT\n  id            AS order_id,\n  customer_name AS customer,\n  \"total amount\" AS total_usd\nFROM \"order\"\nORDER BY id;\n\n-- Query using table alias\nSELECT o.id, o.customer_name\nFROM \"order\" AS o\nWHERE o.\"total amount\" > 100;\n",
+      "instructions": [
+        "Run all statements as written.",
+        "Note that 'order' is a reserved keyword — the double quotes allow it as a table name.",
+        "Run the aliased SELECT — columns appear as order_id, customer, total_usd in the result.",
+        "Run the table-alias query to find customers with total > 100.",
+        "Add a comment: list 3 SQL reserved words you should avoid as table/column names."
+      ],
+      "hint": "Reserved words include: ORDER, SELECT, FROM, TABLE, GROUP, HAVING, WHERE, etc. Always prefer snake_case names like order_details over reserved words or multi-word names.",
+      "expectedOutput": "Aliased query: 3 rows with columns order_id, customer, total_usd\nFiltered query: Alice(150) and Bob(200)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 39,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SQL Comments and Readability",
+    "description": {
+      "task": "Write well-formatted SQL using both single-line (--) and multi-line (/* */) comments, and practise SQL case conventions.",
+      "language": "sql",
+      "context": "SQL keywords are case-insensitive (SELECT = select = Select) but by convention keywords are written in UPPERCASE and identifiers in lowercase. Good comments make complex queries maintainable.",
+      "starterCode": "/*\n  Query: Monthly Sales Report\n  Purpose: Summarise total revenue and order count per month\n  Author: Student\n  Date:   2026-03-01\n*/\n\nCREATE TABLE sales (\n  sale_id   INT PRIMARY KEY,\n  sale_date DATE,\n  product   VARCHAR(60),\n  quantity  INT,\n  unit_price DECIMAL(8,2)\n);\n\nINSERT INTO sales VALUES\n  (1, '2026-01-05', 'Laptop',     2, 999.99),\n  (2, '2026-01-18', 'Mouse',     10,  19.99),\n  (3, '2026-02-03', 'Keyboard',   5,  49.99),\n  (4, '2026-02-14', 'Monitor',    3, 299.99),\n  (5, '2026-03-01', 'Laptop',     1, 999.99),\n  (6, '2026-03-22', 'Headphones', 4,  79.99);\n\n-- Main report query\nSELECT\n  EXTRACT(MONTH FROM sale_date) AS month_number, -- extract numeric month\n  COUNT(*)                       AS order_count,\n  SUM(quantity * unit_price)     AS total_revenue  -- calculated column\nFROM sales\nGROUP BY month_number\nORDER BY month_number;\n",
+      "instructions": [
+        "Run the full script and review the report output.",
+        "Add a comment above each SELECT column explaining what it computes.",
+        "Rewrite the query using lowercase keywords (select, from, group by) — verify it still works.",
+        "Add a block comment /* */ at the top of your version summarising the query purpose."
+      ],
+      "hint": "EXTRACT(MONTH FROM date) returns the month number (1–12). SUM(quantity * unit_price) computes revenue per row before aggregating.",
+      "expectedOutput": "Month 1: 2 orders, ~2199.88 revenue\nMonth 2: 2 orders, ~1149.92 revenue\nMonth 3: 2 orders, ~1319.95 revenue"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 39,
+    "allowedSubmissionType": "TEXT"
+  }
+]

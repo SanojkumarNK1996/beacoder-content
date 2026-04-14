@@ -1,0 +1,26 @@
+<h1>📌 Applications of Hashing</h1>
+<h2>📋 Common Use Cases</h2>
+<ul>
+  <li><strong>Frequency counting</strong>: Count occurrences of elements in O(n)</li>
+  <li><strong>Two Sum problem</strong>: Find pair summing to target in O(n) with a HashSet</li>
+  <li><strong>Anagram detection</strong>: Compare character frequency maps</li>
+  <li><strong>Caching / Memoization</strong>: Store computed results for fast lookup</li>
+  <li><strong>Deduplication</strong>: Use HashSet to track seen elements</li>
+  <li><strong>Grouping</strong>: Group elements by key (HashMap&lt;Key, List&lt;Value&gt;&gt;)</li>
+</ul>
+<div class="code-example">
+  <pre>
+// Two Sum - O(n) with HashMap
+int[] twoSum(int[] nums, int target) {
+    Map&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;();
+    for (int i = 0; i &lt; nums.length; i++) {
+        int complement = target - nums[i];
+        if (map.containsKey(complement)) return new int[]{map.get(complement), i};
+        map.put(nums[i], i);
+    }
+    return new int[]{};
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>When you see "find in O(1)" or "check if element exists" in problem constraints, HashSet/HashMap is the answer.</p>

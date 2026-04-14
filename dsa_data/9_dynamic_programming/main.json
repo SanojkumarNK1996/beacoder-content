@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 169, "title": "Introduction to Dynamic Programming", "dataType": "notes", "data": "intro_to_dp.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 170, "title": "Memoization (Top-Down)", "dataType": "notes", "data": "memoization_and_tabulation.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 171, "title": "Tabulation (Bottom-Up)", "dataType": "notes", "data": "knapsack_problem.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 172, "title": "Classic DP Problems", "dataType": "notes", "data": "lcs_and_string_dp.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 173, "title": "Advanced DP Patterns", "dataType": "notes", "data": "dp_patterns.html", "displayOrder": 5, "verified": false}
+]

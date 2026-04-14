@@ -1,0 +1,33 @@
+<h1>🔄 Introduction to Redux</h1>
+<h2>🎯 What is Redux?</h2>
+<p><strong>Redux</strong> is a predictable state container for JavaScript apps. State lives in a single store, updated only via actions (plain objects) processed by pure reducer functions.</p>
+<h2>📋 Core Concepts</h2>
+<ul>
+  <li><strong>Store</strong>: Single source of truth for all app state</li>
+  <li><strong>Action</strong>: Plain object describing what happened <code>{ type: 'ADD_ITEM', payload: item }</code></li>
+  <li><strong>Reducer</strong>: Pure function: <code>(state, action) =&gt; newState</code></li>
+  <li><strong>Dispatch</strong>: Send an action to the store</li>
+  <li><strong>Selector</strong>: Read data from the store</li>
+</ul>
+<h2>🔄 Unidirectional Data Flow</h2>
+<div class="code-example">
+  <pre>
+UI event → dispatch(action) → reducer(currentState, action) → newState → UI re-renders
+  </pre>
+</div>
+<h2>📌 Traditional Redux (Verbose)</h2>
+<div class="code-example">
+  <pre>
+const ADD = 'cart/add';
+const addItem = (item) =&gt; ({ type: ADD, payload: item });
+
+function cartReducer(state = [], action) {
+  switch (action.type) {
+    case ADD: return [...state, action.payload];
+    default: return state;
+  }
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Classic Redux required a lot of boilerplate. Modern apps use <strong>Redux Toolkit</strong> which dramatically simplifies this. Understanding classic Redux is important to debug and understand library internals.</p>

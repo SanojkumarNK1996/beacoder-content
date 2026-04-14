@@ -1,0 +1,288 @@
+<h1>🧪 Spring JDBC Template</h1>
+
+<h2>🎯 Goal</h2>
+<p>Learn how <strong>Spring&apos;s JdbcTemplate</strong> simplifies working with relational databases using plain SQL while reducing boilerplate code compared to raw JDBC.</p>
+
+<h2>❌ Problem with Plain JDBC</h2>
+<p>With traditional JDBC, you must manually handle:</p>
+<ul>
+  <li>🔌 Getting and closing connections</li>
+  <li>📜 Preparing statements</li>
+  <li>🔁 Iterating over <code>ResultSet</code>s</li>
+  <li>🧹 Cleaning up resources in finally blocks</li>
+  <li>❗ Handling SQLExceptions everywhere</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+// Plain JDBC example (simplified)
+String sql = "SELECT id, name, email FROM users";
+List&lt;User&gt; users = new ArrayList&lt;&gt;();
+
+try (Connection connection = dataSource.getConnection();
+     PreparedStatement statement = connection.prepareStatement(sql);
+     ResultSet rs = statement.executeQuery()) {
+
+    while (rs.next()) {
+        User user = new User();
+        user.setId(rs.getLong("id"));
+        user.setName(rs.getString("name"));
+        user.setEmail(rs.getString("email"));
+        users.add(user);
+    }
+
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+  </pre>
+</div>
+
+<p>This works, but it&apos;s <strong>verbose, repetitive, and error-prone</strong>.</p>
+
+<h2>✅ What is JdbcTemplate?</h2>
+<p><strong>JdbcTemplate</strong> is a core Spring class that:</p>
+<ul>
+  <li>📦 Handles <strong>connection management</strong> and resource cleanup</li>
+  <li>🧹 Wraps exceptions into <strong>runtime exceptions</strong> (no forced try-catch)</li>
+  <li>🔁 Simplifies querying and updating data with convenient methods</li>
+  <li>📄 Allows you to focus on <strong>SQL and mapping</strong> only</li>
+</ul>
+
+<div class="analogy-card">
+  <h3>🍳 Cooking Analogy</h3>
+  <p>Plain JDBC is like cooking from scratch: you chop, marinate, cook, clean. JdbcTemplate is like a meal kit: ingredients are prepped; you just follow simple steps.</p>
+</div>
+
+<h2>⚙️ Setting Up JdbcTemplate in Spring Boot</h2>
+
+<h3>1️⃣ Add Database Dependency</h3>
+<p>In a Spring Boot project, you typically use <strong>spring-boot-starter-jdbc</strong> and a database driver.</p>
+
+<div class="code-example">
+  <pre>
+&lt;!-- pom.xml --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;org.postgresql&lt;/groupId&gt;
+  &lt;artifactId&gt;postgresql&lt;/artifactId&gt;
+  &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<h3>2️⃣ Configure DataSource</h3>
+<p>Spring Boot auto-configures a <code>DataSource</code> and <code>JdbcTemplate</code> when you provide database properties.</p>
+
+<div class="code-example">
+  <pre>
+# application.yml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  
+  jdbc:
+    template:
+      fetch-size: 50
+      max-rows: 1000
+  </pre>
+</div>
+
+<p>Now Spring Boot will automatically create a <code>JdbcTemplate</code> bean that you can inject.</p>
+
+<h2>🏗️ Basic Usage: Querying Data</h2>
+
+<h3>🔹 Domain Model</h3>
+<div class="code-example">
+  <pre>
+public class User {
+    private Long id;
+    private String name;
+    private String email;
+
+    // getters and setters
+}
+  </pre>
+</div>
+
+<h3>🔹 RowMapper</h3>
+<p>A <code>RowMapper&lt;T&gt;</code> converts each row of the <code>ResultSet</code> into an object.</p>
+
+<div class="code-example">
+  <pre>
+public class UserRowMapper implements RowMapper&lt;User&gt; {
+    @Override
+    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+        User user = new User();
+        user.setId(rs.getLong("id"));
+        user.setName(rs.getString("name"));
+        user.setEmail(rs.getString("email"));
+        return user;
+    }
+}
+  </pre>
+</div>
+
+<h3>🔹 Repository with JdbcTemplate</h3>
+
+<div class="code-example">
+  <pre>
+@Repository
+public class UserRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public UserRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List&lt;User&gt; findAll() {
+        String sql = "SELECT id, name, email FROM users";
+        return jdbcTemplate.query(sql, new UserRowMapper());
+    }
+
+    public User findById(Long id) {
+        String sql = "SELECT id, name, email FROM users WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+    }
+}
+  </pre>
+</div>
+
+<h2>✏️ Inserting, Updating, Deleting Data</h2>
+
+<h3>1️⃣ Insert (CREATE)</h3>
+<div class="code-example">
+  <pre>
+public int createUser(User user) {
+    String sql = "INSERT INTO users (name, email) VALUES (?, ?)";
+    return jdbcTemplate.update(sql, user.getName(), user.getEmail());
+}
+  </pre>
+</div>
+
+<h3>2️⃣ Update (UPDATE)</h3>
+<div class="code-example">
+  <pre>
+public int updateUserEmail(Long id, String newEmail) {
+    String sql = "UPDATE users SET email = ? WHERE id = ?";
+    return jdbcTemplate.update(sql, newEmail, id);
+}
+  </pre>
+</div>
+
+<h3>3️⃣ Delete (DELETE)</h3>
+<div class="code-example">
+  <pre>
+public int deleteUser(Long id) {
+    String sql = "DELETE FROM users WHERE id = ?";
+    return jdbcTemplate.update(sql, id);
+}
+  </pre>
+</div>
+
+<h2>🔍 Querying for Single Values</h2>
+
+<div class="code-example">
+  <pre>
+// Count users
+public int countUsers() {
+    String sql = "SELECT COUNT(*) FROM users";
+    return jdbcTemplate.queryForObject(sql, Integer.class);
+}
+
+// Get name by email
+public String findNameByEmail(String email) {
+    String sql = "SELECT name FROM users WHERE email = ?";
+    return jdbcTemplate.queryForObject(sql, String.class, email);
+}
+  </pre>
+</div>
+
+<h2>🧱 NamedParameterJdbcTemplate</h2>
+<p><strong>NamedParameterJdbcTemplate</strong> allows you to use named parameters instead of <code>?</code> placeholders, making complex queries easier to read.</p>
+
+<div class="code-example">
+  <pre>
+@Repository
+public class ProductRepository {
+
+    private final NamedParameterJdbcTemplate namedJdbc;
+
+    public ProductRepository(NamedParameterJdbcTemplate namedJdbc) {
+        this.namedJdbc = namedJdbc;
+    }
+
+    public List&lt;Product&gt; findByPriceRange(double minPrice, double maxPrice) {
+        String sql = "SELECT id, name, price FROM products " +
+                     "WHERE price BETWEEN :minPrice AND :maxPrice";
+
+        Map&lt;String, Object&gt; params = new HashMap&lt;&gt;();
+        params.put("minPrice", minPrice);
+        params.put("maxPrice", maxPrice);
+
+        return namedJdbc.query(sql, params, new ProductRowMapper());
+    }
+}
+  </pre>
+</div>
+
+<h2>🔐 Transactions with JdbcTemplate</h2>
+<p>You can combine JdbcTemplate with Spring&apos;s <code>@Transactional</code> annotation to ensure that multiple database operations either <strong>all succeed or all fail</strong>.</p>
+
+<div class="code-example">
+  <pre>
+@Service
+public class BankService {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public BankService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Transactional
+    public void transferMoney(Long fromAccountId, Long toAccountId, double amount) {
+        // Debit sender
+        String debitSql = "UPDATE accounts SET balance = balance - ? WHERE id = ?";
+        jdbcTemplate.update(debitSql, amount, fromAccountId);
+
+        // Credit receiver
+        String creditSql = "UPDATE accounts SET balance = balance + ? WHERE id = ?";
+        jdbcTemplate.update(creditSql, amount, toAccountId);
+
+        // If any exception occurs here, both updates are rolled back
+    }
+}
+  </pre>
+</div>
+
+<h2>📊 When to Use JdbcTemplate vs JPA</h2>
+
+<ul>
+  <li>✅ Use <strong>JdbcTemplate</strong> when:
+    <ul>
+      <li>You need <strong>full control over SQL</strong></li>
+      <li>You&apos;re working with <strong>complex, hand-optimized queries</strong></li>
+      <li>You&apos;re doing <strong>reporting or batch operations</strong></li>
+    </ul>
+  </li>
+  <li>✅ Use <strong>JPA / Spring Data JPA</strong> when:
+    <ul>
+      <li>You&apos;re working with <strong>object graphs</strong> (entities and relationships)</li>
+      <li>You want to <strong>minimize SQL</strong> and focus on domain models</li>
+      <li>You need <strong>database-agnostic</strong> code</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="key-takeaway">
+  <h3>🎯 Key Takeaway</h3>
+  <p><strong>JdbcTemplate</strong> is ideal when you want the power of SQL with less boilerplate than raw JDBC. It&apos;s simple, lightweight, and fits well in applications that don&apos;t need full ORM features. In the next sections, you&apos;ll see how <strong>JPA</strong> and <strong>Spring Data JPA</strong> can further simplify data access by working at the object level.</p>
+</div>

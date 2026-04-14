@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Role-Based Access Control Engine",
+    "description": {
+      "task": "Implement an RbacEngine class that enforces Role-Based Access Control. Users have roles, roles have permissions, and resources require specific permissions. Implement method access checks and a permission inheritance chain (ADMIN inherits all USER permissions).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class RbacEngine {\n\n    private final Map<String, Set<String>> userRoles = new HashMap<>();\n    private final Map<String, Set<String>> rolePermissions = new HashMap<>();\n\n    public void assignRole(String username, String role) {\n        userRoles.computeIfAbsent(username, k -> new HashSet<>()).add(role);\n    }\n\n    public void grantPermission(String role, String permission) {\n        rolePermissions.computeIfAbsent(role, k -> new HashSet<>()).add(permission);\n    }\n\n    public boolean hasPermission(String username, String permission) {\n        // Return true if any of the user's roles has the permission\n        return false;\n    }\n\n    public Set<String> allPermissions(String username) {\n        // Return union of all permissions across all user's roles\n        return new HashSet<>();\n    }\n\n    public static void main(String[] args) {\n        RbacEngine rbac = new RbacEngine();\n\n        rbac.grantPermission(\"USER\", \"READ\");\n        rbac.grantPermission(\"USER\", \"WRITE\");\n        rbac.grantPermission(\"ADMIN\", \"READ\");\n        rbac.grantPermission(\"ADMIN\", \"WRITE\");\n        rbac.grantPermission(\"ADMIN\", \"DELETE\");\n\n        rbac.assignRole(\"alice\", \"USER\");\n        rbac.assignRole(\"bob\", \"ADMIN\");\n\n        System.out.println(\"Alice DELETE: \" + rbac.hasPermission(\"alice\", \"DELETE\"));\n        System.out.println(\"Bob DELETE: \" + rbac.hasPermission(\"bob\", \"DELETE\"));\n        System.out.println(\"Alice perms: \" + rbac.allPermissions(\"alice\").size());\n        System.out.println(\"Bob perms: \" + rbac.allPermissions(\"bob\").size());\n    }\n}",
+      "instructions": [
+        "assignRole() adds the role to the user's role set (create if absent)",
+        "grantPermission() adds the permission to the role's permission set (create if absent)",
+        "hasPermission() iterates over all user roles, checks each role's permission set, returns true if any match",
+        "allPermissions() collects and returns the union of permissions from all user roles",
+        "Return false/empty set for unknown usernames without throwing exceptions"
+      ],
+      "hint": "For hasPermission(), use userRoles.getOrDefault(username, Set.of()) and stream any-match. For allPermissions(), flatMap the roles to their permissions using stream and collect to Set.",
+      "expectedOutput": "Alice DELETE: false\nBob DELETE: true\nAlice perms: 2\nBob perms: 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 113,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Method-Level Security Annotations Simulator",
+    "description": {
+      "task": "Build a MethodSecurityInterceptor class that simulates Spring Security's @PreAuthorize annotation behavior. Register methods with required roles; when a method is invoked with a user context, verify the user holds any of the required roles before allowing execution.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.function.Supplier;\n\npublic class MethodSecurityInterceptor {\n\n    private final Map<String, Set<String>> methodRoles = new HashMap<>();\n    private final Map<String, Set<String>> userRoles = new HashMap<>();\n\n    public void secureMethod(String methodName, String... requiredRoles) {\n        methodRoles.put(methodName, new HashSet<>(List.of(requiredRoles)));\n    }\n\n    public void setUserRoles(String username, String... roles) {\n        userRoles.put(username, new HashSet<>(List.of(roles)));\n    }\n\n    public <T> T invoke(String username, String methodName, Supplier<T> method) {\n        // Check if user has at least one required role for the method\n        // Throw SecurityException if access denied\n        // Execute and return method result if access granted\n        return null;\n    }\n\n    public static void main(String[] args) {\n        MethodSecurityInterceptor interceptor = new MethodSecurityInterceptor();\n\n        interceptor.secureMethod(\"deleteUser\", \"ADMIN\");\n        interceptor.secureMethod(\"viewProfile\", \"USER\", \"ADMIN\");\n\n        interceptor.setUserRoles(\"alice\", \"USER\");\n        interceptor.setUserRoles(\"bob\", \"ADMIN\");\n\n        String result = interceptor.invoke(\"alice\", \"viewProfile\", () -> \"profile data\");\n        System.out.println(\"Alice viewProfile: \" + result);\n\n        try {\n            interceptor.invoke(\"alice\", \"deleteUser\", () -> \"deleted\");\n        } catch (SecurityException e) {\n            System.out.println(\"Alice deleteUser: ACCESS DENIED\");\n        }\n\n        String deleted = interceptor.invoke(\"bob\", \"deleteUser\", () -> \"User deleted\");\n        System.out.println(\"Bob deleteUser: \" + deleted);\n    }\n}",
+      "instructions": [
+        "secureMethod() registers the method with its required roles",
+        "setUserRoles() registers the user's roles",
+        "invoke() checks if the user has at least one role from the method's required roles",
+        "If access is denied, throw new SecurityException('Access denied for user: ' + username)",
+        "If the method is not registered in methodRoles, allow execution without restriction"
+      ],
+      "hint": "In invoke(), use Collections.disjoint() negation: if (!Collections.disjoint(userRoles, methodRoles)) allow; else throw. Get the sets with getOrDefault(methodName, Set.of()) to handle unregistered methods.",
+      "expectedOutput": "Alice viewProfile: profile data\nAlice deleteUser: ACCESS DENIED\nBob deleteUser: User deleted"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 113,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "OAuth2 Scope Validator",
+    "description": {
+      "task": "Implement an OAuth2ScopeValidator class that checks whether an access token's granted scopes are sufficient for a requested resource. Model an authorization server that issues tokens with specific scopes and a resource server that validates them.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class OAuth2ScopeValidator {\n\n    public record AccessToken(String tokenId, String clientId, Set<String> scopes, long expiresAt) {}\n\n    private final Map<String, AccessToken> tokens = new HashMap<>();\n    private final Map<String, Set<String>> resourceScopes = new HashMap<>();\n\n    public void issueToken(String tokenId, String clientId, Set<String> scopes, long expiresAt) {\n        tokens.put(tokenId, new AccessToken(tokenId, clientId, scopes, expiresAt));\n    }\n\n    public void protectResource(String resourcePath, String... requiredScopes) {\n        resourceScopes.put(resourcePath, new HashSet<>(List.of(requiredScopes)));\n    }\n\n    public boolean authorize(String tokenId, String resourcePath, long currentTime) {\n        // Validate token exists, is not expired, and has ALL required scopes for the resource\n        return false;\n    }\n\n    public static void main(String[] args) {\n        OAuth2ScopeValidator validator = new OAuth2ScopeValidator();\n        validator.protectResource(\"/user/read\", \"user:read\");\n        validator.protectResource(\"/user/write\", \"user:read\", \"user:write\");\n\n        validator.issueToken(\"tok1\", \"app1\", Set.of(\"user:read\"), 9999L);\n        validator.issueToken(\"tok2\", \"app2\", Set.of(\"user:read\", \"user:write\"), 9999L);\n\n        System.out.println(validator.authorize(\"tok1\", \"/user/read\", 1000L));  // true\n        System.out.println(validator.authorize(\"tok1\", \"/user/write\", 1000L)); // false\n        System.out.println(validator.authorize(\"tok2\", \"/user/write\", 1000L)); // true\n        System.out.println(validator.authorize(\"tok1\", \"/user/read\", 99999L)); // false (expired)\n    }\n}",
+      "instructions": [
+        "issueToken() stores the AccessToken in the tokens map keyed by tokenId",
+        "protectResource() stores the required scopes for the given resource path",
+        "authorize() returns false if tokenId is not found",
+        "authorize() returns false if currentTime > token.expiresAt()",
+        "authorize() returns true only if token scopes contain ALL required scopes for the resource (not just any)"
+      ],
+      "hint": "For scope check, use token.scopes().containsAll(requiredScopes). Get requiredScopes with resourceScopes.getOrDefault(resourcePath, Set.of()). Check expiry with currentTime > token.expiresAt().",
+      "expectedOutput": "true\nfalse\ntrue\nfalse"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 113,
+    "allowedSubmissionType": "TEXT"
+  }
+]

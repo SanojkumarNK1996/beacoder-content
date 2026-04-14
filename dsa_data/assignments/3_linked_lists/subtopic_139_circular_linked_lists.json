@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Circular Linked List Builder",
+    "description": {
+      "task": "Implement a CircularLinkedList class where the last node's next points back to the head. Support add, contains, and safe traversal (print a fixed number of steps to avoid infinite loop).",
+      "language": "java",
+      "starterCode": "public class CircularLinkedList {\n\n    static class Node {\n        int val; Node next;\n        Node(int v) { val = v; }\n    }\n\n    private Node head;\n    private int size;\n\n    public void add(int val) {\n        Node n = new Node(val);\n        if (head == null) { head = n; n.next = head; }\n        else {\n            // TODO: traverse to last node (node.next == head), set next=n, n.next=head\n        }\n        size++;\n    }\n\n    public boolean contains(int val) {\n        // TODO: starting at head, traverse up to 'size' steps checking val\n        return false;\n    }\n\n    public void print() {\n        // TODO: print exactly 'size' elements starting from head\n        // Format each as val -> val -> ... and then \" -> (back to head)\"\n    }\n\n    public static void main(String[] args) {\n        CircularLinkedList cll = new CircularLinkedList();\n        cll.add(1);\n        cll.add(2);\n        cll.add(3);\n        cll.print();\n        System.out.println(\"Contains 2: \" + cll.contains(2));\n        System.out.println(\"Contains 5: \" + cll.contains(5));\n    }\n}",
+      "instructions": [
+        "add(val): traverse until node.next==head (last node), set node.next=new Node(val), newNode.next=head",
+        "contains(val): set curr=head; loop size times; if curr.val==val return true; curr=curr.next; return false",
+        "print(): traverse size nodes, build string 'v1 -> v2 -> v3 -> (back to head)'",
+        "The circular property: last node's next == head (confirmed by print suffix)",
+        "Size must be maintained accurately for safe traversal"
+      ],
+      "hint": "add: Node curr=head; while(curr.next!=head) curr=curr.next; curr.next=n; n.next=head; print: use a loop for(int i=0;i<size;i++) to collect vals, build string ending with ' -> (back to head)'",
+      "expectedOutput": "1 -> 2 -> 3 -> (back to head)\nContains 2: true\nContains 5: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 139,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Josephus Problem with Circular List",
+    "description": {
+      "task": "Implement a Josephus class that uses a circular linked list to simulate the Josephus problem: n people stand in a circle, every k-th person is eliminated. Return the position (1-based) of the last person standing.",
+      "language": "java",
+      "starterCode": "public class Josephus {\n\n    static class Node {\n        int pos; Node next;\n        Node(int p) { pos = p; }\n    }\n\n    public int solve(int n, int k) {\n        // Build circular list for positions 1..n\n        Node head = new Node(1);\n        Node tail = head;\n        for (int i = 2; i <= n; i++) {\n            tail.next = new Node(i);\n            tail = tail.next;\n        }\n        tail.next = head; // make circular\n\n        Node curr = head;\n        int remaining = n;\n\n        while (remaining > 1) {\n            // TODO: advance k-1 steps from curr\n            // remove the k-th node (curr.next)\n            // continue from the node after removal\n            remaining--;\n        }\n        return curr.pos;\n    }\n\n    public static void main(String[] args) {\n        Josephus j = new Josephus();\n        System.out.println(j.solve(6, 2));\n        System.out.println(j.solve(7, 3));\n        System.out.println(j.solve(1, 1));\n    }\n}",
+      "instructions": [
+        "The while loop runs n-1 times (eliminates n-1 people)",
+        "Advance k-1 steps from curr: for(int i=0;i<k-1;i++) curr=curr.next",
+        "Remove k-th node: Node toRemove=curr.next; curr.next=toRemove.next; curr=curr.next",
+        "Proceed with curr pointing to the node after the removed one",
+        "solve(6,2)=5, solve(7,3)=4, solve(1,1)=1"
+      ],
+      "hint": "Inside while loop: for(int i=0;i<k-1;i++) curr=curr.next; curr.next=curr.next.next; curr=curr.next; remaining--;",
+      "expectedOutput": "5\n4\n1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 139,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Circular Buffer with Circular List",
+    "description": {
+      "task": "Implement a CircularBuffer class that uses a circular linked list of fixed capacity to store integers. Support enqueue (overwrite oldest when full) and dequeue operations. Track head (oldest) and tail (newest) pointers.",
+      "language": "java",
+      "starterCode": "public class CircularBuffer {\n\n    private int[] buffer;\n    private int head, tail, size, capacity;\n\n    public CircularBuffer(int capacity) {\n        this.capacity = capacity;\n        buffer = new int[capacity];\n        head = tail = size = 0;\n    }\n\n    public void enqueue(int val) {\n        if (size == capacity) {\n            // Buffer full: overwrite oldest, advance head\n            buffer[tail] = val;\n            tail = (tail + 1) % capacity;\n            head = (head + 1) % capacity;\n        } else {\n            // TODO: store val at tail index, advance tail circularly, increment size\n        }\n    }\n\n    public int dequeue() {\n        if (size == 0) return -1;\n        // TODO: get value at head, advance head circularly, decrement size, return value\n        return -1;\n    }\n\n    public void printBuffer() {\n        System.out.print(\"Buffer: \");\n        int idx = head;\n        for (int i = 0; i < size; i++) {\n            System.out.print(buffer[idx]);\n            if (i < size - 1) System.out.print(\", \");\n            idx = (idx + 1) % capacity;\n        }\n        System.out.println();\n    }\n\n    public static void main(String[] args) {\n        CircularBuffer cb = new CircularBuffer(3);\n        cb.enqueue(1); cb.enqueue(2); cb.enqueue(3);\n        cb.printBuffer();\n        cb.enqueue(4); // overwrites 1\n        cb.printBuffer();\n        System.out.println(\"Dequeue: \" + cb.dequeue());\n        cb.printBuffer();\n    }\n}",
+      "instructions": [
+        "enqueue when not full: buffer[tail]=val; tail=(tail+1)%capacity; size++",
+        "dequeue: int val=buffer[head]; head=(head+1)%capacity; size--; return val",
+        "The full-buffer case (overwrite) is already implemented",
+        "After enqueue(1,2,3): buffer is [1,2,3]; after enqueue(4): oldest (1) overwritten → [2,3,4]",
+        "After dequeue() from [2,3,4]: returns 2, buffer becomes [3,4]"
+      ],
+      "hint": "enqueue (non-full): buffer[tail]=val; tail=(tail+1)%capacity; size++. dequeue: int v=buffer[head]; head=(head+1)%capacity; size--; return v;",
+      "expectedOutput": "Buffer: 1, 2, 3\nBuffer: 2, 3, 4\nDequeue: 2\nBuffer: 3, 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 139,
+    "allowedSubmissionType": "TEXT"
+  }
+]

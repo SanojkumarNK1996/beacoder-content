@@ -1,0 +1,38 @@
+[
+  {
+    "subtopicId": 103,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Introduction to Build Tools",
+    "data": "introduction_to_build_tools.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 104,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Maven Fundamentals",
+    "data": "maven_fundamentals.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 105,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Gradle Basics",
+    "data": "gradle_basics.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 106,
+    "dataType": "notes",
+    "displayOrder": 4,
+    "title": "Managing Dependencies",
+    "data": "managing_dependencies.html",
+    "verified": false,
+    "priority": 1
+  }
+]

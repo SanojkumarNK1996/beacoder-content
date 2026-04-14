@@ -1,0 +1,73 @@
+[
+  {
+    "title": "final Variable",
+    "description": {
+      "task": "Write a Java program that uses final variables for constants and demonstrates that attempting to reassign them causes a compile error.",
+      "language": "java",
+      "starterCode": "public class FinalVariable {\n    public static void main(String[] args) {\n        final int MAX_RETRIES = 3;\n        final double TAX_RATE = 0.18;\n        final String APP_NAME = \"BeaCoder\";\n\n        System.out.println(\"App: \" + APP_NAME);\n        System.out.println(\"Max retries: \" + MAX_RETRIES);\n\n        double price = 500.0;\n        double tax = price * TAX_RATE;\n        System.out.println(\"Price: \" + price);\n        System.out.println(\"Tax (18%): \" + tax);\n        System.out.println(\"Total: \" + (price + tax));\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is and verify the output.",
+        "In a comment at the bottom of main(), try to reassign MAX_RETRIES = 5 and note the compile error message.",
+        "Remove the reassignment line before submitting (or comment it out), so the code compiles.",
+        "Submit the running code with your comment about the error."
+      ],
+      "hint": "The compile error will be: 'cannot assign a value to final variable MAX_RETRIES'. final prevents ANY reassignment after initialization.",
+      "expectedOutput": "App: BeaCoder\nMax retries: 3\nPrice: 500.0\nTax (18%): 90.0\nTotal: 590.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 20,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "final Method — No Overriding",
+    "description": {
+      "task": "Create an Account class with a final method getAccountType(). Show that a SavingsAccount subclass cannot override this method.",
+      "language": "java",
+      "context": "A final method cannot be overridden by any subclass. This is used when a behaviour must remain consistent across all subclasses.",
+      "starterCode": "class Account {\n    String owner;\n\n    Account(String owner) { this.owner = owner; }\n\n    // This method is final — subclasses cannot override it\n    final String getAccountType() {\n        return \"Generic Account\";\n    }\n\n    void displayInfo() {\n        System.out.println(\"Owner: \" + owner + \" | Type: \" + getAccountType());\n    }\n}\n\nclass SavingsAccount extends Account {\n    double interestRate;\n\n    SavingsAccount(String owner, double interestRate) {\n        super(owner);\n        this.interestRate = interestRate;\n    }\n\n    // Do NOT attempt to override getAccountType() here\n\n    void showRate() {\n        System.out.println(\"Interest Rate: \" + interestRate + \"%\");\n    }\n}\n\npublic class FinalMethod {\n    public static void main(String[] args) {\n        Account a = new Account(\"Alice\");\n        SavingsAccount s = new SavingsAccount(\"Bob\", 4.5);\n\n        a.displayInfo();\n        s.displayInfo();\n        s.showRate();\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is.",
+        "Attempt to override getAccountType() in SavingsAccount and note the compile error.",
+        "Remove the override attempt before submitting.",
+        "In a comment, explain when you would use a final method."
+      ],
+      "hint": "Compile error for overriding a final method: 'getAccountType() in SavingsAccount cannot override getAccountType() in Account; overridden method is final'.",
+      "expectedOutput": "Owner: Alice | Type: Generic Account\nOwner: Bob | Type: Generic Account\nInterest Rate: 4.5%"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 20,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "final Class — No Inheritance",
+    "description": {
+      "task": "Demonstrate a final class by creating a final Utility class and attempting (then removing) a subclass to observe the compile error.",
+      "language": "java",
+      "context": "A final class cannot be extended. Java's String class is final for this reason — it guarantees immutability by preventing subclasses from altering its behaviour.",
+      "starterCode": "final class Utility {\n    public static int square(int n) {\n        return n * n;\n    }\n\n    public static boolean isPalindrome(String s) {\n        String reversed = new StringBuilder(s).reverse().toString();\n        return s.equals(reversed);\n    }\n}\n\n// Attempting to extend a final class would cause: \"cannot inherit from final Utility\"\n// class ExtendedUtility extends Utility { } // <-- would NOT compile\n\npublic class FinalClass {\n    public static void main(String[] args) {\n        System.out.println(\"Square of 9: \" + Utility.square(9));\n        System.out.println(\"Is 'racecar' a palindrome? \" + Utility.isPalindrome(\"racecar\"));\n        System.out.println(\"Is 'hello' a palindrome? \" + Utility.isPalindrome(\"hello\"));\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is and verify all three output lines.",
+        "Uncomment the 'class ExtendedUtility extends Utility' line temporarily to observe the compile error, then re-comment it.",
+        "In a comment in main(), list two real Java classes that are declared final (hint: String, Integer, Math, System).",
+        "Submit the working code with the comment."
+      ],
+      "hint": "Real-world examples of final classes in Java: java.lang.String, java.lang.Math, java.lang.Integer, java.lang.System.",
+      "expectedOutput": "Square of 9: 81\nIs 'racecar' a palindrome? true\nIs 'hello' a palindrome? false"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 20,
+    "allowedSubmissionType": "TEXT"
+  }
+]

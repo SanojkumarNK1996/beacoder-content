@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Primary Key Constraints",
+    "description": {
+      "task": "Create a table with a PRIMARY KEY and demonstrate that duplicate or NULL primary key values are rejected.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE students (\n  student_id INT PRIMARY KEY,\n  name VARCHAR(50) NOT NULL,\n  email VARCHAR(80) UNIQUE,\n  age INT\n);\n\n-- Valid inserts\nINSERT INTO students VALUES (1, 'Alice', 'alice@school.com', 20);\nINSERT INTO students VALUES (2, 'Bob',   'bob@school.com',   22);\nINSERT INTO students VALUES (3, 'Carol', 'carol@school.com', 21);\n\n-- This would FAIL — duplicate primary key\n-- INSERT INTO students VALUES (2, 'Dave', 'dave@school.com', 23);\n\n-- This would FAIL — duplicate email (UNIQUE constraint)\n-- INSERT INTO students VALUES (4, 'Eve', 'alice@school.com', 19);\n\n-- Query: Show all students\nSELECT * FROM students ORDER BY student_id;\n\n-- Query: Show the PRIMARY KEY constraint definition\nSELECT constraint_name, constraint_type\nFROM information_schema.table_constraints\nWHERE table_name = 'students';\n",
+      "instructions": [
+        "Run the table creation and valid inserts.",
+        "Run the SELECT to show all students.",
+        "Uncomment the duplicate PK insert (id=2) and run it — note the error message.",
+        "Re-comment the failing insert and run the information_schema query to see constraints.",
+        "Add a comment explaining: why can a table have only ONE primary key but MULTIPLE UNIQUE constraints?"
+      ],
+      "hint": "A PRIMARY KEY = NOT NULL + UNIQUE. A table can have many UNIQUE columns but only one PRIMARY KEY (which is the main row identifier used by foreign keys).",
+      "expectedOutput": "3 rows: Alice(1), Bob(2), Carol(3)\nError on duplicate: 'duplicate key value violates unique constraint'"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 36,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Foreign Key Relationships",
+    "description": {
+      "task": "Create two related tables (departments and employees) with a FOREIGN KEY. Attempt an insert that violates referential integrity.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE departments (\n  dept_id INT PRIMARY KEY,\n  dept_name VARCHAR(50) NOT NULL\n);\n\nCREATE TABLE employees (\n  emp_id INT PRIMARY KEY,\n  name VARCHAR(50) NOT NULL,\n  dept_id INT,\n  salary DECIMAL(10,2),\n  FOREIGN KEY (dept_id) REFERENCES departments(dept_id)\n);\n\nINSERT INTO departments VALUES (1,'Engineering'), (2,'Marketing'), (3,'HR');\n\nINSERT INTO employees VALUES\n  (101, 'Alice',  1, 95000),\n  (102, 'Bob',    2, 65000),\n  (103, 'Carol',  1, 88000),\n  (104, 'Dave',   3, 55000);\n\n-- This would FAIL — dept_id 99 doesn't exist in departments\n-- INSERT INTO employees VALUES (105, 'Eve', 99, 70000);\n\n-- Query 1: Show employees with their department names (use JOIN)\nSELECT e.name, d.dept_name, e.salary\nFROM employees e\nJOIN departments d ON e.dept_id = d.dept_id\nORDER BY d.dept_name, e.name;\n\n-- Query 2: Which departments have no employees?\nSELECT d.dept_name\nFROM departments d\nLEFT JOIN employees e ON d.dept_id = e.dept_id\nWHERE e.emp_id IS NULL;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run Query 1 to view employees with department names.",
+        "Run Query 2 to find departments with no employees.",
+        "Uncomment the violating INSERT (Eve, dept 99) and note the FK constraint error.",
+        "In a comment, explain: why does the FK constraint protect data integrity?"
+      ],
+      "hint": "A foreign key ensures that every dept_id in employees MUST exist in departments.dept_id. This prevents orphan records.",
+      "expectedOutput": "Q1: Alice/Engineering, Carol/Engineering, Bob/Marketing, Dave/HR\nQ2: No department is empty (all 3 have employees)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 36,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "All Key Types in Practice",
+    "description": {
+      "task": "Design and query a table that uses all four key types: PRIMARY KEY, FOREIGN KEY, UNIQUE KEY, and COMPOSITE KEY.",
+      "language": "sql",
+      "context": "Understanding all key types is essential for database design. Each serves a distinct purpose in enforcing data integrity.",
+      "starterCode": "CREATE TABLE courses (\n  course_id INT PRIMARY KEY,          -- Primary Key\n  course_code VARCHAR(10) UNIQUE,     -- Unique Key (alternate key)\n  title VARCHAR(100) NOT NULL,\n  credits INT\n);\n\nCREATE TABLE enrollments (\n  student_id INT,\n  course_id INT,\n  semester VARCHAR(10),\n  grade CHAR(2),\n  PRIMARY KEY (student_id, course_id, semester),  -- Composite Key\n  FOREIGN KEY (course_id) REFERENCES courses(course_id)\n);\n\nINSERT INTO courses VALUES\n  (1, 'CS101', 'Introduction to Programming', 3),\n  (2, 'DB201', 'Database Fundamentals',       3),\n  (3, 'MA101', 'Calculus I',                  4);\n\nINSERT INTO enrollments VALUES\n  (1001, 1, 'Spring2026', 'A'),\n  (1001, 2, 'Spring2026', 'B+'),\n  (1002, 1, 'Spring2026', 'A-'),\n  (1001, 1, 'Fall2025',   'B');  -- same student, same course, different semester\n\n-- Query 1: Show all enrollments with course title (JOIN)\nSELECT e.student_id, c.title, e.semester, e.grade\nFROM enrollments e\nJOIN courses c ON e.course_id = c.course_id\nORDER BY e.student_id, e.semester;\n\n-- Query 2: Find courses by course_code (using Unique Key)\nSELECT * FROM courses WHERE course_code = 'DB201';\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run Query 1 to see all enrollments with course names.",
+        "Run Query 2 to look up by course_code.",
+        "In comments, label which key type each constraint is.",
+        "Explain: why does the composite PK allow the same student to re-enroll in the same course in a different semester?"
+      ],
+      "hint": "The composite PK (student_id, course_id, semester) means uniqueness is checked across all THREE columns together — not individually. So (1001, 1, Fall2025) is unique even though 1001 and 1 appear in other rows.",
+      "expectedOutput": "Q1: 4 enrollment rows with course titles\nQ2: DB201 — Database Fundamentals, 3 credits"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 36,
+    "allowedSubmissionType": "TEXT"
+  }
+]

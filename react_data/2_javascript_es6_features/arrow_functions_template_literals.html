@@ -1,0 +1,41 @@
+<h1>🏹 Arrow Functions and Template Literals</h1>
+<h2>🏹 Arrow Functions</h2>
+<p>Concise function syntax introduced in ES6. Used everywhere in React.</p>
+<div class="code-example">
+  <pre>
+// Traditional function
+function add(a, b) { return a + b; }
+
+// Arrow function
+const add = (a, b) =&gt; a + b;
+
+// With body
+const greet = (name) =&gt; {
+  const msg = `Hello, ${name}!`;
+  return msg;
+};
+
+// Event handler in React
+&lt;button onClick={() =&gt; setCount(count + 1)}&gt;Click&lt;/button&gt;
+  </pre>
+</div>
+<h2>📝 Template Literals</h2>
+<p>Backtick strings with embedded expressions: <code>`Hello, ${name}!`</code></p>
+<div class="code-example">
+  <pre>
+const name = "Alice";
+const age = 30;
+// Old way:
+console.log("Name: " + name + ", Age: " + age);
+// Template literal:
+console.log(`Name: ${name}, Age: ${age}`);
+// Multi-line:
+const html = `
+  &lt;div&gt;
+    &lt;h1&gt;${name}&lt;/h1&gt;
+  &lt;/div&gt;
+`;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Arrow functions and template literals appear in nearly every React component. Master them — they're the syntax of modern JavaScript.</p>

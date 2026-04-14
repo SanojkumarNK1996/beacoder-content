@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Bottom-Up Fibonacci Tabulation",
+    "description": {
+      "task": "Implement bottom-up Fibonacci using a DP table. Fill the table iteratively from f(0) up to f(n). Also implement a space-optimized version that only keeps the last two values instead of the full table.",
+      "language": "java",
+      "starterCode": "public class FibTabulation {\n\n    public long fibTable(int n) {\n        if (n <= 1) return n;\n        long[] dp = new long[n + 1];\n        dp[0] = 0; dp[1] = 1;\n        // TODO: for i from 2 to n: dp[i] = dp[i-1] + dp[i-2]\n        return dp[n];\n    }\n\n    public long fibOptimized(int n) {\n        if (n <= 1) return n;\n        long prev2 = 0, prev1 = 1;\n        // TODO: loop n-1 times, updating prev2 and prev1\n        return prev1;\n    }\n\n    public static void main(String[] args) {\n        FibTabulation ft = new FibTabulation();\n        for (int n : new int[]{0, 1, 5, 10, 20, 30}) {\n            long t = ft.fibTable(n);\n            long o = ft.fibOptimized(n);\n            System.out.printf(\"fib(%2d) = %8d, optimized = %8d, match = %b%n\", n, t, o, t==o);\n        }\n    }\n}",
+      "instructions": [
+        "fibTable: for(int i=2;i<=n;i++) dp[i]=dp[i-1]+dp[i-2];",
+        "fibOptimized: for(int i=2;i<=n;i++){long cur=prev1+prev2;prev2=prev1;prev1=cur;}",
+        "fib(0)=0, fib(1)=1, fib(5)=5, fib(10)=55, fib(20)=6765, fib(30)=832040",
+        "Table approach uses O(n) space; optimized uses O(1) space — same O(n) time",
+        "Both must produce identical results"
+      ],
+      "hint": "fibTable: dp[i]=dp[i-1]+dp[i-2]; fibOptimized: long cur=prev1+prev2;prev2=prev1;prev1=cur;",
+      "expectedOutput": "fib( 0) =        0, optimized =        0, match = true\nfib( 1) =        1, optimized =        1, match = true\nfib( 5) =        5, optimized =        5, match = true\nfib(10) =       55, optimized =       55, match = true\nfib(20) =     6765, optimized =     6765, match = true\nfib(30) =   832040, optimized =   832040, match = true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 171,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Bottom-Up LCS with Table",
+    "description": {
+      "task": "Implement LCS (Longest Common Subsequence) using bottom-up tabulation. Build a 2D DP table where dp[i][j] = LCS length of a[0..i-1] and b[0..j-1]. Also reconstruct the actual LCS string by backtracking through the table.",
+      "language": "java",
+      "starterCode": "public class LCSTabulation {\n\n    public int lcsLength(String a, String b) {\n        int m = a.length(), n = b.length();\n        int[][] dp = new int[m+1][n+1];\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (a.charAt(i-1) == b.charAt(j-1)) {\n                    // TODO: dp[i][j] = dp[i-1][j-1] + 1\n                } else {\n                    // TODO: dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1])\n                }\n            }\n        }\n        return dp[m][n];\n    }\n\n    public String lcsString(String a, String b) {\n        int m = a.length(), n = b.length();\n        int[][] dp = new int[m+1][n+1];\n        for (int i=1;i<=m;i++) for (int j=1;j<=n;j++)\n            dp[i][j] = (a.charAt(i-1)==b.charAt(j-1)) ? dp[i-1][j-1]+1 : Math.max(dp[i-1][j],dp[i][j-1]);\n\n        // Backtrack to find the LCS string\n        StringBuilder sb = new StringBuilder();\n        int i = m, j = n;\n        while (i > 0 && j > 0) {\n            if (a.charAt(i-1) == b.charAt(j-1)) {\n                sb.append(a.charAt(i-1));\n                i--; j--;\n            } else if (dp[i-1][j] > dp[i][j-1]) {\n                i--;\n            } else {\n                j--;\n            }\n        }\n        return sb.reverse().toString();\n    }\n\n    public static void main(String[] args) {\n        LCSTabulation lcs = new LCSTabulation();\n        System.out.println(\"LCS length: \" + lcs.lcsLength(\"AGGTAB\", \"GXTXAYB\"));\n        System.out.println(\"LCS string: \" + lcs.lcsString(\"AGGTAB\", \"GXTXAYB\"));\n        System.out.println(\"LCS length: \" + lcs.lcsLength(\"ABCBDAB\", \"BDCABA\"));\n        System.out.println(\"LCS string: \" + lcs.lcsString(\"ABCBDAB\", \"BDCABA\"));\n    }\n}",
+      "instructions": [
+        "Match: dp[i][j] = dp[i-1][j-1] + 1;",
+        "Mismatch: dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);",
+        "AGGTAB and GXTXAYB: LCS length=4, one LCS='GTAB'",
+        "ABCBDAB and BDCABA: LCS length=4, one LCS string backtrack produces 'BCBA' or 'BDAB'",
+        "The backtrack logic is already provided — you only need to fill the table"
+      ],
+      "hint": "Match: dp[i][j]=dp[i-1][j-1]+1; Mismatch: dp[i][j]=Math.max(dp[i-1][j],dp[i][j-1]);",
+      "expectedOutput": "LCS length: 4\nLCS string: GTAB\nLCS length: 4\nLCS string: BCBA"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 171,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Bottom-Up 0/1 Knapsack",
+    "description": {
+      "task": "Implement 0/1 Knapsack using bottom-up tabulation. Build a 2D dp table where dp[i][w] = max value using first i items with capacity w. Also determine which items were selected by backtracking the table.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class KnapsackTabulation {\n\n    public int maxValue(int[] weights, int[] values, int capacity) {\n        int n = weights.length;\n        int[][] dp = new int[n+1][capacity+1];\n        for (int i = 1; i <= n; i++) {\n            for (int w = 0; w <= capacity; w++) {\n                // Don't take item i-1\n                dp[i][w] = dp[i-1][w];\n                // Take item i-1 if it fits\n                if (weights[i-1] <= w) {\n                    // TODO: dp[i][w] = Math.max(dp[i][w], values[i-1] + dp[i-1][w-weights[i-1]])\n                }\n            }\n        }\n        return dp[n][capacity];\n    }\n\n    public List<Integer> selectedItems(int[] weights, int[] values, int capacity) {\n        int n = weights.length;\n        int[][] dp = new int[n+1][capacity+1];\n        for (int i=1;i<=n;i++) for (int w=0;w<=capacity;w++) {\n            dp[i][w]=dp[i-1][w];\n            if(weights[i-1]<=w) dp[i][w]=Math.max(dp[i][w],values[i-1]+dp[i-1][w-weights[i-1]]);\n        }\n        List<Integer> taken = new ArrayList<>();\n        int w = capacity;\n        for (int i=n;i>0;i--) {\n            if (dp[i][w] != dp[i-1][w]) { taken.add(i-1); w -= weights[i-1]; }\n        }\n        Collections.reverse(taken);\n        return taken;\n    }\n\n    public static void main(String[] args) {\n        KnapsackTabulation kt = new KnapsackTabulation();\n        int[] w = {1, 3, 4, 5};\n        int[] v = {1, 4, 5, 7};\n        System.out.println(\"Max value (cap=7): \" + kt.maxValue(w, v, 7));\n        System.out.println(\"Items selected:    \" + kt.selectedItems(w, v, 7));\n        System.out.println(\"Max value (cap=5): \" + kt.maxValue(w, v, 5));\n        System.out.println(\"Items selected:    \" + kt.selectedItems(w, v, 5));\n    }\n}",
+      "instructions": [
+        "dp[i][w] = Math.max(dp[i][w], values[i-1] + dp[i-1][w-weights[i-1]]);",
+        "w={1,3,4,5}, v={1,4,5,7}, cap=7: take items 1(w=3,v=4) and 2(w=4,v=5) → value 9",
+        "cap=5: take item 3(w=5,v=7) → value 7; selected item indices=[3]",
+        "The selectedItems method backtracks the dp table — it's already provided",
+        "Only the dp[i][w] update in maxValue needs to be completed"
+      ],
+      "hint": "dp[i][w]=Math.max(dp[i][w],values[i-1]+dp[i-1][w-weights[i-1]]);",
+      "expectedOutput": "Max value (cap=7): 9\nItems selected:    [1, 2]\nMax value (cap=5): 7\nItems selected:    [3]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 171,
+    "allowedSubmissionType": "TEXT"
+  }
+]

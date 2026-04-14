@@ -1,0 +1,23 @@
+<h1>🛡️ AWS Security Best Practices</h1>
+<h2>🔑 Identity & Access</h2>
+<ul>
+  <li>Enable <strong>MFA</strong> on root and all privileged IAM users</li>
+  <li>Use <strong>IAM Roles</strong> for EC2, Lambda, and all AWS services — never hardcode credentials</li>
+  <li>Rotate Access Keys regularly; disable unused keys</li>
+  <li>Use <strong>AWS STS</strong> for temporary credentials</li>
+</ul>
+<h2>🌐 Network Security</h2>
+<ul>
+  <li>Keep databases and app servers in <strong>private subnets</strong></li>
+  <li>Use <strong>Security Groups</strong> at instance level + <strong>NACLs</strong> at subnet level</li>
+  <li>Enable <strong>VPC Flow Logs</strong> for network monitoring</li>
+  <li>Use <strong>AWS WAF</strong> to block common web exploits (SQLi, XSS)</li>
+</ul>
+<h2>📊 Data Protection</h2>
+<ul>
+  <li>Encrypt S3 buckets at rest (SSE-S3 or SSE-KMS)</li>
+  <li>Encrypt EBS volumes, RDS databases at rest</li>
+  <li>Enforce HTTPS everywhere (ACM for free SSL/TLS certificates)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>AWS Shared Responsibility Model: AWS secures the infrastructure, YOU secure your data, configurations, and access management.</p>

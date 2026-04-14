@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Read an ER Diagram Schema",
+    "description": {
+      "task": "Implement the SQL tables defined in an ER diagram description and write queries to demonstrate the relationships.",
+      "language": "sql",
+      "context": "An ER (Entity-Relationship) Diagram shows entities (tables), their attributes (columns), and relationships (foreign keys) visually. This assignment translates a textual ER description into SQL.",
+      "starterCode": "-- ER DIAGRAM DESCRIPTION:\n-- STUDENT (student_id PK, name, email)\n-- COURSE  (course_id PK, title, credits)\n-- INSTRUCTOR (instructor_id PK, name, department)\n-- ENROLLMENT (student_id FK, course_id FK, grade) — many-to-many junction\n-- TEACHES    (instructor_id FK, course_id FK)       — many-to-many junction\n\nCREATE TABLE student (\n  student_id   INT PRIMARY KEY,\n  name         VARCHAR(60),\n  email        VARCHAR(80) UNIQUE\n);\n\nCREATE TABLE course (\n  course_id  INT PRIMARY KEY,\n  title      VARCHAR(100),\n  credits    INT\n);\n\nCREATE TABLE instructor (\n  instructor_id INT PRIMARY KEY,\n  name          VARCHAR(60),\n  department    VARCHAR(60)\n);\n\nCREATE TABLE enrollment (\n  student_id INT,\n  course_id  INT,\n  grade      CHAR(2),\n  PRIMARY KEY (student_id, course_id),\n  FOREIGN KEY (student_id) REFERENCES student(student_id),\n  FOREIGN KEY (course_id)  REFERENCES course(course_id)\n);\n\nCREATE TABLE teaches (\n  instructor_id INT,\n  course_id     INT,\n  PRIMARY KEY (instructor_id, course_id),\n  FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id),\n  FOREIGN KEY (course_id)     REFERENCES course(course_id)\n);\n\nINSERT INTO student     VALUES (1,'Alice','alice@uni.edu'),(2,'Bob','bob@uni.edu'),(3,'Carol','carol@uni.edu');\nINSERT INTO course      VALUES (101,'Database Fundamentals',3),(102,'Algorithms',4),(103,'Web Dev',3);\nINSERT INTO instructor  VALUES (1,'Prof. Smith','CS'),(2,'Prof. Jones','IT');\nINSERT INTO enrollment  VALUES (1,101,'A'),(1,102,'B+'),(2,101,'B'),(3,103,'A-');\nINSERT INTO teaches     VALUES (1,101),(1,102),(2,103);\n\n-- Query: Which instructor teaches which course?\nSELECT i.name AS instructor, c.title AS course\nFROM teaches t\nJOIN instructor i ON t.instructor_id = i.instructor_id\nJOIN course     c ON t.course_id     = c.course_id\nORDER BY i.name;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run the final query to see instructor-course assignments.",
+        "Write an additional query: show all students enrolled in 'Database Fundamentals'.",
+        "In a comment, explain the difference between a one-to-many and a many-to-many relationship."
+      ],
+      "hint": "For the additional query, JOIN enrollment → student → course WHERE course title = 'Database Fundamentals'.",
+      "expectedOutput": "Instructor-course: Prof.Jones/Web Dev, Prof.Smith/DB Fundamentals, Prof.Smith/Algorithms\nDB Fundamentals students: Alice(A), Bob(B)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 41,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Cardinality in ER Diagrams",
+    "description": {
+      "task": "Implement one-to-one, one-to-many, and many-to-many relationships in SQL and query each.",
+      "language": "sql",
+      "starterCode": "-- 1. ONE-TO-ONE: Each employee has exactly one employee profile\nCREATE TABLE employee (\n  emp_id INT PRIMARY KEY,\n  name   VARCHAR(50)\n);\n\nCREATE TABLE employee_profile (\n  profile_id    INT PRIMARY KEY,\n  emp_id        INT UNIQUE,   -- UNIQUE ensures one profile per employee\n  bio           VARCHAR(200),\n  linkedin_url  VARCHAR(100),\n  FOREIGN KEY (emp_id) REFERENCES employee(emp_id)\n);\n\n-- 2. ONE-TO-MANY: One department has many employees\nCREATE TABLE department (\n  dept_id INT PRIMARY KEY,\n  name    VARCHAR(50)\n);\n\nCREATE TABLE dept_employee (\n  emp_id  INT PRIMARY KEY,\n  name    VARCHAR(50),\n  dept_id INT,\n  FOREIGN KEY (dept_id) REFERENCES department(dept_id)\n);\n\n-- 3. MANY-TO-MANY: Students enroll in many courses, courses have many students\nCREATE TABLE uni_student (student_id INT PRIMARY KEY, name VARCHAR(50));\nCREATE TABLE uni_course  (course_id  INT PRIMARY KEY, title VARCHAR(80));\nCREATE TABLE uni_enrollment (\n  student_id INT, course_id INT,\n  PRIMARY KEY (student_id, course_id),\n  FOREIGN KEY (student_id) REFERENCES uni_student(student_id),\n  FOREIGN KEY (course_id)  REFERENCES uni_course(course_id)\n);\n\nINSERT INTO employee VALUES (1,'Alice'),(2,'Bob');\nINSERT INTO employee_profile VALUES (1,1,'Senior Developer','linkedin.com/alice'),(2,2,'Marketing Lead','linkedin.com/bob');\nINSERT INTO department VALUES (10,'Engineering'),(20,'Marketing');\nINSERT INTO dept_employee VALUES (101,'Alice',10),(102,'Bob',20),(103,'Carol',10);\nINSERT INTO uni_student VALUES (1,'Alice'),(2,'Bob');\nINSERT INTO uni_course  VALUES (1,'SQL 101'),(2,'Python 101');\nINSERT INTO uni_enrollment VALUES (1,1),(1,2),(2,1);\n\n-- Query all three patterns:\nSELECT e.name, p.bio FROM employee e JOIN employee_profile p ON e.emp_id = p.emp_id;\nSELECT d.name AS dept, COUNT(de.emp_id) AS emp_count FROM department d JOIN dept_employee de ON d.dept_id = de.dept_id GROUP BY d.name;\nSELECT s.name, c.title FROM uni_enrollment ue JOIN uni_student s ON ue.student_id = s.student_id JOIN uni_course c ON ue.course_id = c.course_id;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run all three queries at the bottom.",
+        "In comments, label which relationship type (1:1, 1:N, M:N) each table structure implements.",
+        "Explain: why does UNIQUE on emp_id in employee_profile enforce the 1:1 relationship?"
+      ],
+      "hint": "UNIQUE on a FK column means each parent row can appear at most once — exactly what you need for 1:1. Without UNIQUE, multiple profile rows could reference the same employee.",
+      "expectedOutput": "1:1 query: Alice/Senior Developer, Bob/Marketing Lead\n1:N query: Engineering:2, Marketing:1\nM:N query: Alice/SQL101, Alice/Python101, Bob/SQL101"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 41,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Design an ER Diagram for a Library",
+    "description": {
+      "task": "Design and implement a simple library database from an ER description, then write queries to test all relationships.",
+      "language": "sql",
+      "context": "Designing from scratch: identify entities, attributes, relationships and cardinalities before writing any SQL.",
+      "starterCode": "-- LIBRARY ER DESIGN:\n-- BOOK (book_id PK, title, isbn UNIQUE, year)\n-- MEMBER (member_id PK, name, email UNIQUE, joined_date)\n-- AUTHOR (author_id PK, name)\n-- LOAN (loan_id PK, member_id FK, book_id FK, loan_date, due_date, returned DATE)\n-- BOOK_AUTHOR (book_id FK, author_id FK) — a book can have multiple authors\n\nCREATE TABLE author (author_id INT PRIMARY KEY, name VARCHAR(60));\nCREATE TABLE book (\n  book_id INT PRIMARY KEY,\n  title   VARCHAR(120),\n  isbn    VARCHAR(20) UNIQUE,\n  year    INT\n);\nCREATE TABLE book_author (\n  book_id INT, author_id INT,\n  PRIMARY KEY (book_id, author_id),\n  FOREIGN KEY (book_id)   REFERENCES book(book_id),\n  FOREIGN KEY (author_id) REFERENCES author(author_id)\n);\nCREATE TABLE member (\n  member_id   INT PRIMARY KEY,\n  name        VARCHAR(60),\n  email       VARCHAR(80) UNIQUE,\n  joined_date DATE\n);\nCREATE TABLE loan (\n  loan_id    INT PRIMARY KEY,\n  member_id  INT,\n  book_id    INT,\n  loan_date  DATE,\n  due_date   DATE,\n  returned   DATE,\n  FOREIGN KEY (member_id) REFERENCES member(member_id),\n  FOREIGN KEY (book_id)   REFERENCES book(book_id)\n);\n\nINSERT INTO author VALUES (1,'Robert C. Martin'),(2,'Andrew Hunt'),(3,'Harper Lee');\nINSERT INTO book   VALUES (1,'Clean Code','978-0132350884',2008),(2,'The Pragmatic Programmer','978-0201616224',1999),(3,'To Kill a Mockingbird','978-0061935466',1960);\nINSERT INTO book_author VALUES (1,1),(2,2),(3,3);\nINSERT INTO member VALUES (1,'Alice','alice@lib.com','2025-01-10'),(2,'Bob','bob@lib.com','2025-03-15');\nINSERT INTO loan VALUES (1,1,1,'2026-01-01','2026-01-15',NULL),(2,2,3,'2026-01-05','2026-01-19','2026-01-12');\n\n-- Query: Currently on loan (not returned)\nSELECT m.name AS member, b.title AS book, l.due_date\nFROM loan l\nJOIN member m ON l.member_id = m.member_id\nJOIN book   b ON l.book_id   = b.book_id\nWHERE l.returned IS NULL;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run the 'currently on loan' query.",
+        "Write a NEW query: list all books with their authors.",
+        "Write another query: show members who have never borrowed a book (LEFT JOIN)."
+      ],
+      "hint": "Books with authors: JOIN book → book_author → author. Members who never borrowed: LEFT JOIN member → loan WHERE loan.loan_id IS NULL.",
+      "expectedOutput": "On loan: Alice/Clean Code/2026-01-15\nAll books with authors: 3 rows\nMembers never borrowed: 0 (both have loans)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 41,
+    "allowedSubmissionType": "TEXT"
+  }
+]

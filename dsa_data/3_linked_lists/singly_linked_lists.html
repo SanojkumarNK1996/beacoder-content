@@ -1,0 +1,38 @@
+<h1>➡️ Singly Linked Lists</h1>
+
+<h2>🎯 Structure</h2>
+<p>Each node has <strong>data</strong> and a <strong>next</strong> pointer. The last node points to <code>null</code>.</p>
+
+<div class="code-example">
+  <pre>
+class Node {
+    int data;
+    Node next;
+    Node(int data) { this.data = data; }
+}
+
+class SinglyLinkedList {
+    Node head;
+
+    // Add to front
+    void addFirst(int data) {
+        Node node = new Node(data);
+        node.next = head;
+        head = node;
+    }
+
+    // Traverse
+    void print() {
+        Node cur = head;
+        while (cur != null) {
+            System.out.print(cur.data + " -> ");
+            cur = cur.next;
+        }
+        System.out.println("null");
+    }
+}
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<p>Singly linked lists are simple and memory-efficient. You can only traverse in <strong>one direction</strong>.</p>

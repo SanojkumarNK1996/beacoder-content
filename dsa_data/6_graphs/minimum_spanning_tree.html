@@ -1,0 +1,16 @@
+<h1>🌿 Minimum Spanning Tree</h1>
+<h2>🎯 What is an MST?</h2>
+<p>A <strong>Minimum Spanning Tree</strong> of a weighted undirected graph is a subset of edges that connects all vertices with the minimum total weight, with no cycles.</p>
+<h2>🛠️ Kruskal's Algorithm</h2>
+<ul>
+  <li>Sort all edges by weight</li>
+  <li>Add edges greedily; skip if it creates a cycle (use Union-Find)</li>
+  <li>Time: O(E log E)</li>
+</ul>
+<h2>🌱 Prim's Algorithm</h2>
+<ul>
+  <li>Start from any vertex, greedily grow the MST by adding the minimum-weight edge connecting the tree to a new vertex</li>
+  <li>Time: O((V + E) log V) with a priority queue</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Use MST for <strong>network design</strong> problems (minimum cost to connect all cities, laying cables, etc.).</p>

@@ -1,0 +1,45 @@
+<h1>🎉 Your First React App</h1>
+<h2>🎯 Hello World</h2>
+<div class="code-example">
+  <pre>
+// src/App.jsx
+function App() {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Hello, React!&lt;/h1&gt;
+      &lt;p&gt;My first React component.&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+  </pre>
+</div>
+<h2>📋 Making it Interactive</h2>
+<div class="code-example">
+  <pre>
+import { useState } from 'react';
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Count: {count}&lt;/h1&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+        Click me!
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+  </pre>
+</div>
+<h2>🔑 Key Observations</h2>
+<ul>
+  <li>JSX looks like HTML but is actually JavaScript</li>
+  <li><code>useState</code> manages component state</li>
+  <li>React re-renders the component when state changes</li>
+  <li>Event handlers are camelCase: <code>onClick</code>, not <code>onclick</code></li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>React = components + state + events = interactive UI. This counter example is the foundation of every React app.</p>

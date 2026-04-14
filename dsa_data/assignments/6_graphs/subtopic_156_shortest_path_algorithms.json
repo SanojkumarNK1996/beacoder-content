@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Dijkstra's Shortest Path",
+    "description": {
+      "task": "Implement Dijkstra's algorithm to find the shortest weighted path from a source to all vertices in a non-negative weighted directed graph. Use a PriorityQueue (min-heap) for efficiency.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class Dijkstra {\n\n    public int[] shortestPaths(int V, List<int[]>[] adj, int src) {\n        int[] dist = new int[V];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[src] = 0;\n        // PriorityQueue of {distance, vertex}\n        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));\n        pq.offer(new int[]{0, src});\n\n        while (!pq.isEmpty()) {\n            int[] curr = pq.poll();\n            int d = curr[0], u = curr[1];\n            if (d > dist[u]) continue; // stale entry\n            for (int[] edge : adj[u]) {\n                int v = edge[0], w = edge[1];\n                // TODO: if dist[u] + w < dist[v], update dist[v] and add to pq\n            }\n        }\n        return dist;\n    }\n\n    @SuppressWarnings(\"unchecked\")\n    public static void main(String[] args) {\n        int V = 5;\n        List<int[]>[] adj = new ArrayList[V];\n        for (int i = 0; i < V; i++) adj[i] = new ArrayList<>();\n        // Edges: {from, to, weight}\n        int[][] edges = {{0,1,4},{0,2,1},{2,1,2},{1,3,1},{2,3,5},{3,4,3}};\n        for (int[] e : edges) adj[e[0]].add(new int[]{e[1], e[2]});\n        Dijkstra dj = new Dijkstra();\n        int[] dist = dj.shortestPaths(V, adj, 0);\n        for (int i = 0; i < V; i++) System.out.println(\"0 -> \" + i + \" = \" + dist[i]);\n    }\n}",
+      "instructions": [
+        "Inside the edge relaxation: if(dist[u]+w<dist[v]){dist[v]=dist[u]+w; pq.offer(new int[]{dist[v],v});}",
+        "The 'stale entry' check (if d > dist[u] continue) is already provided",
+        "Edges from 0: 0→1(4), 0→2(1); then 2→1(2) makes dist[1]=3; 1→3(1) makes dist[3]=4; 3→4(3) makes dist[4]=7",
+        "Final distances from 0: [0, 3, 1, 4, 7]",
+        "Do not modify the algorithm structure — only add the relaxation logic"
+      ],
+      "hint": "if(dist[u]+w < dist[v]){ dist[v]=dist[u]+w; pq.offer(new int[]{dist[v],v}); }",
+      "expectedOutput": "0 -> 0 = 0\n0 -> 1 = 3\n0 -> 2 = 1\n0 -> 3 = 4\n0 -> 4 = 7"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 156,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Bellman-Ford Algorithm",
+    "description": {
+      "task": "Implement the Bellman-Ford algorithm that handles negative edge weights and detects negative weight cycles. Perform V-1 relaxations, then check for negative cycles.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BellmanFord {\n\n    public int[] shortestPaths(int V, int[][] edges, int src) {\n        // edges[i] = {from, to, weight}\n        int[] dist = new int[V];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[src] = 0;\n\n        // Relax all edges V-1 times\n        for (int i = 0; i < V - 1; i++) {\n            for (int[] edge : edges) {\n                int u = edge[0], v = edge[1], w = edge[2];\n                // TODO: if dist[u] != MAX_VALUE and dist[u]+w < dist[v], update dist[v]\n            }\n        }\n        return dist;\n    }\n\n    public boolean hasNegativeCycle(int V, int[][] edges, int src) {\n        int[] dist = shortestPaths(V, edges, src);\n        // V-th relaxation: if any edge can be relaxed, there's a negative cycle\n        for (int[] edge : edges) {\n            int u = edge[0], v = edge[1], w = edge[2];\n            // TODO: if dist[u] != MAX_VALUE and dist[u]+w < dist[v], return true\n        }\n        return false;\n    }\n\n    public static void main(String[] args) {\n        BellmanFord bf = new BellmanFord();\n        int[][] edges = {{0,1,4},{0,2,5},{1,3,-2},{2,3,1},{3,4,3}};\n        int[] dist = bf.shortestPaths(5, edges, 0);\n        for (int i = 0; i < 5; i++) System.out.println(\"0->\" + i + \": \" + dist[i]);\n        System.out.println(\"Negative cycle: \" + bf.hasNegativeCycle(5, edges, 0));\n        int[][] negCycle = {{0,1,1},{1,2,-3},{2,0,1}};\n        System.out.println(\"Neg cycle (cycle graph): \" + bf.hasNegativeCycle(3, negCycle, 0));\n    }\n}",
+      "instructions": [
+        "Relaxation in shortestPaths: if(dist[u]!=Integer.MAX_VALUE&&dist[u]+w<dist[v]) dist[v]=dist[u]+w;",
+        "Same relaxation check in hasNegativeCycle: if condition holds, return true",
+        "Edges: 0→1(4), 0→2(5), 1→3(-2), 2→3(1), 3→4(3). dist from 0: [0,4,5,2,5]",
+        "Negative cycle {0→1(1), 1→2(-3), 2→0(1)}: total weight=-1, so hasNegativeCycle=true",
+        "Integer.MAX_VALUE guard prevents overflow"
+      ],
+      "hint": "if(dist[u]!=Integer.MAX_VALUE&&dist[u]+w<dist[v]) dist[v]=dist[u]+w; Same pattern in hasNegativeCycle but return true instead of updating.",
+      "expectedOutput": "0->0: 0\n0->1: 4\n0->2: 5\n0->3: 2\n0->4: 5\nNegative cycle: false\nNeg cycle (cycle graph): true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 156,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Floyd-Warshall All-Pairs Shortest Path",
+    "description": {
+      "task": "Implement the Floyd-Warshall algorithm to compute shortest paths between all pairs of vertices in a weighted directed graph. Initialize a distance matrix and apply the DP recurrence using each vertex as an intermediate.",
+      "language": "java",
+      "starterCode": "public class FloydWarshall {\n\n    public int[][] allPairsShortestPath(int[][] graph) {\n        int V = graph.length;\n        int[][] dist = new int[V][V];\n\n        // Initialize dist with direct edges (Integer.MAX_VALUE/2 for no edge)\n        for (int i = 0; i < V; i++)\n            for (int j = 0; j < V; j++)\n                dist[i][j] = graph[i][j];\n\n        // TODO: triple nested loop: for each intermediate k,\n        //       for each i, for each j: update dist[i][j] via k\n\n        return dist;\n    }\n\n    public void print(int[][] dist) {\n        int V = dist.length;\n        for (int i = 0; i < V; i++) {\n            for (int j = 0; j < V; j++) {\n                if (dist[i][j] >= Integer.MAX_VALUE / 2)\n                    System.out.printf(\"%5s\", \"INF\");\n                else\n                    System.out.printf(\"%5d\", dist[i][j]);\n            }\n            System.out.println();\n        }\n    }\n\n    public static void main(String[] args) {\n        final int INF = Integer.MAX_VALUE / 2;\n        int[][] g = {\n            {0,   3,   INF, 7  },\n            {8,   0,   2,   INF},\n            {5,   INF, 0,   1  },\n            {2,   INF, INF, 0  }\n        };\n        FloydWarshall fw = new FloydWarshall();\n        int[][] dist = fw.allPairsShortestPath(g);\n        fw.print(dist);\n    }\n}",
+      "instructions": [
+        "Triple loop: for k in 0..V-1; for i in 0..V-1; for j in 0..V-1: if dist[i][k]+dist[k][j] < dist[i][j], update dist[i][j]",
+        "Use INF=Integer.MAX_VALUE/2 to avoid overflow when adding",
+        "The initialization copies graph to dist — do not change it",
+        "print() is already implemented",
+        "Expected dist matrix for the given graph after Floyd-Warshall"
+      ],
+      "hint": "for(int k=0;k<V;k++) for(int i=0;i<V;i++) for(int j=0;j<V;j++) if(dist[i][k]+dist[k][j]<dist[i][j]) dist[i][j]=dist[i][k]+dist[k][j];",
+      "expectedOutput": "    0    3    5    6\n    5    0    2    3\n    3    6    0    1\n    2    5    7    0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 39,
+    "subtopicId": 156,
+    "allowedSubmissionType": "TEXT"
+  }
+]

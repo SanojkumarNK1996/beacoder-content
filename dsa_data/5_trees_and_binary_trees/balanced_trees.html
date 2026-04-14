@@ -1,0 +1,17 @@
+<h1>⚖️ Balanced Trees</h1>
+<h2>🎯 Why Balance?</h2>
+<p>Unbalanced BSTs degrade to O(n). Self-balancing trees maintain O(log n) by automatically rebalancing after insertion/deletion.</p>
+<h2>🌳 AVL Tree</h2>
+<ul>
+  <li>Height difference (balance factor) of left and right subtrees ≤ 1</li>
+  <li>Rebalances via rotations (LL, RR, LR, RL rotations)</li>
+  <li>Strictly balanced → better read performance</li>
+</ul>
+<h2>🔴⚫ Red-Black Tree</h2>
+<ul>
+  <li>Nodes are colored red or black</li>
+  <li>Guarantees O(log n) with fewer rotations than AVL</li>
+  <li>Used in Java's <code>TreeMap</code> and <code>TreeSet</code></li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>In practice, you rarely implement balanced trees from scratch — use Java's <code>TreeMap</code> / <code>TreeSet</code> (Red-Black internally).</p>

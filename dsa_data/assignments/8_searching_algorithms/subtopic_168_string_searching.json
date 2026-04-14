@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Naive String Search",
+    "description": {
+      "task": "Implement naive pattern matching (brute-force string search). Slide a window of length m across the text of length n and check for character-by-character match at each position. Return all starting indices where the pattern occurs.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class NaiveStringSearch {\n\n    public List<Integer> search(String text, String pattern) {\n        List<Integer> positions = new ArrayList<>();\n        int n = text.length(), m = pattern.length();\n        // TODO: outer loop i from 0 to n-m (inclusive)\n        //       inner loop j from 0 to m; check text.charAt(i+j) == pattern.charAt(j)\n        //       if all m chars match, add i to positions\n        return positions;\n    }\n\n    public static void main(String[] args) {\n        NaiveStringSearch nss = new NaiveStringSearch();\n        System.out.println(nss.search(\"AABAACAADAABAABA\", \"AABA\"));\n        System.out.println(nss.search(\"ABABABCABABABCABABABC\", \"ABABAB\"));\n        System.out.println(nss.search(\"hello world\", \"world\"));\n        System.out.println(nss.search(\"aaa\", \"aa\"));\n    }\n}",
+      "instructions": [
+        "Outer loop: for(int i=0;i<=n-m;i++)",
+        "Inner loop: int j=0; while(j<m&&text.charAt(i+j)==pattern.charAt(j)) j++; if(j==m) positions.add(i);",
+        "Or use String.regionMatches or substring check instead",
+        "AABA occurs at indices 0, 9, 12 in 'AABAACAADAABAABA'",
+        "Naive search is O(n*m) — inefficient for large texts with repeated patterns"
+      ],
+      "hint": "for(int i=0;i<=n-m;i++){int j=0;while(j<m&&text.charAt(i+j)==pattern.charAt(j))j++;if(j==m)positions.add(i);}",
+      "expectedOutput": "[0, 9, 12]\n[0, 2, 7, 9]\n[6]\n[0, 1]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 168,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "KMP Pattern Matching",
+    "description": {
+      "task": "Implement the Knuth-Morris-Pratt (KMP) string search algorithm. First, build the Longest Prefix Suffix (LPS) / failure function array, then use it to skip unnecessary comparisons during the search.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class KMPSearch {\n\n    public int[] buildLPS(String pattern) {\n        int m = pattern.length();\n        int[] lps = new int[m];\n        int len = 0, i = 1;\n        while (i < m) {\n            if (pattern.charAt(i) == pattern.charAt(len)) {\n                lps[i++] = ++len;\n            } else {\n                if (len != 0) len = lps[len - 1];\n                else lps[i++] = 0;\n            }\n        }\n        return lps;\n    }\n\n    public List<Integer> search(String text, String pattern) {\n        List<Integer> positions = new ArrayList<>();\n        int n = text.length(), m = pattern.length();\n        int[] lps = buildLPS(pattern);\n        int i = 0, j = 0; // i=text index, j=pattern index\n        while (i < n) {\n            if (text.charAt(i) == pattern.charAt(j)) {\n                i++; j++;\n            }\n            if (j == m) {\n                positions.add(i - j);\n                j = lps[j - 1]; // slide using LPS\n            } else if (i < n && text.charAt(i) != pattern.charAt(j)) {\n                // TODO: if j != 0, use LPS to set j = lps[j-1]; else increment i\n            }\n        }\n        return positions;\n    }\n\n    public static void main(String[] args) {\n        KMPSearch kmp = new KMPSearch();\n        System.out.println(kmp.search(\"AABAACAADAABAABA\", \"AABA\"));\n        System.out.println(kmp.search(\"ABABABCABABABCABABABC\", \"ABABAB\"));\n        System.out.println(Arrays.toString(kmp.buildLPS(\"AAACAAAA\")));\n    }\n}",
+      "instructions": [
+        "Mismatch handling: if(j!=0) j=lps[j-1]; else i++;",
+        "KMP is O(n+m) — far more efficient than O(n*m) naive search",
+        "LPS for 'AAACAAAA': [0,1,2,0,1,2,3,3]",
+        "KMP finds AABA at [0,9,12] same as naive but without backtracking text pointer",
+        "ABABAB occurs at [0,2,7,9] in the second test"
+      ],
+      "hint": "if(j!=0) j=lps[j-1]; else i++;",
+      "expectedOutput": "[0, 9, 12]\n[0, 2, 7, 9]\n[0, 1, 2, 0, 1, 2, 3, 3]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 168,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Anagram Search",
+    "description": {
+      "task": "Find all starting positions in text where any anagram (permutation) of the pattern occurs. Use a sliding window of size m and compare character frequency counts. This achieves O(n) time.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class AnagramSearch {\n\n    public List<Integer> findAnagrams(String text, String pattern) {\n        List<Integer> result = new ArrayList<>();\n        int n = text.length(), m = pattern.length();\n        if (n < m) return result;\n\n        int[] patCount  = new int[26];\n        int[] winCount  = new int[26];\n\n        // Build frequency for pattern and first window\n        for (int i = 0; i < m; i++) {\n            patCount[pattern.charAt(i) - 'a']++;\n            winCount[text.charAt(i)   - 'a']++;\n        }\n        if (Arrays.equals(patCount, winCount)) result.add(0);\n\n        // Slide window\n        for (int i = m; i < n; i++) {\n            // TODO: Add text.charAt(i) to window\n            // TODO: Remove text.charAt(i - m) from window\n            // TODO: If patCount equals winCount, add (i - m + 1) to result\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        AnagramSearch as = new AnagramSearch();\n        System.out.println(as.findAnagrams(\"cbaebabacd\", \"abc\"));\n        System.out.println(as.findAnagrams(\"abab\", \"ab\"));\n        System.out.println(as.findAnagrams(\"aaa\", \"b\"));\n    }\n}",
+      "instructions": [
+        "Add: winCount[text.charAt(i)-'a']++;",
+        "Remove: winCount[text.charAt(i-m)-'a']--;",
+        "Check: if(Arrays.equals(patCount,winCount)) result.add(i-m+1);",
+        "cbaebabacd with pattern abc: anagrams at index 0 (cba) and index 6 (bac)",
+        "abab with pattern ab: anagrams at 0 (ab) and 2 (ab)"
+      ],
+      "hint": "winCount[text.charAt(i)-'a']++; winCount[text.charAt(i-m)-'a']--; if(Arrays.equals(patCount,winCount)) result.add(i-m+1);",
+      "expectedOutput": "[0, 6]\n[0, 1, 2]\n[]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 168,
+    "allowedSubmissionType": "TEXT"
+  }
+]

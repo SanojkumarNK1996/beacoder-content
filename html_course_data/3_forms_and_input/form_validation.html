@@ -1,0 +1,63 @@
+<h1>Form Validation</h1>
+
+<h2>🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>Bank and UPI apps do not allow submitting a form with invalid phone numbers or empty required fields.</li>
+  <li>Validation prevents bad or incomplete data from being sent to the server.</li>
+</ul>
+
+<h2>📖 What Is This</h2>
+<ul>
+  <li>Form validation ensures the data entered by the user meets specific rules.</li>
+  <li>HTML provides built-in validation using attributes and input types.</li>
+</ul>
+
+<h3>🧾 Syntax / Basic Usage ⭐</h3>
+<pre><code>&lt;form&gt;
+  &lt;input type="email" name="email" required /&gt;
+  &lt;input type="password" name="password" minlength="6" /&gt;
+  &lt;button type="submit"&gt;Login&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+<h2>🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<ol>
+  <li>Attributes like required, minlength, maxlength, and pattern define rules.</li>
+  <li>When the user clicks submit, the browser checks all rules.</li>
+  <li>If any rule fails, the form is not submitted and the browser shows an error.</li>
+</ol>
+
+<h2>When to Use</h2>
+<ul>
+  <li>Always for critical forms like login, signup, and payments.</li>
+</ul>
+
+<h2>When NOT to Use</h2>
+<ul>
+  <li>Never rely only on client-side validation; always validate on the server too.</li>
+</ul>
+
+<h2>Minimum You MUST Remember</h2>
+<ul>
+  <li>Use required for mandatory fields.</li>
+  <li>Use appropriate input types (email, number, url, etc.).</li>
+  <li>Use pattern for custom formats (like Indian phone numbers).</li>
+</ul>
+
+<h2>Common Mistakes</h2>
+<ul>
+  <li>Trusting only client-side validation.</li>
+  <li>Not giving clear error messages to the user.</li>
+</ul>
+
+<h2>Interviewer’s Perspective</h2>
+<ul>
+  <li>What is the difference between client-side and server-side validation?</li>
+  <li>How do you validate an email field in pure HTML?</li>
+</ul>
+
+<h2>Practice Questions</h2>
+<ol>
+  <li>Create a signup form where email and password are required, and password must be at least 6 characters.</li>
+  <li>Add a pattern to validate a 10-digit Indian mobile number.</li>
+</ol>

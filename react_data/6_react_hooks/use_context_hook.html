@@ -1,0 +1,32 @@
+<h1>🌐 useContext Hook</h1>
+<h2>🎯 The Problem: Prop Drilling</h2>
+<p>When data needs to pass through many nested components that don't need it (just pass it along), prop drilling becomes painful. React Context solves this.</p>
+<h2>📋 Creating and Using Context</h2>
+<div class="code-example">
+  <pre>
+// 1. Create context
+const ThemeContext = createContext('light');
+
+// 2. Provide context (wrap tree)
+function App() {
+  const [theme, setTheme] = useState('dark');
+  return (
+    &lt;ThemeContext.Provider value={{ theme, setTheme }}&gt;
+      &lt;Layout /&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+// 3. Consume anywhere in the tree (no prop drilling!)
+function DeepChild() {
+  const { theme, setTheme } = useContext(ThemeContext);
+  return &lt;button onClick={() =&gt; setTheme(t =&gt; t === 'dark' ? 'light' : 'dark')}&gt;
+    Current: {theme}
+  &lt;/button&gt;;
+}
+  </pre>
+</div>
+<h2>⚠️ When NOT to Use Context</h2>
+<p>Context re-renders all consumers when the value changes. Don't use it for high-frequency updates (e.g., mouse position, every keystroke). Use state management libraries (Zustand, Redux) for those cases.</p>
+<h2>🎯 Summary</h2>
+<p>Context for cross-cutting concerns: theme, auth, locale, user preferences. Not a full state management solution — use Zustand/Redux for complex shared state.</p>

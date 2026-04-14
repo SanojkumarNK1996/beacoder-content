@@ -1,0 +1,17 @@
+<h1>📡 Huffman Coding</h1>
+<h2>🎯 What is Huffman Coding?</h2>
+<p>A lossless data compression algorithm that assigns <strong>shorter codes to more frequent characters</strong> and longer codes to less frequent ones.</p>
+<h2>🛠️ Algorithm</h2>
+<ol>
+  <li>Count character frequencies</li>
+  <li>Build a min-heap of nodes</li>
+  <li>Repeatedly extract two minimum-frequency nodes, create a parent node with their combined frequency, and insert back</li>
+  <li>The resulting tree defines codes: left edge = 0, right edge = 1</li>
+</ol>
+<h2>📐 Complexity</h2>
+<ul>
+  <li>Time: O(n log n) where n is the number of distinct characters</li>
+  <li>Always produces an optimal prefix-free code</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Huffman coding is a classic greedy application. The greedy choice — always merge the two smallest — is provably optimal (exchange argument).</p>

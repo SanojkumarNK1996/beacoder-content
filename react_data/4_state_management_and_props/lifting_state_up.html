@@ -1,0 +1,32 @@
+<h1>⬆️ Lifting State Up</h1>
+<h2>🎯 The Problem</h2>
+<p>When two sibling components need to share state, neither can directly access the other's state. The solution: <strong>lift state up</strong> to their common parent.</p>
+<div class="code-example">
+  <pre>
+// ❌ WRONG: state in child, sibling can't access
+function Child1() {
+  const [value, setValue] = useState('');
+  return &lt;input value={value} onChange={e =&gt; setValue(e.target.value)} /&gt;;
+}
+function Child2() { /* can't see Child1's value */ }
+
+// ✅ Lift state to parent
+function Parent() {
+  const [value, setValue] = useState('');
+  return (
+    &lt;&gt;
+      &lt;Child1 value={value} onChange={setValue} /&gt;
+      &lt;Child2 value={value} /&gt;      {/* Both can see it */}
+    &lt;/&gt;
+  );
+}
+function Child1({ value, onChange }) {
+  return &lt;input value={value} onChange={e =&gt; onChange(e.target.value)} /&gt;;
+}
+function Child2({ value }) {
+  return &lt;p&gt;You typed: {value}&lt;/p&gt;;
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>If two components need shared data, lift the state to their nearest common ancestor. Pass state down as props, update state via callback props.</p>

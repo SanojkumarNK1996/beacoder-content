@@ -1,0 +1,77 @@
+[
+  {
+    "title": "UPDATE Single and Multiple Rows",
+    "description": {
+      "task": "Practice UPDATE statements to modify single rows, multiple rows matching a condition, and computed updates.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE products (\n  product_id  INT PRIMARY KEY,\n  name        VARCHAR(80),\n  price       DECIMAL(8,2),\n  stock       INT,\n  category    VARCHAR(40),\n  discount    DECIMAL(4,1) DEFAULT 0.0\n);\n\nINSERT INTO products VALUES\n  (1, 'Laptop',       999.99, 50, 'Electronics', 0),\n  (2, 'Mouse',         19.99,200, 'Electronics', 0),\n  (3, 'Keyboard',      59.99,120, 'Electronics', 0),\n  (4, 'Desk',         250.00, 30, 'Furniture',   0),\n  (5, 'Office Chair', 175.00, 15, 'Furniture',   0),\n  (6, 'Notebook',       5.99,500, 'Stationery',  0);\n\n-- Update 1: Change price of one product\nUPDATE products SET price = 1099.99 WHERE product_id = 1;\n\n-- Update 2: Apply 10% discount to all Electronics\nUPDATE products SET discount = 10.0 WHERE category = 'Electronics';\n\n-- Update 3: Decrease stock by 5 for Laptop (simulate sale)\nUPDATE products SET stock = stock - 5 WHERE product_id = 1;\n\n-- Update 4: Recalculate effective price column (computed update)\nALTER TABLE products ADD COLUMN sale_price DECIMAL(8,2);\nUPDATE products SET sale_price = ROUND(price * (1 - discount / 100), 2);\n\nSELECT name, price, discount, stock, sale_price\nFROM products\nORDER BY category, name;\n",
+      "instructions": [
+        "Run all INSERT statements.",
+        "Run each UPDATE in sequence.",
+        "Run the ALTER and final UPDATE to calculate sale_price.",
+        "Run the final SELECT.",
+        "Verify: Laptop = $1099.99 price, 45 stock, $989.99 sale_price (10% off).",
+        "Verify: Notebook sale_price = $5.99 (0% discount)."
+      ],
+      "hint": "ROUND(price * (1 - discount/100), 2) calculates the discounted price with 2 decimal places. The arithmetic happens per row because these are not aggregates.",
+      "expectedOutput": "Laptop: price=1099.99, stock=45, sale_price=989.99\nElectronics all have discount=10, Furniture/Stationery discount=0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 51,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "UPDATE with JOIN",
+    "description": {
+      "task": "Use UPDATE ... FROM (PostgreSQL syntax) to update rows based on information in a related table.",
+      "language": "sql",
+      "context": "In real systems, you often need to update one table using values from another. PostgreSQL allows UPDATE ... FROM to join with other tables.",
+      "starterCode": "CREATE TABLE employees (\n  emp_id     INT PRIMARY KEY,\n  name       VARCHAR(60),\n  dept_id    INT,\n  salary     DECIMAL(10,2),\n  bonus      DECIMAL(10,2) DEFAULT 0\n);\n\nCREATE TABLE dept_bonuses (\n  dept_id     INT PRIMARY KEY,\n  dept_name   VARCHAR(50),\n  bonus_pct   DECIMAL(4,1)  -- bonus as % of salary\n);\n\nINSERT INTO dept_bonuses VALUES\n  (1, 'Engineering', 15.0),\n  (2, 'Marketing',   10.0),\n  (3, 'HR',           5.0);\n\nINSERT INTO employees VALUES\n  (101, 'Alice', 1, 95000, 0),\n  (102, 'Bob',   2, 65000, 0),\n  (103, 'Carol', 1, 88000, 0),\n  (104, 'Dave',  3, 55000, 0),\n  (105, 'Eve',   1,105000, 0);\n\n-- UPDATE with JOIN: set each employee's bonus based on dept_bonuses table\nUPDATE employees\nSET bonus = ROUND(employees.salary * dept_bonuses.bonus_pct / 100, 2)\nFROM dept_bonuses\nWHERE employees.dept_id = dept_bonuses.dept_id;\n\nSELECT e.name, d.dept_name, e.salary, e.bonus\nFROM employees e\nJOIN dept_bonuses d ON e.dept_id = d.dept_id\nORDER BY e.bonus DESC;\n",
+      "instructions": [
+        "Run both CREATE TABLE and INSERT statements.",
+        "Run the UPDATE...FROM statement.",
+        "Run the final SELECT.",
+        "Verify: Alice bonus = 14250 (95000 * 15%), Eve = 15750, Carol = 13200.",
+        "Write an additional query: total bonus payout per department."
+      ],
+      "hint": "UPDATE ... FROM is PostgreSQL-specific. The equivalent in standard SQL uses a correlated subquery: UPDATE employees SET bonus = (SELECT salary * bonus_pct / 100 FROM dept_bonuses WHERE dept_id = employees.dept_id).",
+      "expectedOutput": "Eve: bonus=15750, Alice: 14250, Carol: 13200, Bob: 6500, Dave: 2750"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 51,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "UPDATE Safety Practices",
+    "description": {
+      "task": "Demonstrate safe UPDATE practices: always use WHERE, test with SELECT first, wrap in transaction for rollback.",
+      "language": "sql",
+      "context": "One of the most dangerous SQL mistakes is running UPDATE or DELETE without a WHERE clause — it modifies every row in the table.",
+      "starterCode": "CREATE TABLE orders (\n  order_id  INT PRIMARY KEY,\n  customer  VARCHAR(50),\n  status    VARCHAR(20),\n  total     DECIMAL(8,2)\n);\n\nINSERT INTO orders VALUES\n  (1, 'Alice', 'pending',    150.00),\n  (2, 'Bob',   'processing', 200.00),\n  (3, 'Carol', 'pending',     80.00),\n  (4, 'Dave',  'shipped',   350.00),\n  (5, 'Eve',   'pending',    120.00);\n\n-- SAFE PRACTICE 1: SELECT first to verify affected rows before updating\nSELECT order_id, customer, status FROM orders WHERE status = 'pending';\n\n-- If result is correct, run the UPDATE\nUPDATE orders SET status = 'processing' WHERE status = 'pending';\n\n-- Verify the update\nSELECT * FROM orders ORDER BY order_id;\n\n-- SAFE PRACTICE 2: Wrap in a transaction so you can review and rollback\nBEGIN;\n  UPDATE orders SET total = total * 1.1 WHERE customer = 'Dave';  -- 10% price increase\n  SELECT * FROM orders WHERE customer = 'Dave';  -- review the change\nROLLBACK;  -- undo — decide not to apply\n\n-- Verify Dave's total is unchanged after rollback\nSELECT order_id, customer, total FROM orders WHERE customer = 'Dave';\n",
+      "instructions": [
+        "Run INSERT then the pre-update SELECT — confirm 3 pending orders.",
+        "Run the UPDATE and post-update SELECT.",
+        "Run the BEGIN...ROLLBACK block and verify Dave's total reverts.",
+        "Add a comment: what is the 'SELECT before UPDATE' best practice called?",
+        "Add a comment: why is running a raw UPDATE without WHERE clause a career-ending mistake in production?"
+      ],
+      "hint": "The practice of running a SELECT with the same WHERE clause before an UPDATE is sometimes called 'dry-run verification'. The transaction wrap gives you a chance to review changes before committing.",
+      "expectedOutput": "After UPDATE: all 'pending' orders now 'processing'\nAfter ROLLBACK: Dave's total still 350.00 (unchanged)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 51,
+    "allowedSubmissionType": "TEXT"
+  }
+]

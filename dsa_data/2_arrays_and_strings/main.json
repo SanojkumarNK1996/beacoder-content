@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 131, "title": "Array Fundamentals", "dataType": "notes", "data": "array_fundamentals.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 132, "title": "Array Operations", "dataType": "notes", "data": "array_operations.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 133, "title": "Multi-dimensional Arrays", "dataType": "notes", "data": "multidimensional_arrays.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 134, "title": "String Manipulation", "dataType": "notes", "data": "string_manipulation.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 135, "title": "Common Array Problems", "dataType": "notes", "data": "common_array_problems.html", "displayOrder": 5, "verified": false}
+]

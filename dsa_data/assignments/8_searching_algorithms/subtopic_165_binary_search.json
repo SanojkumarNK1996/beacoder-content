@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Binary Search (Iterative)",
+    "description": {
+      "task": "Implement iterative binary search on a sorted array. Maintain low, mid, and high pointers. At each step, compare the middle element with the target and eliminate half the search space.",
+      "language": "java",
+      "starterCode": "public class BinarySearch {\n\n    public int search(int[] arr, int target) {\n        int low = 0, high = arr.length - 1;\n        while (low <= high) {\n            int mid = low + (high - low) / 2; // avoids overflow vs (low+high)/2\n            // TODO: if arr[mid] == target, return mid\n            // TODO: else if arr[mid] < target, move low = mid + 1\n            // TODO: else move high = mid - 1\n        }\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        BinarySearch bs = new BinarySearch();\n        int[] arr = {2, 3, 4, 10, 40, 55, 67, 89};\n\n        System.out.println(\"Search 10: index \" + bs.search(arr, 10));\n        System.out.println(\"Search 2:  index \" + bs.search(arr, 2));\n        System.out.println(\"Search 89: index \" + bs.search(arr, 89));\n        System.out.println(\"Search 99: index \" + bs.search(arr, 99));\n    }\n}",
+      "instructions": [
+        "if(arr[mid]==target) return mid;",
+        "else if(arr[mid]<target) low=mid+1;",
+        "else high=mid-1;",
+        "Binary search requires a sorted array and runs in O(log n)",
+        "Use mid=low+(high-low)/2 (not (low+high)/2) to prevent integer overflow for large arrays"
+      ],
+      "hint": "if(arr[mid]==target) return mid; else if(arr[mid]<target) low=mid+1; else high=mid-1;",
+      "expectedOutput": "Search 10: index 3\nSearch 2:  index 0\nSearch 89: index 7\nSearch 99: index -1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 165,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Binary Search (Recursive)",
+    "description": {
+      "task": "Implement recursive binary search that returns both the found index and the number of recursive calls made. Wrap the result in a small holder class RecursiveResult.",
+      "language": "java",
+      "starterCode": "public class RecursiveBinarySearch {\n\n    static class Result {\n        int index, calls;\n        Result(int i, int c) { index=i; calls=c; }\n    }\n\n    private int calls;\n\n    public Result search(int[] arr, int target) {\n        calls = 0;\n        int idx = binarySearch(arr, target, 0, arr.length - 1);\n        return new Result(idx, calls);\n    }\n\n    private int binarySearch(int[] arr, int target, int low, int high) {\n        calls++;\n        if (low > high) return -1;\n        int mid = low + (high - low) / 2;\n        // TODO: if arr[mid]==target return mid\n        // TODO: if arr[mid] < target, recurse on right half\n        // TODO: else recurse on left half\n        return -1; // remove after implementing\n    }\n\n    public static void main(String[] args) {\n        RecursiveBinarySearch rbs = new RecursiveBinarySearch();\n        int[] sorted = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19};\n\n        Result r1 = rbs.search(sorted, 7);\n        System.out.println(\"Found 7 at index \" + r1.index + \" in \" + r1.calls + \" call(s)\");\n\n        Result r2 = rbs.search(sorted, 1);\n        System.out.println(\"Found 1 at index \" + r2.index + \" in \" + r2.calls + \" call(s)\");\n\n        Result r3 = rbs.search(sorted, 20);\n        System.out.println(\"Found 20 at index \" + r3.index + \" in \" + r3.calls + \" call(s)\");\n    }\n}",
+      "instructions": [
+        "if(arr[mid]==target) return mid;",
+        "if(arr[mid]<target) return binarySearch(arr,target,mid+1,high);",
+        "else return binarySearch(arr,target,low,mid-1);",
+        "Remove the 'return -1;' placeholder after the else",
+        "arr={1,3,5,7,9,11,13,15,17,19}: 7 is at index 3 (mid of 0-9=4→9; mid=4→13? wait, mid=4 is arr[4]=9>7, so go left); confirm calls count"
+      ],
+      "hint": "if(arr[mid]==target)return mid; if(arr[mid]<target)return binarySearch(arr,target,mid+1,high); else return binarySearch(arr,target,low,mid-1);",
+      "expectedOutput": "Found 7 at index 3 in 3 call(s)\nFound 1 at index 0 in 4 call(s)\nFound 20 at index -1 in 5 call(s)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 165,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Binary Search on Answer (Square Root)",
+    "description": {
+      "task": "Use binary search to compute the integer square root (floor) of a number without using Math.sqrt(). Also implement a method to find the minimum days required to produce at least n items (a classic 'binary search on answer' problem).",
+      "language": "java",
+      "starterCode": "public class BinarySearchOnAnswer {\n\n    public int intSqrt(int n) {\n        if (n < 0) return -1;\n        if (n == 0) return 0;\n        int low = 1, high = n, ans = 1;\n        // TODO: binary search for largest x where x*x <= n\n        while (low <= high) {\n            long mid = (long) low + (high - low) / 2; // use long to avoid overflow\n            // TODO: if mid*mid <= n, set ans=mid and move low=mid+1\n            // TODO: else move high=mid-1\n        }\n        return ans;\n    }\n\n    // production[i] = items produced per day at factory i\n    // Find minimum days to produce at least totalNeeded items total\n    public long minDays(int[] production, long totalNeeded) {\n        long low = 1, high = totalNeeded, ans = totalNeeded;\n        while (low <= high) {\n            long mid = low + (high - low) / 2;\n            // compute total production in 'mid' days\n            long total = 0;\n            for (int p : production) total += p * mid;\n            // TODO: if total >= totalNeeded, try fewer days (ans=mid, high=mid-1)\n            // TODO: else need more days (low=mid+1)\n        }\n        return ans;\n    }\n\n    public static void main(String[] args) {\n        BinarySearchOnAnswer bsa = new BinarySearchOnAnswer();\n        System.out.println(\"sqrt(16) = \" + bsa.intSqrt(16));\n        System.out.println(\"sqrt(20) = \" + bsa.intSqrt(20));\n        System.out.println(\"sqrt(1)  = \" + bsa.intSqrt(1));\n\n        int[] factories = {3, 1, 4}; // produce 3,1,4 items/day respectively\n        System.out.println(\"Min days for 20 items: \" + bsa.minDays(factories, 20));\n        System.out.println(\"Min days for 8 items:  \" + bsa.minDays(factories, 8));\n    }\n}",
+      "instructions": [
+        "intSqrt: if(mid*mid<=n){ans=(int)mid;low=(int)mid+1;}else high=(int)mid-1;",
+        "minDays: if(total>=totalNeeded){ans=mid;high=mid-1;}else low=mid+1;",
+        "sqrt(16)=4 (4*4=16<=16); sqrt(20)=4 (4*4=16<=20, 5*5=25>20)",
+        "factories={3,1,4}: 8 items/day total. 20 items needs ceil(20/8)=3 days (exact: 3*8=24≥20); 8 items needs 1 day (1*8=8≥8)",
+        "Binary search on answer is powerful for optimization problems with monotone feasibility"
+      ],
+      "hint": "intSqrt: if(mid*mid<=n){ans=(int)mid;low=(int)mid+1;}else high=(int)mid-1; minDays: if(total>=totalNeeded){ans=mid;high=mid-1;}else low=mid+1;",
+      "expectedOutput": "sqrt(16) = 4\nsqrt(20) = 4\nsqrt(1)  = 1\nMin days for 20 items: 3\nMin days for 8 items:  1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 165,
+    "allowedSubmissionType": "TEXT"
+  }
+]

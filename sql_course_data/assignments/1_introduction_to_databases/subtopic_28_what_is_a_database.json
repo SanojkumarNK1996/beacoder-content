@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Define a Database in Your Own Words",
+    "description": {
+      "task": "Write a SQL query that retrieves all records from a sample 'databases_info' table, and in a comment block define what a database is in your own words.",
+      "language": "sql",
+      "context": "A database is an organised collection of structured data stored and managed electronically. Understanding this concept is the foundation of everything in this course.",
+      "starterCode": "-- Reference schema\nCREATE TABLE databases_info (\n  id INT PRIMARY KEY,\n  db_name VARCHAR(50),\n  purpose VARCHAR(100)\n);\n\nINSERT INTO databases_info VALUES\n  (1, 'MySQL',      'Web applications, e-commerce'),\n  (2, 'PostgreSQL', 'Enterprise apps, analytics'),\n  (3, 'MongoDB',    'Document storage, flexible schema'),\n  (4, 'Oracle',     'Large-scale enterprise systems'),\n  (5, 'SQLite',     'Mobile and embedded applications');\n\n-- Task: Write a SELECT query to retrieve all rows from databases_info\n-- Also add a comment block (/* ... */) defining what a database is\n",
+      "instructions": [
+        "Write a SELECT * FROM databases_info; query to retrieve all records.",
+        "Above the SELECT, add a multi-line comment (/* ... */) that defines a database in your own words.",
+        "Your definition should mention: organised collections of data, structured storage, and the ability to retrieve and manage data."
+      ],
+      "hint": "Multi-line SQL comment: /* Your comment here */. A single-line comment uses --.",
+      "expectedOutput": "id | db_name    | purpose\n1  | MySQL      | Web applications, e-commerce\n2  | PostgreSQL | Enterprise apps, analytics\n3  | MongoDB    | Document storage, flexible schema\n4  | Oracle     | Large-scale enterprise systems\n5  | SQLite     | Mobile and embedded applications"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 28,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Real-World Database Examples",
+    "description": {
+      "task": "Write a SQL query that lists examples of where databases are used in the real world by selecting from a provided table.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE real_world_db (\n  id INT PRIMARY KEY,\n  application VARCHAR(60),\n  database_used VARCHAR(40),\n  data_stored VARCHAR(80)\n);\n\nINSERT INTO real_world_db VALUES\n  (1, 'Facebook',        'MySQL / Cassandra', 'User profiles, posts, messages'),\n  (2, 'Amazon',          'Oracle / DynamoDB', 'Products, orders, customer data'),\n  (3, 'Netflix',         'MySQL / Cassandra', 'Movies, user watch history'),\n  (4, 'Hospital System', 'PostgreSQL',        'Patient records, appointments'),\n  (5, 'Banking App',     'Oracle / DB2',      'Transactions, accounts, balances');\n\n-- Task 1: Select all rows\n-- Task 2: Select only rows where data_stored contains 'User'\n",
+      "instructions": [
+        "Write a query to select ALL rows and columns from real_world_db.",
+        "Write a second query that filters rows where data_stored LIKE '%User%'.",
+        "Separate the two queries with a comment line: -- Filter query."
+      ],
+      "hint": "The LIKE operator with % wildcard matches any sequence of characters. LIKE '%User%' matches any value containing the word 'User'.",
+      "expectedOutput": "All 5 rows, then:\nid | application | database_used       | data_stored\n1  | Facebook    | MySQL / Cassandra   | User profiles, posts, messages"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 28,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Purpose of a Database vs Spreadsheet",
+    "description": {
+      "task": "Given a comparison table, write SQL queries to demonstrate why a database is more powerful than a spreadsheet for managing data.",
+      "language": "sql",
+      "context": "Databases handle concurrent users, enforce data integrity, support complex queries across large datasets, and prevent data redundancy — things spreadsheets cannot do reliably.",
+      "starterCode": "CREATE TABLE students (\n  id INT PRIMARY KEY,\n  name VARCHAR(50) NOT NULL,\n  age INT,\n  department VARCHAR(50),\n  gpa DECIMAL(3,2)\n);\n\nINSERT INTO students VALUES\n  (1, 'Alice',   20, 'Computer Science', 3.85),\n  (2, 'Bob',     22, 'Mathematics',      3.20),\n  (3, 'Carol',   21, 'Computer Science', 3.65),\n  (4, 'Dave',    23, 'Physics',          2.90),\n  (5, 'Eve',     20, 'Computer Science', 3.95),\n  (6, 'Frank',   24, 'Mathematics',      3.10);\n\n-- Task: Show 3 capabilities a database has that a spreadsheet struggles with:\n-- 1. Filter: students in Computer Science\n-- 2. Count: number of students per department\n-- 3. Sort: students ordered by GPA descending\n",
+      "instructions": [
+        "Query 1: SELECT all students in the 'Computer Science' department.",
+        "Query 2: SELECT department and COUNT(*) grouped by department.",
+        "Query 3: SELECT all students ordered by gpa DESC.",
+        "Label each query with a comment like -- Query 1: Filter."
+      ],
+      "hint": "Use WHERE for filtering, GROUP BY with COUNT() for aggregation, ORDER BY column DESC for descending sort.",
+      "expectedOutput": "Q1: Alice, Carol, Eve (CS students)\nQ2: Computer Science:3, Mathematics:2, Physics:1\nQ3: Eve(3.95), Alice(3.85), Carol(3.65), Bob(3.20), Frank(3.10), Dave(2.90)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 28,
+    "allowedSubmissionType": "TEXT"
+  }
+]

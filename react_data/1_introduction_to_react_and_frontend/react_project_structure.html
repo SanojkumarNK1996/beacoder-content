@@ -1,0 +1,29 @@
+<h1>📁 React Project Structure</h1>
+<h2>📋 Typical Vite + React Structure</h2>
+<div class="code-example">
+  <pre>
+my-app/
+  public/          # Static assets (favicon, images)
+  src/
+    assets/        # Images, fonts, etc.
+    components/    # Reusable UI components
+    pages/         # Page-level components (App routing)
+    hooks/         # Custom React hooks
+    services/      # API calls
+    store/         # State management (Redux/Zustand)
+    utils/         # Helper functions
+    App.jsx        # Root component
+    main.jsx       # Entry point (renders App to DOM)
+  index.html       # HTML template
+  package.json     # Dependencies and scripts
+  vite.config.js   # Build config
+  </pre>
+</div>
+<h2>🔑 Key Files</h2>
+<ul>
+  <li><strong>main.jsx</strong>: Entry point — mounts React app to <code>&lt;div id="root"&gt;</code> in index.html</li>
+  <li><strong>App.jsx</strong>: Root component, typically holds router and global layout</li>
+  <li><strong>package.json</strong>: Lists dependencies; run <code>npm install</code> to install them</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Organize by feature or by type. For small apps, organize by type (components/, pages/, hooks/). For large apps, organize by feature (feature-x/components/, feature-x/hooks/).</p>

@@ -1,0 +1,15 @@
+<h1>🔍 Searching in Practice</h1>
+<h2>📌 Hash-Based Search</h2>
+<p>Java's <code>HashMap</code> enables O(1) average lookups. Ideal for: check existence, count frequency, find pairs.</p>
+<div class="code-example">
+  <pre>
+Map&lt;Integer, Integer&gt; freq = new HashMap&lt;&gt;();
+for (int n : nums) freq.merge(n, 1, Integer::sum);
+  </pre>
+</div>
+<h2>🌲 Tree-Based Search</h2>
+<p>Java's <code>TreeMap</code> / <code>TreeSet</code> (Red-Black Tree) gives O(log n) search + sorted order + range queries via <code>floorKey()</code>, <code>ceilingKey()</code>, <code>subMap()</code>.</p>
+<h2>🎯 Two-Pointer Search</h2>
+<p>On a sorted array, use two pointers (left and right) to find pairs or triplets in O(n) instead of O(n²).</p>
+<h2>🎯 Summary</h2>
+<p>Real-world search combines data structures: HashMap for O(1) lookup, TreeMap for ordered lookup, two-pointer for sorted-array problems.</p>

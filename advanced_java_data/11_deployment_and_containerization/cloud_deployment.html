@@ -1,0 +1,80 @@
+<h1>☁️ Cloud Deployment</h1>
+
+<h2>🎯 Goal</h2>
+<p>Understand common options for deploying Java/Spring applications to the <strong>cloud</strong> (AWS, Azure, Google Cloud).</p>
+
+<h2>🧱 Deployment Models</h2>
+<ul>
+  <li><strong>IaaS</strong> (Infrastructure as a Service)
+    <ul>
+      <li>You manage VMs, OS, runtime, app</li>
+      <li>Example: EC2 (AWS), Compute Engine (GCP), Virtual Machines (Azure)</li>
+    </ul>
+  </li>
+  <li><strong>PaaS</strong> (Platform as a Service)
+    <ul>
+      <li>Platform manages runtime and scaling</li>
+      <li>Example: Elastic Beanstalk, App Engine, Azure App Service</li>
+    </ul>
+  </li>
+  <li><strong>CaaS / Kubernetes</strong>
+    <ul>
+      <li>You deploy and manage <strong>containers</strong></li>
+      <li>Example: EKS (AWS), AKS (Azure), GKE (GCP)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>🚀 Deploying a Spring Boot JAR to a VM</h2>
+
+<ol>
+  <li>Create a VM instance (EC2, Compute Engine, Azure VM)</li>
+  <li>Install Java runtime (e.g., Temurin 17)</li>
+  <li>Copy the JAR (SCP, SFTP, CI/CD pipeline)</li>
+  <li>Run: <code>java -jar app.jar</code>, usually managed by a process manager (systemd, supervisor)</li>
+</ol>
+
+<h2>🐳 Deploying Containers</h2>
+<p>Using Docker images, you can deploy to container platforms:</p>
+
+<ul>
+  <li><strong>AWS</strong> – ECS, EKS, Fargate</li>
+  <li><strong>Azure</strong> – AKS, Container Instances</li>
+  <li><strong>GCP</strong> – GKE, Cloud Run</li>
+</ul>
+
+<p>Basic steps:</p>
+<ol>
+  <li>Build Docker image</li>
+  <li>Push to container registry (ECR, GCR, ACR, Docker Hub)</li>
+  <li>Create service/deployment definitions (ECS task, Kubernetes Deployment)</li>
+  <li>Expose via load balancer or ingress</li>
+</ol>
+
+<h2>📦 PaaS-style Deployment</h2>
+<ul>
+  <li>Upload JAR or connect to Git repo</li>
+  <li>Platform builds and runs app</li>
+  <li>Auto-scaling, logging, monitoring often built-in</li>
+</ul>
+
+<h2>📊 Observability in the Cloud</h2>
+<ul>
+  <li>Use platform logging and metrics (CloudWatch, Stackdriver, Azure Monitor)</li>
+  <li>Expose health and metrics endpoints (Spring Boot Actuator)</li>
+  <li>Set up alerts for errors, high latency, or resource exhaustion</li>
+</ul>
+
+<h2>💰 Cost and Scaling</h2>
+<ul>
+  <li>Auto-scaling policies based on CPU, memory, or custom metrics</li>
+  <li>Right-size instances/containers for cost efficiency</li>
+  <li>Use multiple environments (dev, test, prod) with separate resources</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>You can deploy Spring apps as <strong>JARs on VMs</strong>, as <strong>containers</strong>, or via <strong>PaaS</strong> platforms</li>
+  <li>Containers + orchestrators (like Kubernetes) are now the common standard for scalable deployments</li>
+  <li>Cloud deployment is not just about running the app—it includes <strong>scaling, observability, security, and cost management</strong></li>
+</ul>

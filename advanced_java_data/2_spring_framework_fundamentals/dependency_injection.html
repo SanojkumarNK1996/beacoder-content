@@ -1,0 +1,560 @@
+<h1>💉 Dependency Injection</h1>
+
+<h2>🎯 What is Dependency Injection?</h2>
+<p>Dependency Injection (DI) is a <strong>technique for implementing IoC</strong> where dependencies are provided (injected) to a class rather than the class creating them itself.</p>
+
+<div class="di-concept">
+    <div class="definition-card">
+        <h3>💉 Dependency Injection</h3>
+        <p><strong>A design pattern</strong> where objects receive their dependencies from external sources rather than creating them internally.</p>
+        <p><em>It's HOW we implement the WHAT of IoC</em></p>
+    </div>
+</div>
+
+<h2>🏥 Medical Analogy: Getting Treatment</h2>
+<div class="medical-analogy">
+    <div class="analogy-scenario">
+        <h3>🏥 Without DI (Self-Treatment)</h3>
+        <p><strong>Patient handles everything:</strong></p>
+        <ul>
+            <li>🔬 Diagnose your own illness</li>
+            <li>💊 Research and buy medicine</li>
+            <li>💉 Give yourself injections</li>
+            <li>📋 Monitor your own recovery</li>
+        </ul>
+        <p><em>Risky, error-prone, requires extensive knowledge!</em></p>
+    </div>
+
+    <div class="analogy-scenario">
+        <h3>🩺 With DI (Hospital Treatment)</h3>
+        <p><strong>Medical team provides what you need:</strong></p>
+        <ul>
+            <li>🩺 Doctor diagnoses (injected expertise)</li>
+            <li>💊 Pharmacy provides medicine (injected resources)</li>
+            <li>👨‍⚕️ Nurse administers injection (injected service)</li>
+            <li>📊 Healthcare system monitors (injected monitoring)</li>
+        </ul>
+        <p><em>Safer, reliable, specialized care provided when needed!</em></p>
+    </div>
+</div>
+
+<h2>🔧 Types of Dependency Injection</h2>
+
+<h3>1️⃣ Constructor Injection (Recommended)</h3>
+<div class="injection-type">
+    <p><strong>Dependencies injected through class constructor</strong></p>
+    <div class="code-example">
+        <pre>
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+    
+    // Constructor injection - Spring calls this constructor
+    public UserService(UserRepository userRepository, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+    }
+    
+    public User createUser(User user) {
+        User savedUser = userRepository.save(user);
+        emailService.sendWelcomeEmail(savedUser.getEmail());
+        return savedUser;
+    }
+}
+        </pre>
+    </div>
+    
+    <div class="pros-cons">
+        <div class="pros">
+            <h4>✅ Pros:</h4>
+            <ul>
+                <li>🔒 <strong>Immutable:</strong> Dependencies can't change after creation</li>
+                <li>🧪 <strong>Testable:</strong> Easy to pass mocks in tests</li>
+                <li>✅ <strong>Required Dependencies:</strong> Clear what's needed</li>
+                <li>🛡️ <strong>Null Safety:</strong> No null dependencies</li>
+            </ul>
+        </div>
+        <div class="cons">
+            <h4>❌ Cons:</h4>
+            <ul>
+                <li>📝 More code if many dependencies</li>
+                <li>🔄 Circular dependencies harder to solve</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<h3>2️⃣ Setter Injection</h3>
+<div class="injection-type">
+    <p><strong>Dependencies injected through setter methods</strong></p>
+    <div class="code-example">
+        <pre>
+@Service
+public class UserService {
+    private UserRepository userRepository;
+    private EmailService emailService;
+    
+    // Setter injection
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    
+    @Autowired
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+    
+    public User createUser(User user) {
+        User savedUser = userRepository.save(user);
+        emailService.sendWelcomeEmail(savedUser.getEmail());
+        return savedUser;
+    }
+}
+        </pre>
+    </div>
+    
+    <div class="pros-cons">
+        <div class="pros">
+            <h4>✅ Pros:</h4>
+            <ul>
+                <li>🔄 <strong>Optional Dependencies:</strong> Can have default values</li>
+                <li>📝 <strong>Readable:</strong> Clear what each dependency does</li>
+                <li>🔧 <strong>Reconfigurable:</strong> Can change dependencies at runtime</li>
+            </ul>
+        </div>
+        <div class="cons">
+            <h4>❌ Cons:</h4>
+            <ul>
+                <li>⚠️ <strong>Null Risk:</strong> Dependencies might not be set</li>
+                <li>🔄 <strong>Mutable:</strong> Dependencies can change unexpectedly</li>
+                <li>🧪 <strong>Testing:</strong> Need to call setters in tests</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<h3>3️⃣ Field Injection</h3>
+<div class="injection-type">
+    <p><strong>Dependencies injected directly into fields</strong></p>
+    <div class="code-example">
+        <pre>
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private EmailService emailService;
+    
+    public User createUser(User user) {
+        User savedUser = userRepository.save(user);
+        emailService.sendWelcomeEmail(savedUser.getEmail());
+        return savedUser;
+    }
+}
+        </pre>
+    </div>
+    
+    <div class="pros-cons">
+        <div class="pros">
+            <h4>✅ Pros:</h4>
+            <ul>
+                <li>📝 <strong>Less Code:</strong> Very concise</li>
+                <li>🔧 <strong>Easy to Add:</strong> Just add @Autowired</li>
+            </ul>
+        </div>
+        <div class="cons">
+            <h4>❌ Cons:</h4>
+            <ul>
+                <li>🧪 <strong>Hard to Test:</strong> Can't inject mocks easily</li>
+                <li>🔍 <strong>Hidden Dependencies:</strong> Not obvious what's needed</li>
+                <li>🏗️ <strong>Framework Coupling:</strong> Tied to Spring annotations</li>
+                <li>⚠️ <strong>Null Risk:</strong> Dependencies might not be injected</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<h2>🎯 DI Best Practices</h2>
+
+<div class="best-practices">
+    <div class="practice-card">
+        <h3>1️⃣ Prefer Constructor Injection</h3>
+        <div class="code-example">
+            <pre>
+// ✅ Good - Constructor injection
+@Service
+public class OrderService {
+    private final PaymentService paymentService;
+    private final InventoryService inventoryService;
+    
+    public OrderService(PaymentService paymentService, 
+                       InventoryService inventoryService) {
+        this.paymentService = paymentService;
+        this.inventoryService = inventoryService;
+    }
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="practice-card">
+        <h3>2️⃣ Use Interfaces for Dependencies</h3>
+        <div class="code-example">
+            <pre>
+// ✅ Good - Depend on interface
+@Service
+public class NotificationService {
+    private final MessageSender messageSender; // Interface
+    
+    public NotificationService(MessageSender messageSender) {
+        this.messageSender = messageSender;
+    }
+}
+
+// ✅ Multiple implementations possible
+@Service
+public class EmailMessageSender implements MessageSender { }
+
+@Service  
+public class SMSMessageSender implements MessageSender { }
+            </pre>
+        </div>
+    </div>
+
+    <div class="practice-card">
+        <h3>3️⃣ Avoid Circular Dependencies</h3>
+        <div class="code-example">
+            <pre>
+// ❌ Bad - Circular dependency
+@Service
+public class UserService {
+    @Autowired
+    private OrderService orderService; // UserService → OrderService
+}
+
+@Service  
+public class OrderService {
+    @Autowired
+    private UserService userService;   // OrderService → UserService
+}
+
+// ✅ Good - Break the cycle
+@Service
+public class UserService {
+    // Remove direct dependency on OrderService
+}
+
+@Service
+public class OrderService {
+    private final UserService userService;
+    // Keep only one direction
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="practice-card">
+        <h3>4️⃣ Make Dependencies Final</h3>
+        <div class="code-example">
+            <pre>
+// ✅ Good - Immutable dependencies
+@Service
+public class UserService {
+    private final UserRepository userRepository; // final = immutable
+    private final EmailService emailService;    // final = immutable
+    
+    public UserService(UserRepository userRepository, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+    }
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>🧪 Testing with Dependency Injection</h2>
+
+<div class="testing-examples">
+    <h3>✅ Easy Testing with Constructor Injection</h3>
+    <div class="code-example">
+        <pre>
+// Production code
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+    
+    public UserService(UserRepository userRepository, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+    }
+    
+    public User createUser(String email) {
+        User user = new User(email);
+        User savedUser = userRepository.save(user);
+        emailService.sendWelcomeEmail(email);
+        return savedUser;
+    }
+}
+
+// Test code
+class UserServiceTest {
+    @Test
+    void shouldCreateUserAndSendEmail() {
+        // Create mocks
+        UserRepository mockRepository = mock(UserRepository.class);
+        EmailService mockEmailService = mock(EmailService.class);
+        
+        // Inject mocks via constructor
+        UserService userService = new UserService(mockRepository, mockEmailService);
+        
+        // Setup mock behavior
+        User savedUser = new User("test@example.com");
+        when(mockRepository.save(any(User.class))).thenReturn(savedUser);
+        
+        // Test
+        User result = userService.createUser("test@example.com");
+        
+        // Verify
+        assertThat(result.getEmail()).isEqualTo("test@example.com");
+        verify(mockRepository).save(any(User.class));
+        verify(mockEmailService).sendWelcomeEmail("test@example.com");
+    }
+}
+        </pre>
+    </div>
+
+    <h3>❌ Harder Testing with Field Injection</h3>
+    <div class="code-example">
+        <pre>
+// Production code with field injection
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository; // Hard to inject mocks
+    
+    @Autowired
+    private EmailService emailService;     // Hard to inject mocks
+    
+    public User createUser(String email) {
+        User user = new User(email);
+        User savedUser = userRepository.save(user);
+        emailService.sendWelcomeEmail(email);
+        return savedUser;
+    }
+}
+
+// Test code - more complex
+@ExtendWith(SpringExtension.class)
+class UserServiceTest {
+    @InjectMocks
+    private UserService userService;
+    
+    @Mock
+    private UserRepository userRepository;
+    
+    @Mock
+    private EmailService emailService;
+    
+    @Test
+    void shouldCreateUserAndSendEmail() {
+        // Need Spring test infrastructure
+        // Dependencies injected via reflection
+        
+        User savedUser = new User("test@example.com");
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        
+        User result = userService.createUser("test@example.com");
+        
+        assertThat(result.getEmail()).isEqualTo("test@example.com");
+        verify(userRepository).save(any(User.class));
+        verify(emailService).sendWelcomeEmail("test@example.com");
+    }
+}
+        </pre>
+    </div>
+</div>
+
+<h2>🔍 Spring DI Annotations</h2>
+
+<table>
+    <tr>
+        <th>Annotation</th>
+        <th>Usage</th>
+        <th>Description</th>
+        <th>Example</th>
+    </tr>
+    <tr>
+        <td><code>@Autowired</code></td>
+        <td>Fields, Constructors, Methods</td>
+        <td>Auto-inject dependencies</td>
+        <td><code>@Autowired private UserRepository repo;</code></td>
+    </tr>
+    <tr>
+        <td><code>@Qualifier</code></td>
+        <td>With @Autowired</td>
+        <td>Specify which bean to inject</td>
+        <td><code>@Qualifier("emailService")</code></td>
+    </tr>
+    <tr>
+        <td><code>@Value</code></td>
+        <td>Fields, Parameters</td>
+        <td>Inject property values</td>
+        <td><code>@Value("${app.name}")</code></td>
+    </tr>
+    <tr>
+        <td><code>@Required</code></td>
+        <td>Setter methods</td>
+        <td>Mark dependency as required</td>
+        <td><code>@Required public void setRepo(...)</code></td>
+    </tr>
+</table>
+
+<h2>⚠️ Common DI Problems & Solutions</h2>
+
+<div class="problems-solutions">
+    <div class="problem-solution-card">
+        <h3>🔄 Problem: Circular Dependencies</h3>
+        <p><strong>Symptom:</strong> BeanCurrentlyInCreationException</p>
+        <div class="code-example">
+            <pre>
+// ❌ Problem
+@Service
+public class A {
+    @Autowired private B b;
+}
+
+@Service  
+public class B {
+    @Autowired private A a; // Creates cycle: A → B → A
+}
+
+// ✅ Solutions
+// 1. Use @Lazy
+@Service
+public class A {
+    @Autowired @Lazy private B b; // Delays B creation
+}
+
+// 2. Refactor design - extract common functionality
+@Service
+public class CommonService { }
+
+@Service
+public class A {
+    @Autowired private CommonService common;
+}
+
+@Service
+public class B {
+    @Autowired private CommonService common;
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="problem-solution-card">
+        <h3>🔍 Problem: No Qualifying Bean Found</h3>
+        <p><strong>Symptom:</strong> NoSuchBeanDefinitionException</p>
+        <div class="code-example">
+            <pre>
+// ❌ Problem - Multiple implementations
+public interface PaymentService { }
+
+@Service
+public class CreditCardPayment implements PaymentService { }
+
+@Service
+public class PayPalPayment implements PaymentService { }
+
+@Service
+public class OrderService {
+    @Autowired
+    private PaymentService paymentService; // Which one?
+}
+
+// ✅ Solutions
+// 1. Use @Qualifier
+@Service
+public class OrderService {
+    @Autowired
+    @Qualifier("creditCardPayment")  
+    private PaymentService paymentService;
+}
+
+// 2. Use @Primary
+@Service
+@Primary  // This one is preferred
+public class CreditCardPayment implements PaymentService { }
+
+// 3. Inject specific implementation
+@Service
+public class OrderService {
+    @Autowired
+    private CreditCardPayment paymentService; // Specific type
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>🛠️ Advanced DI Features</h2>
+
+<h3>🎯 Conditional Bean Creation</h3>
+<div class="code-example">
+    <pre>
+@Service
+@ConditionalOnProperty(name = "payment.provider", havingValue = "stripe")
+public class StripePaymentService implements PaymentService {
+    // Only created if payment.provider=stripe in properties
+}
+
+@Service
+@ConditionalOnProperty(name = "payment.provider", havingValue = "paypal")  
+public class PayPalPaymentService implements PaymentService {
+    // Only created if payment.provider=paypal in properties
+}
+    </pre>
+</div>
+
+<h3>📋 Bean Scopes</h3>
+<div class="code-example">
+    <pre>
+@Service
+@Scope("singleton")    // Default - one instance per container
+public class SingletonService { }
+
+@Service
+@Scope("prototype")    // New instance every time injected
+public class PrototypeService { }
+
+@Service
+@Scope("request")      // One instance per HTTP request (web apps)
+public class RequestScopedService { }
+
+@Service
+@Scope("session")      // One instance per HTTP session (web apps)
+public class SessionScopedService { }
+    </pre>
+</div>
+
+<div class="key-takeaway">
+    <h3>🎯 Key Takeaway</h3>
+    <p>Dependency Injection is the <strong>implementation mechanism</strong> for IoC. It transforms tightly coupled code into <strong>flexible, testable, and maintainable</strong> applications.</p>
+    
+    <p>💡 <strong>Golden Rule:</strong> Prefer <strong>constructor injection</strong> with <strong>final fields</strong> for mandatory dependencies. Use setter injection only for optional dependencies.</p>
+</div>
+
+<h2>🛤️ Next Steps</h2>
+<p>Mastering Dependency Injection prepares you for:</p>
+<ul>
+    <li>⚙️ Learning Spring configuration options (XML, annotations, Java config)</li>
+    <li>📋 Understanding Spring Bean lifecycle and scopes</li>
+    <li>🏗️ Building more complex Spring applications</li>
+    <li>🧪 Writing comprehensive unit tests with mocking</li>
+    <li>🌐 Creating robust REST APIs with proper dependency management</li>
+</ul>

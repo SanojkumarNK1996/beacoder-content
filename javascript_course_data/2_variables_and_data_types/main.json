@@ -1,0 +1,29 @@
+[
+  {
+    "subtopicId": 343,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Variables",
+    "data": "variables.html",
+    "verified": true,
+    "priority": 1
+  },
+  {
+    "subtopicId": 344,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Data Types",
+    "data": "data_types.html",
+    "verified": true,
+    "priority": 1
+  },
+  {
+    "subtopicId": 345,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Operators",
+    "data": "operators.html",
+    "verified": true,
+    "priority": 1
+  }
+]

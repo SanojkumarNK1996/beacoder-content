@@ -1,0 +1,27 @@
+<h1>🔍 Backtracking Algorithms</h1>
+<h2>🎯 What is Backtracking?</h2>
+<p><strong>Backtracking</strong> is a systematic way to explore all potential solutions by building a solution incrementally and abandoning (backtracking) a path as soon as it violates constraints.</p>
+<h2>📋 Template</h2>
+<div class="code-example">
+  <pre>
+void backtrack(State state, List&lt;State&gt; result) {
+    if (isSolution(state)) { result.add(new State(state)); return; }
+    for (Choice choice : getChoices(state)) {
+        if (isValid(state, choice)) {
+            applyChoice(state, choice);
+            backtrack(state, result);
+            undoChoice(state, choice);  // KEY: undo
+        }
+    }
+}
+  </pre>
+</div>
+<h2>📌 Classic Problems</h2>
+<ul>
+  <li><strong>N-Queens</strong>: Place N queens on NxN board with no attacks</li>
+  <li><strong>Sudoku Solver</strong>: Fill in digits 1-9 with row/col/box constraints</li>
+  <li><strong>Permutations</strong>: Generate all arrangements of a set</li>
+  <li><strong>Subsets</strong>: Generate all subsets of a set</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Backtracking = recursion + pruning. It explores all possibilities but prunes invalid branches early, making it much faster than brute force.</p>

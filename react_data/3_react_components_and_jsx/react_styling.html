@@ -1,0 +1,42 @@
+<h1>🎨 React Styling Methods</h1>
+<h2>📋 1. CSS Stylesheets</h2>
+<div class="code-example">
+  <pre>
+// Button.css
+.btn { background: blue; color: white; padding: 8px 16px; }
+.btn-large { font-size: 1.2rem; }
+
+// Button.jsx
+import './Button.css';
+const Button = () =&gt; &lt;button className="btn btn-large"&gt;Click&lt;/button&gt;;
+  </pre>
+</div>
+<h2>🔒 2. CSS Modules (Scoped Styles)</h2>
+<div class="code-example">
+  <pre>
+// Button.module.css
+.btn { background: blue; }
+
+// Button.jsx
+import styles from './Button.module.css';
+const Button = () =&gt; &lt;button className={styles.btn}&gt;Click&lt;/button&gt;;
+// Class names are auto-scoped: becomes ".Button_btn__abc123"
+  </pre>
+</div>
+<h2>💅 3. Inline Styles</h2>
+<div class="code-example">
+  <pre>
+const style = { background: 'blue', color: 'white', fontSize: '16px' };
+&lt;button style={style}&gt;Click&lt;/button&gt;
+  </pre>
+</div>
+<h2>🌊 4. Tailwind CSS (Most Popular Today)</h2>
+<div class="code-example">
+  <pre>
+&lt;button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"&gt;
+  Click
+&lt;/button&gt;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>CSS Modules for scoped styles, Tailwind for utility-first rapid development. Both are excellent for React. Avoid inline styles for anything beyond truly dynamic values.</p>

@@ -1,0 +1,77 @@
+[
+  {
+    "title": "Row-Level Locking with SELECT FOR UPDATE",
+    "description": {
+      "task": "Use SELECT ... FOR UPDATE to acquire a row lock before modifying it, preventing concurrent transactions from interfering.",
+      "language": "sql",
+      "context": "SELECT FOR UPDATE locks selected rows for the duration of the current transaction. Any other transaction trying to SELECT FOR UPDATE or UPDATE the same rows must wait — preventing lost updates.",
+      "starterCode": "CREATE TABLE seats (\n  seat_id   INT PRIMARY KEY,\n  flight    VARCHAR(20),\n  seat_no   VARCHAR(5),\n  status    VARCHAR(20) DEFAULT 'available',\n  booked_by VARCHAR(50)\n);\n\nINSERT INTO seats VALUES\n  (1, 'FL100', '1A', 'available', NULL),\n  (2, 'FL100', '1B', 'available', NULL),\n  (3, 'FL100', '2A', 'booked',    'Alice'),\n  (4, 'FL100', '2B', 'available', NULL),\n  (5, 'FL101', '1A', 'available', NULL);\n\n-- Simulate Transaction 1: Bob books seat 1A on FL100\n-- SELECT FOR UPDATE locks the row so Transaction 2 cannot simultaneously book it\nBEGIN;\n  SELECT * FROM seats\n  WHERE flight = 'FL100' AND seat_no = '1A' AND status = 'available'\n  FOR UPDATE;  -- acquires row lock\n\n  UPDATE seats\n  SET status = 'booked', booked_by = 'Bob'\n  WHERE seat_id = 1;\nCOMMIT;\n\n-- Verify\nSELECT seat_id, seat_no, status, booked_by FROM seats WHERE flight = 'FL100';\n",
+      "instructions": [
+        "Run CREATE TABLE and INSERT.",
+        "Run the booking transaction — SELECT FOR UPDATE then UPDATE.",
+        "Run the final SELECT — seat 1A should show status='booked', booked_by='Bob'.",
+        "In a comment: describe the 'Lost Update' problem that SELECT FOR UPDATE prevents.",
+        "In a comment: what is SELECT FOR SHARE (FOR KEY SHARE) used for?"
+      ],
+      "hint": "Lost Update problem: Two transactions read the same row simultaneously, both see 'available', both proceed to book it — the second overwriting the first. SELECT FOR UPDATE eliminates this by making the second transaction wait.",
+      "expectedOutput": "Seat 1A: status=booked, booked_by=Bob\nOther available seats unchanged"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 63,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Deadlock Demonstration",
+    "description": {
+      "task": "Understand how deadlocks occur by tracing two transactions that lock each other's required rows, and learn PostgreSQL's deadlock detection.",
+      "language": "sql",
+      "context": "A deadlock occurs when Transaction A holds a lock that Transaction B needs, while Transaction B holds a lock that Transaction A needs. Neither can proceed. PostgreSQL automatically detects and resolves deadlocks by aborting one transaction.",
+      "starterCode": "CREATE TABLE accounts (\n  account_id INT PRIMARY KEY,\n  owner      VARCHAR(50),\n  balance    DECIMAL(10,2)\n);\n\nINSERT INTO accounts VALUES (1,'Alice',1000),(2,'Bob',800);\n\n-- DEADLOCK SCENARIO (conceptual — cannot truly demo in single script):\n-- Transaction A (Session 1):\n--   BEGIN;\n--   UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;  -- locks row 1\n--   -- waits for row 2...\n--   UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;\n--   COMMIT;\n\n-- Transaction B (Session 2, simultaneously):\n--   BEGIN;\n--   UPDATE accounts SET balance = balance - 50 WHERE account_id = 2;   -- locks row 2\n--   -- waits for row 1... DEADLOCK!\n--   UPDATE accounts SET balance = balance + 50 WHERE account_id = 1;\n--   COMMIT;\n\n-- PREVENTION: always lock rows in the same order across all transactions\n-- Transaction A and B both lock account 1 first, then account 2\n\n-- Safe pattern: always update lower account_id first\nBEGIN;\n  UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;\n  UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;\nCOMMIT;\n\n-- Verify\nSELECT * FROM accounts ORDER BY account_id;\n",
+      "instructions": [
+        "Run CREATE TABLE, INSERT statements.",
+        "Run the safe transaction (consistent ordering).",
+        "Verify Alice=900, Bob=900.",
+        "In a comment: explain why accessing rows in consistent order prevents deadlocks.",
+        "In a comment: when PostgreSQL detects a deadlock, which transaction does it kill?"
+      ],
+      "hint": "When both transactions lock rows in the same order (1 then 2), Transaction B must wait for Transaction A to release row 1 before it can acquire it — creating a simple wait queue, not a deadlock cycle.",
+      "expectedOutput": "Alice: 900, Bob: 900\nNo deadlock (safe ordering used)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 63,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Optimistic vs Pessimistic Locking",
+    "description": {
+      "task": "Implement an optimistic locking pattern using a version column to detect concurrent modifications.",
+      "language": "sql",
+      "context": "Pessimistic locking (SELECT FOR UPDATE) blocks other readers/writers. Optimistic locking allows concurrent reads and checks at UPDATE time if the data was modified since last read, using a version column.",
+      "starterCode": "CREATE TABLE documents (\n  doc_id    INT PRIMARY KEY,\n  title     VARCHAR(100),\n  content   TEXT,\n  version   INT DEFAULT 1,  -- incremented on every update\n  edited_by VARCHAR(50),\n  updated_at TIMESTAMP DEFAULT NOW()\n);\n\nINSERT INTO documents VALUES\n  (1, 'Project Proposal', 'Initial content...', 1, 'Alice', NOW()),\n  (2, 'Meeting Notes',    'Agenda items...',    1, 'Bob',   NOW());\n\n-- OPTIMISTIC LOCKING PATTERN:\n-- Step 1: Application reads doc and notes version=1\nSELECT doc_id, title, content, version FROM documents WHERE doc_id = 1;\n\n-- Step 2: Application prepares update\n-- Step 3: UPDATE includes version check — only succeeds if nobody else updated it\nUPDATE documents\nSET\n  content    = 'Updated content from Alice...',\n  version    = version + 1,\n  edited_by  = 'Alice',\n  updated_at = NOW()\nWHERE doc_id = 1 AND version = 1;  -- optimistic check: version still 1?\n\n-- Check how many rows were updated\n-- If 0 rows: version mismatch — someone else updated first! Retry or error.\nSELECT doc_id, title, version, edited_by FROM documents WHERE doc_id = 1;\n\n-- Attempt to update again with stale version (simulating concurrent editor)\nUPDATE documents\nSET content = 'Overwrite attempt with old version', version = version + 1\nWHERE doc_id = 1 AND version = 1;  -- fails: version is now 2, not 1!\n\n-- Verify: content is unchanged (0 rows affected)\nSELECT doc_id, version, edited_by FROM documents WHERE doc_id = 1;\n",
+      "instructions": [
+        "Run CREATE TABLE and INSERT.",
+        "Run the first UPDATE (version=1) — should affect 1 row, version becomes 2.",
+        "Run the second UPDATE with stale version=1 — should affect 0 rows.",
+        "Final SELECT: version=2, edited_by=Alice, second update was rejected.",
+        "Add a comment: when is optimistic locking preferred over SELECT FOR UPDATE?"
+      ],
+      "hint": "Optimistic locking is preferred when conflicts are rare — allows maximum concurrency without blocking. SELECT FOR UPDATE is better when conflicts are frequent and retrying is expensive.",
+      "expectedOutput": "First UPDATE: 1 row affected, version=2\nSecond UPDATE with stale version: 0 rows affected\nFinal state: version=2, Alice's content"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 63,
+    "allowedSubmissionType": "TEXT"
+  }
+]

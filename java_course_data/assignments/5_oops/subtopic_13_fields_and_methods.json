@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Instance vs Static Members",
+    "description": {
+      "task": "Create a BankAccount class that uses an instance field for balance and a static field to track the total number of accounts created.",
+      "language": "java",
+      "starterCode": "public class BankAccount {\n    // Static field to count total accounts\n    static int totalAccounts = 0;\n\n    // Instance fields\n    String owner;\n    double balance;\n\n    // Constructor: accepts owner and balance, increments totalAccounts\n\n    // displayInfo(): prints owner, balance, and totalAccounts\n\n    public static void main(String[] args) {\n        BankAccount a1 = new BankAccount(\"Alice\", 1000.0);\n        BankAccount a2 = new BankAccount(\"Bob\", 500.0);\n        BankAccount a3 = new BankAccount(\"Carol\", 750.0);\n\n        a1.displayInfo();\n        a2.displayInfo();\n        a3.displayInfo();\n    }\n}",
+      "instructions": [
+        "Implement the constructor: assign owner and balance, then increment totalAccounts.",
+        "Implement displayInfo(): print 'Owner: Alice | Balance: 1000.0 | Total Accounts: 3'.",
+        "Do NOT change main().",
+        "Observe that all three objects share the same totalAccounts value."
+      ],
+      "hint": "Static members belong to the class, not to any object. Every time a new BankAccount is created, the shared static counter increments.",
+      "expectedOutput": "Owner: Alice | Balance: 1000.0 | Total Accounts: 3\nOwner: Bob | Balance: 500.0 | Total Accounts: 3\nOwner: Carol | Balance: 750.0 | Total Accounts: 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 13,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Static Utility Methods",
+    "description": {
+      "task": "Create a MathUtils class with two static methods: one that returns the maximum of three integers and one that checks if a number is even.",
+      "language": "java",
+      "context": "Static methods belong to the class itself and can be called without creating an object. Utility methods that don't rely on object state are typically static.",
+      "starterCode": "public class MathUtils {\n\n    // Static method: max(int a, int b, int c) — returns the largest\n\n    // Static method: isEven(int n) — returns true if n is even\n\n    public static void main(String[] args) {\n        System.out.println(\"Max of 12, 7, 19: \" + MathUtils.max(12, 7, 19));\n        System.out.println(\"Max of 5, 5, 3: \" + MathUtils.max(5, 5, 3));\n        System.out.println(\"Is 8 even? \" + MathUtils.isEven(8));\n        System.out.println(\"Is 13 even? \" + MathUtils.isEven(13));\n    }\n}",
+      "instructions": [
+        "Implement static int max(int a, int b, int c) that returns the largest of the three values.",
+        "Implement static boolean isEven(int n) that returns true if n % 2 == 0.",
+        "Call both methods using the class name (MathUtils.max(...)) — do not create an object.",
+        "Do NOT change main()."
+      ],
+      "hint": "Use Math.max(a, Math.max(b, c)) or a chain of if statements to find the max of three values.",
+      "expectedOutput": "Max of 12, 7, 19: 19\nMax of 5, 5, 3: 5\nIs 8 even? true\nIs 13 even? false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 13,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Instance Method vs Class Method",
+    "description": {
+      "task": "Create a Rectangle class with instance fields (width, height), an instance method for area, and a static method that creates a square.",
+      "language": "java",
+      "starterCode": "public class Rectangle {\n    double width;\n    double height;\n\n    // Constructor\n\n    // Instance method: getArea() — returns width * height\n\n    // Static factory method: square(double side) — returns a new Rectangle where width == height == side\n\n    public static void main(String[] args) {\n        Rectangle r = new Rectangle(4.0, 6.0);\n        System.out.println(\"Rectangle area: \" + r.getArea());\n\n        Rectangle sq = Rectangle.square(5.0);\n        System.out.println(\"Square area: \" + sq.getArea());\n    }\n}",
+      "instructions": [
+        "Implement the constructor accepting width and height.",
+        "Implement getArea() as an instance method returning width * height.",
+        "Implement the static factory method square(double side) that returns new Rectangle(side, side).",
+        "Do NOT change main()."
+      ],
+      "hint": "A static factory method creates and returns an object of its own class. It can call 'new Rectangle(...)' even though it's static.",
+      "expectedOutput": "Rectangle area: 24.0\nSquare area: 25.0"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 13,
+    "allowedSubmissionType": "TEXT"
+  }
+]

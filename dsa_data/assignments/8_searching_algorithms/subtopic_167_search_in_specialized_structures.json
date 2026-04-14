@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Binary Search Tree Search",
+    "description": {
+      "task": "Implement search in a Binary Search Tree (BST). Return the node value if found, or -1 if not. Also implement a method to find the k-th smallest element using in-order traversal.",
+      "language": "java",
+      "starterCode": "public class BSTSearch {\n\n    static class Node {\n        int val; Node left, right;\n        Node(int v) { val = v; }\n    }\n\n    Node insert(Node root, int val) {\n        if (root == null) return new Node(val);\n        if (val < root.val) root.left  = insert(root.left,  val);\n        else if (val > root.val) root.right = insert(root.right, val);\n        return root;\n    }\n\n    public int search(Node root, int target) {\n        // TODO: return target if root.val==target;\n        //       recurse left if target < root.val, else recurse right\n        //       return -1 if root is null\n        if (root == null) return -1;\n        return -1; // replace\n    }\n\n    int[] count = {0};\n    public int kthSmallest(Node root, int k) {\n        // TODO: in-order DFS; increment count each visit;\n        //       when count == k, return root.val\n        if (root == null) return -1;\n        int left = kthSmallest(root.left, k);\n        if (left != -1) return left;\n        count[0]++;\n        if (count[0] == k) return root.val;\n        return kthSmallest(root.right, k);\n    }\n\n    public static void main(String[] args) {\n        BSTSearch bst = new BSTSearch();\n        Node root = null;\n        for (int v : new int[]{5, 3, 7, 1, 4, 6, 8}) root = bst.insert(root, v);\n\n        System.out.println(\"Search 4: \" + bst.search(root, 4));\n        System.out.println(\"Search 9: \" + bst.search(root, 9));\n\n        bst.count[0] = 0;\n        System.out.println(\"1st smallest: \" + bst.kthSmallest(root, 1));\n        bst.count[0] = 0;\n        System.out.println(\"3rd smallest: \" + bst.kthSmallest(root, 3));\n        bst.count[0] = 0;\n        System.out.println(\"7th smallest: \" + bst.kthSmallest(root, 7));\n    }\n}",
+      "instructions": [
+        "search: if(root.val==target) return target; if(target<root.val) return search(root.left,target); return search(root.right,target);",
+        "kthSmallest: The in-order logic is mostly provided — the left subtree returns early if non-(-1), then count++, then check",
+        "BST with {5,3,7,1,4,6,8}: in-order = [1,3,4,5,6,7,8]",
+        "1st smallest=1, 3rd=4, 7th=8",
+        "BST search is O(h) where h is height — O(log n) for balanced, O(n) worst case"
+      ],
+      "hint": "search: if(root.val==target)return target; if(target<root.val)return search(root.left,target); return search(root.right,target);",
+      "expectedOutput": "Search 4: 4\nSearch 9: -1\n1st smallest: 1\n3rd smallest: 4\n7th smallest: 8"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 167,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "HashMap Lookup and Frequency Count",
+    "description": {
+      "task": "Implement a FrequencyMap class backed by HashMap that supports O(1) average search. Build a frequency map from an array, then use it to answer queries: count occurrences, find most frequent, find elements appearing exactly k times.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class FrequencyMap {\n    private Map<Integer, Integer> freq = new HashMap<>();\n\n    public void build(int[] arr) {\n        // TODO: populate freq map: freq[x] = count of x in arr\n        freq.clear();\n        for (int x : arr) {\n            // TODO: freq.merge(x, 1, Integer::sum) or getOrDefault pattern\n        }\n    }\n\n    public int count(int val) {\n        return freq.getOrDefault(val, 0);\n    }\n\n    public int mostFrequent() {\n        // TODO: Return the key with the maximum value in freq map\n        int best = Integer.MIN_VALUE, bestKey = -1;\n        for (Map.Entry<Integer,Integer> e : freq.entrySet()) {\n            // TODO: update best and bestKey if e.getValue() > best\n        }\n        return bestKey;\n    }\n\n    public List<Integer> appearsExactly(int k) {\n        // TODO: Return list of keys whose frequency == k\n        List<Integer> result = new ArrayList<>();\n        return result;\n    }\n\n    public static void main(String[] args) {\n        FrequencyMap fm = new FrequencyMap();\n        fm.build(new int[]{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5});\n        System.out.println(\"Count 5: \" + fm.count(5));\n        System.out.println(\"Count 7: \" + fm.count(7));\n        System.out.println(\"Most frequent: \" + fm.mostFrequent());\n        List<Integer> once = fm.appearsExactly(1);\n        Collections.sort(once);\n        System.out.println(\"Appears once: \" + once);\n    }\n}",
+      "instructions": [
+        "build: freq.merge(x,1,Integer::sum); OR freq.put(x,freq.getOrDefault(x,0)+1);",
+        "mostFrequent: if(e.getValue()>best){best=e.getValue();bestKey=e.getKey();}",
+        "appearsExactly: for(Map.Entry<Integer,Integer> e:freq.entrySet()) if(e.getValue()==k) result.add(e.getKey());",
+        "arr={3,1,4,1,5,9,2,6,5,3,5}: frequencies: 5→3, 1→2, 3→2, 4→1, 9→1, 2→1, 6→1",
+        "Most frequent=5; appearing once (sorted): [2,4,6,9]"
+      ],
+      "hint": "build: freq.merge(x,1,Integer::sum); mostFrequent: if(e.getValue()>best){best=e.getValue();bestKey=e.getKey();} appearsExactly: if(e.getValue()==k) result.add(e.getKey());",
+      "expectedOutput": "Count 5: 3\nCount 7: 0\nMost frequent: 5\nAppears once: [2, 4, 6, 9]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 167,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Interpolation Search",
+    "description": {
+      "task": "Implement Interpolation Search, which improves over binary search for uniformly distributed data by estimating the probe position using the target's value. The probe formula: pos = low + ((target - arr[low]) * (high - low)) / (arr[high] - arr[low]).",
+      "language": "java",
+      "starterCode": "public class InterpolationSearch {\n\n    public int search(int[] arr, int target) {\n        int low = 0, high = arr.length - 1;\n        while (low <= high && target >= arr[low] && target <= arr[high]) {\n            if (low == high) {\n                return (arr[low] == target) ? low : -1;\n            }\n            // TODO: compute pos using interpolation formula\n            // pos = low + ((target - arr[low]) * (high - low)) / (arr[high] - arr[low])\n            int pos = 0; // replace with formula\n\n            if (arr[pos] == target) return pos;\n            // TODO: if arr[pos] < target, move low = pos + 1, else move high = pos - 1\n        }\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        InterpolationSearch is = new InterpolationSearch();\n        // Uniformly distributed sorted array\n        int[] arr = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};\n        System.out.println(\"Search 70: \" + is.search(arr, 70));\n        System.out.println(\"Search 10: \" + is.search(arr, 10));\n        System.out.println(\"Search 55: \" + is.search(arr, 55));\n        System.out.println(\"Search 100: \" + is.search(arr, 100));\n    }\n}",
+      "instructions": [
+        "pos = low + ((target - arr[low]) * (high - low)) / (arr[high] - arr[low]);",
+        "After computing pos: if(arr[pos]==target) return pos; if(arr[pos]<target) low=pos+1; else high=pos-1;",
+        "For uniform data like {10,20,...,100}, interpolation search finds target in O(log log n) avg",
+        "Search 70: probe = 0 + (70-10)*9/90 = 6 → arr[6]=70 ✓",
+        "Search 55: not in array (only multiples of 10) → return -1"
+      ],
+      "hint": "int pos=low+((target-arr[low])*(high-low))/(arr[high]-arr[low]); if(arr[pos]<target)low=pos+1;else high=pos-1;",
+      "expectedOutput": "Search 70: 6\nSearch 10: 0\nSearch 55: -1\nSearch 100: 9"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 41,
+    "subtopicId": 167,
+    "allowedSubmissionType": "TEXT"
+  }
+]

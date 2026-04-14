@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Simulate Embedded vs External Server",
+    "description": {
+      "task": "Write a Java program that simulates the concept of embedded vs external server deployment using simple Java classes. Create an EmbeddedServer class that starts and hosts an application internally.",
+      "language": "java",
+      "starterCode": "public interface WebServer {\n    void start();\n    void stop();\n    void deploy(String appName);\n}\n\n// Embedded: The app contains the server\npublic class EmbeddedTomcat implements WebServer {\n    private String deployedApp;\n    // TODO: Implement start, stop, deploy methods\n}\n\n// External: The server exists independently\npublic class ExternalAppServer implements WebServer {\n    private String serverName;\n    // TODO: Implement with a serverName parameter\n}\n\npublic class SpringBootApp {\n    private WebServer server;\n    // TODO: Constructor and run() method\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Demonstrate both deployment styles\n    }\n}",
+      "instructions": [
+        "EmbeddedTomcat.start() prints 'Embedded Tomcat started on port 8080', deploy() stores the app name, stop() prints 'Embedded Tomcat stopped'.",
+        "ExternalAppServer takes a serverName in constructor; its deploy() prints 'App deployed to external server: [serverName]'.",
+        "SpringBootApp.run() calls server.start() and server.deploy() with the app name.",
+        "Demonstrate both: first SpringBootApp with EmbeddedTomcat, then with ExternalAppServer."
+      ],
+      "hint": "Spring Boot uses embedded servers by default (Tomcat, Jetty), making deployment as simple as running a JAR file.",
+      "expectedOutput": "Embedded Tomcat started on port 8080\nApp [MyApp] is running\nApp deployed to external server: JBoss"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 80,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Application Packaging Concepts",
+    "description": {
+      "task": "Write a Java program that models the structure differences between a WAR (Web Application Resource) deployment on an external server vs a JAR (Java ARchive) deployment with an embedded server.",
+      "language": "java",
+      "starterCode": "public class DeploymentPackage {\n    private String type; // \"WAR\" or \"JAR\"\n    private String appName;\n    private boolean hasEmbeddedServer;\n    \n    // TODO: Constructor, getters\n    \n    public void describe() {\n        // TODO: Print description based on type\n    }\n}\n\npublic class DeploymentManager {\n    public void deploy(DeploymentPackage pkg) {\n        // TODO: Different behavior for WAR vs JAR\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Create and deploy WAR and JAR packages\n    }\n}",
+      "instructions": [
+        "DeploymentPackage constructor takes type, appName, hasEmbeddedServer.",
+        "describe() prints: 'Package: [appName].[type] | Embedded Server: [yes/no]'.",
+        "DeploymentManager.deploy() prints different messages for WAR ('Deploying to external application server...') vs JAR ('Running self-contained JAR with embedded server...').",
+        "Demonstrate deploying a WAR named 'shopapp' and a JAR named 'microservice'."
+      ],
+      "hint": "Spring Boot favors the fat/uber JAR approach — everything needed is bundled in one executable JAR file.",
+      "expectedOutput": "Package: shopapp.WAR | Embedded Server: no\nDeploying to external application server...\nPackage: microservice.JAR | Embedded Server: yes\nRunning self-contained JAR with embedded server..."
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 80,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Server Lifecycle Simulation",
+    "description": {
+      "task": "Simulate a basic server lifecycle (init → start → handle requests → stop) in Java. Implement a simple state machine that tracks server state transitions.",
+      "language": "java",
+      "context": "Understanding server lifecycle is important when building enterprise Java apps — Spring manages lifecycle hooks via @PostConstruct and @PreDestroy annotations.",
+      "starterCode": "public class SimpleServer {\n    public enum State { STOPPED, INITIALIZING, RUNNING, STOPPING }\n    \n    private State state = State.STOPPED;\n    private String name;\n    \n    public SimpleServer(String name) {\n        this.name = name;\n    }\n    \n    public void init() {\n        // TODO: Transition to INITIALIZING then RUNNING\n    }\n    \n    public void handleRequest(String path) {\n        // TODO: Only handle if RUNNING, otherwise print error\n    }\n    \n    public void shutdown() {\n        // TODO: Transition to STOPPING then STOPPED\n    }\n    \n    public State getState() { return state; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Full lifecycle demonstration\n    }\n}",
+      "instructions": [
+        "init() transitions: STOPPED -> INITIALIZING (print 'Initializing...') -> RUNNING (print '[name] is running').",
+        "handleRequest() prints 'Handling GET [path]' if RUNNING, else prints 'Server not running!'.",
+        "shutdown() transitions: RUNNING -> STOPPING (print 'Stopping...') -> STOPPED (print '[name] stopped').",
+        "In Main, init the server, handle two requests '/home' and '/api/data', then shut down."
+      ],
+      "hint": "State machines ensure that operations only happen when the system is in the correct state — this prevents null pointer errors and race conditions.",
+      "expectedOutput": "Initializing...\nTomcat is running\nHandling GET /home\nHandling GET /api/data\nStopping...\nTomcat stopped"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 80,
+    "allowedSubmissionType": "TEXT"
+  }
+]

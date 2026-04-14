@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Spring Boot Application Entry Point",
+    "description": {
+      "task": "Model a Spring Boot application's startup sequence. Simulate what happens when SpringApplication.run() is called: context initialization, bean registration, and server startup.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SpringApplication {\n    private Class<?> mainClass;\n    private List<String> startupLog = new ArrayList<>();\n    \n    public SpringApplication(Class<?> mainClass) {\n        this.mainClass = mainClass;\n    }\n    \n    public ApplicationContext run(String... args) {\n        // TODO: 1. Log banner\n        // TODO: 2. Create and refresh application context\n        // TODO: 3. Register beans from mainClass\n        // TODO: 4. Start embedded server\n        // TODO: 5. Log startup completion\n        ApplicationContext ctx = new ApplicationContext();\n        return ctx;\n    }\n    \n    private void printBanner() {\n        System.out.println(\"  .   ____          _            __ _ _\");\n        System.out.println(\" :: Spring Boot :: (v3.2.0)\");\n    }\n    \n    public List<String> getStartupLog() { return startupLog; }\n}\n\npublic class ApplicationContext {\n    private Map<String, Object> beans = new HashMap<>();\n    \n    public void registerBean(String name, Object bean) {\n        beans.put(name, bean);\n        System.out.println(\"Bean registered: \" + name);\n    }\n    \n    public void startServer(int port) {\n        System.out.println(\"Tomcat started on port(s): \" + port);\n    }\n}\n\n// The user's main application class\npublic class MySpringBootApp {\n    // Annotated with @SpringBootApplication (simulated)\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        SpringApplication app = new SpringApplication(MySpringBootApp.class);\n        ApplicationContext ctx = app.run(args);\n        System.out.println(\"Application started!\");\n    }\n}",
+      "instructions": [
+        "In run(), call printBanner() first.",
+        "Then call ctx.registerBean() for 3 simulated beans: 'mySpringBootApp', 'dispatcherServlet', 'dataSource'.",
+        "Then call ctx.startServer(8080).",
+        "Print 'Started MySpringBootApp in 2.3 seconds' at the end of run().",
+        "Return the context."
+      ],
+      "hint": "When you call SpringApplication.run(), Spring Boot initializes the full context, discovers beans, auto-configures, and starts the embedded server automatically.",
+      "expectedOutput": "  .   ____          _            __ _ _\n :: Spring Boot :: (v3.2.0)\nBean registered: mySpringBootApp\nBean registered: dispatcherServlet\nBean registered: dataSource\nTomcat started on port(s): 8080\nStarted MySpringBootApp in 2.3 seconds\nApplication started!"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 88,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Spring Boot Project Structure Scanner",
+    "description": {
+      "task": "Create a Java program that scans and describes the package structure of a typical Spring Boot application, identifying controllers, services, repositories, and models by their naming convention.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ClassInfo {\n    private String className;\n    private String packageName;\n    private String role;\n    \n    public ClassInfo(String className, String packageName) {\n        this.className = className;\n        this.packageName = packageName;\n        this.role = detectRole(className);\n    }\n    \n    private String detectRole(String name) {\n        // TODO: Return 'Controller' if ends with 'Controller',\n        // 'Service' if ends with 'Service',\n        // 'Repository' if ends with 'Repository',\n        // 'Entity' if ends with 'Entity' or 'Model',\n        // 'Configuration' if ends with 'Config',\n        // 'Other' otherwise\n        return \"Other\";\n    }\n    \n    @Override\n    public String toString() {\n        return packageName + \".\" + className + \" [\" + role + \"]\";\n    }\n}\n\npublic class ApplicationScanner {\n    private List<ClassInfo> classes;\n    \n    public ApplicationScanner(List<ClassInfo> classes) {\n        this.classes = classes;\n    }\n    \n    public Map<String, List<ClassInfo>> groupByRole() {\n        // TODO: Group classes by their role\n        return new LinkedHashMap<>();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        List<ClassInfo> appClasses = Arrays.asList(\n            new ClassInfo(\"UserController\", \"com.app.controller\"),\n            new ClassInfo(\"ProductController\", \"com.app.controller\"),\n            new ClassInfo(\"UserService\", \"com.app.service\"),\n            new ClassInfo(\"UserRepository\", \"com.app.repository\"),\n            new ClassInfo(\"UserEntity\", \"com.app.model\"),\n            new ClassInfo(\"AppConfig\", \"com.app.config\")\n        );\n        \n        ApplicationScanner scanner = new ApplicationScanner(appClasses);\n        Map<String, List<ClassInfo>> grouped = scanner.groupByRole();\n        grouped.forEach((role, classList) -> {\n            System.out.println(role + \":\");\n            classList.forEach(c -> System.out.println(\"  \" + c));\n        });\n    }\n}",
+      "instructions": [
+        "Implement detectRole() using if-else or switch with endsWith() checks.",
+        "Implement groupByRole() using a LinkedHashMap: iterate classes and group by role.",
+        "Run Main as-is.",
+        "Output should group all classes correctly by role."
+      ],
+      "hint": "Spring Boot's component scan works similarly — it finds @Controller, @Service, @Repository within the base package and registers them as beans.",
+      "expectedOutput": "Controller:\n  com.app.controller.UserController [Controller]\n  com.app.controller.ProductController [Controller]\nService:\n  com.app.service.UserService [Service]\nRepository:\n  com.app.repository.UserRepository [Repository]\nEntity:\n  com.app.model.UserEntity [Entity]\nConfiguration:\n  com.app.config.AppConfig [Configuration]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 88,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "CommandLineRunner Simulation",
+    "description": {
+      "task": "Simulate Spring Boot's CommandLineRunner interface — which runs code after application startup. Implement a data seeder that populates an in-memory store when the app starts.",
+      "language": "java",
+      "context": "CommandLineRunner and ApplicationRunner are used in Spring Boot to execute code after the context is loaded. Common uses: data seeding, startup checks, job scheduling.",
+      "starterCode": "import java.util.*;\n\npublic interface CommandLineRunner {\n    void run(String... args) throws Exception;\n}\n\npublic class UserStore {\n    private List<String> users = new ArrayList<>();\n    public void addUser(String user) { users.add(user); }\n    public List<String> getUsers() { return Collections.unmodifiableList(users); }\n}\n\npublic class DataSeeder implements CommandLineRunner {\n    private UserStore userStore;\n    \n    public DataSeeder(UserStore store) {\n        this.userStore = store;\n    }\n    \n    @Override\n    public void run(String... args) throws Exception {\n        // TODO: Seed 3 default users: admin, alice, bob\n        System.out.println(\"Data seeding complete.\");\n    }\n}\n\npublic class StartupHealthCheck implements CommandLineRunner {\n    @Override\n    public void run(String... args) throws Exception {\n        // TODO: Print health check messages for DB and Cache\n    }\n}\n\npublic class AppStartup {\n    public void start(List<CommandLineRunner> runners, String... args) throws Exception {\n        System.out.println(\"Application context loaded. Running startup tasks...\");\n        for (CommandLineRunner runner : runners) {\n            runner.run(args);\n        }\n        System.out.println(\"All startup tasks completed.\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        UserStore store = new UserStore();\n        DataSeeder seeder = new DataSeeder(store);\n        StartupHealthCheck healthCheck = new StartupHealthCheck();\n        \n        AppStartup startup = new AppStartup();\n        startup.start(Arrays.asList(healthCheck, seeder), args);\n        \n        System.out.println(\"Users in store: \" + store.getUsers());\n    }\n}",
+      "instructions": [
+        "DataSeeder.run() adds 'admin', 'alice', 'bob' to userStore and prints 'Data seeding complete.'.",
+        "StartupHealthCheck.run() prints 'Checking database connection... OK' and 'Checking cache... OK'.",
+        "Run Main as-is.",
+        "Output should show health check, seeding, then the user list."
+      ],
+      "hint": "In Spring Boot, implement CommandLineRunner or ApplicationRunner and annotate with @Component. Spring will execute all runners after context startup in order.",
+      "expectedOutput": "Application context loaded. Running startup tasks...\nChecking database connection... OK\nChecking cache... OK\nData seeding complete.\nAll startup tasks completed.\nUsers in store: [admin, alice, bob]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 88,
+    "allowedSubmissionType": "TEXT"
+  }
+]

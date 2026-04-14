@@ -1,0 +1,25 @@
+<h1>🔨 Queue Implementation</h1>
+
+<h2>🔄 Circular Queue</h2>
+<p>Uses a fixed-size array with front/rear indices that wrap around to avoid wasted space.</p>
+
+<h2>⚡ Priority Queue</h2>
+<p>Elements dequeued in priority order (not FIFO). In Java: <code>PriorityQueue</code>.</p>
+
+<div class="code-example">
+  <pre>
+// Min-heap (smallest dequeued first)
+PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();
+pq.offer(30); pq.offer(10); pq.offer(20);
+System.out.println(pq.poll()); // 10 (min)
+
+// Max-heap
+PriorityQueue&lt;Integer&gt; maxPQ = new PriorityQueue&lt;&gt;(Collections.reverseOrder());
+  </pre>
+</div>
+
+<h2>🔀 Deque (Double-ended Queue)</h2>
+<p>Supports insert/remove from both ends. In Java: <code>ArrayDeque</code>.</p>
+
+<h2>🎯 Summary</h2>
+<p>Choose <code>LinkedList</code> for simple FIFO, <code>PriorityQueue</code> for priority-based access, and <code>ArrayDeque</code> for deque operations.</p>

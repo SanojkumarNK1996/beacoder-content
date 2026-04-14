@@ -1,0 +1,14 @@
+<h1>👥 IAM Users, Groups, and Roles</h1>
+<h2>👤 IAM Users</h2>
+<p>Represents a person or service with long-term credentials (username/password for console, access key/secret for API). Best practice: one user per person, never share credentials.</p>
+<h2>👥 IAM Groups</h2>
+<p>A collection of users that share the same permissions. Attach policies to groups, not individual users. Examples: Developers group, Admins group, ReadOnly group.</p>
+<h2>🎭 IAM Roles</h2>
+<p>An identity with permissions that can be <strong>assumed</strong> by AWS services, users, or external identities (no permanent credentials). This is the preferred way to grant access.</p>
+<ul>
+  <li><strong>EC2 instance role</strong>: Allows EC2 to call S3, DynamoDB without storing credentials on the instance</li>
+  <li><strong>Lambda execution role</strong>: Permissions for Lambda to access other AWS services</li>
+  <li><strong>Cross-account role</strong>: Allow another AWS account to access your resources</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Use Groups to manage users at scale. Use Roles to grant permissions to AWS services and applications — never put credentials in your code.</p>

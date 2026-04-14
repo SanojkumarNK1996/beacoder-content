@@ -1,0 +1,15 @@
+<h1>🔧 AWS Systems Manager</h1>
+<h2>🎯 What is Systems Manager?</h2>
+<p><strong>AWS Systems Manager (SSM)</strong> gives you operational visibility and control over AWS infrastructure. Manage EC2 and on-premises servers at scale without SSH.</p>
+<h2>📋 Key SSM Features</h2>
+<ul>
+  <li><strong>Session Manager</strong>: Browser-based or CLI SSH to EC2 without opening port 22. No key pairs needed. All sessions logged to CloudWatch/S3.</li>
+  <li><strong>Parameter Store</strong>: Centralized config store for strings, secrets, encrypted values (free tier for standard parameters)</li>
+  <li><strong>Run Command</strong>: Execute scripts across a fleet of instances simultaneously without SSH</li>
+  <li><strong>Patch Manager</strong>: Automate OS patching across EC2 fleet</li>
+  <li><strong>Inventory</strong>: Collect metadata about installed software, OS, configuration</li>
+</ul>
+<h2>🔒 Session Manager vs SSH</h2>
+<p>Session Manager is preferred for production: no bastion host needed, no open ports, full audit trail of all commands.</p>
+<h2>🎯 Summary</h2>
+<p>SSM replaces SSH for EC2 management. Use Parameter Store for app config, Session Manager for secure server access, Run Command for fleet-wide automation.</p>

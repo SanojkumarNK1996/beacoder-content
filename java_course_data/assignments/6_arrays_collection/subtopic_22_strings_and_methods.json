@@ -1,0 +1,77 @@
+[
+  {
+    "title": "String Methods Explorer",
+    "description": {
+      "task": "Write a Java program that demonstrates 6 commonly used String methods on a given sentence.",
+      "language": "java",
+      "starterCode": "public class StringMethods {\n    public static void main(String[] args) {\n        String sentence = \"  Java Programming is Fun!  \";\n\n        // Use: trim(), toUpperCase(), toLowerCase(), length(), contains(), replace()\n        // Print labelled results for each\n    }\n}",
+      "instructions": [
+        "Call trim() and print 'Trimmed: Java Programming is Fun!'",
+        "Call toUpperCase() on the trimmed string and print 'Upper: JAVA PROGRAMMING IS FUN!'",
+        "Call toLowerCase() on the trimmed string and print 'Lower: java programming is fun!'",
+        "Print 'Length (trimmed): 25'",
+        "Print 'Contains \\'Java\\': true' using contains(\"Java\")",
+        "Call replace(\"Fun\", \"Amazing\") and print 'Replaced: Java Programming is Amazing!'"
+      ],
+      "hint": "Chain method calls: String trimmed = sentence.trim(); then call methods on trimmed. String.length() counts characters including spaces.",
+      "expectedOutput": "Trimmed: Java Programming is Fun!\nUpper: JAVA PROGRAMMING IS FUN!\nLower: java programming is fun!\nLength (trimmed): 25\nContains 'Java': true\nReplaced: Java Programming is Amazing!"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 22,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "String Comparison and Equality",
+    "description": {
+      "task": "Demonstrate the difference between == (reference equality) and .equals() (content equality) for Strings in Java.",
+      "language": "java",
+      "context": "A common Java bug is using == to compare Strings. The == operator compares references (memory addresses), while .equals() compares actual character content.",
+      "starterCode": "public class StringComparison {\n    public static void main(String[] args) {\n        String s1 = \"Hello\";\n        String s2 = \"Hello\";\n        String s3 = new String(\"Hello\");\n\n        // Compare s1 and s2 with == and .equals()\n        // Compare s1 and s3 with == and .equals()\n        // Compare case-insensitively using equalsIgnoreCase()\n\n        String s4 = \"hello\";\n        System.out.println(\"s1.equalsIgnoreCase(s4): \" + s1.equalsIgnoreCase(s4));\n    }\n}",
+      "instructions": [
+        "Print 's1 == s2: true' (both point to the same String pool literal).",
+        "Print 's1 == s3: false' (s3 is a new object in heap, different reference).",
+        "Print 's1.equals(s2): true'.",
+        "Print 's1.equals(s3): true' (same content).",
+        "The equalsIgnoreCase line is already provided — do not change it."
+      ],
+      "hint": "String literals are interned (pooled) so s1 == s2 is true. new String(...) always creates a new heap object so s1 == s3 is false.",
+      "expectedOutput": "s1 == s2: true\ns1 == s3: false\ns1.equals(s2): true\ns1.equals(s3): true\ns1.equalsIgnoreCase(s4): true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 22,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "StringBuilder Performance",
+    "description": {
+      "task": "Use StringBuilder to build a comma-separated list of numbers from 1 to 10, then demonstrate why StringBuilder is preferred over String concatenation in loops.",
+      "language": "java",
+      "context": "Strings in Java are immutable. Concatenating in a loop with + creates a new String object each time, wasting memory. StringBuilder mutates in-place and is much more efficient.",
+      "starterCode": "public class StringBuilderDemo {\n    public static void main(String[] args) {\n        StringBuilder sb = new StringBuilder();\n\n        for (int i = 1; i <= 10; i++) {\n            // Append the number\n            // Append comma and space if it's not the last number\n        }\n\n        String result = sb.toString();\n        System.out.println(\"List: \" + result);\n        System.out.println(\"Length: \" + result.length());\n\n        // Reverse the string\n        sb.reverse();\n        System.out.println(\"Reversed: \" + sb.toString());\n    }\n}",
+      "instructions": [
+        "Inside the loop, append the number, and if i < 10 also append \", \".",
+        "Convert to String and print 'List: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10'.",
+        "Print 'Length: 31'.",
+        "Call sb.reverse() and print the reversed string.",
+        "Do NOT change the println statements outside the loop."
+      ],
+      "hint": "sb.append(i); if (i < 10) sb.append(\", \"); — The reversed output flips the character sequence including commas and digits.",
+      "expectedOutput": "List: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10\nLength: 31\nReversed: 01 ,9 ,8 ,7 ,6 ,5 ,4 ,3 ,2 ,1"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 6,
+    "subtopicId": 22,
+    "allowedSubmissionType": "TEXT"
+  }
+]

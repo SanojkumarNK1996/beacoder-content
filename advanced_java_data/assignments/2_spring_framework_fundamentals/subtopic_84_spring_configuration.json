@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Java-based Spring Configuration Simulation",
+    "description": {
+      "task": "Simulate Spring Java-based configuration using pure Java (no Spring). Create a configuration class that acts as a factory for all application beans, mimicking @Configuration and @Bean annotations.",
+      "language": "java",
+      "starterCode": "// Simulate @Bean annotation\nimport java.lang.annotation.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.METHOD)\n@interface Bean { String name() default \"\"; }\n\npublic class DataService {\n    private String source;\n    public DataService(String source) { this.source = source; }\n    public String getData() { return \"Data from \" + source; }\n}\n\npublic class CacheService {\n    private DataService dataService;\n    public CacheService(DataService ds) { this.dataService = ds; }\n    public String getCached() { return \"[CACHED] \" + dataService.getData(); }\n}\n\n// Simulates @Configuration class\npublic class AppConfig {\n    @Bean(name = \"dataService\")\n    public DataService dataService() {\n        // TODO: Return new DataService(\"PostgreSQL\")\n        return null;\n    }\n    \n    @Bean(name = \"cacheService\")\n    public CacheService cacheService() {\n        // TODO: Return new CacheService using dataService()\n        return null;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Use AppConfig to wire beans and test them\n    }\n}",
+      "instructions": [
+        "Complete AppConfig.dataService() to return new DataService(\"PostgreSQL\").",
+        "Complete AppConfig.cacheService() to call dataService() and pass result to CacheService.",
+        "In Main, create AppConfig, get CacheService, and call getCached().",
+        "Also get DataService and call getData() directly."
+      ],
+      "hint": "In Spring, @Configuration classes are special — Spring intercepts @Bean method calls to ensure beans are singletons. This exercise simulates that pattern.",
+      "expectedOutput": "Data from PostgreSQL\n[CACHED] Data from PostgreSQL"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 84,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Annotation-based Configuration",
+    "description": {
+      "task": "Implement a component-scanning mechanism using Java Reflection that discovers classes with a custom @Component annotation and registers them as beans.",
+      "language": "java",
+      "starterCode": "import java.lang.annotation.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.TYPE)\n@interface Component { String value() default \"\"; }\n\n@Component(\"inventoryService\")\npublic class InventoryService {\n    public String checkStock(String item) { return item + \": In Stock\"; }\n}\n\n@Component(\"shippingService\")\npublic class ShippingService {\n    public String ship(String item) { return \"Shipping: \" + item; }\n}\n\n// Not a component — should not be registered\npublic class HelperUtil {\n    public void help() {}\n}\n\npublic class ComponentScanner {\n    public java.util.Map<String, Object> scan(Class<?>... classes) throws Exception {\n        // TODO: Register classes annotated with @Component, use annotation value() as key\n        return new java.util.HashMap<>();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        // TODO: Scan all three classes, print registered beans, use them\n    }\n}",
+      "instructions": [
+        "In scan(), check each class for @Component. If present, instantiate using no-arg constructor and store using annotation value() as key.",
+        "In Main, scan InventoryService, ShippingService, HelperUtil.",
+        "Print each registered bean name.",
+        "Retrieve InventoryService and call checkStock('Laptop'), retrieve ShippingService and call ship('Laptop')."
+      ],
+      "hint": "Spring's @ComponentScan does exactly this — it scans packages, finds @Component/@Service/@Repository annotated classes, and registers them.",
+      "expectedOutput": "Registered beans: [inventoryService, shippingService]\nLaptop: In Stock\nShipping: Laptop"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 84,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Environment Profiles Configuration",
+    "description": {
+      "task": "Implement an environment profiles system in Java that loads different configurations based on the active profile (dev, staging, prod).",
+      "language": "java",
+      "context": "Spring Profiles allow different beans and configurations per environment. This is essential for applications deployed to multiple environments.",
+      "starterCode": "import java.util.*;\n\npublic class DatabaseConfig {\n    private String url;\n    private String username;\n    private int maxPoolSize;\n    \n    public DatabaseConfig(String url, String username, int maxPoolSize) {\n        this.url = url;\n        this.username = username;\n        this.maxPoolSize = maxPoolSize;\n    }\n    \n    @Override\n    public String toString() {\n        return \"DB[url=\" + url + \", user=\" + username + \", poolSize=\" + maxPoolSize + \"]\";\n    }\n}\n\npublic class ProfileConfigFactory {\n    public static DatabaseConfig getConfig(String profile) {\n        // TODO: Return different DatabaseConfig based on profile\n        // dev: localhost, devuser, pool=5\n        // staging: staging-db.example.com, stageuser, pool=10\n        // prod: prod-db.example.com, produser, pool=50\n        // default: throw IllegalArgumentException\n        return null;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Load and print config for all three profiles\n    }\n}",
+      "instructions": [
+        "Implement getConfig() with a switch/if-else for profiles 'dev', 'staging', 'prod', and throw IllegalArgumentException for unknown profiles.",
+        "dev: url='jdbc:h2:mem:devdb', username='devuser', maxPoolSize=5.",
+        "staging: url='jdbc:postgresql://staging-db/app', username='stageuser', maxPoolSize=10.",
+        "prod: url='jdbc:postgresql://prod-db/app', username='produser', maxPoolSize=50.",
+        "In Main, print the config for all three profiles."
+      ],
+      "hint": "In Spring, use @Profile('dev') on @Bean methods or @Component classes to activate them only in specific environments, controlled via spring.profiles.active.",
+      "expectedOutput": "Dev: DB[url=jdbc:h2:mem:devdb, user=devuser, poolSize=5]\nStaging: DB[url=jdbc:postgresql://staging-db/app, user=stageuser, poolSize=10]\nProd: DB[url=jdbc:postgresql://prod-db/app, user=produser, poolSize=50]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 84,
+    "allowedSubmissionType": "TEXT"
+  }
+]

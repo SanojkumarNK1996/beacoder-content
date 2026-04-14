@@ -1,0 +1,75 @@
+[
+  {
+    "title": "First Normal Form (1NF)",
+    "description": {
+      "task": "Identify a table that violates 1NF and rewrite it in First Normal Form — atomic values, no repeating groups.",
+      "language": "sql",
+      "context": "1NF requires: (1) each column contains atomic (indivisible) values, (2) each row is unique, (3) no repeating groups of columns.",
+      "starterCode": "-- UNNORMALISED — violates 1NF (multi-valued phone_numbers column)\n-- Imagine this existed as a spreadsheet:\n-- student_id | name  | phone_numbers\n-- 1          | Alice | '555-1111, 555-2222'  <- NOT atomic!\n-- 2          | Bob   | '555-3333'\n\n-- 1NF solution: each phone number in its own row\nCREATE TABLE students_1nf (\n  student_id INT,\n  name VARCHAR(50),\n  phone_number VARCHAR(15),\n  PRIMARY KEY (student_id, phone_number)  -- composite PK ensures uniqueness\n);\n\nINSERT INTO students_1nf VALUES\n  (1, 'Alice', '555-1111'),\n  (1, 'Alice', '555-2222'),\n  (2, 'Bob',   '555-3333'),\n  (3, 'Carol', '555-4444');\n\n-- Query 1: Show all students with their phone numbers\nSELECT * FROM students_1nf ORDER BY student_id;\n\n-- Query 2: How many phone numbers does Alice have?\nSELECT name, COUNT(phone_number) AS phone_count\nFROM students_1nf\nGROUP BY student_id, name;\n",
+      "instructions": [
+        "Run all statements and both queries.",
+        "Query 1 should show 4 rows: Alice appears twice (two numbers), Bob and Carol once each.",
+        "Query 2 shows Alice:2, Bob:1, Carol:1.",
+        "In a comment, explain: why is storing multiple values in a single column (comma-separated) a bad practice?"
+      ],
+      "hint": "Atomic means one value per cell. Storing '555-1111, 555-2222' in one cell makes queries harder — you can't easily filter by individual phone numbers.",
+      "expectedOutput": "Q1: 4 rows\nQ2: Alice:2, Bob:1, Carol:1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 40,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Second Normal Form (2NF)",
+    "description": {
+      "task": "Identify a partial dependency violation and rewrite the design in Second Normal Form by separating entities into their own tables.",
+      "language": "sql",
+      "context": "2NF (satisfies 1NF): every non-key attribute must depend on the WHOLE primary key — no partial dependencies. This only applies to tables with composite primary keys.",
+      "starterCode": "-- VIOLATES 2NF: course_name depends only on course_id, not on (student_id, course_id)\n-- CREATE TABLE enrollments_bad (\n--   student_id INT,\n--   course_id INT,\n--   course_name VARCHAR(80),  <- partial dependency on course_id alone!\n--   student_name VARCHAR(50), <- partial dependency on student_id alone!\n--   grade CHAR(2),\n--   PRIMARY KEY (student_id, course_id)\n-- );\n\n-- 2NF SOLUTION: separate tables\nCREATE TABLE students (\n  student_id INT PRIMARY KEY,\n  student_name VARCHAR(50)\n);\n\nCREATE TABLE courses (\n  course_id INT PRIMARY KEY,\n  course_name VARCHAR(80)\n);\n\nCREATE TABLE enrollments (\n  student_id INT,\n  course_id INT,\n  grade CHAR(2),\n  PRIMARY KEY (student_id, course_id),\n  FOREIGN KEY (student_id) REFERENCES students(student_id),\n  FOREIGN KEY (course_id) REFERENCES courses(course_id)\n);\n\nINSERT INTO students VALUES (1,'Alice'),(2,'Bob'),(3,'Carol');\nINSERT INTO courses  VALUES (101,'Database Fundamentals'),(102,'Web Development');\nINSERT INTO enrollments VALUES (1,101,'A'),(1,102,'B+'),(2,101,'B'),(3,102,'A-');\n\n-- Query: Show all enrollments with names\nSELECT s.student_name, c.course_name, e.grade\nFROM enrollments e\nJOIN students s ON e.student_id = s.student_id\nJOIN courses  c ON e.course_id  = c.course_id\nORDER BY s.student_name;\n",
+      "instructions": [
+        "Run all three CREATE TABLE statements and all INSERT statements.",
+        "Run the JOIN query to see all enrollments with student and course names.",
+        "Add a comment explaining: what update anomaly would occur if course_name was stored in enrollments directly (it would need to be updated in multiple rows)?",
+        "Add a comment: why does 2NF only apply to composite primary keys?"
+      ],
+      "hint": "Update anomaly: if 'Database Fundamentals' is renamed in a single-table design, you'd need to update every enrollment row that references it — easy to miss one.",
+      "expectedOutput": "4 enrollment rows: Alice/DB Fundamentals/A, Alice/Web Dev/B+, Bob/DB Fundamentals/B, Carol/Web Dev/A-"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 40,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Third Normal Form (3NF)",
+    "description": {
+      "task": "Identify a transitive dependency and restructure a table into Third Normal Form.",
+      "language": "sql",
+      "context": "3NF (satisfies 2NF): no non-key attribute should depend on another non-key attribute (no transitive dependencies). Each column must depend ONLY on the primary key.",
+      "starterCode": "-- VIOLATES 3NF: zip_code → city/state (transitive dependency)\n-- CREATE TABLE customers_bad (\n--   customer_id INT PRIMARY KEY,\n--   name VARCHAR(50),\n--   zip_code VARCHAR(10),\n--   city VARCHAR(50),     <- depends on zip_code, not customer_id\n--   state VARCHAR(30)     <- depends on zip_code, not customer_id\n-- );\n\n-- 3NF SOLUTION: extract zip_code info to its own table\nCREATE TABLE zip_codes (\n  zip_code VARCHAR(10) PRIMARY KEY,\n  city VARCHAR(50),\n  state VARCHAR(30)\n);\n\nCREATE TABLE customers (\n  customer_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  zip_code VARCHAR(10),\n  FOREIGN KEY (zip_code) REFERENCES zip_codes(zip_code)\n);\n\nINSERT INTO zip_codes VALUES\n  ('10001', 'New York',     'NY'),\n  ('90001', 'Los Angeles',  'CA'),\n  ('60601', 'Chicago',      'IL');\n\nINSERT INTO customers VALUES\n  (1, 'Alice',   '10001'),\n  (2, 'Bob',     '90001'),\n  (3, 'Carol',   '10001'),\n  (4, 'Dave',    '60601');\n\n-- Query: Show customer with full address\nSELECT c.name, z.city, z.state, c.zip_code\nFROM customers c\nJOIN zip_codes z ON c.zip_code = z.zip_code\nORDER BY c.name;\n\n-- Query: Count customers per city\nSELECT z.city, COUNT(*) AS customer_count\nFROM customers c\nJOIN zip_codes z ON c.zip_code = z.zip_code\nGROUP BY z.city\nORDER BY customer_count DESC;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run the first query to see customers with full city/state info.",
+        "Run the second query for customer count per city.",
+        "In a comment: what update anomaly would occur if zip code 10001 changed city name in a denormalized design?",
+        "Add a comment: summarize 1NF, 2NF, 3NF in one sentence each."
+      ],
+      "hint": "With 3NF, if the city for zip code 10001 changes, you update it in ONE place (zip_codes table). Without 3NF, you'd need to update all customer rows with that zip code.",
+      "expectedOutput": "Q1: Alice-NewYork-NY, Bob-LA-CA, Carol-NewYork-NY, Dave-Chicago-IL\nQ2: New York:2, Los Angeles:1, Chicago:1"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 40,
+    "allowedSubmissionType": "TEXT"
+  }
+]

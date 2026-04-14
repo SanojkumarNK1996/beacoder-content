@@ -1,0 +1,30 @@
+<h1>⌨️ AWS CLI and SDKs</h1>
+<h2>🛠️ AWS CLI</h2>
+<p>The <strong>AWS Command Line Interface</strong> lets you interact with AWS services from your terminal.</p>
+<div class="code-example">
+  <pre>
+# Install
+pip install awscli
+
+# Configure with credentials
+aws configure
+# Enter: Access Key ID, Secret Access Key, Region, Output format
+
+# Example commands
+aws s3 ls                          # List S3 buckets
+aws ec2 describe-instances         # List EC2 instances
+aws s3 cp file.txt s3://my-bucket/ # Upload to S3
+  </pre>
+</div>
+<h2>📦 AWS SDKs</h2>
+<p>AWS provides SDKs for Python (boto3), Java (AWS SDK for Java), Node.js, .NET, Go, Ruby, and more.</p>
+<div class="code-example">
+  <pre>
+# Python (boto3) example
+import boto3
+s3 = boto3.client('s3')
+s3.upload_file('file.txt', 'my-bucket', 'file.txt')
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>The CLI is your productivity multiplier: automate resource provisioning, script deployments, and integrate AWS into CI/CD pipelines.</p>

@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Build Tool Comparison: Maven vs Gradle",
+    "description": {
+      "task": "Create a BuildToolComparison class that models key differences between Maven and Gradle. Implement a method that returns characteristics (convention-based vs script-based, XML vs Groovy/Kotlin DSL, build lifecycle) as a structured map.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BuildToolComparison {\n\n    public Map<String, Map<String, String>> compareTools() {\n        // Return a map where keys are tool names (\"maven\", \"gradle\")\n        // and values are maps of characteristic -> description\n        return new HashMap<>();\n    }\n\n    public String recommendTool(boolean largeProjectWithCustomBuilds, boolean preferXml) {\n        // Return \"gradle\" or \"maven\" based on the flags\n        return \"\";\n    }\n\n    public static void main(String[] args) {\n        BuildToolComparison btc = new BuildToolComparison();\n        Map<String, Map<String, String>> comparison = btc.compareTools();\n        System.out.println(\"Maven config format: \" + comparison.get(\"maven\").get(\"configFormat\"));\n        System.out.println(\"Gradle config format: \" + comparison.get(\"gradle\").get(\"configFormat\"));\n        System.out.println(\"Recommendation: \" + btc.recommendTool(true, false));\n    }\n}",
+      "instructions": [
+        "compareTools() must return entries for both 'maven' and 'gradle'",
+        "Each tool map must include keys: 'configFormat', 'buildApproach', 'performanceModel'",
+        "Maven configFormat should be 'XML (pom.xml)'; Gradle configFormat should be 'Groovy/Kotlin DSL (build.gradle)'",
+        "Maven buildApproach should be 'convention-based'; Gradle should be 'script-based'",
+        "recommendTool() returns 'gradle' when largeProjectWithCustomBuilds=true and preferXml=false; otherwise returns 'maven'"
+      ],
+      "hint": "Use Map.of() or put() to populate the inner maps. For recommendation logic, check both flags with && and ||.",
+      "expectedOutput": "Maven config format: XML (pom.xml)\nGradle config format: Groovy/Kotlin DSL (build.gradle)\nRecommendation: gradle"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 103,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Build Lifecycle Phases Simulator",
+    "description": {
+      "task": "Implement a BuildLifecycle class that simulates Maven's default build lifecycle. The class should execute phases in order (validate → compile → test → package → install → deploy) and support skipping individual phases.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BuildLifecycle {\n\n    private static final List<String> PHASES = List.of(\n        \"validate\", \"compile\", \"test\", \"package\", \"install\", \"deploy\"\n    );\n\n    private Set<String> skippedPhases = new HashSet<>();\n    private List<String> executedPhases = new ArrayList<>();\n\n    public void skipPhase(String phase) {\n        // Add phase to the skipped set\n    }\n\n    public List<String> runUpTo(String targetPhase) {\n        // Execute all phases from 'validate' up to and including targetPhase\n        // Skip phases in skippedPhases set\n        // Return list of actually executed phases\n        return new ArrayList<>();\n    }\n\n    public List<String> getExecutedPhases() {\n        return executedPhases;\n    }\n\n    public static void main(String[] args) {\n        BuildLifecycle lifecycle = new BuildLifecycle();\n        lifecycle.skipPhase(\"test\");\n        List<String> executed = lifecycle.runUpTo(\"package\");\n        System.out.println(\"Executed: \" + executed);\n    }\n}",
+      "instructions": [
+        "PHASES list is fixed: validate, compile, test, package, install, deploy (in this order)",
+        "skipPhase() adds the given phase name to the skippedPhases set",
+        "runUpTo() iterates from the first phase to targetPhase (inclusive) in order",
+        "Phases in skippedPhases are not added to executedPhases or returned",
+        "If targetPhase is not in PHASES, return an empty list"
+      ],
+      "hint": "Use PHASES.indexOf(targetPhase) to find the cutoff index, then loop from 0 to that index (inclusive), checking skippedPhases for each phase.",
+      "expectedOutput": "Executed: [validate, compile, package]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 103,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Project Structure Validator",
+    "description": {
+      "task": "Create a ProjectStructureValidator class that validates whether a given project layout follows Maven's standard directory structure. Check for the presence of key directories and report any missing ones.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ProjectStructureValidator {\n\n    private static final List<String> REQUIRED_DIRS = List.of(\n        \"src/main/java\",\n        \"src/main/resources\",\n        \"src/test/java\",\n        \"src/test/resources\"\n    );\n\n    public ValidationResult validate(Set<String> projectDirs) {\n        // Check which required directories are present or missing\n        // Return a ValidationResult with isValid flag and list of missing dirs\n        return new ValidationResult(false, new ArrayList<>());\n    }\n\n    public static class ValidationResult {\n        public final boolean isValid;\n        public final List<String> missingDirs;\n\n        public ValidationResult(boolean isValid, List<String> missingDirs) {\n            this.isValid = isValid;\n            this.missingDirs = missingDirs;\n        }\n    }\n\n    public static void main(String[] args) {\n        ProjectStructureValidator validator = new ProjectStructureValidator();\n        Set<String> dirs = new HashSet<>(Set.of(\n            \"src/main/java\", \"src/main/resources\", \"src/test/java\"\n        ));\n        ValidationResult result = validator.validate(dirs);\n        System.out.println(\"Valid: \" + result.isValid);\n        System.out.println(\"Missing: \" + result.missingDirs);\n    }\n}",
+      "instructions": [
+        "validate() must check all 4 entries in REQUIRED_DIRS",
+        "isValid is true only when no required directories are missing",
+        "missingDirs contains exactly the REQUIRED_DIRS entries not found in projectDirs",
+        "The order of entries in missingDirs should match their order in REQUIRED_DIRS",
+        "The method must not modify the input set"
+      ],
+      "hint": "Loop through REQUIRED_DIRS and check if each entry is contained in projectDirs. Collect missing ones. Set isValid = missingDirs.isEmpty().",
+      "expectedOutput": "Valid: false\nMissing: [src/test/resources]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 103,
+    "allowedSubmissionType": "TEXT"
+  }
+]

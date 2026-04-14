@@ -1,0 +1,18 @@
+<h1>🏗️ Serverless Architecture Patterns</h1>
+<h2>📋 Common Serverless Patterns</h2>
+<h3>1. REST API Pattern</h3>
+<p><code>API Gateway → Lambda → DynamoDB</code><br>The standard serverless CRUD API. Zero infrastructure, scales to any load.</p>
+<h3>2. Event Processing Pattern</h3>
+<p><code>S3 Event → Lambda → Process → Destination</code><br>Process uploaded files (resize images, parse CSV, trigger notifications).</p>
+<h3>3. Message Fanout Pattern</h3>
+<p><code>SNS Topic → Multiple SQS Queues → Lambda per queue</code><br>Decouple publishers from multiple consumers.</p>
+<h3>4. Scheduled Job Pattern</h3>
+<p><code>EventBridge Scheduler → Lambda</code><br>Replace cron jobs with serverless scheduled functions.</p>
+<h2>🎯 Serverless Considerations</h2>
+<ul>
+  <li><strong>Cold starts</strong>: First invocation may be slower. Use Provisioned Concurrency for latency-sensitive APIs.</li>
+  <li><strong>State</strong>: Lambda is stateless — use DynamoDB/ElastiCache for state</li>
+  <li><strong>Cost</strong>: Very cost-effective at low-to-medium scale; may be expensive at very high constant load</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Serverless architectures shine for event-driven, variable-load workloads. Design around the event; pick the simplest trigger → function → destination path.</p>

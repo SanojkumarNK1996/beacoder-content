@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 159, "title": "Introduction to Sorting", "dataType": "notes", "data": "intro_to_sorting.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 160, "title": "Simple Sorting Algorithms", "dataType": "notes", "data": "basic_sorting_algorithms.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 161, "title": "Efficient Sorting Algorithms", "dataType": "notes", "data": "merge_sort.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 162, "title": "Linear Sorting Algorithms", "dataType": "notes", "data": "quick_sort.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 163, "title": "Comparison of Sorting Algorithms", "dataType": "notes", "data": "heap_sort_and_comparison.html", "displayOrder": 5, "verified": false}
+]

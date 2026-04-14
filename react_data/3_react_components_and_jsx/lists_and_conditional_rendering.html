@@ -1,0 +1,36 @@
+<h1>📜 Rendering Lists and Conditional Rendering</h1>
+<h2>📋 Rendering Lists with .map()</h2>
+<div class="code-example">
+  <pre>
+const fruits = ['Apple', 'Banana', 'Cherry'];
+
+function FruitList() {
+  return (
+    &lt;ul&gt;
+      {fruits.map((fruit, index) =&gt; (
+        &lt;li key={fruit}&gt;{fruit}&lt;/li&gt;  // key is required!
+      ))}
+    &lt;/ul&gt;
+  );
+}
+  </pre>
+</div>
+<p><strong>⚠️ Always provide a unique <code>key</code> prop!</strong> React uses keys to efficiently update lists. Use IDs, not array indexes, whenever possible.</p>
+<h2>🔀 Conditional Rendering</h2>
+<div class="code-example">
+  <pre>
+// Ternary operator
+{isLoggedIn ? &lt;Dashboard /&gt; : &lt;LoginPage /&gt;}
+
+// Short-circuit (render or nothing)
+{isLoading &amp;&amp; &lt;Spinner /&gt;}
+
+// Early return
+function UserCard({ user }) {
+  if (!user) return &lt;p&gt;No user found&lt;/p&gt;;
+  return &lt;h2&gt;{user.name}&lt;/h2&gt;;
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p><code>map</code> for lists (with unique keys). Ternary for if/else rendering. Short-circuit <code>&amp;&amp;</code> for optional rendering. Early returns for guard conditions.</p>

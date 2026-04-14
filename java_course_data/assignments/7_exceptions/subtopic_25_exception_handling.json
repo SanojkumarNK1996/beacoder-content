@@ -1,0 +1,72 @@
+[
+  {
+    "title": "try-catch-finally Bank Transaction",
+    "description": {
+      "task": "Write a BankAccount class that throws an exception when a withdrawal exceeds the balance. Handle it with try-catch-finally.",
+      "language": "java",
+      "starterCode": "public class BankTransaction {\n\n    static double balance = 500.0;\n\n    static void withdraw(double amount) {\n        if (amount > balance) {\n            throw new IllegalArgumentException(\"Insufficient funds. Balance: \" + balance);\n        }\n        balance -= amount;\n        System.out.println(\"Withdrawn: \" + amount + \" | New balance: \" + balance);\n    }\n\n    public static void main(String[] args) {\n        // Attempt 1: valid withdrawal of 200\n        try {\n            withdraw(200);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        } finally {\n            System.out.println(\"Transaction 1 complete.\");\n        }\n\n        // Attempt 2: invalid withdrawal of 400 (only 300 left)\n        try {\n            withdraw(400);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        } finally {\n            System.out.println(\"Transaction 2 complete.\");\n        }\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is.",
+        "Observe that the finally block runs in BOTH cases — whether an exception occurred or not.",
+        "In a comment, explain: when would you use finally? (e.g., closing a file/database connection).",
+        "Submit the code with your explanation comment."
+      ],
+      "hint": "Finally always runs — even if a return statement or exception occurs in the try or catch block. It's used for cleanup code like closing resources.",
+      "expectedOutput": "Withdrawn: 200.0 | New balance: 300.0\nTransaction 1 complete.\nError: Insufficient funds. Balance: 300.0\nTransaction 2 complete."
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 7,
+    "subtopicId": 25,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Custom Exception: InvalidAgeException",
+    "description": {
+      "task": "Create a custom checked exception InvalidAgeException and use it in a registerVoter() method that validates age.",
+      "language": "java",
+      "context": "Custom exceptions make code self-documenting — instead of generic RuntimeException, a specific exception name tells the caller exactly what went wrong.",
+      "starterCode": "// Define custom exception class below\nclass InvalidAgeException extends Exception {\n    // Constructor: accepts a String message and passes to super()\n}\n\npublic class VoterRegistration {\n\n    static void registerVoter(String name, int age) throws InvalidAgeException {\n        if (age < 18) {\n            throw new InvalidAgeException(name + \" is too young to vote. Age: \" + age);\n        }\n        System.out.println(name + \" registered successfully. Age: \" + age);\n    }\n\n    public static void main(String[] args) {\n        String[][] candidates = {{\"Alice\", \"25\"}, {\"Tom\", \"16\"}, {\"Carol\", \"19\"}};\n\n        for (String[] c : candidates) {\n            try {\n                registerVoter(c[0], Integer.parseInt(c[1]));\n            } catch (InvalidAgeException e) {\n                System.out.println(\"Registration failed: \" + e.getMessage());\n            }\n        }\n    }\n}",
+      "instructions": [
+        "Implement the InvalidAgeException constructor: public InvalidAgeException(String message) { super(message); }",
+        "Do NOT change VoterRegistration.main() or registerVoter().",
+        "Run and verify all three candidates are processed."
+      ],
+      "hint": "A checked exception extends Exception (not RuntimeException). The calling method must either catch it or declare 'throws InvalidAgeException' in its signature.",
+      "expectedOutput": "Alice registered successfully. Age: 25\nRegistration failed: Tom is too young to vote. Age: 16\nCarol registered successfully. Age: 19"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 7,
+    "subtopicId": 25,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Multiple Catch Blocks",
+    "description": {
+      "task": "Write a program that performs risky operations (array access and division) in a single try block, with separate catch blocks for each exception type.",
+      "language": "java",
+      "context": "A try block can have multiple catch blocks to handle different exception types differently. Java checks them top to bottom — put more specific exceptions before general ones.",
+      "starterCode": "public class MultiCatch {\n\n    static void riskyOperation(int[] arr, int index, int divisor) {\n        try {\n            int value = arr[index];         // may throw ArrayIndexOutOfBoundsException\n            int result = value / divisor;   // may throw ArithmeticException\n            System.out.println(\"Result: \" + result);\n        } catch (ArrayIndexOutOfBoundsException e) {\n            System.out.println(\"Array error: \" + e.getMessage());\n        } catch (ArithmeticException e) {\n            System.out.println(\"Math error: \" + e.getMessage());\n        } finally {\n            System.out.println(\"---\");\n        }\n    }\n\n    public static void main(String[] args) {\n        int[] data = {10, 20, 30};\n\n        riskyOperation(data, 1, 4);   // normal: 20 / 4 = 5\n        riskyOperation(data, 5, 4);   // bad index\n        riskyOperation(data, 0, 0);   // divide by zero\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is — do not change it.",
+        "Observe how each call triggers a different execution path.",
+        "In a comment, explain: why must ArithmeticException come BEFORE Exception if you were to add a general catch (Exception e) at the end?",
+        "Submit the code with your explanation comment."
+      ],
+      "hint": "More specific exception types must be caught before more general ones. Putting catch (Exception e) first would catch everything, making the specific catches unreachable (compile error).",
+      "expectedOutput": "Result: 5\n---\nArray error: Index 5 out of bounds for length 3\n---\nMath error: / by zero\n---"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 7,
+    "subtopicId": 25,
+    "allowedSubmissionType": "TEXT"
+  }
+]

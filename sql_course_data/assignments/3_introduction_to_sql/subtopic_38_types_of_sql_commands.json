@@ -1,0 +1,77 @@
+[
+  {
+    "title": "DDL Commands Practice",
+    "description": {
+      "task": "Write DDL (Data Definition Language) commands: CREATE, ALTER, and DROP to manage the structure of a table.",
+      "language": "sql",
+      "context": "DDL commands define and modify the schema (structure) of the database. They include CREATE, ALTER, DROP, and TRUNCATE. Changes are auto-committed in most DBMS.",
+      "starterCode": "-- DDL Example: Manage table structure\n\n-- CREATE: Define a new table\nCREATE TABLE categories (\n  id INT PRIMARY KEY,\n  name VARCHAR(50) NOT NULL\n);\n\n-- INSERT some data to work with\nINSERT INTO categories VALUES (1,'Electronics'),(2,'Books'),(3,'Clothing');\n\nSELECT * FROM categories;\n\n-- ALTER: Add a new column\nALTER TABLE categories ADD COLUMN description VARCHAR(200);\n\n-- ALTER: Rename a column (standard SQL / PostgreSQL)\nALTER TABLE categories RENAME COLUMN description TO notes;\n\nSELECT * FROM categories;\n\n-- DROP: Remove the table entirely\n-- DROP TABLE categories;\n",
+      "instructions": [
+        "Run CREATE, INSERT, and first SELECT.",
+        "Run the ALTER ADD COLUMN command — re-run SELECT to see the new column.",
+        "Run the RENAME COLUMN command — verify column is now named 'notes'.",
+        "In a comment, list the 4 DDL commands and what each does (CREATE, ALTER, DROP, TRUNCATE).",
+        "Explain: why must TRUNCATE be used carefully compared to DELETE?"
+      ],
+      "hint": "TRUNCATE removes all rows instantly without logging each deletion — it cannot be rolled back in some DBMS. DELETE removes rows one at a time and can be rolled back inside a transaction.",
+      "expectedOutput": "After CREATE+INSERT: 3 rows\nAfter ALTER ADD: same 3 rows with extra 'description' column (NULL)\nAfter RENAME: columns are id, name, notes"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 38,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "DML Commands Practice",
+    "description": {
+      "task": "Write DML (Data Manipulation Language) commands — INSERT, SELECT, UPDATE, DELETE — to manage records in a table.",
+      "language": "sql",
+      "context": "DML commands manipulate the data stored in tables. They can be wrapped inside transactions and rolled back if needed.",
+      "starterCode": "CREATE TABLE tasks (\n  id INT PRIMARY KEY,\n  title VARCHAR(100),\n  status VARCHAR(20) DEFAULT 'todo',\n  priority INT\n);\n\n-- INSERT: Add new rows\nINSERT INTO tasks VALUES\n  (1, 'Design database schema', 'todo',        1),\n  (2, 'Write SQL queries',      'in_progress',  2),\n  (3, 'Review pull request',    'todo',         3),\n  (4, 'Deploy to staging',      'blocked',      1),\n  (5, 'Write unit tests',       'todo',         2);\n\n-- SELECT: Read data\nSELECT * FROM tasks ORDER BY priority;\n\n-- UPDATE: Modify existing rows\nUPDATE tasks SET status = 'done' WHERE id = 2;\nUPDATE tasks SET priority = priority + 1 WHERE status = 'todo';\n\nSELECT * FROM tasks ORDER BY priority;\n\n-- DELETE: Remove rows (with WHERE to avoid deleting all)\nDELETE FROM tasks WHERE status = 'done';\n\nSELECT * FROM tasks ORDER BY id;\n",
+      "instructions": [
+        "Run INSERT and the first SELECT — verify 5 rows.",
+        "Run the two UPDATE statements.",
+        "Run the second SELECT — verify task 2 is 'done' and priorities of todo tasks increased.",
+        "Run DELETE — task 2 should be removed.",
+        "Run the final SELECT — 4 rows remain.",
+        "Add a comment explaining: what happens if you run DELETE FROM tasks; (no WHERE clause)?"
+      ],
+      "hint": "DELETE without WHERE deletes ALL rows in the table — but the table structure remains. Use TRUNCATE for that pattern. DROP TABLE removes the table itself.",
+      "expectedOutput": "After UPDATEs: task 2 status=done, todo tasks have priority incremented\nAfter DELETE: 4 rows remain (task 2 removed)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 38,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "DCL and TCL Commands",
+    "description": {
+      "task": "Demonstrate TCL (Transaction Control Language) commands — COMMIT, ROLLBACK, SAVEPOINT — and explain DCL (GRANT/REVOKE).",
+      "language": "sql",
+      "context": "TCL commands manage transactions — grouping multiple DML statements so they either all succeed or all fail. DCL controls access permissions.",
+      "starterCode": "CREATE TABLE orders (\n  id INT PRIMARY KEY,\n  customer VARCHAR(50),\n  total DECIMAL(8,2),\n  status VARCHAR(20) DEFAULT 'new'\n);\n\nINSERT INTO orders VALUES\n  (1, 'Alice', 150.00, 'new'),\n  (2, 'Bob',   200.00, 'new'),\n  (3, 'Carol',  80.00, 'new');\n\nSELECT * FROM orders;\n\n-- TCL: SAVEPOINT lets you partially rollback\nBEGIN;\n  UPDATE orders SET status = 'processing' WHERE id = 1;\n  SAVEPOINT after_order_1;\n  UPDATE orders SET status = 'processing' WHERE id = 2;\n  SAVEPOINT after_order_2;\n  UPDATE orders SET status = 'processing' WHERE id = 3;\n  -- Oops — order 3 has a problem, rollback to the savepoint\n  ROLLBACK TO SAVEPOINT after_order_2;\n  -- Order 1 and 2 are processing, order 3 is still 'new'\nCOMMIT;\n\nSELECT * FROM orders ORDER BY id;\n",
+      "instructions": [
+        "Run the BEGIN...COMMIT block with SAVEPOINT.",
+        "Run the final SELECT — orders 1 and 2 should be 'processing', order 3 still 'new'.",
+        "In a comment, list all 4 SQL command categories: DDL, DML, DCL, TCL with one example each.",
+        "In a comment, explain: what does GRANT SELECT ON orders TO 'reporting_user'; do (DCL example)?"
+      ],
+      "hint": "ROLLBACK TO SAVEPOINT undoes only the work done AFTER the savepoint. The transaction can then continue and ultimately COMMIT the earlier work.",
+      "expectedOutput": "Order 1: processing\nOrder 2: processing\nOrder 3: new (rolled back to savepoint)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 12,
+    "subtopicId": 38,
+    "allowedSubmissionType": "TEXT"
+  }
+]

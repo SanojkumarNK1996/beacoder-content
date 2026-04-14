@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Array Declaration and Indexing",
+    "description": {
+      "task": "Implement an ArrayFundamentals class that demonstrates array declaration, initialization, and indexing. Create methods to initialize an array with squares, retrieve elements by index safely (with bounds check), and compute the sum of all elements.",
+      "language": "java",
+      "starterCode": "public class ArrayFundamentals {\n\n    public int[] initializeSquares(int n) {\n        // TODO: create int[n] where arr[i] = (i+1)*(i+1)\n        return null;\n    }\n\n    public int safeGet(int[] arr, int index) {\n        // TODO: return arr[index] if valid, else return -1\n        return -1;\n    }\n\n    public int sum(int[] arr) {\n        // TODO: return sum of all elements\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        ArrayFundamentals af = new ArrayFundamentals();\n        int[] squares = af.initializeSquares(5);\n        System.out.println(\"Length: \" + squares.length);\n        System.out.println(\"Index 0: \" + af.safeGet(squares, 0));\n        System.out.println(\"Index 4: \" + af.safeGet(squares, 4));\n        System.out.println(\"Index 5: \" + af.safeGet(squares, 5));\n        System.out.println(\"Sum: \" + af.sum(squares));\n    }\n}",
+      "instructions": [
+        "initializeSquares(n): return new int[n] where arr[i] = (i+1)*(i+1) for i in 0..n-1",
+        "safeGet(arr, index): if index >= 0 && index < arr.length return arr[index], else return -1",
+        "sum(arr): iterate all elements and accumulate total",
+        "All three methods must be implemented",
+        "initializeSquares(5) produces [1, 4, 9, 16, 25]; sum = 55"
+      ],
+      "hint": "initializeSquares: int[] arr = new int[n]; for(int i=0;i<n;i++) arr[i]=(i+1)*(i+1); return arr;",
+      "expectedOutput": "Length: 5\nIndex 0: 1\nIndex 4: 25\nIndex 5: -1\nSum: 55"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 131,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Array Memory Layout Printer",
+    "description": {
+      "task": "Create a MemoryLayout class that simulates the contiguous memory layout of a Java int array. Assume each int occupies 4 bytes starting at a base address of 1000. Given an index, compute its address. Print the memory map of an entire array.",
+      "language": "java",
+      "starterCode": "public class MemoryLayout {\n\n    private static final int BASE_ADDRESS = 1000;\n    private static final int INT_SIZE = 4;\n\n    public int addressOf(int index) {\n        // TODO: address = BASE_ADDRESS + index * INT_SIZE\n        return 0;\n    }\n\n    public void printMemoryMap(int[] arr) {\n        System.out.printf(\"%-8s %-10s %-8s%n\", \"Index\", \"Address\", \"Value\");\n        System.out.println(\"-\".repeat(28));\n        for (int i = 0; i < arr.length; i++) {\n            System.out.printf(\"%-8d %-10d %-8d%n\", i, addressOf(i), arr[i]);\n        }\n    }\n\n    public static void main(String[] args) {\n        MemoryLayout ml = new MemoryLayout();\n        int[] arr = {10, 20, 30, 40, 50};\n        ml.printMemoryMap(arr);\n        System.out.println(\"Address of index 3: \" + ml.addressOf(3));\n    }\n}",
+      "instructions": [
+        "addressOf(index) = BASE_ADDRESS + index * INT_SIZE",
+        "printMemoryMap() calls addressOf() for each index — do not modify it",
+        "addressOf(0) = 1000, addressOf(1) = 1004, addressOf(3) = 1012",
+        "Only addressOf() needs to be implemented",
+        "Output format must match the header/separator/row pattern exactly"
+      ],
+      "hint": "return BASE_ADDRESS + index * INT_SIZE; That's all for addressOf().",
+      "expectedOutput": "Index    Address    Value   \n----------------------------\n0        1000       10      \n1        1004       20      \n2        1008       30      \n3        1012       40      \n4        1016       50      \nAddress of index 3: 1012"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 131,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Static vs Dynamic Array Comparison",
+    "description": {
+      "task": "Implement a StaticVsDynamic class that compares a fixed-size int[] (static) with an ArrayList<Integer> (dynamic). Demonstrate that the static array throws ArrayIndexOutOfBoundsException on overflow while the ArrayList grows. Count capacity doublings when filling an ArrayList.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class StaticVsDynamic {\n\n    public boolean staticOverflows(int capacity) {\n        try {\n            int[] arr = new int[capacity];\n            arr[capacity] = 99; // deliberate out-of-bounds\n            return false;\n        } catch (ArrayIndexOutOfBoundsException e) {\n            return true;\n        }\n    }\n\n    public int countCapacityDoublings(int targetSize) {\n        // TODO: simulate ArrayList growth: starts at 10, doubles when full.\n        // Count how many times capacity must double to hold targetSize elements.\n        return 0;\n    }\n\n    public void demonstrate() {\n        System.out.println(\"Static overflows? \" + staticOverflows(5));\n        System.out.println(\"Doublings for 100 elements: \" + countCapacityDoublings(100));\n        System.out.println(\"Doublings for 1000 elements: \" + countCapacityDoublings(1000));\n    }\n\n    public static void main(String[] args) {\n        new StaticVsDynamic().demonstrate();\n    }\n}",
+      "instructions": [
+        "staticOverflows() is already implemented — do not change it",
+        "countCapacityDoublings(targetSize): start capacity at 10, double it while capacity < targetSize, count doublings",
+        "countCapacityDoublings(100) = 4 (10->20->40->80->160, which exceeds 100 after 4 doublings)",
+        "countCapacityDoublings(11) = 1 (10->20 which exceeds 11 after 1 doubling)",
+        "Return the number of times capacity was doubled"
+      ],
+      "hint": "int capacity=10, count=0; while(capacity < targetSize){ capacity*=2; count++; } return count;",
+      "expectedOutput": "Static overflows? true\nDoublings for 100 elements: 4\nDoublings for 1000 elements: 7"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 131,
+    "allowedSubmissionType": "TEXT"
+  }
+]

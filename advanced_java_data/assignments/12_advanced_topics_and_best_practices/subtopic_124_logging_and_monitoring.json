@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Structured Log Entry Builder",
+    "description": {
+      "task": "Implement a StructuredLogger class that builds structured log entries (JSON-like format) with consistent fields: timestamp, level, service name, correlation ID, message, and optional context. The output format enables log aggregation tools to parse entries reliably.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class StructuredLogger {\n\n    public enum Level { DEBUG, INFO, WARN, ERROR }\n\n    private final String serviceName;\n    private Level minimumLevel;\n\n    public StructuredLogger(String serviceName, Level minimumLevel) {\n        this.serviceName = serviceName;\n        this.minimumLevel = minimumLevel;\n    }\n\n    public String formatEntry(\n        Level level,\n        String correlationId,\n        String message,\n        Map<String, String> context\n    ) {\n        // Format: {\"timestamp\":\"...\",\"level\":\"...\",\"service\":\"...\",\"correlationId\":\"...\",\"message\":\"...\",\"context\":{...}}\n        // Use a fixed timestamp placeholder: '2024-01-01T00:00:00Z' for testability\n        StringBuilder sb = new StringBuilder();\n        sb.append(\"{\");\n        sb.append(\"\\\"timestamp\\\":\\\"2024-01-01T00:00:00Z\\\",\");\n        sb.append(\"\\\"level\\\":\\\"\").append(level).append(\"\\\",\");\n        sb.append(\"\\\"service\\\":\\\"\").append(serviceName).append(\"\\\",\");\n        sb.append(\"\\\"correlationId\\\":\\\"\").append(correlationId).append(\"\\\",\");\n        sb.append(\"\\\"message\\\":\\\"\").append(message).append(\"\\\"\");\n        if (context != null && !context.isEmpty()) {\n            // TODO: append context as JSON object\n        }\n        sb.append(\"}\");\n        return sb.toString();\n    }\n\n    public boolean shouldLog(Level level) {\n        // Return true if level ordinal >= minimumLevel ordinal\n        return level.ordinal() >= minimumLevel.ordinal();\n    }\n\n    public String log(Level level, String correlationId, String message, Map<String, String> context) {\n        if (!shouldLog(level)) return null;\n        return formatEntry(level, correlationId, message, context);\n    }\n\n    public static void main(String[] args) {\n        StructuredLogger logger = new StructuredLogger(\"order-service\", Level.INFO);\n\n        String entry = logger.log(Level.INFO, \"corr-123\", \"Order created\",\n            Map.of(\"orderId\", \"42\", \"userId\", \"7\"));\n        System.out.println(entry);\n\n        String skipped = logger.log(Level.DEBUG, \"corr-123\", \"Debug detail\", null);\n        System.out.println(\"Debug logged: \" + (skipped != null));\n    }\n}",
+      "instructions": [
+        "formatEntry() builds the JSON string in the exact order shown: timestamp, level, service, correlationId, message, context",
+        "Context should be appended as: ',\"context\":{\"key1\":\"val1\",\"key2\":\"val2\"}' (iterate map entries)",
+        "shouldLog() compares level.ordinal() with minimumLevel.ordinal()",
+        "log() returns null when shouldLog() returns false, otherwise returns formatEntry()",
+        "Context keys and values should not have any additional escaping beyond wrapping in double quotes"
+      ],
+      "hint": "For context: sb.append(',\"context\":{'); sb.append(context.entrySet().stream().map(e -> '\"'+e.getKey()+'\":\"'+e.getValue()+'\"').collect(Collectors.joining(','))); sb.append('}');",
+      "expectedOutput": "{\"timestamp\":\"2024-01-01T00:00:00Z\",\"level\":\"INFO\",\"service\":\"order-service\",\"correlationId\":\"corr-123\",\"message\":\"Order created\",\"context\":{\"orderId\":\"42\",\"userId\":\"7\"}}\nDebug logged: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 124,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Metrics Aggregator",
+    "description": {
+      "task": "Build a MetricsAggregator class that collects application metrics (counters, gauges, timers) and generates statistical summaries. Support percentile calculations (p50, p95, p99) for response time distributions, used in SLO/SLA monitoring.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class MetricsAggregator {\n\n    private final Map<String, Long> counters = new HashMap<>();\n    private final Map<String, Double> gauges = new HashMap<>();\n    private final Map<String, List<Long>> timers = new HashMap<>();\n\n    public void incrementCounter(String name, long by) {\n        counters.merge(name, by, Long::sum);\n    }\n\n    public void setGauge(String name, double value) {\n        gauges.put(name, value);\n    }\n\n    public void recordTime(String name, long durationMs) {\n        timers.computeIfAbsent(name, k -> new ArrayList<>()).add(durationMs);\n    }\n\n    public long percentile(String timerName, double percentile) {\n        // Return the value at the given percentile (0.0-100.0) for the timer\n        // Use nearest-rank method: index = ceil(percentile/100 * count) - 1\n        List<Long> times = timers.getOrDefault(timerName, List.of());\n        if (times.isEmpty()) return 0;\n        List<Long> sorted = times.stream().sorted().collect(Collectors.toList());\n        int index = (int) Math.ceil(percentile / 100.0 * sorted.size()) - 1;\n        return sorted.get(Math.max(0, index));\n    }\n\n    public Map<String, Long> timerStats(String timerName) {\n        // Return map with keys: min, max, mean, p50, p95, p99\n        List<Long> times = timers.getOrDefault(timerName, List.of());\n        if (times.isEmpty()) return Map.of();\n        // TODO: compute and return all 6 stats\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        MetricsAggregator metrics = new MetricsAggregator();\n        metrics.incrementCounter(\"requests.total\", 1);\n        metrics.incrementCounter(\"requests.total\", 5);\n        metrics.setGauge(\"heap.usedMb\", 256.5);\n\n        for (long ms : new long[]{10,20,30,40,50,60,70,80,90,100,200,500}) {\n            metrics.recordTime(\"http.response\", ms);\n        }\n\n        System.out.println(\"Requests: \" + metrics.counters.get(\"requests.total\"));\n        System.out.println(\"p50: \" + metrics.percentile(\"http.response\", 50));\n        System.out.println(\"p95: \" + metrics.percentile(\"http.response\", 95));\n        Map<String, Long> stats = metrics.timerStats(\"http.response\");\n        System.out.println(\"min: \" + stats.get(\"min\") + \", max: \" + stats.get(\"max\"));\n    }\n}",
+      "instructions": [
+        "percentile() implementation is provided — do not change it",
+        "timerStats() computes all 6 statistics using the provided methods and stream operations",
+        "min: min of times stream, max: max of times stream, mean: average (as long), p50/p95/p99: use percentile()",
+        "mean should be rounded to the nearest long (use Math.round)",
+        "Return an empty map if no times have been recorded for the timer"
+      ],
+      "hint": "timerStats(): Map<String, Long> result = new HashMap<>(); result.put('min', times.stream().min(Long::compare).get()); result.put('max', ..max..); result.put('mean', Math.round(times.stream().mapToLong(x->x).average().orElse(0))); result.put('p50', percentile(timerName, 50)); etc.",
+      "expectedOutput": "Requests: 6\np50: 60\np95: 200\nmin: 10, max: 500"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 124,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Distributed Correlation ID Propagator",
+    "description": {
+      "task": "Implement a CorrelationIdPropagator class that manages correlation IDs across microservice calls. The ID originates at the API gateway and must be passed to all downstream services via HTTP headers. Implement ID generation, extraction, and thread-local storage for request-scoped tracking.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class CorrelationIdPropagator {\n\n    public static final String HEADER_NAME = \"X-Correlation-Id\";\n    private static final ThreadLocal<String> currentId = new ThreadLocal<>();\n\n    public String generate() {\n        // Generate an ID in format 'cid-<8 random hex chars>'\n        String hex = String.format(\"%08x\", (int)(Math.random() * Integer.MAX_VALUE));\n        return \"cid-\" + hex;\n    }\n\n    public void set(String correlationId) {\n        currentId.set(correlationId);\n    }\n\n    public String get() {\n        return currentId.get();\n    }\n\n    public void clear() {\n        currentId.remove();\n    }\n\n    public String extractOrGenerate(Map<String, String> incomingHeaders) {\n        // Extract from header if present, otherwise generate a new one\n        // Set it as current and return it\n        return null; // TODO\n    }\n\n    public Map<String, String> addToHeaders(Map<String, String> outgoingHeaders) {\n        // Add current correlation ID to outgoing headers\n        // Return the modified map (create new LinkedHashMap to avoid mutating input)\n        return new HashMap<>(); // TODO\n    }\n\n    public static void main(String[] args) {\n        CorrelationIdPropagator prop = new CorrelationIdPropagator();\n\n        // Incoming from API gateway\n        Map<String, String> incoming = Map.of(\"X-Correlation-Id\", \"cid-abc123\", \"Content-Type\", \"application/json\");\n        String id = prop.extractOrGenerate(incoming);\n        System.out.println(\"Extracted: \" + id);\n        System.out.println(\"Current: \" + prop.get());\n\n        // Propagate to downstream\n        Map<String, String> outgoing = new LinkedHashMap<>();\n        outgoing.put(\"Authorization\", \"Bearer token\");\n        Map<String, String> propagated = prop.addToHeaders(outgoing);\n        System.out.println(\"Has correlation ID: \" + propagated.containsKey(HEADER_NAME));\n        System.out.println(\"ID preserved: \" + id.equals(propagated.get(HEADER_NAME)));\n    }\n}",
+      "instructions": [
+        "extractOrGenerate() checks incomingHeaders for HEADER_NAME key; if found, use that value; otherwise call generate()",
+        "extractOrGenerate() calls set() to store the ID in ThreadLocal and returns it",
+        "addToHeaders() creates a new LinkedHashMap, copies outgoingHeaders, adds the current correlation ID, and returns it",
+        "addToHeaders() should not modify the original outgoingHeaders map",
+        "clear() removes the ThreadLocal value to prevent memory leaks"
+      ],
+      "hint": "extractOrGenerate(): String id = incomingHeaders.getOrDefault(HEADER_NAME, generate()); set(id); return id. addToHeaders(): Map<String,String> result = new LinkedHashMap<>(outgoingHeaders); result.put(HEADER_NAME, get()); return result.",
+      "expectedOutput": "Extracted: cid-abc123\nCurrent: cid-abc123\nHas correlation ID: true\nID preserved: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 124,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "title": "Compare Relational vs NoSQL Databases",
+    "description": {
+      "task": "Write SQL queries on a relational table and answer questions that compare RDBMS (relational) vs NoSQL databases.",
+      "language": "sql",
+      "context": "Relational databases store structured data in tables with fixed schemas and support SQL. NoSQL databases (MongoDB, Cassandra) are flexible but sacrifice some structure and ACID guarantees.",
+      "starterCode": "CREATE TABLE db_comparison (\n  id INT PRIMARY KEY,\n  db_type VARCHAR(20),\n  db_name VARCHAR(30),\n  schema_type VARCHAR(20),\n  best_for VARCHAR(80)\n);\n\nINSERT INTO db_comparison VALUES\n  (1, 'Relational', 'MySQL',      'Fixed schema',    'Structured data, transactions, reporting'),\n  (2, 'Relational', 'PostgreSQL', 'Fixed schema',    'Complex queries, data integrity'),\n  (3, 'NoSQL',      'MongoDB',    'Flexible schema', 'Unstructured data, rapid prototyping'),\n  (4, 'NoSQL',      'Cassandra',  'Flexible schema', 'High-write workloads, time-series data'),\n  (5, 'NoSQL',      'Redis',      'Key-Value',       'Caching, session management');\n\n-- Query 1: Show only Relational databases\n-- Query 2: Show only NoSQL databases\n-- Query 3: Show all databases ordered by db_type\n",
+      "instructions": [
+        "Query 1: SELECT all rows WHERE db_type = 'Relational'.",
+        "Query 2: SELECT all rows WHERE db_type = 'NoSQL'.",
+        "Query 3: SELECT all rows ORDER BY db_type, db_name.",
+        "Label each query with a comment."
+      ],
+      "hint": "String comparisons in SQL are case-sensitive in some databases. Use exact case matching as shown.",
+      "expectedOutput": "Q1: MySQL, PostgreSQL\nQ2: MongoDB, Cassandra, Redis\nQ3: All 5 rows alphabetically by type then name"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 29,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "When to Use Each Database Type",
+    "description": {
+      "task": "Given a scenarios table, write a SQL query that matches each use case to the most appropriate database type.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE use_cases (\n  id INT PRIMARY KEY,\n  scenario VARCHAR(100),\n  recommended_type VARCHAR(20),\n  reason VARCHAR(100)\n);\n\nINSERT INTO use_cases VALUES\n  (1, 'Bank transaction processing',     'Relational', 'Requires ACID, strict schema, joins'),\n  (2, 'Social media user activity feed', 'NoSQL',      'High write volume, flexible content'),\n  (3, 'E-commerce product catalog',      'Relational', 'Structured data, reporting, inventory'),\n  (4, 'Real-time chat messages',         'NoSQL',      'Flexible message schema, high throughput'),\n  (5, 'Hospital patient records',        'Relational', 'Data integrity, complex queries, auditing');\n\n-- Task 1: Select all use cases where recommended_type is 'Relational'\n-- Task 2: Select all use cases where reason CONTAINS 'ACID' OR 'integrity'\n",
+      "instructions": [
+        "Query 1: Filter rows where recommended_type = 'Relational'.",
+        "Query 2: Filter rows where reason contains 'ACID' OR reason contains 'integrity' using LIKE and OR.",
+        "Label each with a comment."
+      ],
+      "hint": "Combine multiple LIKE conditions with OR: WHERE reason LIKE '%ACID%' OR reason LIKE '%integrity%'",
+      "expectedOutput": "Q1: 3 rows (Bank, E-commerce, Hospital)\nQ2: 2 rows (Bank transaction, Hospital patient)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 29,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Database Type Features Summary",
+    "description": {
+      "task": "Write SQL queries that count, group, and summarise database features from a comparison table.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE db_features (\n  id INT PRIMARY KEY,\n  db_type VARCHAR(20),\n  feature VARCHAR(50),\n  supported BOOLEAN\n);\n\nINSERT INTO db_features VALUES\n  (1,  'Relational', 'ACID transactions',   true),\n  (2,  'Relational', 'SQL query language',  true),\n  (3,  'Relational', 'Fixed schema',        true),\n  (4,  'Relational', 'Horizontal scaling',  false),\n  (5,  'NoSQL',      'ACID transactions',   false),\n  (6,  'NoSQL',      'SQL query language',  false),\n  (7,  'NoSQL',      'Flexible schema',     true),\n  (8,  'NoSQL',      'Horizontal scaling',  true),\n  (9,  'NoSQL',      'High availability',   true),\n  (10, 'Relational', 'Complex joins',       true);\n\n-- Query 1: Count supported features per db_type\n-- Query 2: Show features supported by Relational but NOT NoSQL (supported = true for Relational)\n-- Query 3: Show all features for NoSQL where supported = true\n",
+      "instructions": [
+        "Query 1: SELECT db_type, COUNT(*) as total_features, SUM(CASE WHEN supported THEN 1 ELSE 0 END) as supported_count GROUP BY db_type.",
+        "Query 2: SELECT feature WHERE db_type = 'Relational' AND supported = true.",
+        "Query 3: SELECT feature WHERE db_type = 'NoSQL' AND supported = true."
+      ],
+      "hint": "CASE WHEN supported THEN 1 ELSE 0 END converts a boolean to 1/0 for summing. Some databases use supported = TRUE (uppercase).",
+      "expectedOutput": "Q1: Relational has 4 supported, NoSQL has 3 supported\nQ2: ACID transactions, SQL query language, Fixed schema, Complex joins\nQ3: Flexible schema, Horizontal scaling, High availability"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 29,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "title": "Simulate Client-Server Queries",
+    "description": {
+      "task": "Write queries that represent a client sending requests to a database server — demonstrating how the client-server model works in a DBMS context.",
+      "language": "sql",
+      "context": "In a client-server DBMS architecture, a client application (e.g., your app, pgAdmin, or MySQL Workbench) sends SQL queries over a network to the database server, which processes them and returns results.",
+      "starterCode": "CREATE TABLE server_logs (\n  id INT PRIMARY KEY,\n  client_id INT,\n  client_ip VARCHAR(20),\n  query_type VARCHAR(20),\n  query_text VARCHAR(200),\n  execution_ms INT,\n  logged_at TIMESTAMP\n);\n\nINSERT INTO server_logs VALUES\n  (1, 101, '192.168.1.10', 'SELECT', 'SELECT * FROM users WHERE id=5',         12, '2026-03-01 09:00:01'),\n  (2, 102, '192.168.1.11', 'INSERT', 'INSERT INTO orders VALUES(...)',           8,  '2026-03-01 09:00:03'),\n  (3, 101, '192.168.1.10', 'SELECT', 'SELECT COUNT(*) FROM products',            5,  '2026-03-01 09:00:05'),\n  (4, 103, '10.0.0.5',     'UPDATE', 'UPDATE inventory SET stock=stock-1',       20, '2026-03-01 09:00:07'),\n  (5, 102, '192.168.1.11', 'SELECT', 'SELECT * FROM orders WHERE status=active', 35, '2026-03-01 09:00:10'),\n  (6, 104, '10.0.0.9',     'DELETE', 'DELETE FROM sessions WHERE expired=true',   9,  '2026-03-01 09:00:12');\n\n-- Query 1: Show all SELECT queries, ordered by execution time\n-- Query 2: Count queries per client_id\n-- Query 3: Find the slowest query (max execution_ms)\n",
+      "instructions": [
+        "Query 1: SELECT client_ip, query_text, execution_ms FROM server_logs WHERE query_type = 'SELECT' ORDER BY execution_ms DESC.",
+        "Query 2: SELECT client_id, COUNT(*) as query_count FROM server_logs GROUP BY client_id ORDER BY query_count DESC.",
+        "Query 3: SELECT * FROM server_logs WHERE execution_ms = (SELECT MAX(execution_ms) FROM server_logs)."
+      ],
+      "hint": "A subquery (SELECT MAX(...) FROM ...) returns the maximum value which is then used in the outer WHERE clause for exact matching.",
+      "expectedOutput": "Q1: 3 SELECT rows ordered by exec time (35ms, 12ms, 5ms)\nQ2: client 101:2, 102:2, 103:1, 104:1\nQ3: Row with execution_ms=35"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 33,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Identify Network Layer Operations",
+    "description": {
+      "task": "Query a table that describes how the client-server layers process a SQL request step by step.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE request_pipeline (\n  step_order INT PRIMARY KEY,\n  layer VARCHAR(30),\n  action VARCHAR(100),\n  location VARCHAR(20)\n);\n\nINSERT INTO request_pipeline VALUES\n  (1, 'Client Application',  'User submits SQL query',                        'Client'),\n  (2, 'Client Driver',       'Serialises query and sends over TCP/IP',         'Client'),\n  (3, 'Network',             'Query travels to database server port (5432)',   'Network'),\n  (4, 'Connection Handler',  'Server accepts connection, authenticates user',  'Server'),\n  (5, 'Query Processor',     'Parses SQL, plans and optimises execution',      'Server'),\n  (6, 'Storage Engine',      'Reads/writes data from disk or buffer cache',    'Server'),\n  (7, 'Result Set',          'Server sends result rows back to client',        'Server'),\n  (8, 'Client Application',  'Displays or processes the returned results',     'Client');\n\n-- Query 1: Show all Client-side steps in order\n-- Query 2: Show all Server-side steps in order\n-- Query 3: Count steps per location\n",
+      "instructions": [
+        "Query 1: SELECT step_order, layer, action FROM request_pipeline WHERE location = 'Client' ORDER BY step_order.",
+        "Query 2: SELECT step_order, layer, action FROM request_pipeline WHERE location = 'Server' ORDER BY step_order.",
+        "Query 3: SELECT location, COUNT(*) as steps FROM request_pipeline GROUP BY location."
+      ],
+      "hint": "ORDER BY step_order ensures the pipeline steps appear in sequence. Use separate queries labelled with comments.",
+      "expectedOutput": "Q1: Steps 1,2,8 (Client)\nQ2: Steps 4,5,6,7 (Server)\nQ3: Client:3, Network:1, Server:4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 33,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Connection Pool Analysis",
+    "description": {
+      "task": "Analyse a connection pool status table to find active connections, idle connections, and utilisation rate.",
+      "language": "sql",
+      "context": "In production systems, a connection pool keeps a fixed number of pre-established database connections so clients don't need to re-negotiate a connection on every request.",
+      "starterCode": "CREATE TABLE connection_pool (\n  conn_id INT PRIMARY KEY,\n  client_app VARCHAR(50),\n  status VARCHAR(10),\n  current_query VARCHAR(100),\n  duration_secs INT\n);\n\nINSERT INTO connection_pool VALUES\n  (1,  'WebServer-1', 'active', 'SELECT * FROM users WHERE id=101',  2),\n  (2,  'WebServer-1', 'idle',   NULL,                                  0),\n  (3,  'WebServer-2', 'active', 'INSERT INTO orders VALUES(...)',      1),\n  (4,  'WebServer-2', 'idle',   NULL,                                  0),\n  (5,  'ReportJob',  'active', 'SELECT SUM(sales) FROM transactions', 45),\n  (6,  'WebServer-3', 'idle',   NULL,                                  0),\n  (7,  'WebServer-3', 'active', 'UPDATE stock SET qty=qty-1',          3),\n  (8,  'CacheSync',  'idle',   NULL,                                  0),\n  (9,  'WebServer-1', 'idle',   NULL,                                  0),\n  (10, 'WebServer-2', 'active', 'SELECT product FROM catalog LIMIT 20',1);\n\n-- Query 1: Show all ACTIVE connections with their current queries\n-- Query 2: Count active vs idle connections\n-- Query 3: Find any long-running query (duration_secs > 10)\n",
+      "instructions": [
+        "Query 1: SELECT conn_id, client_app, current_query, duration_secs FROM connection_pool WHERE status = 'active' ORDER BY duration_secs DESC.",
+        "Query 2: SELECT status, COUNT(*) as count FROM connection_pool GROUP BY status.",
+        "Query 3: SELECT * FROM connection_pool WHERE duration_secs > 10."
+      ],
+      "hint": "NULL values in current_query represent idle connections with no active query. Query 1's ORDER BY will show the longest-running queries first.",
+      "expectedOutput": "Q1: 5 active connections, ReportJob longest at 45s\nQ2: active:5, idle:5\nQ3: ReportJob (45 seconds)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 33,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,26 @@
+<h1>💡 Understanding State in React</h1>
+<h2>🎯 What is State?</h2>
+<p><strong>State</strong> is data that can change over time and, when it changes, causes the component to re-render to reflect the new data in the UI.</p>
+<h2>📋 State vs Props</h2>
+<table border="1" style="border-collapse:collapse; width:100%">
+  <tr><th>Feature</th><th>Props</th><th>State</th></tr>
+  <tr><td>Owned by</td><td>Parent component</td><td>Component itself</td></tr>
+  <tr><td>Mutable</td><td>No (read-only)</td><td>Yes (via setState)</td></tr>
+  <tr><td>Used for</td><td>Passing data down</td><td>Component's own data</td></tr>
+  <tr><td>Triggers re-render</td><td>When parent re-renders</td><td>When state changes</td></tr>
+</table>
+<h2>📌 What Should Be State?</h2>
+<ul>
+  <li>User input (form fields)</li>
+  <li>Toggle values (isOpen, isLoading)</li>
+  <li>API response data</li>
+  <li>Current page / selected item</li>
+</ul>
+<h2>⚠️ What Should NOT Be State?</h2>
+<ul>
+  <li>Derived values (compute from existing state instead)</li>
+  <li>Props (don't copy props into state)</li>
+  <li>Constant values</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>State = the component's memory for changing data. Only put things in state that actually need to trigger a re-render and that can't be derived from existing state or props.</p>

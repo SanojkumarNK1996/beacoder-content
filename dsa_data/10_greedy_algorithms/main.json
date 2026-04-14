@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 174, "title": "Greedy Algorithm Approach", "dataType": "notes", "data": "intro_to_greedy.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 175, "title": "Activity Selection Problem", "dataType": "notes", "data": "activity_selection.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 176, "title": "Fractional Knapsack", "dataType": "notes", "data": "fractional_knapsack.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 177, "title": "Graph Greedy Algorithms", "dataType": "notes", "data": "greedy_patterns.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 178, "title": "Huffman Coding", "dataType": "notes", "data": "huffman_coding.html", "displayOrder": 5, "verified": false}
+]

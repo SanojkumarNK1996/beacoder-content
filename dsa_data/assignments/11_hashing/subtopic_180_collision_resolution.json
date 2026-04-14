@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Linear Probing (Open Addressing)",
+    "description": {
+      "task": "Implement a hash table using open addressing with linear probing. When a collision occurs, probe the next slot sequentially. Implement put, get, and delete (using a tombstone marker). Print the internal table state.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class LinearProbing {\n    private static final int EMPTY  = Integer.MIN_VALUE;\n    private static final int DELETED = Integer.MIN_VALUE + 1; // tombstone\n    private int capacity;\n    private int[] keys, vals;\n\n    public LinearProbing(int cap) {\n        capacity = cap;\n        keys = new int[cap]; vals = new int[cap];\n        Arrays.fill(keys, EMPTY);\n    }\n\n    private int hash(int key) { return Math.abs(key) % capacity; }\n\n    public void put(int key, int val) {\n        int i = hash(key);\n        while (keys[i] != EMPTY && keys[i] != DELETED && keys[i] != key)\n            i = (i + 1) % capacity; // linear probe\n        keys[i] = key; vals[i] = val;\n    }\n\n    public int get(int key) {\n        int i = hash(key);\n        // TODO: probe until EMPTY or key found; skip DELETED slots\n        while (keys[i] != EMPTY) {\n            if (keys[i] == key) return vals[i];\n            // TODO: if DELETED, continue probing\n            i = (i + 1) % capacity;\n        }\n        return -1;\n    }\n\n    public void delete(int key) {\n        int i = hash(key);\n        while (keys[i] != EMPTY) {\n            if (keys[i] == key) { keys[i] = DELETED; return; }\n            i = (i + 1) % capacity;\n        }\n    }\n\n    public void printTable() {\n        for (int i = 0; i < capacity; i++) {\n            String s = keys[i]==EMPTY?\"EMPTY\":keys[i]==DELETED?\"DEL\":keys[i]+\":\"+vals[i];\n            System.out.println(\"[\" + i + \"] \" + s);\n        }\n    }\n\n    public static void main(String[] args) {\n        LinearProbing lp = new LinearProbing(7);\n        lp.put(10, 100); lp.put(17, 170); lp.put(24, 240); // 10,17,24 all hash to 3\n        lp.put(5, 50);\n        lp.printTable();\n        System.out.println(\"get(17): \" + lp.get(17));\n        lp.delete(17);\n        System.out.println(\"After delete(17), get(24): \" + lp.get(24));\n    }\n}",
+      "instructions": [
+        "The DELETED tombstone means: skip it while searching, but stop at EMPTY",
+        "get: the loop already handles it — just ensure DELETED slots are skipped (the loop continues on them)",
+        "Actually looking at the code: if(keys[i]==key) return vals[i]; else i=(i+1)%capacity; — DELETED is skipped by this logic already. The TODO comment is just noting it explicitly",
+        "10,17,24 all hash to 3 (mod 7); they occupy slots 3,4,5 with linear probing; 5 hashes to slot 5 → conflict → slot 6",
+        "After delete(17), slot 4 has tombstone; get(24) still finds it at slot 5 by probing past tombstone"
+      ],
+      "hint": "The get loop already skips DELETED by only checking for key equality first. The DELETED tombstone ensures probing continues past deleted slots while stopping at EMPTY.",
+      "expectedOutput": "[0] EMPTY\n[1] EMPTY\n[2] EMPTY\n[3] 10:100\n[4] 17:170\n[5] 24:240\n[6] 5:50\nget(17): 170\nAfter delete(17), get(24): 240"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 180,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Quadratic Probing",
+    "description": {
+      "task": "Implement a hash table with quadratic probing (i² offset for i=0,1,2,...). Compare it with linear probing for clustering behavior. Demonstrate that quadratic probing reduces primary clustering by spreading collisions.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class QuadraticProbing {\n    private static final int EMPTY = Integer.MIN_VALUE;\n    private int capacity;\n    private int[] keys, vals;\n\n    public QuadraticProbing(int cap) {\n        capacity = cap; // should be prime for best distribution\n        keys = new int[cap]; vals = new int[cap];\n        Arrays.fill(keys, EMPTY);\n    }\n\n    private int hash(int key) { return Math.abs(key) % capacity; }\n\n    public boolean put(int key, int val) {\n        int base = hash(key);\n        for (int i = 0; i < capacity; i++) {\n            int slot = (base + i * i) % capacity; // quadratic probe\n            if (keys[slot] == EMPTY || keys[slot] == key) {\n                keys[slot] = key; vals[slot] = val; return true;\n            }\n        }\n        return false; // table full\n    }\n\n    public int get(int key) {\n        int base = hash(key);\n        // TODO: Probe with quadratic offset: slot = (base + i*i) % capacity\n        //       Return vals[slot] if keys[slot]==key; return -1 if EMPTY reached\n        for (int i = 0; i < capacity; i++) {\n            int slot = 0; // replace with quadratic formula\n            if (keys[slot] == EMPTY) return -1;\n            if (keys[slot] == key) return vals[slot];\n        }\n        return -1;\n    }\n\n    public void printSlots() {\n        for (int i = 0; i < capacity; i++)\n            System.out.println(\"[\" + i + \"] \" + (keys[i]==EMPTY?\"EMPTY\":keys[i]+\":\"+vals[i]));\n    }\n\n    public static void main(String[] args) {\n        QuadraticProbing qp = new QuadraticProbing(11); // prime capacity\n        qp.put(10, 100); qp.put(21, 210); qp.put(32, 320); // all hash to 10\n        qp.put(5, 50); qp.put(16, 160);\n        qp.printSlots();\n        System.out.println(\"get(32): \" + qp.get(32));\n        System.out.println(\"get(16): \" + qp.get(16));\n    }\n}",
+      "instructions": [
+        "get: slot=(base+i*i)%capacity;",
+        "Keys 10,21,32 hash to 10 (mod 11). Linear probing would put them at 10,0,1 (consecutive). Quadratic: 10→slot 10, 21→(10+1)%11=0, 32→(10+4)%11=3 (more spread out)",
+        "5 hashes to 5; 16 hashes to 5 → quadratic: 16→(5+1)%11=6",
+        "printSlots shows scattered placement vs linear probing's clustering",
+        "The only change needed is the slot formula in get"
+      ],
+      "hint": "int slot=(base+i*i)%capacity;",
+      "expectedOutput": "[0] 21:210\n[1] EMPTY\n[2] EMPTY\n[3] 32:320\n[4] EMPTY\n[5] 5:50\n[6] 16:160\n[7] EMPTY\n[8] EMPTY\n[9] EMPTY\n[10] 10:100\nget(32): 320\nget(16): 160"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 180,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Double Hashing",
+    "description": {
+      "task": "Implement double hashing where the probe step itself is computed by a second hash function: slot = (h1(key) + i * h2(key)) % capacity. This eliminates both primary and secondary clustering. Use h2(key) = 7 - (key % 7).",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class DoubleHashing {\n    private static final int EMPTY = Integer.MIN_VALUE;\n    private int capacity;\n    private int[] keys, vals;\n\n    public DoubleHashing(int cap) {\n        capacity = cap;\n        keys = new int[cap]; vals = new int[cap];\n        Arrays.fill(keys, EMPTY);\n    }\n\n    private int h1(int key) { return Math.abs(key) % capacity; }\n    private int h2(int key) { return 7 - (Math.abs(key) % 7); } // always 1..7\n\n    public void put(int key, int val) {\n        int base = h1(key), step = h2(key);\n        for (int i = 0; i < capacity; i++) {\n            int slot = (base + i * step) % capacity;\n            if (keys[slot] == EMPTY || keys[slot] == key) {\n                keys[slot] = key; vals[slot] = val; return;\n            }\n        }\n    }\n\n    public int get(int key) {\n        int base = h1(key), step = h2(key);\n        // TODO: probe using double hashing: slot = (base + i*step) % capacity\n        //       return vals[slot] if match; return -1 if EMPTY\n        for (int i = 0; i < capacity; i++) {\n            // int slot = ?;\n            // TODO\n        }\n        return -1;\n    }\n\n    public void printSlots() {\n        for (int i = 0; i < capacity; i++)\n            System.out.println(\"[\" + i + \"] \" + (keys[i]==EMPTY?\"EMPTY\":keys[i]+\":\"+vals[i]));\n    }\n\n    public static void main(String[] args) {\n        DoubleHashing dh = new DoubleHashing(11);\n        dh.put(20, 200); dh.put(31, 310); dh.put(42, 420); // all h1 = 9\n        dh.put(4, 40);\n        dh.printSlots();\n        System.out.println(\"get(31): \" + dh.get(31));\n        System.out.println(\"get(42): \" + dh.get(42));\n    }\n}",
+      "instructions": [
+        "get: int slot=(base+i*step)%capacity; if(keys[slot]==EMPTY) return -1; if(keys[slot]==key) return vals[slot];",
+        "For 20: h1=9, h2=7-(20%7)=7-6=1; slot=9",
+        "For 31: h1=9, h2=7-(31%7)=7-3=4; probe: 9→(9+4)%11=2",
+        "For 42: h1=9, h2=7-(42%7)=7-0=7; probe: 9→(9+7)%11=5",
+        "Double hashing spreads collisions better than linear or quadratic probing"
+      ],
+      "hint": "int slot=(base+i*step)%capacity; if(keys[slot]==EMPTY)return -1; if(keys[slot]==key)return vals[slot];",
+      "expectedOutput": "[0] EMPTY\n[1] EMPTY\n[2] 31:310\n[3] EMPTY\n[4] 4:40\n[5] 42:420\n[6] EMPTY\n[7] EMPTY\n[8] EMPTY\n[9] 20:200\n[10] EMPTY\nget(31): 310\nget(42): 420"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 180,
+    "allowedSubmissionType": "TEXT"
+  }
+]

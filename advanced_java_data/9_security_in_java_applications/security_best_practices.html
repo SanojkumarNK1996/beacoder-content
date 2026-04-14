@@ -1,0 +1,92 @@
+<h1>🛡️ Security Best Practices</h1>
+
+<h2>🎯 Goal</h2>
+<p>Even with Spring Security in place, insecure configuration or coding practices can still leave your application vulnerable. This section covers <strong>practical best practices</strong> for securing Java and Spring applications.</p>
+
+<h2>🔑 Password and Credential Management</h2>
+<ul>
+  <li>Never store passwords in plain text</li>
+  <li>Use strong <strong>password hashing</strong> (BCrypt, Argon2, PBKDF2)</li>
+  <li>Enforce <strong>password policies</strong> (length, complexity, lockout on repeated failures)</li>
+  <li>Do not hardcode secrets (API keys, DB passwords) in source code</li>
+  <li>Use <strong>environment variables</strong> or secret management tools (Vault, AWS Secrets Manager)</li>
+</ul>
+
+<h2>🌐 HTTPS Everywhere</h2>
+<ul>
+  <li>Use <strong>HTTPS</strong> for all traffic, especially authentication and sensitive data</li>
+  <li>Redirect HTTP to HTTPS</li>
+  <li>Use modern TLS versions and strong cipher suites</li>
+</ul>
+
+<h2>🧾 Security Headers</h2>
+<p>Configure HTTP security headers to protect against common attacks:</p>
+
+<ul>
+  <li><strong>Content-Security-Policy (CSP)</strong> – Mitigates XSS</li>
+  <li><strong>X-Frame-Options</strong> – Protects against clickjacking</li>
+  <li><strong>X-Content-Type-Options</strong> – Prevents MIME type sniffing</li>
+  <li><strong>Strict-Transport-Security (HSTS)</strong> – Enforces HTTPS</li>
+</ul>
+
+<p>Spring Security can help configure many of these headers automatically.</p>
+
+<h2>🧬 CSRF Protection</h2>
+<ul>
+  <li>CSRF (Cross-Site Request Forgery) tricks a logged-in user into performing unwanted actions</li>
+  <li>Enable CSRF protection for <strong>state-changing operations</strong> in browser-based apps</li>
+  <li>For pure stateless REST APIs used by SPAs/mobile apps, carefully evaluate CSRF vs token-based approaches</li>
+</ul>
+
+<h2>🧹 Input Validation & Output Encoding</h2>
+<ul>
+  <li>Validate input on <strong>server side</strong> using Bean Validation (e.g., @NotBlank, @Email)</li>
+  <li>Sanitize/escape output in views to prevent XSS</li>
+  <li>Use prepared statements / parameterized queries to prevent SQL Injection (Spring Data/JPA help here)</li>
+</ul>
+
+<h2>📦 Least Privilege</h2>
+<ul>
+  <li>Give users and services only the <strong>minimal permissions</strong> they need</li>
+  <li>Restrict database users (read-only vs read/write)</li>
+  <li>Use separate credentials per environment (dev, test, prod)</li>
+</ul>
+
+<h2>🧩 Secure Configuration Management</h2>
+<ul>
+  <li>Keep configuration out of source control when it contains secrets</li>
+  <li>Use profiles (dev/test/prod) with appropriate security settings</li>
+  <li>Turn off debug features (e.g., detailed error pages, actuator endpoints) in production</li>
+</ul>
+
+<h2>📊 Logging & Monitoring</h2>
+<ul>
+  <li>Log authentication attempts (success/failure), access denials, suspicious behavior</li>
+  <li>Ensure logs <strong>do not contain sensitive data</strong> (passwords, full credit card numbers)</li>
+  <li>Use centralized logging and monitoring (ELK stack, Prometheus, Grafana)</li>
+  <li>Set up alerts for unusual patterns</li>
+</ul>
+
+<h2>🔍 Regular Security Testing</h2>
+<ul>
+  <li>Run <strong>static code analysis</strong> tools (SpotBugs, SonarQube)</li>
+  <li>Use dependency scanning tools (OWASP Dependency-Check, Snyk, etc.)</li>
+  <li>Perform penetration tests or use automated scanners for common vulnerabilities</li>
+</ul>
+
+<h2>📚 Follow OWASP Guidelines</h2>
+<p>The <strong>OWASP Top Ten</strong> lists the most critical web application security risks (e.g., injection, broken auth, XSS, insecure deserialization).</p>
+
+<ul>
+  <li>Review the OWASP Top Ten regularly</li>
+  <li>Design and code with these risks in mind</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Security is an <strong>ongoing process</strong>, not a one-time setup</li>
+  <li>Combine Spring Security features with <strong>good coding and configuration practices</strong></li>
+  <li>Keep dependencies updated, monitor your systems, and follow industry standards (like OWASP)</li>
+</ul>
+
+<p>By applying these best practices, you significantly reduce the attack surface of your Java applications.</p>

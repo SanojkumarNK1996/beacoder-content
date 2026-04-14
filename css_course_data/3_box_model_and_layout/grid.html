@@ -1,0 +1,55 @@
+<h1>CSS Grid</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>Grid simplifies building complex two-dimensional layouts like dashboards, galleries, and magazine-style pages.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>CSS Grid is a powerful layout system for defining rows, columns, and areas.</li>
+</ul>
+
+<h2>Syntax / Basic usage</h2>
+<pre><code>.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.item {
+  background: #eee;
+}
+</code></pre>
+
+<h2>How it works</h2>
+<ol>
+  <li>Set display: grid on the parent.</li>
+  <li>Define columns and rows using grid-template-columns and grid-template-rows.</li>
+  <li>Place items explicitly or let them auto-flow into the grid.</li>
+</ol>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>display: grid on container.</li>
+  <li>Use fr units to divide available space.</li>
+  <li>gap creates space between grid items.</li>
+</ul>
+
+<h2>Common mistakes</h2>
+<ul>
+  <li>Mixing flexbox and grid without a clear plan.</li>
+  <li>Overcomplicating layouts that could be simple.</li>
+</ul>
+
+<h2>Interviewer perspective</h2>
+<ul>
+  <li>When would you choose grid over flexbox?</li>
+  <li>Explain the fr unit.</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Create a 3x3 photo gallery using CSS Grid.</li>
+  <li>Build a basic dashboard layout with header, sidebar, and main content using grid areas.</li>
+</ol>

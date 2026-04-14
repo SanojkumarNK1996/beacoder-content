@@ -1,0 +1,73 @@
+[
+  {
+    "title": "First Multiple of 7 with break",
+    "description": {
+      "task": "Write a Java program that uses a for loop and a break statement to find and print the first multiple of 7 that is also greater than 50.",
+      "language": "java",
+      "starterCode": "public class BreakDemo {\n    public static void main(String[] args) {\n        int found = -1;\n\n        for (int i = 51; i <= 200; i++) {\n            // Check if i is a multiple of 7\n            // If yes, store in found and break the loop\n        }\n\n        System.out.println(\"First multiple of 7 greater than 50: \" + found);\n    }\n}",
+      "instructions": [
+        "Loop from 51 to 200.",
+        "Inside the loop, check if i % 7 == 0.",
+        "If true, assign i to found and use break to exit the loop.",
+        "Print the result in the exact format shown."
+      ],
+      "hint": "break immediately exits the innermost loop. After break, execution continues at the line after the loop.",
+      "expectedOutput": "First multiple of 7 greater than 50: 56"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 10,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Print Even Numbers with continue",
+    "description": {
+      "task": "Write a Java program that uses a for loop and a continue statement to print only even numbers from 1 to 20.",
+      "language": "java",
+      "starterCode": "public class ContinueDemo {\n    public static void main(String[] args) {\n        System.out.println(\"Even numbers from 1 to 20:\");\n\n        for (int i = 1; i <= 20; i++) {\n            // Skip odd numbers using continue\n            // Print even numbers\n        }\n    }\n}",
+      "instructions": [
+        "Inside the loop, use an if statement to check if i is odd (i % 2 != 0).",
+        "If the number is odd, use continue to skip to the next iteration.",
+        "If the number is even, print it.",
+        "Print all even numbers from 2 to 20, each on its own line."
+      ],
+      "hint": "continue skips the rest of the current loop iteration and moves to the next step in the loop header (i++).",
+      "expectedOutput": "Even numbers from 1 to 20:\n2\n4\n6\n8\n10\n12\n14\n16\n18\n20"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 10,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Return from a Method",
+    "description": {
+      "task": "Write a Java program with a method that checks if a number is prime. Use return to exit early when a divisor is found.",
+      "language": "java",
+      "context": "return inside a method immediately stops execution and sends a value back to the caller — it can be used as an early-exit strategy in loops within methods.",
+      "starterCode": "public class PrimeChecker {\n\n    public static boolean isPrime(int n) {\n        if (n < 2) return false;\n\n        // Loop from 2 to n-1\n        // If n is divisible by any i, return false immediately\n\n        return true; // If no divisor found, it's prime\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"17 is prime: \" + isPrime(17));\n        System.out.println(\"18 is prime: \" + isPrime(18));\n        System.out.println(\"1 is prime: \" + isPrime(1));\n    }\n}",
+      "instructions": [
+        "Complete the isPrime() method body.",
+        "Loop from i = 2 to i < n.",
+        "If n % i == 0, return false immediately (uses 'return' as an early exit).",
+        "After the loop, return true.",
+        "Do NOT change the main() method."
+      ],
+      "hint": "You can optimize by looping only up to Math.sqrt(n): for (int i = 2; i <= Math.sqrt(n); i++). This is more efficient but not required.",
+      "expectedOutput": "17 is prime: true\n18 is prime: false\n1 is prime: false"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 3,
+    "subtopicId": 10,
+    "allowedSubmissionType": "TEXT"
+  }
+]

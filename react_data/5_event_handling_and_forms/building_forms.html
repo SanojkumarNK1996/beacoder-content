@@ -1,0 +1,53 @@
+<h1>📋 Building Forms in React</h1>
+<h2>🎯 Complete Form Example</h2>
+<div class="code-example">
+  <pre>
+function LoginForm() {
+  const [form, setForm] = useState({ email: '', password: '' });
+
+  const handleChange = (e) =&gt; {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) =&gt; {
+    e.preventDefault();  // Prevent page reload
+    console.log('Form submitted:', form);
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input
+        type="email"
+        name="email"
+        value={form.email}
+        onChange={handleChange}
+        placeholder="Email"
+      /&gt;
+      &lt;input
+        type="password"
+        name="password"
+        value={form.password}
+        onChange={handleChange}
+        placeholder="Password"
+      /&gt;
+      &lt;button type="submit"&gt;Login&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}
+  </pre>
+</div>
+<h2>📌 Select, Checkbox, Radio</h2>
+<div class="code-example">
+  <pre>
+// Select
+&lt;select value={color} onChange={e =&gt; setColor(e.target.value)}&gt;
+  &lt;option value="red"&gt;Red&lt;/option&gt;
+  &lt;option value="blue"&gt;Blue&lt;/option&gt;
+&lt;/select&gt;
+
+// Checkbox
+&lt;input type="checkbox" checked={agreed} onChange={e =&gt; setAgreed(e.target.checked)} /&gt;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Use a single state object for forms with multiple fields. <code>e.target.name</code> + computed property key <code>[name]: value</code> is the cleanest pattern for generic change handlers.</p>

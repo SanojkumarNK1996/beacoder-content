@@ -1,0 +1,75 @@
+[
+  {
+    "title": "GROUP BY Fundamentals",
+    "description": {
+      "task": "Use GROUP BY to group rows and compute aggregate statistics per group.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE orders (\n  order_id   INT PRIMARY KEY,\n  customer   VARCHAR(50),\n  category   VARCHAR(40),\n  amount     DECIMAL(8,2),\n  order_date DATE\n);\n\nINSERT INTO orders VALUES\n  (1,  'Alice', 'Electronics',  999.99, '2026-01-05'),\n  (2,  'Bob',   'Furniture',    250.00, '2026-01-06'),\n  (3,  'Alice', 'Stationery',     5.99, '2026-01-07'),\n  (4,  'Carol', 'Electronics',  299.99, '2026-01-08'),\n  (5,  'Bob',   'Electronics',   19.99, '2026-01-09'),\n  (6,  'Alice', 'Furniture',    175.00, '2026-01-10'),\n  (7,  'Dave',  'Stationery',     8.99, '2026-01-11'),\n  (8,  'Carol', 'Electronics',  999.99, '2026-01-12'),\n  (9,  'Dave',  'Furniture',    350.00, '2026-01-13'),\n  (10, 'Alice', 'Electronics',   59.99, '2026-01-14');\n\n-- Group 1: Total orders and revenue per customer\nSELECT\n  customer,\n  COUNT(*) AS order_count,\n  SUM(amount) AS total_spent,\n  AVG(amount) AS avg_order_value\nFROM orders\nGROUP BY customer\nORDER BY total_spent DESC;\n\n-- Group 2: Revenue per category\nSELECT\n  category,\n  COUNT(*) AS order_count,\n  SUM(amount) AS category_revenue\nFROM orders\nGROUP BY category\nORDER BY category_revenue DESC;\n",
+      "instructions": [
+        "Run both GROUP BY queries.",
+        "Customer query: Alice has 4 orders totalling ~1240.97, Carol has 2 (~1299.98), Dave 2 (~358.99), Bob 2 (~269.99).",
+        "Category query: Electronics dominates in revenue.",
+        "Add a GROUP BY on (customer, category) to see revenue per customer per category.",
+        "In a comment: why must every selected column either be in GROUP BY or wrapped in an aggregate function?"
+      ],
+      "hint": "Non-aggregated columns not in GROUP BY cause an ambiguity error — the database doesn't know which row's value to use for the group. Every column in SELECT must be either grouped or aggregated.",
+      "expectedOutput": "By customer: Alice highest total, ~4 orders\nBy category: Electronics > Furniture > Stationery"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 54,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "HAVING Clause",
+    "description": {
+      "task": "Use the HAVING clause to filter groups after aggregation — the equivalent of WHERE but for grouped results.",
+      "language": "sql",
+      "context": "WHERE filters individual rows BEFORE grouping. HAVING filters whole groups AFTER aggregation. A common mistake is using WHERE with aggregate functions — that must be HAVING.",
+      "starterCode": "CREATE TABLE employees (\n  emp_id     INT PRIMARY KEY,\n  name       VARCHAR(60),\n  department VARCHAR(40),\n  salary     DECIMAL(10,2)\n);\n\nINSERT INTO employees VALUES\n  (1,  'Alice',  'Engineering',  95000),\n  (2,  'Bob',    'Marketing',    65000),\n  (3,  'Carol',  'Engineering',  88000),\n  (4,  'Dave',   'HR',           55000),\n  (5,  'Eve',    'Engineering', 105000),\n  (6,  'Frank',  'Marketing',    70000),\n  (7,  'Grace',  'HR',           58000),\n  (8,  'Henry',  'Engineering',  91000),\n  (9,  'Iris',   'Marketing',    68000);\n\n-- HAVING: only departments with more than 2 employees\nSELECT department, COUNT(*) AS headcount, AVG(salary) AS avg_salary\nFROM employees\nGROUP BY department\nHAVING COUNT(*) > 2\nORDER BY avg_salary DESC;\n\n-- HAVING: departments where total payroll exceeds 200000\nSELECT department, SUM(salary) AS total_payroll\nFROM employees\nGROUP BY department\nHAVING SUM(salary) > 200000\nORDER BY total_payroll DESC;\n\n-- WHERE + HAVING combined: senior employees (salary > 60000) grouped by dept\n-- only departments where the avg senior salary > 80000\nSELECT department, COUNT(*) AS senior_count, AVG(salary) AS avg_senior_salary\nFROM employees\nWHERE salary > 60000\nGROUP BY department\nHAVING AVG(salary) > 80000\nORDER BY avg_senior_salary DESC;\n",
+      "instructions": [
+        "Run all three queries.",
+        "Query 1: Engineering (4 employees) and Marketing (3) should appear; HR (2) excluded.",
+        "Query 2: Engineering total payroll = 379000 > 200K. Marketing = 203000. HR = 113000 (excluded).",
+        "Query 3: Only Engineering (senior avg ~94750) should appear.",
+        "Add a comment: what error would occur if you wrote WHERE COUNT(*) > 2 instead of HAVING?"
+      ],
+      "hint": "WHERE COUNT(*) > 2 produces 'aggregate functions are not allowed in WHERE' error. WHERE runs before grouping, so no aggregates exist yet at that stage.",
+      "expectedOutput": "Q1: Engineering(4 employees), Marketing(3)\nQ2: Engineering(379000), Marketing(203000)\nQ3: Engineering only"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 54,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "GROUP BY with ROLLUP",
+    "description": {
+      "task": "Use GROUP BY ROLLUP to generate subtotals and grand totals in a single query.",
+      "language": "sql",
+      "context": "ROLLUP extends GROUP BY to generate all levels of subtotals automatically — useful for reports that need region totals + a grand total in one query.",
+      "starterCode": "CREATE TABLE regional_sales (\n  region   VARCHAR(30),\n  quarter  VARCHAR(5),\n  product  VARCHAR(60),\n  revenue  DECIMAL(10,2)\n);\n\nINSERT INTO regional_sales VALUES\n  ('North', 'Q1', 'Laptop',  50000),\n  ('North', 'Q1', 'Mouse',    5000),\n  ('North', 'Q2', 'Laptop',  60000),\n  ('North', 'Q2', 'Monitor', 30000),\n  ('South', 'Q1', 'Laptop',  40000),\n  ('South', 'Q1', 'Keyboard', 8000),\n  ('South', 'Q2', 'Laptop',  45000),\n  ('South', 'Q2', 'Mouse',    4000),\n  ('West',  'Q1', 'Monitor', 20000),\n  ('West',  'Q2', 'Laptop',  35000);\n\n-- ROLLUP: revenue per region + per quarter + grand total\nSELECT\n  COALESCE(region,  'ALL REGIONS') AS region,\n  COALESCE(quarter, 'ALL QUARTERS') AS quarter,\n  SUM(revenue) AS total_revenue\nFROM regional_sales\nGROUP BY ROLLUP(region, quarter)\nORDER BY region NULLS LAST, quarter NULLS LAST;\n",
+      "instructions": [
+        "Run all INSERT and the ROLLUP query.",
+        "Identify the subtotal rows: North total, South total, West total.",
+        "Identify the grand total row at the bottom (region=ALL REGIONS).",
+        "Add a comment: what is the difference between ROLLUP and CUBE in GROUP BY extensions?"
+      ],
+      "hint": "ROLLUP generates N+1 grouping levels (hierarchy). CUBE generates all possible combinations of grouping columns (2^N subsets). For (region, quarter): ROLLUP gives 3 levels, CUBE gives 4 combinations.",
+      "expectedOutput": "North/Q1: 55000, North/Q2: 90000, North subtotal: 145000\nSouth/Q1: 48000, South/Q2: 49000, South subtotal: 97000\nWest totals + Grand total"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 54,
+    "allowedSubmissionType": "TEXT"
+  }
+]

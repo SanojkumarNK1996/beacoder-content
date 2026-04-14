@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Implement an IoC Container",
+    "description": {
+      "task": "Build a simplified IoC container in Java that manages bean creation and retrieval. The container should store beans by type and resolve them on demand.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SimpleIoCContainer {\n    private Map<String, Object> beans = new HashMap<>();\n    \n    public void registerBean(String name, Object bean) {\n        // TODO: Store bean with name as key\n    }\n    \n    public <T> T getBean(String name, Class<T> type) {\n        // TODO: Retrieve and cast bean by name\n    }\n    \n    public boolean containsBean(String name) {\n        // TODO: Check if bean exists\n    }\n}\n\npublic class UserService {\n    public String getWelcomeMessage(String username) {\n        return \"Welcome, \" + username + \"!\";\n    }\n}\n\npublic class EmailService {\n    public void sendEmail(String to, String message) {\n        System.out.println(\"Email to \" + to + \": \" + message);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Create container, register beans, retrieve and use them\n    }\n}",
+      "instructions": [
+        "Implement registerBean(), getBean() (casting to type), and containsBean().",
+        "In Main, create the container and register UserService and EmailService as beans.",
+        "Retrieve UserService and call getWelcomeMessage('Alice').",
+        "Retrieve EmailService and call sendEmail('bob@example.com', 'Hello').",
+        "Print the welcome message and check if 'orderService' bean exists."
+      ],
+      "hint": "Spring's ApplicationContext is an advanced IoC container. Beans are registered by the framework and resolved lazily or eagerly.",
+      "expectedOutput": "Welcome, Alice!\nEmail to bob@example.com: Hello\nBean 'orderService' exists: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 82,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Singleton vs Prototype Bean Scope",
+    "description": {
+      "task": "Demonstrate the difference between Singleton and Prototype bean scopes by implementing a simple scope-aware bean factory in Java.",
+      "language": "java",
+      "starterCode": "public class Counter {\n    private static int instanceCount = 0;\n    private int id;\n    private int count = 0;\n    \n    public Counter() {\n        id = ++instanceCount;\n    }\n    \n    public void increment() { count++; }\n    public int getCount() { return count; }\n    public int getId() { return id; }\n}\n\npublic class BeanFactory {\n    private Counter singletonCounter;\n    \n    // SINGLETON scope: always return the same instance\n    public Counter getSingletonCounter() {\n        // TODO: Lazy-init and always return singletonCounter\n    }\n    \n    // PROTOTYPE scope: always return a new instance\n    public Counter getPrototypeCounter() {\n        // TODO: Always create and return a new Counter\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        BeanFactory factory = new BeanFactory();\n        // TODO: Demonstrate scope differences\n    }\n}",
+      "instructions": [
+        "Implement getSingletonCounter() to lazily create and reuse the same Counter instance.",
+        "Implement getPrototypeCounter() to always return new Counter().",
+        "In Main, get two singleton counters, increment both, and show they share state.",
+        "Get two prototype counters, increment each once, and show they have separate state."
+      ],
+      "hint": "Spring default scope is singleton (one per container). Prototype creates a new bean each time — useful for stateful objects.",
+      "expectedOutput": "Singleton IDs: 1 and 1 (same instance)\nSingleton count after 2 increments: 2\nPrototype IDs: 2 and 3 (different instances)\nPrototype counts: 1 and 1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 82,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Bean Dependency Resolution",
+    "description": {
+      "task": "Simulate how an IoC container resolves deep dependency chains. Build an object graph where OrderController depends on OrderService which depends on OrderRepository.",
+      "language": "java",
+      "context": "IoC containers resolve dependencies automatically. When you request a bean with deep dependencies, the container builds the entire object graph for you.",
+      "starterCode": "public class OrderRepository {\n    public String findOrder(int id) {\n        return \"Order#\" + id + \" [PENDING]\";\n    }\n}\n\npublic class OrderService {\n    private OrderRepository repository;\n    \n    public OrderService(OrderRepository repository) {\n        this.repository = repository;\n    }\n    \n    public String processOrder(int id) {\n        String order = repository.findOrder(id);\n        return order.replace(\"PENDING\", \"PROCESSED\");\n    }\n}\n\npublic class OrderController {\n    private OrderService service;\n    \n    public OrderController(OrderService service) {\n        this.service = service;\n    }\n    \n    public void handleRequest(int orderId) {\n        // TODO: Use service to process order and print result\n    }\n}\n\npublic class ApplicationContext {\n    // TODO: Wire the entire object graph and return OrderController\n    public static OrderController buildOrderController() {\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Get controller from ApplicationContext and handle two requests\n    }\n}",
+      "instructions": [
+        "Implement OrderController.handleRequest() to print 'Handling order: [processed result]'.",
+        "Implement ApplicationContext.buildOrderController() to create all three beans and wire them together.",
+        "In Main, use ApplicationContext to get OrderController and call handleRequest(101) and handleRequest(202).",
+        "Print output for both requests."
+      ],
+      "hint": "This is exactly what Spring does when you call applicationContext.getBean(OrderController.class) — it builds the full dependency tree.",
+      "expectedOutput": "Handling order: Order#101 [PROCESSED]\nHandling order: Order#202 [PROCESSED]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 82,
+    "allowedSubmissionType": "TEXT"
+  }
+]

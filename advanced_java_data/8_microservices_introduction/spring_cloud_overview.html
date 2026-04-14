@@ -1,0 +1,135 @@
+<h1>☁️ Spring Cloud Overview</h1>
+
+<h2>🎯 What is Spring Cloud?</h2>
+<p><strong>Spring Cloud</strong> is a set of tools built on top of Spring Boot to help you build <strong>distributed systems and microservices</strong>.</p>
+
+<p>It provides ready-made solutions for common challenges:</p>
+<ul>
+  <li>🔍 Service discovery</li>
+  <li>⚙️ Centralized configuration</li>
+  <li>📡 Intelligent routing</li>
+  <li>🔁 Load balancing</li>
+  <li>🛡️ Resilience (circuit breakers, retries)</li>
+</ul>
+
+<h2>🧩 Key Spring Cloud Components</h2>
+
+<ul>
+  <li><strong>Spring Cloud Config</strong> – Centralized configuration server</li>
+  <li><strong>Spring Cloud Netflix / Discovery</strong> – Service discovery (Eureka)</li>
+  <li><strong>Spring Cloud Gateway</strong> – API Gateway / edge service</li>
+  <li><strong>Spring Cloud OpenFeign</strong> – Declarative REST clients</li>
+  <li><strong>Spring Cloud Circuit Breaker</strong> – Integrations with Resilience4j, etc.</li>
+</ul>
+
+<h2>📂 Centralized Configuration with Spring Cloud Config</h2>
+
+<p>Instead of hardcoding configuration in each service, use a <strong>Config Server</strong>.</p>
+
+<ol>
+  <li>Create a Config Server (Spring Boot app)</li>
+  <li>Point it to a Git repository with properties/YAML files</li>
+  <li>Each microservice fetches its configuration from the server</li>
+</ol>
+
+<div class="code-example">
+  <pre>
+# application.yml for config server
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/your-org/config-repo
+  </pre>
+</div>
+
+<h2>🔍 Service Discovery with Eureka</h2>
+
+<p><strong>Eureka Server</strong> acts as a registry where services register themselves.</p>
+
+<ol>
+  <li>Run Eureka Server (Spring Boot + Eureka Server dependency)</li>
+  <li>Each microservice adds Eureka Client dependency</li>
+  <li>Services register with Eureka and discover each other by name</li>
+</ol>
+
+<div class="code-example">
+  <pre>
+# application.yml snippet for a service
+spring:
+  application:
+    name: order-service
+
+# This service registers as "order-service" in Eureka
+  </pre>
+</div>
+
+<h2>🚪 API Gateway with Spring Cloud Gateway</h2>
+
+<p><strong>Spring Cloud Gateway</strong> is a modern, reactive API Gateway that handles:</p>
+<ul>
+  <li>Routing (path-based, host-based, etc.)</li>
+  <li>Filters (authentication, logging, rate limiting)</li>
+  <li>Load balancing across services</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+# application.yml for a simple route
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/orders/**
+  </pre>
+</div>
+
+<h2>📡 Declarative HTTP Clients with OpenFeign</h2>
+
+<p><strong>OpenFeign</strong> lets you define HTTP clients as Java interfaces.</p>
+
+<div class="code-example">
+  <pre>
+@FeignClient(name = "inventory-service")
+public interface InventoryClient {
+
+    @GetMapping("/inventory/{productId}")
+    InventoryResponse getInventory(@PathVariable String productId);
+}
+  </pre>
+</div>
+
+<p>Spring Cloud integrates Feign with <strong>service discovery</strong> and <strong>load balancing</strong> automatically.</p>
+
+<h2>🛡️ Resilience with Spring Cloud Circuit Breaker</h2>
+
+<p>Use circuit breakers and retries to protect your system from cascading failures.</p>
+
+<ul>
+  <li>Integrates with <strong>Resilience4j</strong></li>
+  <li>Configure fallbacks for failing remote calls</li>
+</ul>
+
+<h2>🧪 Typical Microservices Stack with Spring</h2>
+
+<ul>
+  <li>Spring Boot for each microservice</li>
+  <li>Spring Cloud Config for configuration</li>
+  <li>Eureka (or another registry) for discovery</li>
+  <li>Spring Cloud Gateway as API Gateway</li>
+  <li>OpenFeign for inter-service calls</li>
+  <li>Resilience4j for resilience patterns</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Spring Cloud provides <strong>building blocks</strong> for microservices: config, discovery, gateway, clients, and resilience</li>
+  <li>It builds on top of <strong>Spring Boot</strong>, so you can reuse what you already know</li>
+  <li>Combining these tools lets you build <strong>production-ready distributed systems</strong> in Java</li>
+</ul>
+
+<p>Next, you&apos;ll focus on the <strong>API Gateway pattern</strong> and how it fits into microservices architectures.</p>

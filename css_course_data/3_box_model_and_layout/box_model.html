@@ -1,0 +1,52 @@
+<h1>Box Model</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>Every element on a web page behaves like a box; understanding the box model is necessary for proper layout.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>The CSS box model describes how margins, borders, padding, and content define the size and space of an element.</li>
+</ul>
+
+<h2>Syntax / Basic understanding</h2>
+<pre><code>div.card {
+  width: 300px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  margin: 20px;
+}
+</code></pre>
+
+<h2>How it works</h2>
+<ol>
+  <li>Content: actual text or image inside the element.</li>
+  <li>Padding: space between content and border.</li>
+  <li>Border: line surrounding the padding and content.</li>
+  <li>Margin: space outside the border, separating elements.</li>
+</ol>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>Total element width = content width + padding + border + margin.</li>
+  <li>Use box-sizing: border-box to make sizing easier.</li>
+</ul>
+
+<h2>Common mistakes</h2>
+<ul>
+  <li>Forgetting that padding and border add to the width/height.</li>
+  <li>Unexpected layouts because of default box-sizing.</li>
+</ul>
+
+<h2>Interviewer perspective</h2>
+<ul>
+  <li>Explain the CSS box model.</li>
+  <li>What does box-sizing: border-box do?</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Create a card layout and experiment with padding, border, and margin.</li>
+  <li>Compare layouts with content-box vs border-box.</li>
+</ol>

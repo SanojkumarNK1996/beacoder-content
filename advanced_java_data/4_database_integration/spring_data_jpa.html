@@ -1,0 +1,273 @@
+<h1>📦 Spring Data JPA</h1>
+
+<h2>🎯 Goal</h2>
+<p>Understand how <strong>Spring Data JPA</strong> builds on top of JPA to provide <strong>repository-based</strong>, highly productive data access with minimal boilerplate.</p>
+
+<h2>❓ Why Spring Data JPA?</h2>
+<p>With plain JPA you still need to write repository classes and use <code>EntityManager</code> manually. Spring Data JPA removes much of this boilerplate.</p>
+
+<ul>
+  <li>✅ No manual repository implementation for basic CRUD</li>
+  <li>✅ Query methods generated from method names</li>
+  <li>✅ Integration with Spring Boot, transactions, and validation</li>
+</ul>
+
+<div class="analogy-card">
+  <h3>🧱 Lego Set Analogy</h3>
+  <p>JPA gives you <strong>individual Lego bricks</strong>. Spring Data JPA gives you <strong>pre-built Lego modules</strong> for common patterns like CRUD, pagination, and sorting.</p>
+</div>
+
+<h2>⚙️ Setup</h2>
+
+<h3>1️⃣ Dependencies</h3>
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;org.postgresql&lt;/groupId&gt;
+  &lt;artifactId&gt;postgresql&lt;/artifactId&gt;
+  &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<h3>2️⃣ Configuration</h3>
+<div class="code-example">
+  <pre>
+# application.yml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bookdb
+    username: bookuser
+    password: secret
+
+  jpa:
+    hibernate:
+      ddl-auto: update     # create, update, validate, create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  </pre>
+</div>
+
+<h2>🧱 Defining an Entity</h2>
+
+<div class="code-example">
+  <pre>
+@Entity
+@Table(name = "books")
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String author;
+
+    @Column(unique = true)
+    private String isbn;
+
+    private Double price;
+
+    // getters and setters
+}
+  </pre>
+</div>
+
+<h2>📂 Creating a Repository Interface</h2>
+<p>With Spring Data JPA, you define <strong>interfaces</strong> that extend repository base interfaces — no implementation class required for basic CRUD.</p>
+
+<div class="code-example">
+  <pre>
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookRepository extends JpaRepository&lt;Book, Long&gt; {
+
+    // Query methods derived from method names
+    List&lt;Book&gt; findByAuthor(String author);
+
+    List&lt;Book&gt; findByTitleContainingIgnoreCase(String keyword);
+
+    Optional&lt;Book&gt; findByIsbn(String isbn);
+}
+  </pre>
+</div>
+
+<p>Spring Data JPA will automatically provide implementations for these methods at runtime.</p>
+
+<h2>🔁 Using the Repository in a Service</h2>
+
+<div class="code-example">
+  <pre>
+@Service
+public class BookService {
+
+    private final BookRepository bookRepository;
+
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    public List&lt;Book&gt; getAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    public Book createBook(Book book) {
+        return bookRepository.save(book);
+    }
+
+    public Optional&lt;Book&gt; getBookById(Long id) {
+        return bookRepository.findById(id);
+    }
+
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
+    }
+}
+  </pre>
+</div>
+
+<h2>🧩 Derived Query Methods</h2>
+<p>Spring Data JPA can generate queries from method names:</p>
+
+<ul>
+  <li><code>findByTitle</code></li>
+  <li><code>findByAuthorAndPriceLessThan</code></li>
+  <li><code>findByTitleContainingIgnoreCase</code></li>
+</ul>
+
+<div class="code-example">
+  <pre>
+public interface BookRepository extends JpaRepository&lt;Book, Long&gt; {
+
+    List&lt;Book&gt; findByAuthor(String author);
+
+    List&lt;Book&gt; findByAuthorAndPriceLessThan(String author, Double price);
+
+    List&lt;Book&gt; findByTitleContainingIgnoreCaseOrderByPriceDesc(String keyword);
+}
+  </pre>
+</div>
+
+<h3>🔤 Method Naming Rules</h3>
+<ul>
+  <li><strong>findBy</strong> + property name → equality</li>
+  <li>Keywords: <strong>And</strong>, <strong>Or</strong>, <strong>LessThan</strong>, <strong>GreaterThan</strong>, <strong>Containing</strong>, <strong>Between</strong>, etc.</li>
+  <li><strong>OrderBy</strong> + property + <strong>Asc/Desc</strong> → sorting</li>
+</ul>
+
+<h2>🧾 Custom JPQL / Native Queries</h2>
+
+<h3>1️⃣ JPQL Queries with @Query</h3>
+<div class="code-example">
+  <pre>
+public interface BookRepository extends JpaRepository&lt;Book, Long&gt; {
+
+    @Query("SELECT b FROM Book b WHERE b.price &gt; :minPrice")
+    List&lt;Book&gt; findExpensiveBooks(@Param("minPrice") double minPrice);
+}
+  </pre>
+</div>
+
+<h3>2️⃣ Native SQL Queries</h3>
+<div class="code-example">
+  <pre>
+public interface BookRepository extends JpaRepository&lt;Book, Long&gt; {
+
+    @Query(value = "SELECT * FROM books WHERE isbn LIKE %:prefix%", 
+           nativeQuery = true)
+    List&lt;Book&gt; searchByIsbnPrefix(@Param("prefix") String prefix);
+}
+  </pre>
+</div>
+
+<h2>📄 Pagination & Sorting</h2>
+
+<div class="code-example">
+  <pre>
+public interface BookRepository extends JpaRepository&lt;Book, Long&gt; {
+
+    Page&lt;Book&gt; findByAuthor(String author, Pageable pageable);
+}
+
+// Usage in service
+public Page&lt;Book&gt; getBooksByAuthor(String author, int page, int size) {
+    Pageable pageable = PageRequest.of(page, size, Sort.by("title").ascending());
+    return bookRepository.findByAuthor(author, pageable);
+}
+  </pre>
+</div>
+
+<h2>🔐 Transactions with Spring Data JPA</h2>
+<p>Spring Data JPA integrates tightly with Spring&apos;s transaction management. By default, <code>CrudRepository</code> and <code>JpaRepository</code> methods are transactional where appropriate.</p>
+
+<div class="code-example">
+  <pre>
+@Service
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final PaymentService paymentService;
+
+    public OrderService(OrderRepository orderRepository, PaymentService paymentService) {
+        this.orderRepository = orderRepository;
+        this.paymentService = paymentService;
+    }
+
+    @Transactional
+    public Order placeOrder(Order order) {
+        // Save order
+        Order savedOrder = orderRepository.save(order);
+
+        // Process payment
+        paymentService.charge(order);
+
+        // If paymentService throws an exception, transaction is rolled back
+        return savedOrder;
+    }
+}
+  </pre>
+</div>
+
+<h2>🧪 Testing Spring Data JPA Repositories</h2>
+
+<div class="code-example">
+  <pre>
+@DataJpaTest
+class BookRepositoryTest {
+
+    @Autowired
+    private TestEntityManager entityManager;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Test
+    void testFindByAuthor() {
+        Book book = new Book();
+        book.setTitle("Spring in Action");
+        book.setAuthor("Craig Walls");
+        entityManager.persist(book);
+        entityManager.flush();
+
+        List&lt;Book&gt; result = bookRepository.findByAuthor("Craig Walls");
+
+        assertEquals(1, result.size());
+    }
+}
+  </pre>
+</div>
+
+<div class="key-takeaway">
+  <h3>🎯 Key Takeaway</h3>
+  <p><strong>Spring Data JPA</strong> lets you build powerful data access layers using simple interfaces and method names. It removes most of the boilerplate of JPA while still giving you the flexibility to use custom queries, pagination, sorting, and transactions. For most enterprise applications, it&apos;s the <strong>default choice</strong> for relational data access in Spring.</p>
+</div>

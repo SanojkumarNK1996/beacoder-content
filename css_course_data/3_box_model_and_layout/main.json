@@ -1,0 +1,38 @@
+[
+  {
+    "subtopicId": 334,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Box Model",
+    "data": "box_model.html",
+    "verified": true,
+    "priority": 1
+  },
+  {
+    "subtopicId": 335,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Positioning",
+    "data": "positioning.html",
+    "verified": true,
+    "priority": 1
+  },
+  {
+    "subtopicId": 336,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Flexbox",
+    "data": "flexbox.html",
+    "verified": true,
+    "priority": 1
+  },
+  {
+    "subtopicId": 337,
+    "dataType": "notes",
+    "displayOrder": 4,
+    "title": "Grid",
+    "data": "grid.html",
+    "verified": true,
+    "priority": 1
+  }
+]

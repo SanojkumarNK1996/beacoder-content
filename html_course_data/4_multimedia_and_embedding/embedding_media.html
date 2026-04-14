@@ -1,0 +1,71 @@
+<h1>Embedding Media</h1>
+
+<h2>🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>YouTube videos, Spotify audio players, and Google Maps on Indian business sites are all embedded media.</li>
+  <li>Embedding media keeps users on your site while showing content from other platforms.</li>
+</ul>
+
+<h2>📖 What Is This</h2>
+<ul>
+  <li>Embedding media means displaying audio, video, maps, or other content inside your page.</li>
+  <li>HTML provides &lt;audio&gt;, &lt;video&gt;, and &lt;iframe&gt; for this.</li>
+</ul>
+
+<h3>🧾 Syntax / Basic Usage ⭐</h3>
+<pre><code>&lt;audio controls&gt;
+  &lt;source src="song.mp3" type="audio/mpeg" /&gt;
+  Your browser does not support the audio element.
+&lt;/audio&gt;
+
+&lt;video controls width="320" height="240"&gt;
+  &lt;source src="movie.mp4" type="video/mp4" /&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+
+&lt;iframe
+  src="https://www.youtube.com/embed/VIDEO_ID"
+  width="560" height="315" frameborder="0" allowfullscreen
+&gt;&lt;/iframe&gt;
+</code></pre>
+
+<h2>🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<ol>
+  <li>&lt;audio&gt; and &lt;video&gt; load media files from your server or CDN.</li>
+  <li>&lt;iframe&gt; embeds another web page (like a YouTube player or map) inside your page.</li>
+</ol>
+
+<h2>When to Use</h2>
+<ul>
+  <li>Product demo videos, background music, podcasts, tutorials, maps.</li>
+</ul>
+
+<h2>When NOT to Use</h2>
+<ul>
+  <li>Don’t autoplay audio with sound—it annoys users.</li>
+  <li>Don’t embed untrusted external content for security reasons.</li>
+</ul>
+
+<h2>Minimum You MUST Remember</h2>
+<ul>
+  <li>Use controls attribute to show play/pause UI.</li>
+  <li>Use allowfullscreen for video iframes when needed.</li>
+</ul>
+
+<h2>Common Mistakes</h2>
+<ul>
+  <li>Not providing fallback text for unsupported browsers.</li>
+  <li>Incorrect aspect ratios causing black bars or distortion.</li>
+</ul>
+
+<h2>Interviewer’s Perspective</h2>
+<ul>
+  <li>How do you embed a YouTube video?</li>
+  <li>Difference between &lt;video&gt; and &lt;iframe&gt; usage?</li>
+</ul>
+
+<h2>Practice Questions</h2>
+<ol>
+  <li>Embed a YouTube trailer in a web page.</li>
+  <li>Add an audio player with a local MP3 file.</li>
+</ol>

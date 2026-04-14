@@ -1,0 +1,17 @@
+<h1>💾 Introduction to EBS</h1>
+<h2>🎯 What is EBS?</h2>
+<p><strong>Amazon EBS</strong> (Elastic Block Store) provides block storage volumes that attach to EC2 instances like a virtual hard drive. Persist independently from the EC2 instance lifecycle.</p>
+<h2>📋 Key Features</h2>
+<ul>
+  <li>Attach to one EC2 instance at a time (same AZ)</li>
+  <li><strong>Snapshots</strong>: Point-in-time backups stored in S3, can replicate across regions</li>
+  <li>Encrypt volumes at rest with AWS KMS</li>
+  <li>Resize volumes without downtime</li>
+</ul>
+<h2>📌 EBS vs Instance Store</h2>
+<ul>
+  <li><strong>EBS</strong>: Persistent, survives stop/start/reboot of instance</li>
+  <li><strong>Instance Store</strong>: Temporary (ephemeral), lost when instance stops/terminates. Very high I/O, good for caches/scratch space</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>EBS = persistent virtual hard drive for EC2. Always take snapshots before modifying or terminating critical instances.</p>

@@ -1,0 +1,29 @@
+[
+  {
+    "subtopicId": 346,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Conditionals",
+    "data": "conditionals.html",
+    "verified": true,
+    "priority": 1
+  },
+  {
+    "subtopicId": 347,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Loops",
+    "data": "loops.html",
+    "verified": true,
+    "priority": 1
+  },
+  {
+    "subtopicId": 348,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Functions",
+    "data": "functions.html",
+    "verified": true,
+    "priority": 1
+  }
+]

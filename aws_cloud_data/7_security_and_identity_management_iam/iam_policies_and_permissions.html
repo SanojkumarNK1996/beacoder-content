@@ -1,0 +1,25 @@
+<h1>📋 IAM Policies and Permissions</h1>
+<h2>🎯 What is an IAM Policy?</h2>
+<p>An IAM <strong>policy</strong> is a JSON document defining permissions. It specifies what actions are allowed or denied on which resources under what conditions.</p>
+<div class="code-example">
+  <pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": ["s3:GetObject", "s3:PutObject"],
+    "Resource": "arn:aws:s3:::my-bucket/*"
+  }]
+}
+  </pre>
+</div>
+<h2>📋 Policy Types</h2>
+<ul>
+  <li><strong>AWS Managed Policies</strong>: Pre-built by AWS (e.g., AmazonS3ReadOnlyAccess)</li>
+  <li><strong>Customer Managed Policies</strong>: You create and manage them</li>
+  <li><strong>Inline Policies</strong>: Embedded directly in a user/role (not reusable — avoid)</li>
+</ul>
+<h2>🔒 Policy Evaluation Logic</h2>
+<p>Explicit Deny ALWAYS wins. Then Allow if a matching allow policy exists. Default is Implicit Deny for everything.</p>
+<h2>🎯 Summary</h2>
+<p>Master IAM policy JSON. Use AWS Managed Policies for common access patterns, Customer Managed for fine-grained control. Explicit deny overrides everything.</p>

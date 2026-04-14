@@ -1,0 +1,38 @@
+[
+    {
+        "subtopicId": 85,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Introduction to Spring Boot",
+        "data": "intro_to_spring_boot.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 86,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Spring Boot Starters",
+        "data": "spring_boot_starters.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 87,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Application Properties",
+        "data": "application_properties.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 88,
+        "dataType": "notes",
+        "displayOrder": 4,
+        "title": "Creating Your First Spring Boot Application",
+        "data": "first_spring_boot_app.html",
+        "verified": false,
+        "priority": 1
+    }
+]

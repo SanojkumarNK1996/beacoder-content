@@ -1,0 +1,30 @@
+<h1>🔨 Stack Implementation</h1>
+
+<h2>🧱 Array-based Stack</h2>
+<div class="code-example">
+  <pre>
+class ArrayStack {
+    private int[] data;
+    private int top = -1;
+
+    ArrayStack(int capacity) { data = new int[capacity]; }
+
+    void push(int x) { data[++top] = x; }
+    int pop() { return data[top--]; }
+    int peek() { return data[top]; }
+    boolean isEmpty() { return top == -1; }
+}
+  </pre>
+</div>
+
+<h2>🔗 Linked List-based Stack</h2>
+<p>Each node is one element; <code>head</code> is the top. Push = addFirst, Pop = removeFirst — both O(1).</p>
+
+<h2>⚖️ Comparison</h2>
+<ul>
+  <li>Array: O(1) amortized push (needs resize occasionally), fixed max size or resizable</li>
+  <li>LinkedList: Always O(1) push/pop, extra memory per node</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<p>In Java, prefer <code>ArrayDeque</code> (array-backed) as it's faster than <code>LinkedList</code> for stack operations in most cases.</p>

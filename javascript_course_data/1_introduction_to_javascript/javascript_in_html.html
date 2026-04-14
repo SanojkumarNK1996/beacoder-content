@@ -1,0 +1,52 @@
+<h1>JavaScript in HTML</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>To connect JavaScript code with web pages, we need a standard way to include scripts in HTML.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>Ways to add JavaScript using the &lt;script&gt; tag: inline, internal, and external.</li>
+</ul>
+
+<h2>Basic patterns</h2>
+<pre><code>&lt;!-- Internal script --&gt;
+&lt;script&gt;
+  console.log('Hello from internal script');
+&lt;/script&gt;
+
+&lt;!-- External script --&gt;
+&lt;script src="app.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<h2>How it works</h2>
+<ol>
+  <li>The browser parses HTML from top to bottom.</li>
+  <li>When it sees a &lt;script&gt; tag, it loads and executes that JavaScript.</li>
+  <li>External scripts are fetched from the given src URL.</li>
+</ol>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>Prefer external scripts for maintainability.</li>
+  <li>Place scripts at the end of &lt;body&gt; or use defer for better performance.</li>
+</ul>
+
+<h2>Common mistakes</h2>
+<ul>
+  <li>Running scripts before the DOM is ready, causing null errors.</li>
+  <li>Mixing too much inline JavaScript inside HTML attributes.</li>
+</ul>
+
+<h2>Interviewer perspective</h2>
+<ul>
+  <li>Difference between internal and external JavaScript?</li>
+  <li>Why is it better to keep JS in separate files?</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Create a page that loads an external script logging a message.</li>
+  <li>Move inline onclick code into a separate JS file using addEventListener.</li>
+</ol>

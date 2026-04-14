@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Custom Exception Hierarchy",
+    "description": {
+      "task": "Build a REST API exception hierarchy for common scenarios. Create custom exceptions that map to specific HTTP status codes and error responses.",
+      "language": "java",
+      "starterCode": "// Base REST exception\npublic class RestException extends RuntimeException {\n    private int statusCode;\n    private String errorCode;\n    \n    public RestException(int statusCode, String errorCode, String message) {\n        super(message);\n        this.statusCode = statusCode;\n        this.errorCode = errorCode;\n    }\n    \n    public int getStatusCode() { return statusCode; }\n    public String getErrorCode() { return errorCode; }\n}\n\n// TODO: Create these subclasses:\npublic class ResourceNotFoundException extends RestException {\n    // TODO: Constructor with resourceName and id, status=404, code=\"NOT_FOUND\"\n}\n\npublic class DuplicateResourceException extends RestException {\n    // TODO: Constructor with resourceType and field, status=409, code=\"DUPLICATE\"\n}\n\npublic class ValidationException extends RestException {\n    // TODO: Constructor with fieldName and reason, status=400, code=\"VALIDATION_ERROR\"\n}\n\npublic class UnauthorizedException extends RestException {\n    // TODO: Constructor with action, status=401, code=\"UNAUTHORIZED\"\n}\n\npublic class ErrorResponse {\n    private int status;\n    private String code;\n    private String message;\n    \n    public ErrorResponse(RestException ex) {\n        this.status = ex.getStatusCode();\n        this.code = ex.getErrorCode();\n        this.message = ex.getMessage();\n    }\n    \n    @Override\n    public String toString() {\n        return \"ErrorResponse{status=\" + status + \", code='\" + code + \"', message='\" + message + \"'}\";\n    }\n}\n\npublic class GlobalExceptionHandler {\n    public ErrorResponse handle(RestException ex) {\n        System.out.println(\"Handling exception: \" + ex.getClass().getSimpleName());\n        return new ErrorResponse(ex);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        GlobalExceptionHandler handler = new GlobalExceptionHandler();\n        \n        System.out.println(handler.handle(new ResourceNotFoundException(\"User\", 42)));\n        System.out.println(handler.handle(new DuplicateResourceException(\"User\", \"email\")));\n        System.out.println(handler.handle(new ValidationException(\"age\", \"must be >= 18\")));\n        System.out.println(handler.handle(new UnauthorizedException(\"delete user\")));\n    }\n}",
+      "instructions": [
+        "ResourceNotFoundException(String resourceName, long id): message = resourceName + ' with id ' + id + ' not found', status=404.",
+        "DuplicateResourceException(String resourceType, String field): message = resourceType + ' with same ' + field + ' already exists', status=409.",
+        "ValidationException(String fieldName, String reason): message = 'Field \\'' + fieldName + '\\' ' + reason, status=400.",
+        "UnauthorizedException(String action): message = 'Not authorized to ' + action, status=401.",
+        "Run Main as-is."
+      ],
+      "hint": "In Spring Boot, annotate exception handling methods with @ExceptionHandler(ResourceNotFoundException.class) inside a @RestControllerAdvice class. This provides global exception handling.",
+      "expectedOutput": "Handling exception: ResourceNotFoundException\nErrorResponse{status=404, code='NOT_FOUND', message='User with id 42 not found'}\nHandling exception: DuplicateResourceException\nErrorResponse{status=409, code='DUPLICATE', message='User with same email already exists'}\nHandling exception: ValidationException\nErrorResponse{status=400, code='VALIDATION_ERROR', message='Field \\'age\\' must be >= 18'}\nHandling exception: UnauthorizedException\nErrorResponse{status=401, code='UNAUTHORIZED', message='Not authorized to delete user'}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 97,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Global Exception Handler",
+    "description": {
+      "task": "Build a global exception handler that catches different exception types and returns consistent error response objects. Implement fallback handling for unexpected exceptions.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ApiError {\n    private int status;\n    private String error;\n    private String message;\n    private String timestamp;\n    private List<String> details;\n    \n    public ApiError(int status, String error, String message) {\n        this.status = status;\n        this.error = error;\n        this.message = message;\n        this.timestamp = \"2024-01-15T10:30:00\";\n        this.details = new ArrayList<>();\n    }\n    \n    public void addDetail(String detail) { details.add(detail); }\n    \n    @Override\n    public String toString() {\n        String base = \"ApiError{\" + status + \" \" + error + \": \" + message + \"}\";\n        if (!details.isEmpty()) base += \" Details: \" + details;\n        return base;\n    }\n}\n\npublic class GlobalExceptionHandler {\n    \n    public ApiError handleNotFoundException(RuntimeException ex) {\n        // TODO: Return 404 Not Found error\n        return null;\n    }\n    \n    public ApiError handleBadRequestException(IllegalArgumentException ex) {\n        // TODO: Return 400 Bad Request error\n        return null;\n    }\n    \n    public ApiError handleSecurityException(SecurityException ex) {\n        // TODO: Return 403 Forbidden error\n        return null;\n    }\n    \n    public ApiError handleGenericException(Exception ex) {\n        // TODO: Return 500 Internal Server Error with generic message\n        // Do NOT expose internal error details in response\n        return null;\n    }\n    \n    public ApiError dispatch(Exception ex) {\n        if (ex instanceof IllegalArgumentException) return handleBadRequestException((IllegalArgumentException) ex);\n        if (ex instanceof SecurityException) return handleSecurityException((SecurityException) ex);\n        if (ex.getMessage() != null && ex.getMessage().contains(\"not found\")) return handleNotFoundException((RuntimeException) ex);\n        return handleGenericException(ex);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        GlobalExceptionHandler handler = new GlobalExceptionHandler();\n        \n        System.out.println(handler.dispatch(new RuntimeException(\"User with id 5 not found\")));\n        System.out.println(handler.dispatch(new IllegalArgumentException(\"Invalid email format\")));\n        System.out.println(handler.dispatch(new SecurityException(\"Access denied to admin endpoint\")));\n        System.out.println(handler.dispatch(new RuntimeException(\"NullPointerException at line 42\")));\n    }\n}",
+      "instructions": [
+        "handleNotFoundException(): ApiError(404, 'Not Found', ex.getMessage()).",
+        "handleBadRequestException(): ApiError(400, 'Bad Request', ex.getMessage()).",
+        "handleSecurityException(): ApiError(403, 'Forbidden', ex.getMessage()).",
+        "handleGenericException(): ApiError(500, 'Internal Server Error', 'An unexpected error occurred') — do not expose ex.getMessage().",
+        "Run Main as-is."
+      ],
+      "hint": "Spring Boot auto-configures a BasicErrorController that produces error responses. Add @RestControllerAdvice with @ExceptionHandler methods to customize error responses for specific exceptions.",
+      "expectedOutput": "ApiError{404 Not Found: User with id 5 not found}\nApiError{400 Bad Request: Invalid email format}\nApiError{403 Forbidden: Access denied to admin endpoint}\nApiError{500 Internal Server Error: An unexpected error occurred}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 97,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Exception Response Consistency",
+    "description": {
+      "task": "Implement a REST exception filter that intercepts exceptions from a service chain and transforms them into consistent RFC 7807 Problem Detail responses.",
+      "language": "java",
+      "context": "RFC 7807 defines a standard format for API error responses with type, title, status, detail, and instance fields. Spring Boot 3.x supports ProblemDetail natively.",
+      "starterCode": "import java.util.*;\n\npublic class ProblemDetail {\n    private String type;\n    private String title;\n    private int status;\n    private String detail;\n    private String instance;\n    private Map<String, Object> extensions = new LinkedHashMap<>();\n    \n    public ProblemDetail(String type, String title, int status, String detail, String instance) {\n        this.type = type; this.title = title; this.status = status;\n        this.detail = detail; this.instance = instance;\n    }\n    \n    public void addExtension(String key, Object value) { extensions.put(key, value); }\n    \n    @Override\n    public String toString() {\n        String base = \"ProblemDetail{type='\" + type + \"', status=\" + status + \", title='\" + title + \"', detail='\" + detail + \"'}\";\n        if (!extensions.isEmpty()) base += \" [\" + extensions + \"]\";\n        return base;\n    }\n}\n\npublic class ExceptionToProblemMapper {\n    \n    public ProblemDetail map(Exception ex, String requestPath) {\n        // TODO: Map different exception types to RFC 7807 ProblemDetail\n        // IllegalArgumentException -> type=validation, status=400\n        // NoSuchElementException -> type=not-found, status=404\n        // ArithmeticException -> type=calculation-error, status=422\n        // default -> type=internal-error, status=500\n        return null;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ExceptionToProblemMapper mapper = new ExceptionToProblemMapper();\n        \n        System.out.println(mapper.map(new IllegalArgumentException(\"Invalid age value\"), \"/api/users\"));\n        System.out.println(mapper.map(new NoSuchElementException(\"Product not found\"), \"/api/products/99\"));\n        System.out.println(mapper.map(new ArithmeticException(\"Division by zero\"), \"/api/calculate\"));\n        System.out.println(mapper.map(new RuntimeException(\"Unexpected failure\"), \"/api/orders\"));\n    }\n}",
+      "instructions": [
+        "In map(), use instanceof checks to identify the exception type.",
+        "For each, create a ProblemDetail with appropriate type URL like 'about:blank' or custom type, title, status, the exception's message as detail, and requestPath as instance.",
+        "IllegalArgumentException: title='Validation Error', status=400. NoSuchElementException: title='Not Found', status=404. ArithmeticException: title='Unprocessable Entity', status=422. Default: title='Internal Server Error', status=500.",
+        "Run Main as-is."
+      ],
+      "hint": "Spring Boot 3.x: throw a ResponseStatusException or use ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, message). RFC 7807 improves API client error handling.",
+      "expectedOutput": "ProblemDetail{type='about:blank', status=400, title='Validation Error', detail='Invalid age value'}\nProblemDetail{type='about:blank', status=404, title='Not Found', detail='Product not found'}\nProblemDetail{type='about:blank', status=422, title='Unprocessable Entity', detail='Division by zero'}\nProblemDetail{type='about:blank', status=500, title='Internal Server Error', detail='Unexpected failure'}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 97,
+    "allowedSubmissionType": "TEXT"
+  }
+]

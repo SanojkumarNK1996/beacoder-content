@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Data Types Explorer",
+    "description": {
+      "task": "Declare variables of four different primitive data types in Java, assign them values, and print each variable with a label.",
+      "language": "java",
+      "starterCode": "public class DataTypesExplorer {\n    public static void main(String[] args) {\n        // Declare an int variable for age\n        int age;\n\n        // Declare a double for temperature\n        double temperature;\n\n        // Declare a char for grade\n        char grade;\n\n        // Declare a boolean for isStudent\n        boolean isStudent;\n\n        // Assign values and print each variable\n    }\n}",
+      "instructions": [
+        "Declare an int variable named 'age' and assign it the value 20.",
+        "Declare a double variable named 'temperature' and assign it 36.6.",
+        "Declare a char variable named 'grade' and assign it 'A'.",
+        "Declare a boolean variable named 'isStudent' and assign it true.",
+        "Print each variable on a separate line in the format: 'age: 20', 'temperature: 36.6', 'grade: A', 'isStudent: true'."
+      ],
+      "hint": "Remember: char literals use single quotes ('A') while String literals use double quotes. You can concatenate with + in System.out.println().",
+      "expectedOutput": "age: 20\ntemperature: 36.6\ngrade: A\nisStudent: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 4,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Type Casting Challenge",
+    "description": {
+      "task": "Demonstrate both implicit (widening) and explicit (narrowing) type casting in Java and print the results.",
+      "language": "java",
+      "context": "Type casting is the process of converting a value from one data type to another. Java handles some conversions automatically (implicit) and requires a manual cast for others (explicit).",
+      "starterCode": "public class TypeCasting {\n    public static void main(String[] args) {\n        int intVal = 42;\n        double doubleVal = 9.99;\n\n        // Implicit casting: int → double (widening)\n        double implicitResult; // assign intVal to a double without a cast\n\n        // Explicit casting: double → int (narrowing)\n        int explicitResult;   // cast doubleVal to int\n\n        System.out.println(\"int value: \" + intVal);\n        System.out.println(\"double value: \" + doubleVal);\n        System.out.println(\"Implicit (int to double): \" + implicitResult);\n        System.out.println(\"Explicit (double to int): \" + explicitResult);\n    }\n}",
+      "instructions": [
+        "Assign intVal (int) to implicitResult (double) directly — no cast needed.",
+        "Cast doubleVal (double) to int using (int) and assign to explicitResult.",
+        "Print all four lines in the exact format shown.",
+        "Note how the explicit cast truncates (not rounds) the decimal part."
+      ],
+      "hint": "Explicit cast syntax: int result = (int) someDouble; — this drops the decimal part; 9.99 becomes 9.",
+      "expectedOutput": "int value: 42\ndouble value: 9.99\nImplicit (int to double): 42.0\nExplicit (double to int): 9"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 4,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Integer Overflow Demonstration",
+    "description": {
+      "task": "Write a Java program that demonstrates what happens when an int variable exceeds its maximum value (integer overflow).",
+      "language": "java",
+      "context": "Every data type has a fixed range. Exceeding the maximum value causes it to wrap around to the minimum — this is called overflow and is a common source of bugs.",
+      "starterCode": "public class IntegerOverflow {\n    public static void main(String[] args) {\n        int maxValue = Integer.MAX_VALUE;\n\n        System.out.println(\"Max int value: \" + maxValue);\n\n        // Add 1 to the maximum value\n        int overflow = maxValue + 1;\n\n        System.out.println(\"Max int + 1: \" + overflow);\n        System.out.println(\"Min int value: \" + Integer.MIN_VALUE);\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is — do not change it.",
+        "Observe the output and note that maxValue + 1 wraps around to Integer.MIN_VALUE.",
+        "Add a comment in your submission explaining why this happens.",
+        "Submit the code with your added explanation comment."
+      ],
+      "hint": "Integer.MAX_VALUE is 2147483647 (2^31 - 1). Adding 1 causes a binary overflow and the value wraps to -2147483648 (Integer.MIN_VALUE).",
+      "expectedOutput": "Max int value: 2147483647\nMax int + 1: -2147483648\nMin int value: -2147483648"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 4,
+    "allowedSubmissionType": "TEXT"
+  }
+]

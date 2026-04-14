@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Singleton Pattern with Thread Safety",
+    "description": {
+      "task": "Implement a DatabaseConnectionPool class using the Singleton pattern with double-checked locking for thread safety. The pool maintains a fixed number of connections and provides borrowBorrow/return operations.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class DatabaseConnectionPool {\n\n    private static volatile DatabaseConnectionPool instance;\n    private final int maxConnections;\n    private final Queue<String> availableConnections;\n    private int borrowedCount = 0;\n\n    private DatabaseConnectionPool(int maxConnections) {\n        this.maxConnections = maxConnections;\n        this.availableConnections = new LinkedList<>();\n        for (int i = 1; i <= maxConnections; i++) {\n            availableConnections.offer(\"conn-\" + i);\n        }\n    }\n\n    public static DatabaseConnectionPool getInstance(int maxConnections) {\n        // Implement double-checked locking singleton\n        if (instance == null) {\n            // TODO: add synchronized block with second null check\n        }\n        return instance;\n    }\n\n    public String borrowConnection() {\n        // Return next available connection, or null if none available\n        if (!availableConnections.isEmpty()) {\n            borrowedCount++;\n            return availableConnections.poll();\n        }\n        return null;\n    }\n\n    public void returnConnection(String connection) {\n        // Return the connection to the pool\n        if (connection != null) {\n            availableConnections.offer(connection);\n            borrowedCount--;\n        }\n    }\n\n    public int availableCount() { return availableConnections.size(); }\n    public int borrowedCount() { return borrowedCount; }\n\n    public static void main(String[] args) {\n        DatabaseConnectionPool pool = DatabaseConnectionPool.getInstance(3);\n        String c1 = pool.borrowConnection();\n        String c2 = pool.borrowConnection();\n        System.out.println(\"Borrowed: \" + pool.borrowedCount());\n        System.out.println(\"Available: \" + pool.availableCount());\n        pool.returnConnection(c1);\n        System.out.println(\"After return - Available: \" + pool.availableCount());\n        // Second getInstance call returns same instance\n        System.out.println(\"Same instance: \" + (pool == DatabaseConnectionPool.getInstance(5)));\n    }\n}",
+      "instructions": [
+        "getInstance() uses double-checked locking: check instance==null, enter synchronized block, check again, then create",
+        "The instance field is declared volatile to prevent instruction reordering",
+        "The second call to getInstance() must return the exact same object regardless of the argument",
+        "borrowConnection() decrements the available pool and returns the connection string",
+        "returnConnection() returns the connection back to the available pool"
+      ],
+      "hint": "In getInstance(), use: if (instance == null) { synchronized(DatabaseConnectionPool.class) { if (instance == null) { instance = new DatabaseConnectionPool(maxConnections); } } }",
+      "expectedOutput": "Borrowed: 2\nAvailable: 1\nAfter return - Available: 2\nSame instance: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 115,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Builder Pattern for Complex Objects",
+    "description": {
+      "task": "Implement a HttpRequest builder using the Builder pattern. An HTTP request has a URL, method, headers, query parameters, and body. The builder should validate mandatory fields and support an immutable request object.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class HttpRequest {\n\n    private final String url;\n    private final String method;\n    private final Map<String, String> headers;\n    private final Map<String, String> queryParams;\n    private final String body;\n\n    private HttpRequest(Builder builder) {\n        this.url = builder.url;\n        this.method = builder.method;\n        this.headers = Collections.unmodifiableMap(new HashMap<>(builder.headers));\n        this.queryParams = Collections.unmodifiableMap(new HashMap<>(builder.queryParams));\n        this.body = builder.body;\n    }\n\n    public String url() { return url; }\n    public String method() { return method; }\n    public Map<String, String> headers() { return headers; }\n    public String body() { return body; }\n    public int headerCount() { return headers.size(); }\n\n    public static class Builder {\n        private String url;\n        private String method = \"GET\";\n        private final Map<String, String> headers = new LinkedHashMap<>();\n        private final Map<String, String> queryParams = new LinkedHashMap<>();\n        private String body;\n\n        public Builder url(String url) {\n            this.url = url;\n            return this;\n        }\n\n        public Builder method(String method) {\n            this.method = method;\n            return this;\n        }\n\n        public Builder header(String name, String value) {\n            // Add a header to the headers map\n            return this;\n        }\n\n        public Builder queryParam(String name, String value) {\n            // Add a query parameter\n            return this;\n        }\n\n        public Builder body(String body) {\n            this.body = body;\n            return this;\n        }\n\n        public HttpRequest build() {\n            // Validate: url must not be null or blank\n            // Validate: body is only allowed for POST/PUT/PATCH\n            if (url == null || url.isBlank()) {\n                throw new IllegalStateException(\"URL is required\");\n            }\n            return new HttpRequest(this);\n        }\n    }\n\n    public static void main(String[] args) {\n        HttpRequest request = new HttpRequest.Builder()\n            .url(\"https://api.example.com/users\")\n            .method(\"POST\")\n            .header(\"Content-Type\", \"application/json\")\n            .header(\"Authorization\", \"Bearer token123\")\n            .body(\"{\\\"name\\\": \\\"Alice\\\"}\")\n            .build();\n\n        System.out.println(\"URL: \" + request.url());\n        System.out.println(\"Method: \" + request.method());\n        System.out.println(\"Headers: \" + request.headerCount());\n        System.out.println(\"Body: \" + request.body());\n    }\n}",
+      "instructions": [
+        "Builder.header() adds the name-value pair to headers and returns 'this'",
+        "Builder.queryParam() adds to queryParams and returns 'this'",
+        "build() throws IllegalStateException('URL is required') if url is null or blank",
+        "The resulting HttpRequest has immutable collections for headers and queryParams",
+        "The Builder uses a fluent API style — each setter returns 'this'"
+      ],
+      "hint": "header() and queryParam() just call headers.put(name, value) and queryParams.put(name, value) then return this. The build() validation for body is optional per the task description.",
+      "expectedOutput": "URL: https://api.example.com/users\nMethod: POST\nHeaders: 2\nBody: {\"name\": \"Alice\"}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 115,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Factory Method for Notification Channels",
+    "description": {
+      "task": "Implement a NotificationFactory using the Factory Method pattern. The factory creates different Notification objects (Email, SMS, Push) based on a channel type enum. Each notification type has its own send logic that formats the message differently.",
+      "language": "java",
+      "starterCode": "public class NotificationFactory {\n\n    public enum Channel { EMAIL, SMS, PUSH }\n\n    public interface Notification {\n        String send(String recipient, String message);\n        String channelName();\n    }\n\n    static class EmailNotification implements Notification {\n        public String send(String recipient, String message) {\n            return \"EMAIL to \" + recipient + \": \" + message;\n        }\n        public String channelName() { return \"email\"; }\n    }\n\n    static class SmsNotification implements Notification {\n        public String send(String recipient, String message) {\n            // Format as: 'SMS to +<recipient>: <first 160 chars of message>'\n            String truncated = message.length() > 160 ? message.substring(0, 160) : message;\n            return \"SMS to +\" + recipient + \": \" + truncated;\n        }\n        public String channelName() { return \"sms\"; }\n    }\n\n    static class PushNotification implements Notification {\n        public String send(String recipient, String message) {\n            // Format as: 'PUSH to device/<recipient>: <message>'\n            return null; // TODO\n        }\n        public String channelName() { return \"push\"; }\n    }\n\n    public Notification create(Channel channel) {\n        // Return appropriate Notification implementation based on channel\n        return null;\n    }\n\n    public static void main(String[] args) {\n        NotificationFactory factory = new NotificationFactory();\n\n        Notification email = factory.create(Channel.EMAIL);\n        Notification sms = factory.create(Channel.SMS);\n        Notification push = factory.create(Channel.PUSH);\n\n        System.out.println(email.send(\"alice@example.com\", \"Welcome!\"));\n        System.out.println(sms.send(\"15551234567\", \"Your OTP is 123456\"));\n        System.out.println(push.send(\"device-abc\", \"New message\"));\n    }\n}",
+      "instructions": [
+        "create() uses a switch or if-else on the Channel enum to return the correct Notification subclass",
+        "create() throws IllegalArgumentException('Unknown channel: ' + channel) for any unrecognized channel",
+        "PushNotification.send() formats as 'PUSH to device/<recipient>: <message>'",
+        "SmsNotification truncates messages longer than 160 characters",
+        "All three channel implementations must fully implement both interface methods"
+      ],
+      "hint": "Use switch(channel) { case EMAIL -> return new EmailNotification(); ... } in create(). For PushNotification.send(), return 'PUSH to device/' + recipient + ': ' + message.",
+      "expectedOutput": "EMAIL to alice@example.com: Welcome!\nSMS to +15551234567: Your OTP is 123456\nPUSH to device/device-abc: New message"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 115,
+    "allowedSubmissionType": "TEXT"
+  }
+]

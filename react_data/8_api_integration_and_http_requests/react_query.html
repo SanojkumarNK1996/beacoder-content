@@ -1,0 +1,45 @@
+<h1>🔍 React Query for Data Fetching</h1>
+<h2>🎯 What is React Query?</h2>
+<p><strong>TanStack Query (React Query)</strong> is the gold standard for server state management in React. It handles caching, background refetching, loading/error states, and pagination automatically.</p>
+<div class="code-example">
+  <pre>
+npm install @tanstack/react-query
+  </pre>
+</div>
+<h2>🔧 Setup</h2>
+<div class="code-example">
+  <pre>
+// main.jsx
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+const queryClient = new QueryClient();
+
+// Wrap your app:
+&lt;QueryClientProvider client={queryClient}&gt;
+  &lt;App /&gt;
+&lt;/QueryClientProvider&gt;
+  </pre>
+</div>
+<h2>📋 useQuery and useMutation</h2>
+<div class="code-example">
+  <pre>
+// Fetching data
+function UserList() {
+  const { data: users, isLoading, error } = useQuery({
+    queryKey: ['users'],
+    queryFn: () =&gt; api.get('/users').then(r =&gt; r.data),
+    staleTime: 5 * 60 * 1000,  // Cache for 5 minutes
+  });
+  if (isLoading) return &lt;Spinner /&gt;;
+  if (error) return &lt;Error /&gt;;
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+
+// Mutating data
+const { mutate: createUser } = useMutation({
+  mutationFn: (data) =&gt; api.post('/users', data),
+  onSuccess: () =&gt; queryClient.invalidateQueries(['users']),
+});
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>React Query eliminates 80% of data-fetching boilerplate. It handles caching, deduplication, background sync, and refetch on focus automatically. Use it for any server state.</p>

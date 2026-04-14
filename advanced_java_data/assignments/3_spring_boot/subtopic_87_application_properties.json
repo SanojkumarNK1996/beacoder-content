@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Properties File Reader",
+    "description": {
+      "task": "Build a custom application properties reader in Java that loads key-value pairs from a properties string and supports default values — simulating Spring Boot's application.properties.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ApplicationProperties {\n    private Map<String, String> properties = new HashMap<>();\n    \n    public void load(String propertiesContent) {\n        // TODO: Parse lines of the form 'key=value', skip comments (#) and blank lines\n    }\n    \n    public String getProperty(String key) {\n        // TODO: Return property value or throw RuntimeException if missing\n        return null;\n    }\n    \n    public String getProperty(String key, String defaultValue) {\n        // TODO: Return property value or defaultValue if missing\n        return null;\n    }\n    \n    public int getIntProperty(String key, int defaultValue) {\n        // TODO: Parse and return int or defaultValue\n        return defaultValue;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ApplicationProperties props = new ApplicationProperties();\n        \n        String config = \n            \"# Server Configuration\\n\" +\n            \"server.port=8080\\n\" +\n            \"server.name=MyApp\\n\" +\n            \"\\n\" +\n            \"# Database Configuration\\n\" +\n            \"spring.datasource.url=jdbc:postgresql://localhost/mydb\\n\" +\n            \"spring.datasource.username=admin\\n\";\n        \n        props.load(config);\n        \n        // TODO: Print server.port, server.name, spring.datasource.url\n        // TODO: Show default value for missing 'app.version' property\n        // TODO: Show int parsing for server.port\n    }\n}",
+      "instructions": [
+        "Implement load() to split content by newlines, skip lines starting with '#' or blank lines, and parse 'key=value' pairs.",
+        "Implement all three getProperty variants as described.",
+        "In Main, print each property on its own line with the format 'key: value'.",
+        "Print app.version with default '1.0.0' and server.port as int."
+      ],
+      "hint": "Spring Boot's application.properties uses the same pattern. You can also use YAML (application.yml) for hierarchical configuration.",
+      "expectedOutput": "server.port: 8080\nserver.name: MyApp\nspring.datasource.url: jdbc:postgresql://localhost/mydb\napp.version: 1.0.0 (default)\nport as int: 8080"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 87,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Profile-based Configuration Loading",
+    "description": {
+      "task": "Implement a multi-profile properties system that merges a base application.properties with a profile-specific override file (like application-dev.properties).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MultiProfileConfig {\n    private Map<String, String> base = new LinkedHashMap<>();\n    private Map<String, String> override = new LinkedHashMap<>();\n    \n    public void loadBase(Map<String, String> baseProps) {\n        this.base.putAll(baseProps);\n    }\n    \n    public void loadProfile(Map<String, String> profileProps) {\n        this.override.putAll(profileProps);\n    }\n    \n    public String get(String key) {\n        // TODO: Return override value if exists, else base value, else null\n        return null;\n    }\n    \n    public Map<String, String> getEffectiveConfig() {\n        // TODO: Merge base with override (override wins)\n        return new LinkedHashMap<>();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Map<String, String> baseProps = new LinkedHashMap<>();\n        baseProps.put(\"server.port\", \"8080\");\n        baseProps.put(\"app.name\", \"MyApp\");\n        baseProps.put(\"logging.level\", \"INFO\");\n        baseProps.put(\"db.url\", \"jdbc:h2:mem:testdb\");\n        \n        Map<String, String> devProps = new LinkedHashMap<>();\n        devProps.put(\"logging.level\", \"DEBUG\");  // overrides base\n        devProps.put(\"db.url\", \"jdbc:postgresql://localhost/devdb\");  // overrides base\n        devProps.put(\"debug.enabled\", \"true\");  // new in dev\n        \n        MultiProfileConfig config = new MultiProfileConfig();\n        config.loadBase(baseProps);\n        config.loadProfile(devProps);\n        \n        System.out.println(\"Effective configuration (dev profile):\");\n        config.getEffectiveConfig().forEach((k, v) -> System.out.println(\"  \" + k + \" = \" + v));\n    }\n}",
+      "instructions": [
+        "Implement get() to check override first, then base, returning null if not found in either.",
+        "Implement getEffectiveConfig() by copying base then putting all override entries (override wins).",
+        "Run Main as-is — do not change Main.",
+        "Output should show all keys, with overridden values from dev profile."
+      ],
+      "hint": "Spring Boot loads application-{profile}.properties and merges it with application.properties. Profile-specific values always take precedence.",
+      "expectedOutput": "Effective configuration (dev profile):\n  server.port = 8080\n  app.name = MyApp\n  logging.level = DEBUG\n  db.url = jdbc:postgresql://localhost/devdb\n  debug.enabled = true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 87,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Configuration Binding",
+    "description": {
+      "task": "Simulate Spring Boot's @ConfigurationProperties by building a binder that maps flat key-value properties into a structured configuration class using reflection.",
+      "language": "java",
+      "context": "Spring Boot's @ConfigurationProperties binds properties like 'server.port=8080' to a Java object field 'serverPort'. This eliminates boilerplate getter calls.",
+      "starterCode": "import java.lang.annotation.*;\nimport java.lang.reflect.*;\nimport java.util.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.FIELD)\n@interface Value { String key(); }\n\npublic class ServerConfig {\n    @Value(key = \"server.port\")\n    private int port;\n    \n    @Value(key = \"server.host\")\n    private String host;\n    \n    @Value(key = \"server.maxConnections\")\n    private int maxConnections;\n    \n    // TODO: Getters for all fields\n    \n    @Override\n    public String toString() {\n        return \"ServerConfig{host='\" + host + \"', port=\" + port + \", maxConnections=\" + maxConnections + \"}\";\n    }\n}\n\npublic class ConfigBinder {\n    public static void bind(Object target, Map<String, String> props) throws Exception {\n        // TODO: Use reflection to find @Value annotated fields and set them\n        // Parse int for int fields, String for String fields\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        Map<String, String> props = new HashMap<>();\n        props.put(\"server.port\", \"9090\");\n        props.put(\"server.host\", \"0.0.0.0\");\n        props.put(\"server.maxConnections\", \"200\");\n        \n        ServerConfig config = new ServerConfig();\n        ConfigBinder.bind(config, props);\n        System.out.println(config);\n    }\n}",
+      "instructions": [
+        "Implement getters for port, host, maxConnections in ServerConfig.",
+        "In ConfigBinder.bind(), iterate all declared fields of target. For fields annotated with @Value, get the key, look up in props, and set the field value (use Integer.parseInt for int fields, setAccessible(true)).",
+        "Run Main as-is.",
+        "Output should show the bound ServerConfig."
+      ],
+      "hint": "Spring's @ConfigurationProperties uses a similar binding mechanism. For complex types, it supports nested objects and relaxed binding (server.port = serverPort).",
+      "expectedOutput": "ServerConfig{host='0.0.0.0', port=9090, maxConnections=200}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 87,
+    "allowedSubmissionType": "TEXT"
+  }
+]

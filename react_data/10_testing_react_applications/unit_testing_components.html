@@ -1,0 +1,40 @@
+<h1>🧪 Unit Testing React Components</h1>
+<h2>🎯 What to Unit Test</h2>
+<ul>
+  <li>Pure utility functions (formatDate, calculateTotal)</li>
+  <li>Custom hooks in isolation</li>
+  <li>Simple presentational components with fixed outputs</li>
+</ul>
+<div class="code-example">
+  <pre>
+// utils.test.js
+import { formatCurrency } from './utils';
+test('formats number as USD', () =&gt; {
+  expect(formatCurrency(15.5)).toBe('$15.50');
+  expect(formatCurrency(0)).toBe('$0.00');
+});
+
+// Component test
+import { render, screen } from '@testing-library/react';
+import Badge from './Badge';
+
+test('renders with correct text and color', () =&gt; {
+  render(&lt;Badge variant="success"&gt;Active&lt;/Badge&gt;);
+  const badge = screen.getByText('Active');
+  expect(badge).toBeInTheDocument();
+  expect(badge).toHaveClass('badge-success');
+});
+
+// Custom hook test with renderHook:
+import { renderHook, act } from '@testing-library/react';
+import useCounter from './useCounter';
+
+test('increments counter', () =&gt; {
+  const { result } = renderHook(() =&gt; useCounter(0));
+  act(() =&gt; result.current.increment());
+  expect(result.current.count).toBe(1);
+});
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Unit tests are fastest and most precise but test in isolation (miss integration bugs). Use them for utilities and custom hooks. Use integration tests for components with user interactions.</p>

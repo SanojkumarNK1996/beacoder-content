@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Synchronous vs Asynchronous Communication Classifier",
+    "description": {
+      "task": "Create a CommunicationPatternClassifier class that categorizes inter-service communication patterns as synchronous (REST, gRPC) or asynchronous (Kafka, RabbitMQ). Implement a method that returns the coupling level and latency characteristics of each pattern.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class CommunicationPatternClassifier {\n\n    public enum CommunicationType { SYNCHRONOUS, ASYNCHRONOUS }\n\n    public record PatternInfo(CommunicationType type, String coupling, String latency) {}\n\n    private final Map<String, PatternInfo> patterns = new HashMap<>();\n\n    public CommunicationPatternClassifier() {\n        // Register known patterns\n    }\n\n    public PatternInfo classify(String patternName) {\n        // Return info for given pattern name (case-insensitive), or null if unknown\n        return null;\n    }\n\n    public List<String> getSynchronousPatterns() {\n        // Return names of all synchronous patterns\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        CommunicationPatternClassifier classifier = new CommunicationPatternClassifier();\n        PatternInfo rest = classifier.classify(\"REST\");\n        System.out.println(\"REST type: \" + rest.type());\n        System.out.println(\"REST coupling: \" + rest.coupling());\n        PatternInfo kafka = classifier.classify(\"kafka\");\n        System.out.println(\"Kafka type: \" + kafka.type());\n        System.out.println(\"Sync patterns: \" + classifier.getSynchronousPatterns().size());\n    }\n}",
+      "instructions": [
+        "Register at least 4 patterns in the constructor: REST, gRPC (SYNCHRONOUS), Kafka, RabbitMQ (ASYNCHRONOUS)",
+        "REST and gRPC should have coupling='tight' and latency='low'; Kafka and RabbitMQ should have coupling='loose' and latency='eventual'",
+        "classify() is case-insensitive: 'REST', 'rest', 'Rest' all return the same entry",
+        "getSynchronousPatterns() returns only the names of SYNCHRONOUS patterns",
+        "classify() returns null for unrecognized pattern names"
+      ],
+      "hint": "Store pattern names in lowercase in the map. In classify(), call patternName.toLowerCase() before lookup. In getSynchronousPatterns(), stream the map entries filtering by SYNCHRONOUS type.",
+      "expectedOutput": "REST type: SYNCHRONOUS\nREST coupling: tight\nKafka type: ASYNCHRONOUS\nSync patterns: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 108,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Message Queue Simulator",
+    "description": {
+      "task": "Build a SimpleMessageQueue class that simulates asynchronous inter-service communication. Producers publish messages to named topics; consumers subscribe and process messages. Implement a round-robin delivery strategy when multiple consumers exist for the same topic.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.function.Consumer;\n\npublic class SimpleMessageQueue {\n\n    private final Map<String, Queue<String>> topics = new HashMap<>();\n    private final Map<String, List<Consumer<String>>> subscribers = new HashMap<>();\n\n    public void publish(String topic, String message) {\n        // Add message to the topic queue\n        topics.computeIfAbsent(topic, k -> new LinkedList<>()).offer(message);\n    }\n\n    public void subscribe(String topic, Consumer<String> handler) {\n        // Register a handler for the topic\n        subscribers.computeIfAbsent(topic, k -> new ArrayList<>()).add(handler);\n    }\n\n    public int processNext(String topic) {\n        // Deliver the next message to the next subscriber (round-robin index)\n        // Return 1 if delivered, 0 if no messages or no subscribers\n        return 0;\n    }\n\n    private final Map<String, Integer> roundRobinIndex = new HashMap<>();\n\n    public static void main(String[] args) {\n        SimpleMessageQueue mq = new SimpleMessageQueue();\n        List<String> received = new ArrayList<>();\n\n        mq.subscribe(\"orders\", msg -> received.add(\"Consumer1: \" + msg));\n        mq.subscribe(\"orders\", msg -> received.add(\"Consumer2: \" + msg));\n\n        mq.publish(\"orders\", \"Order#1\");\n        mq.publish(\"orders\", \"Order#2\");\n        mq.publish(\"orders\", \"Order#3\");\n\n        mq.processNext(\"orders\");\n        mq.processNext(\"orders\");\n        mq.processNext(\"orders\");\n\n        received.forEach(System.out::println);\n    }\n}",
+      "instructions": [
+        "publish() enqueues the message string to the named topic's queue",
+        "subscribe() adds the handler to the topic's subscriber list",
+        "processNext() dequeues one message and delivers it to subscribers[roundRobinIndex % subscriberCount]",
+        "After each delivery, increment the round-robin index for that topic",
+        "Return 0 from processNext() if the topic queue is empty or no subscribers are registered"
+      ],
+      "hint": "Use roundRobinIndex.getOrDefault(topic, 0) to get the current index. After delivery, update it with (current + 1) % subscribers.size().",
+      "expectedOutput": "Consumer1: Order#1\nConsumer2: Order#2\nConsumer1: Order#3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 108,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Service-to-Service Request Logger",
+    "description": {
+      "task": "Implement a ServiceCallLogger that tracks all inter-service HTTP calls, recording request metadata (source, target, method, status code) and providing statistics such as total calls, error rate, and calls per service pair.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class ServiceCallLogger {\n\n    public record CallRecord(String source, String target, String method, int statusCode) {}\n\n    private final List<CallRecord> logs = new ArrayList<>();\n\n    public void log(String source, String target, String method, int statusCode) {\n        logs.add(new CallRecord(source, target, method, statusCode));\n    }\n\n    public long totalCalls() {\n        return logs.size();\n    }\n\n    public double errorRate() {\n        // Return percentage of calls with statusCode >= 400\n        return 0.0;\n    }\n\n    public Map<String, Long> callsPerPair() {\n        // Return map of 'source->target' to call count\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        ServiceCallLogger logger = new ServiceCallLogger();\n        logger.log(\"gateway\", \"user-service\", \"GET\", 200);\n        logger.log(\"gateway\", \"user-service\", \"POST\", 201);\n        logger.log(\"user-service\", \"auth-service\", \"POST\", 401);\n        logger.log(\"gateway\", \"order-service\", \"GET\", 500);\n\n        System.out.println(\"Total: \" + logger.totalCalls());\n        System.out.printf(\"Error rate: %.1f%%%n\", logger.errorRate());\n        System.out.println(\"Per pair: \" + logger.callsPerPair());\n    }\n}",
+      "instructions": [
+        "log() creates and appends a CallRecord to the logs list",
+        "totalCalls() returns logs.size()",
+        "errorRate() returns (count of records with statusCode >= 400) / totalCalls * 100.0",
+        "callsPerPair() groups records by 'source->target' key and counts them",
+        "errorRate() returns 0.0 when there are no logs"
+      ],
+      "hint": "For errorRate(), use stream filter with statusCode >= 400, then count and divide by logs.size() * 100.0. For callsPerPair(), use Collectors.groupingBy with source + \"->\" + target and Collectors.counting().",
+      "expectedOutput": "Total: 4\nError rate: 50.0%\nPer pair: {gateway->user-service=2, user-service->auth-service=1, gateway->order-service=1}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 108,
+    "allowedSubmissionType": "TEXT"
+  }
+]

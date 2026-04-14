@@ -1,0 +1,34 @@
+[
+  {
+    "subtopicId": 115,
+    "title": "Creational Patterns",
+    "dataType": "notes",
+    "data": "creational_patterns.html",
+    "displayOrder": 1,
+    "verified": false
+  },
+  {
+    "subtopicId": 116,
+    "title": "Structural Patterns",
+    "dataType": "notes",
+    "data": "structural_patterns.html",
+    "displayOrder": 2,
+    "verified": false
+  },
+  {
+    "subtopicId": 117,
+    "title": "Behavioral Patterns",
+    "dataType": "notes",
+    "data": "behavioral_patterns.html",
+    "displayOrder": 3,
+    "verified": false
+  },
+  {
+    "subtopicId": 118,
+    "title": "Enterprise Patterns",
+    "dataType": "notes",
+    "data": "enterprise_patterns.html",
+    "displayOrder": 4,
+    "verified": false
+  }
+]

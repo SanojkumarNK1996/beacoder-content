@@ -1,103 +1,68 @@
-<h1>Subqueries in SQL (Single-row and Multi-row)</h1>
+<h1>Subqueries in SQL: 10-Part Beginner-Friendly Guide</h1>
 
-<p>A <strong>subquery</strong> is a query nested inside another SQL query. It allows you to use the result of one query as input for another.  
-Subqueries help in filtering, comparing, or calculating values dynamically based on other data in the database.</p>
+<h2>1. Why Does This Topic Exist?</h2>
+<p>Sometimes you need to answer questions like “Who scored above average?” or “Which products cost more than the cheapest item in another category?” Subqueries let you use the result of one query inside another, making SQL much more powerful.</p>
 
-<hr>
+<h2>2. What Is This?</h2>
+<p>A <b>subquery</b> is a query inside another SQL query. It’s used to filter, compare, or calculate values based on other data in the database.</p>
 
-<h2>1️⃣ What is a Subquery?</h2>
-
-<p>A <strong>subquery</strong> (also called an <em>inner query</em>) is enclosed in parentheses and used inside another SQL query (called the <em>outer query</em>).</p>
-
-<p><strong>Example:</strong></p>
+<h2>3. Syntax/Structure</h2>
 <pre>
-SELECT name
-FROM Students
-WHERE marks > (
-    SELECT AVG(marks)
-    FROM Students
+-- Basic subquery
+SELECT ...
+FROM ...
+WHERE column OPERATOR (
+    SELECT ... FROM ... WHERE ...
 );
 </pre>
 
-<p>This finds all students who scored higher than the class average.  
-Here, the inner query calculates the average marks, and the outer query uses that value.</p>
+<h2>4. Step-by-Step: How It Works</h2>
+<ol>
+    <li>Write the inner query (subquery) that gets the value(s) you need.</li>
+    <li>Use the subquery inside the main (outer) query, usually in WHERE or HAVING.</li>
+    <li>Run the combined query to get your answer.</li>
+</ol>
 
-<hr>
-
-<h2>2️⃣ Types of Subqueries</h2>
-
+<h2>5. When to Use</h2>
 <ul>
-  <li><strong>Single-row Subquery</strong> — returns only one value (one row, one column).</li>
-  <li><strong>Multi-row Subquery</strong> — returns multiple values (one column, many rows).</li>
-  <li><strong>Multi-column Subquery</strong> — returns multiple columns (used rarely).</li>
+    <li>To compare each row to a calculated value (like average marks).</li>
+    <li>To filter results based on another table’s data.</li>
+    <li>To answer “top N” or “exists in another set” questions.</li>
 </ul>
 
-<hr>
-
-<h2>3️⃣ Single-row Subquery</h2>
-
-<p>A <strong>single-row subquery</strong> returns exactly one value and is often used with comparison operators like <code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, or <code>&lt;=</code>.</p>
-
-<p><strong>Example:</strong></p>
-<pre>
-SELECT name, marks
-FROM Students
-WHERE marks > (
-    SELECT AVG(marks)
-    FROM Students
-);
-</pre>
-
-<p>This query compares each student’s marks to a single average value returned by the subquery.</p>
-
-<hr>
-
-<h2>4️⃣ Example: Comparing Salaries</h2>
-
-<pre>
-SELECT name, salary
-FROM Employees
-WHERE salary > (
-    SELECT salary
-    FROM Employees
-    WHERE name = 'John'
-);
-</pre>
-
-<p>This shows all employees who earn more than John.  
-Here, the subquery returns one row — John’s salary.</p>
-
-<hr>
-
-<h2>5️⃣ Multi-row Subquery</h2>
-
-<p>A <strong>multi-row subquery</strong> returns multiple rows, and is used with operators like:</p>
-
+<h2>6. When Not to Use</h2>
 <ul>
-  <li><code>IN</code> — matches any of the values</li>
-  <li><code>ANY</code> or <code>SOME</code> — compares to any value</li>
-  <li><code>ALL</code> — compares to all returned values</li>
+    <li>When a simple JOIN or WHERE is enough.</li>
+    <li>When performance is critical and the subquery is slow (consider JOINs or CTEs).</li>
 </ul>
 
-<hr>
+<h2>7. Minimum to Remember</h2>
+<ul>
+    <li>Subqueries go inside parentheses.</li>
+    <li>Single-row subqueries return one value (use =, >, <, etc.).</li>
+    <li>Multi-row subqueries return many values (use IN, ANY, ALL).</li>
+</ul>
 
-<h2>6️⃣ Example with IN</h2>
+<h2>8. Common Mistakes</h2>
+<ul>
+    <li>Using = with a multi-row subquery (causes errors—use IN instead).</li>
+    <li>Forgetting parentheses around the subquery.</li>
+    <li>Not checking if the subquery returns the expected number of rows.</li>
+</ul>
 
-<pre>
-SELECT name
-FROM Students
-WHERE course_id IN (
-    SELECT course_id
-    FROM Courses
-    WHERE instructor = 'Dr. Smith'
-);
-</pre>
+<h2>9. Interviewer’s Perspective</h2>
+<ul>
+    <li>“How do you find students who scored above the class average?”</li>
+    <li>“What’s the difference between a single-row and multi-row subquery?”</li>
+    <li>“How do you use a subquery to filter results from another table?”</li>
+</ul>
 
-<p>This finds all students who are enrolled in courses taught by Dr. Smith.</p>
-
-<hr>
-
-<h2>7️⃣ Example with ANY</h2>
+<h2>10. Practice Questions</h2>
+<ol>
+    <li>Write SQL to find all employees who earn more than the average salary.</li>
+    <li>How would you list products that cost more than the cheapest item in another category?</li>
+    <li>Write a query to find students enrolled in courses taught by “Dr. Sharma” using a subquery.</li>
+</ol>
 
 <pre>
 SELECT name, salary

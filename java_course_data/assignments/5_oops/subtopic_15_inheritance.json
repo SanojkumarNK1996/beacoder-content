@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Animal Inheritance",
+    "description": {
+      "task": "Create an Animal base class and two subclasses (Dog and Cat) using the extends keyword. Each subclass must override a makeSound() method.",
+      "language": "java",
+      "starterCode": "class Animal {\n    String name;\n\n    Animal(String name) {\n        this.name = name;\n    }\n\n    void makeSound() {\n        System.out.println(name + \" makes a sound.\");\n    }\n}\n\n// Dog extends Animal — override makeSound() to print \"<name> says: Woof!\"\n\n// Cat extends Animal — override makeSound() to print \"<name> says: Meow!\"\n\npublic class AnimalInheritance {\n    public static void main(String[] args) {\n        Animal a = new Animal(\"Generic Animal\");\n        Dog d = new Dog(\"Buddy\");\n        Cat c = new Cat(\"Whiskers\");\n\n        a.makeSound();\n        d.makeSound();\n        c.makeSound();\n    }\n}",
+      "instructions": [
+        "Define class Dog extends Animal with a constructor that calls super(name).",
+        "Override makeSound() in Dog to print '<name> says: Woof!'.",
+        "Define class Cat extends Animal, same pattern but prints '<name> says: Meow!'.",
+        "Do NOT change AnimalInheritance.main()."
+      ],
+      "hint": "Use the @Override annotation above overridden methods as a best practice. Call super(name) in subclass constructors to initialise the parent's field.",
+      "expectedOutput": "Generic Animal makes a sound.\nBuddy says: Woof!\nWhiskers says: Meow!"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 15,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "super Keyword in Action",
+    "description": {
+      "task": "Create a Vehicle class with a describe() method, then extend it with ElectricVehicle that calls super.describe() and adds battery range info.",
+      "language": "java",
+      "context": "The super keyword lets a subclass call the parent class's constructor or methods, avoiding code duplication.",
+      "starterCode": "class Vehicle {\n    String brand;\n    int year;\n\n    Vehicle(String brand, int year) {\n        this.brand = brand;\n        this.year = year;\n    }\n\n    void describe() {\n        System.out.println(\"Brand: \" + brand + \", Year: \" + year);\n    }\n}\n\nclass ElectricVehicle extends Vehicle {\n    int rangeKm;\n\n    // Constructor: use super() to initialise brand and year, then set rangeKm\n\n    // Override describe(): call super.describe() then print \"Range: <rangeKm> km\"\n}\n\npublic class SuperDemo {\n    public static void main(String[] args) {\n        ElectricVehicle ev = new ElectricVehicle(\"Tesla\", 2023, 500);\n        ev.describe();\n    }\n}",
+      "instructions": [
+        "In ElectricVehicle's constructor, call super(brand, year) to initialise the parent fields, then assign rangeKm.",
+        "Override describe(): call super.describe() first, then print 'Range: 500 km'.",
+        "Do NOT change SuperDemo.main()."
+      ],
+      "hint": "super() must be the first statement in a subclass constructor. super.describe() calls the parent's version of the method.",
+      "expectedOutput": "Brand: Tesla, Year: 2023\nRange: 500 km"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 15,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Employee Hierarchy",
+    "description": {
+      "task": "Build a three-level inheritance chain: Person → Employee → Manager. Each level adds a field and overrides toString().",
+      "language": "java",
+      "context": "Inheritance enables a hierarchy where common attributes live in parent classes and specialised attributes are added by subclasses.",
+      "starterCode": "class Person {\n    String name;\n    Person(String name) { this.name = name; }\n    public String toString() { return \"Person: \" + name; }\n}\n\n// Employee extends Person: adds String department\n// Constructor: super(name), this.department = department\n// Override toString(): \"Employee: \" + name + \" | Dept: \" + department\n\n// Manager extends Employee: adds int teamSize\n// Constructor: super(name, department), this.teamSize = teamSize\n// Override toString(): \"Manager: \" + name + \" | Dept: \" + department + \" | Team: \" + teamSize\n\npublic class EmployeeHierarchy {\n    public static void main(String[] args) {\n        Person p = new Person(\"Alice\");\n        Employee e = new Employee(\"Bob\", \"Engineering\");\n        Manager m = new Manager(\"Carol\", \"Engineering\", 8);\n\n        System.out.println(p);\n        System.out.println(e);\n        System.out.println(m);\n    }\n}",
+      "instructions": [
+        "Implement Employee extending Person as described in the comments.",
+        "Implement Manager extending Employee as described.",
+        "Override toString() at each level with the exact formats shown.",
+        "Do NOT change EmployeeHierarchy.main()."
+      ],
+      "hint": "System.out.println(object) calls the object's toString() automatically.",
+      "expectedOutput": "Person: Alice\nEmployee: Bob | Dept: Engineering\nManager: Carol | Dept: Engineering | Team: 8"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 15,
+    "allowedSubmissionType": "TEXT"
+  }
+]

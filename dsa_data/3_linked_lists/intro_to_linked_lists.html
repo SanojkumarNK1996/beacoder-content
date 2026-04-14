@@ -1,0 +1,21 @@
+<h1>🔗 Introduction to Linked Lists</h1>
+
+<h2>🎯 What is a Linked List?</h2>
+<p>A <strong>linked list</strong> is a sequence of <strong>nodes</strong> where each node holds data and a reference (pointer) to the next node.</p>
+
+<div class="analogy-card">
+  <h3>🚂 Train Analogy</h3>
+  <p>Like a train: each carriage (node) is connected to the next with a coupling (pointer). You can add or remove carriages without reshuffling the rest of the train.</p>
+</div>
+
+<h2>📐 Array vs Linked List</h2>
+<table>
+  <tr><th>Operation</th><th>Array</th><th>Linked List</th></tr>
+  <tr><td>Access by index</td><td>O(1)</td><td>O(n)</td></tr>
+  <tr><td>Insert at start</td><td>O(n)</td><td>O(1)</td></tr>
+  <tr><td>Insert at middle</td><td>O(n)</td><td>O(n) traversal + O(1) insert</td></tr>
+  <tr><td>Memory</td><td>Contiguous</td><td>Scattered (extra pointer overhead)</td></tr>
+</table>
+
+<h2>🎯 Summary</h2>
+<p>Use linked lists when you need <strong>frequent insertions/deletions</strong> and don't need random access by index.</p>

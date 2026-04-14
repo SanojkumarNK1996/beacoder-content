@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Environment Check: Hello World Program",
+    "description": {
+      "task": "Set up your Java development environment and write a Hello World program to confirm everything is installed and configured correctly.",
+      "language": "java",
+      "starterCode": "public class HelloWorld {\n    public static void main(String[] args) {\n        // Verify your Java setup works\n    }\n}",
+      "instructions": [
+        "Install JDK 17 or later and set up an IDE (IntelliJ IDEA, Eclipse, or VS Code with Java extensions).",
+        "Create a new Java project and a file named HelloWorld.java.",
+        "Add code inside the main() method to print 'Hello, World!' using System.out.println().",
+        "Compile and run the program to verify it prints the expected output.",
+        "Submit your complete code."
+      ],
+      "hint": "If you get 'javac is not recognized', ensure JAVA_HOME is set and the JDK bin folder is added to your system PATH.",
+      "expectedOutput": "Hello, World!"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 3,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Personal Info Printer",
+    "description": {
+      "task": "Write a Java program that prints your name, the course you are studying, and today's date — using separate println statements.",
+      "language": "java",
+      "starterCode": "public class PersonalInfo {\n    public static void main(String[] args) {\n        // Replace the placeholders with your actual details\n        String name = \"Your Name\";\n        String course = \"Java Programming\";\n        String date = \"2026-03-19\";\n\n        // Print each on its own line with a label\n    }\n}",
+      "instructions": [
+        "Declare three String variables: name, course, and date.",
+        "Assign them your actual name, the course name, and today's date.",
+        "Print each in the format: 'Name: John Doe', 'Course: Java Programming', 'Date: 2026-03-19'."
+      ],
+      "hint": "String variables are declared as: String variableName = \"value\";",
+      "expectedOutput": "Name: John Doe\nCourse: Java Programming\nDate: 2026-03-19"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 3,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Multi-Line Art Printer",
+    "description": {
+      "task": "Write a Java program that uses multiple System.out.println() statements to print a simple pattern or ASCII art of your choice.",
+      "language": "java",
+      "context": "Practising multiple print statements reinforces your understanding of how code is executed line by line.",
+      "starterCode": "public class ArtPrinter {\n    public static void main(String[] args) {\n        // Use System.out.println() to print the pattern below\n        //   *\n        //  ***\n        // *****\n        //  ***\n        //   *\n    }\n}",
+      "instructions": [
+        "Print the diamond pattern exactly as shown in the comments using 5 println() statements.",
+        "Each line of the pattern must use the exact spaces and asterisks shown.",
+        "Do not use loops — use only separate System.out.println() calls."
+      ],
+      "hint": "Count the leading spaces carefully. Line 1 has 2 spaces before *, Line 2 has 1 space before ***, etc.",
+      "expectedOutput": "  *\n ***\n*****\n ***\n  *"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 3,
+    "allowedSubmissionType": "TEXT"
+  }
+]

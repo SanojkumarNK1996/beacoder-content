@@ -1,0 +1,70 @@
+[
+  {
+    "title": "this to Resolve Naming Conflict",
+    "description": {
+      "task": "Create a Product class where the constructor parameters have the same names as the instance fields. Use the 'this' keyword to resolve the ambiguity.",
+      "language": "java",
+      "starterCode": "public class Product {\n    String name;\n    double price;\n    int quantity;\n\n    // Constructor: parameters are also named name, price, quantity\n    // Use 'this' to assign parameters to instance fields\n    Product(String name, double price, int quantity) {\n        // Without 'this', 'name = name' assigns the parameter to itself\n        // With 'this.name = name', left side is the field, right side is the parameter\n    }\n\n    void display() {\n        System.out.println(\"Product: \" + name + \" | Price: $\" + price + \" | Qty: \" + quantity);\n    }\n\n    public static void main(String[] args) {\n        Product p1 = new Product(\"Laptop\", 999.99, 5);\n        Product p2 = new Product(\"Mouse\", 29.99, 20);\n        p1.display();\n        p2.display();\n    }\n}",
+      "instructions": [
+        "Inside the constructor, use this.name = name; this.price = price; this.quantity = quantity;",
+        "Do NOT rename the constructor parameters.",
+        "Do NOT change display() or main()."
+      ],
+      "hint": "When a local variable (or parameter) shadows an instance field with the same name, 'this.fieldName' explicitly refers to the instance field.",
+      "expectedOutput": "Product: Laptop | Price: $999.99 | Qty: 5\nProduct: Mouse | Price: $29.99 | Qty: 20"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 19,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Constructor Chaining with this()",
+    "description": {
+      "task": "Create a Circle class with two constructors. Use this() in the second constructor to delegate to the first, avoiding code duplication.",
+      "language": "java",
+      "context": "this() calls another constructor in the same class. It must be the first statement in a constructor and avoids repeating logic across multiple constructors.",
+      "starterCode": "public class Circle {\n    double radius;\n    String color;\n\n    // Primary constructor: accepts both radius and color\n    Circle(double radius, String color) {\n        this.radius = radius;\n        this.color = color;\n        System.out.println(\"Circle created: radius=\" + radius + \", color=\" + color);\n    }\n\n    // Secondary constructor: accepts only radius, delegates to primary with default color \"White\"\n    Circle(double radius) {\n        // Use this() to call the primary constructor\n    }\n\n    public static void main(String[] args) {\n        Circle c1 = new Circle(5.0, \"Red\");\n        Circle c2 = new Circle(3.0);         // should use default color \"White\"\n    }\n}",
+      "instructions": [
+        "Complete the secondary constructor using this(radius, \"White\") to delegate to the primary.",
+        "Do NOT change the primary constructor or main().",
+        "Both constructors should print the same message format — the secondary achieves this through delegation."
+      ],
+      "hint": "this(radius, \"White\") must be the very first line in the secondary constructor. No other code can come before it.",
+      "expectedOutput": "Circle created: radius=5.0, color=Red\nCircle created: radius=3.0, color=White"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 19,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Return this for Method Chaining",
+    "description": {
+      "task": "Implement a Builder-style class where setter methods return 'this', allowing method calls to be chained in a single expression.",
+      "language": "java",
+      "context": "Returning 'this' from a method enables a fluent API / builder pattern, making code more readable — e.g., new User().setName(\"Alice\").setAge(25).build().",
+      "starterCode": "public class QueryBuilder {\n    private String table = \"\";\n    private String condition = \"\";\n    private int limit = 100;\n\n    // setTable(String table): assigns table, returns this\n\n    // setCondition(String condition): assigns condition, returns this\n\n    // setLimit(int limit): assigns limit, returns this\n\n    public String build() {\n        return \"SELECT * FROM \" + table +\n               (condition.isEmpty() ? \"\" : \" WHERE \" + condition) +\n               \" LIMIT \" + limit;\n    }\n\n    public static void main(String[] args) {\n        String query = new QueryBuilder()\n            .setTable(\"users\")\n            .setCondition(\"age > 18\")\n            .setLimit(50)\n            .build();\n\n        System.out.println(query);\n    }\n}",
+      "instructions": [
+        "Implement setTable(), setCondition(), and setLimit() — each assigns the value and returns 'this'.",
+        "Return type of each setter must be QueryBuilder.",
+        "Do NOT change build() or main()."
+      ],
+      "hint": "Return type: public QueryBuilder setTable(String table) { this.table = table; return this; }",
+      "expectedOutput": "SELECT * FROM users WHERE age > 18 LIMIT 50"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 5,
+    "subtopicId": 19,
+    "allowedSubmissionType": "TEXT"
+  }
+]

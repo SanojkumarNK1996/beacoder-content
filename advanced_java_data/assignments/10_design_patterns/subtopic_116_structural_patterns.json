@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Decorator Pattern for HTTP Middleware",
+    "description": {
+      "task": "Implement an HTTP request handler using the Decorator pattern. A base handler processes requests; decorators add cross-cutting concerns like logging, authentication checks, and caching. Each decorator wraps the next handler and adds its behavior before/after delegation.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class HandlerDecorators {\n\n    interface RequestHandler {\n        String handle(String path, Map<String, String> headers);\n    }\n\n    static class BaseHandler implements RequestHandler {\n        public String handle(String path, Map<String, String> headers) {\n            return \"200 OK: \" + path;\n        }\n    }\n\n    static class LoggingDecorator implements RequestHandler {\n        private final RequestHandler wrapped;\n        private final List<String> log;\n\n        LoggingDecorator(RequestHandler wrapped, List<String> log) {\n            this.wrapped = wrapped;\n            this.log = log;\n        }\n\n        public String handle(String path, Map<String, String> headers) {\n            log.add(\"REQUEST: \" + path);\n            String result = wrapped.handle(path, headers);\n            log.add(\"RESPONSE: \" + result);\n            return result;\n        }\n    }\n\n    static class AuthDecorator implements RequestHandler {\n        private final RequestHandler wrapped;\n\n        AuthDecorator(RequestHandler wrapped) {\n            this.wrapped = wrapped;\n        }\n\n        public String handle(String path, Map<String, String> headers) {\n            // Check 'Authorization' header; return '401 Unauthorized' if absent\n            // Otherwise, delegate to wrapped handler\n            return null; // TODO\n        }\n    }\n\n    public static void main(String[] args) {\n        List<String> log = new ArrayList<>();\n\n        RequestHandler chain = new LoggingDecorator(\n            new AuthDecorator(\n                new BaseHandler()\n            ), log\n        );\n\n        String r1 = chain.handle(\"/api/data\", Map.of(\"Authorization\", \"Bearer tok\"));\n        System.out.println(r1);\n        String r2 = chain.handle(\"/api/data\", Map.of());\n        System.out.println(r2);\n        System.out.println(\"Log entries: \" + log.size());\n    }\n}",
+      "instructions": [
+        "BaseHandler returns '200 OK: ' + path for any request",
+        "LoggingDecorator logs 'REQUEST: ' + path before delegation, and 'RESPONSE: ' + result after",
+        "AuthDecorator checks for the presence of 'Authorization' key in headers",
+        "AuthDecorator returns '401 Unauthorized' if Authorization header is absent, otherwise delegates",
+        "Decorators must call wrapped.handle() to delegate — do not duplicate the inner handler's logic"
+      ],
+      "hint": "In AuthDecorator.handle(), check headers.containsKey('Authorization'). If missing, return '401 Unauthorized'. Otherwise, return wrapped.handle(path, headers).",
+      "expectedOutput": "200 OK: /api/data\n401 Unauthorized\nLog entries: 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 116,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Adapter Pattern for Legacy Integration",
+    "description": {
+      "task": "Implement an Adapter pattern to integrate a legacy LegacyPaymentProcessor (using old API methods) with a modern PaymentGateway interface. The adapter translates modern interface calls to legacy calls without modifying either the interface or the legacy class.",
+      "language": "java",
+      "starterCode": "public class PaymentAdapter {\n\n    // Modern interface that the application uses\n    interface PaymentGateway {\n        boolean processPayment(String accountId, double amount, String currency);\n        String getTransactionStatus(String transactionId);\n    }\n\n    // Legacy class — cannot be modified\n    static class LegacyPaymentProcessor {\n        public int executeTransaction(String account, int amountCents) {\n            // Returns transaction ID (positive) or -1 on failure\n            if (amount_is_valid(amountCents)) return 10000 + amountCents % 9999;\n            return -1;\n        }\n\n        public String queryStatus(int txnId) {\n            return txnId > 0 ? \"LEGACY_SUCCESS\" : \"LEGACY_FAILED\";\n        }\n\n        private boolean amount_is_valid(int cents) {\n            return cents > 0 && cents <= 1_000_000;\n        }\n    }\n\n    // Adapter class\n    static class LegacyPaymentAdapter implements PaymentGateway {\n        private final LegacyPaymentProcessor legacy;\n\n        LegacyPaymentAdapter(LegacyPaymentProcessor legacy) {\n            this.legacy = legacy;\n        }\n\n        public boolean processPayment(String accountId, double amount, String currency) {\n            // Convert amount from double (e.g., 49.99) to cents (int)\n            // Call legacy.executeTransaction(), return true if txnId > 0\n            return false; // TODO\n        }\n\n        public String getTransactionStatus(String transactionId) {\n            // Parse transactionId to int and call legacy.queryStatus()\n            // Map LEGACY_SUCCESS -> SUCCESS, LEGACY_FAILED -> FAILED\n            return null; // TODO\n        }\n    }\n\n    public static void main(String[] args) {\n        PaymentGateway gateway = new LegacyPaymentAdapter(new LegacyPaymentProcessor());\n\n        boolean ok = gateway.processPayment(\"acc-123\", 49.99, \"USD\");\n        System.out.println(\"Payment processed: \" + ok);\n        System.out.println(\"Status: \" + gateway.getTransactionStatus(\"5000\"));\n        System.out.println(\"Negative status: \" + gateway.getTransactionStatus(\"-1\"));\n    }\n}",
+      "instructions": [
+        "LegacyPaymentAdapter.processPayment() converts amount to cents using (int)(amount * 100)",
+        "processPayment() calls legacy.executeTransaction(accountId, amountCents) and returns true if result > 0",
+        "getTransactionStatus() parses the transactionId string to int with Integer.parseInt()",
+        "Map 'LEGACY_SUCCESS' to 'SUCCESS' and 'LEGACY_FAILED' to 'FAILED'",
+        "The adapter must not modify LegacyPaymentProcessor — only wrap its calls"
+      ],
+      "hint": "processPayment(): int cents = (int)(amount * 100); int txnId = legacy.executeTransaction(accountId, cents); return txnId > 0. getTransactionStatus(): String raw = legacy.queryStatus(Integer.parseInt(transactionId)); return raw.replace('LEGACY_', '').",
+      "expectedOutput": "Payment processed: true\nStatus: SUCCESS\nNegative status: FAILED"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 116,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Composite Pattern for File System",
+    "description": {
+      "task": "Implement a file system tree using the Composite pattern. Both files and directories implement a FileSystemNode interface. Directories can contain other nodes. Implement methods to calculate total size and print the tree structure with indentation.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class FileSystem {\n\n    interface FileSystemNode {\n        String name();\n        long sizeBytes();\n        void print(String indent);\n    }\n\n    static class File implements FileSystemNode {\n        private final String name;\n        private final long sizeBytes;\n\n        File(String name, long sizeBytes) {\n            this.name = name;\n            this.sizeBytes = sizeBytes;\n        }\n\n        public String name() { return name; }\n        public long sizeBytes() { return sizeBytes; }\n        public void print(String indent) {\n            System.out.println(indent + name + \" (\" + sizeBytes + \"B)\");\n        }\n    }\n\n    static class Directory implements FileSystemNode {\n        private final String name;\n        private final List<FileSystemNode> children = new ArrayList<>();\n\n        Directory(String name) { this.name = name; }\n\n        public void add(FileSystemNode node) {\n            children.add(node);\n        }\n\n        public String name() { return name; }\n\n        public long sizeBytes() {\n            // Sum sizes of all children recursively\n            return 0; // TODO\n        }\n\n        public void print(String indent) {\n            // Print directory name with indent, then recurse with indent+\"  \"\n        }\n    }\n\n    public static void main(String[] args) {\n        Directory root = new Directory(\"root\");\n        Directory src = new Directory(\"src\");\n        src.add(new File(\"Main.java\", 2048));\n        src.add(new File(\"Utils.java\", 1024));\n        root.add(src);\n        root.add(new File(\"README.md\", 512));\n\n        System.out.println(\"Total size: \" + root.sizeBytes());\n        root.print(\"\");\n    }\n}",
+      "instructions": [
+        "File.sizeBytes() returns the fixed size passed to the constructor",
+        "Directory.sizeBytes() returns the sum of sizeBytes() of all its children (recursive)",
+        "Directory.print() prints 'indent + name + /' then recurses on each child with indent + '  '",
+        "File.print() prints 'indent + name + (sizeBytesB)' (already implemented)",
+        "The Composite pattern means Directory and File are treated uniformly through FileSystemNode"
+      ],
+      "hint": "sizeBytes(): return children.stream().mapToLong(FileSystemNode::sizeBytes).sum(). print(): System.out.println(indent + name + '/'); children.forEach(c -> c.print(indent + '  '));",
+      "expectedOutput": "Total size: 3584\nroot/\n  src/\n    Main.java (2048B)\n    Utils.java (1024B)\n  README.md (512B)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 116,
+    "allowedSubmissionType": "TEXT"
+  }
+]

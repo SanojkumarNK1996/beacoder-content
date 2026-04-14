@@ -1,0 +1,29 @@
+[
+  {
+    "subtopicId": 322,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Basic HTML Tags",
+    "data": "basic_tags.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 323,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Links and Images",
+    "data": "links_and_images.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 324,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "HTML Tables",
+    "data": "tables.html",
+    "verified": false,
+    "priority": 1
+  }
+]

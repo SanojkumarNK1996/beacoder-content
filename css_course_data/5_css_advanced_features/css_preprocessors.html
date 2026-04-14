@@ -1,0 +1,56 @@
+<h1>CSS Preprocessors</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>Large projects (like e-commerce or banking portals) need organized, reusable, and maintainable CSS.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>CSS preprocessors like Sass and LESS extend CSS with variables, nesting, mixins, and functions.</li>
+  <li>You write code in .scss or .less, which is compiled into normal CSS.</li>
+</ul>
+
+<h2>Syntax / Basic usage (Sass example)</h2>
+<pre><code>$primary-color: #3498db;
+
+.button {
+  background-color: $primary-color;
+  padding: 10px 20px;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+}
+</code></pre>
+
+<h2>How it works</h2>
+<ol>
+  <li>Write styles using preprocessor features (variables, nesting, etc.).</li>
+  <li>Run a build step (CLI, build tool, or bundler) to compile into plain CSS.</li>
+  <li>Browser only sees and uses the compiled CSS.</li>
+</ol>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>Preprocessors improve developer productivity but are optional.</li>
+  <li>Final output is still standard CSS.</li>
+</ul>
+
+<h2>Common mistakes</h2>
+<ul>
+  <li>Over-nesting selectors leading to very specific and hard-to-override CSS.</li>
+  <li>Using too many nested levels instead of keeping styles flat and modular.</li>
+</ul>
+
+<h2>Interviewer perspective</h2>
+<ul>
+  <li>Why use Sass instead of plain CSS?</li>
+  <li>What are variables and mixins in Sass?</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Install Sass and convert a small CSS file into SCSS using variables.</li>
+  <li>Create a mixin for a button style and reuse it for multiple buttons.</li>
+</ol>

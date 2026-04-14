@@ -1,102 +1,103 @@
-<h2>Comments in Java</h2>
+<h1>💬 Comments in Java</h1>
 
-<p>In Java, <strong>comments</strong> are lines in your code that are ignored by the compiler.  
-They are used to explain code, make it more readable, and help others (and your future self) understand what the code does.</p>
-
-<p>Comments do not affect how a program runs — they are purely for humans to read.</p>
-
-<hr>
-
-<h3>Why Use Comments?</h3>
-
+<h2>1. 🎯 Why This Exists (Indian Real-Life Example)</h2>
 <ul>
-  <li>To describe what a piece of code does.</li>
-  <li>To temporarily disable a part of the code during debugging.</li>
-  <li>To provide information about the author, version, or usage of a class or method.</li>
+  <li>Think of a <strong>notebook</strong> where you solve maths problems.</li>
+  <li>You often write <strong>side notes</strong> like "formula used" or "check again".</li>
+  <li>These notes are for <strong>you</strong>, not for the teacher to mark as an answer.</li>
+  <li>Similarly, <strong>comments</strong> in Java are notes for humans; the computer <strong>ignores</strong> them.</li>
 </ul>
 
-<hr>
+<h2>2. 📖 What Are Comments?</h2>
+<ul>
+  <li>Comments are parts of the code that are <strong>ignored by the compiler</strong>.</li>
+  <li>Used to explain logic, mark TODOs, or temporarily disable code.</li>
+  <li>They <strong>do not affect</strong> how the program runs.</li>
+</ul>
 
-<h2>Types of Comments in Java</h2>
+<h2>3. 🧾 Syntax / Basic Structure ⭐</h2>
+<p>Java supports 3 types of comments:</p>
+<pre><code>// 1. Single-line comment
 
-<p>Java supports three types of comments:</p>
+/* 2. Multi-line comment
+   can span multiple lines */
+
+/** 3. Documentation comment
+ *  Used for generating docs
+ */
+</code></pre>
+
+<h2>4. 🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<pre><code>public class CommentDemo {
+  public static void main(String[] args) {
+    // Step 1: Print greeting
+    System.out.println("Hello");      // This prints Hello
+
+    /* Step 2: Print another line
+       This part is still simple. */
+    System.out.println("Java comments");
+  }
+}
+</code></pre>
 <ol>
-  <li>Single-line comments</li>
-  <li>Multi-line comments</li>
-  <li>Documentation comments</li>
+  <li>Lines starting with <code>//</code> are <strong>skipped</strong> by the compiler.</li>
+  <li>Multi-line section between <code>/*</code> and <code>*/</code> is also ignored.</li>
+  <li>Only the <code>System.out.println</code> lines are compiled and executed.</li>
 </ol>
 
-<hr>
-
-<h3>1. Single-line Comments</h3>
-
-<p>Single-line comments start with <code>//</code>.  
-Everything written after <code>//</code> on that line is ignored by the compiler.</p>
-
-<h4>Example:</h4>
-<pre><code>public class Main {
-    public static void main(String[] args) {
-        // This is a single-line comment
-        System.out.println("Hello, World!"); // This prints text to the console
-    }
-}</code></pre>
-
-<p>💡 Use single-line comments for short notes or quick explanations.</p>
-
-<hr>
-
-<h3>2. Multi-line Comments</h3>
-
-<p>Multi-line comments start with <code>/*</code> and end with <code>*/</code>.  
-Everything between these symbols is ignored by the compiler — even if it spans multiple lines.</p>
-
-<h4>Example:</h4>
-<pre><code>public class Main {
-    public static void main(String[] args) {
-        /* This is a multi-line comment.
-           It can cover several lines.
-           Use it for detailed explanations. */
-        System.out.println("Java is fun!");
-    }
-}</code></pre>
-
-<p>💡 Use multi-line comments when you need to explain a large section of code or document logic flow.</p>
-
-<hr>
-
-<h3>3. Documentation Comments</h3>
-
-<p>Documentation comments start with <code>/**</code> and end with <code>*/</code>.  
-They are used to describe classes, methods, and fields in detail and can be extracted using the <strong>Javadoc tool</strong> to generate HTML documentation.</p>
-
-<h4>Example:</h4>
-<pre><code>/**
- * The HelloWorld class prints a greeting message.
- * 
- * @author  John Doe
- * @version 1.0
- */
-public class HelloWorld {
-    
-    /**
-     * This method prints "Hello, World!" to the console.
-     * @param args Unused
-     */
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}</code></pre>
-
-<p>💡 Use documentation comments for public classes and methods — they make your code professional and easier to understand for others.</p>
-
-<hr>
-
-<h3>Summary</h3>
+<h2>5. ✅ When to Use Comments</h2>
 <ul>
-  <li><strong>Single-line comments</strong>: start with <code>//</code> — good for short explanations.</li>
-  <li><strong>Multi-line comments</strong>: enclosed between <code>/*</code> and <code>*/</code> — used for longer notes.</li>
-  <li><strong>Documentation comments</strong>: start with <code>/**</code> — used with Javadoc to generate documentation.</li>
+  <li>To explain <strong>why</strong> something is done (not what – code already shows what).</li>
+  <li>To mark <strong>complex logic</strong> so that future you/others can understand.</li>
+  <li>To temporarily <strong>disable code</strong> for testing (comment it out).</li>
+  <li>To generate <strong>documentation</strong> using Javadoc (for public APIs).</li>
 </ul>
 
-<p>Comments are one of the simplest yet most important parts of writing clean and maintainable Java code.  
-Always document your code well!</p>
+<h2>6. ⛔ When NOT to Use Comments</h2>
+<ul>
+  <li>Don’t comment obvious things like <code>// add 1 to i</code> for <code>i++;</code>.</li>
+  <li>Don’t use comments to "hide" bad code; instead, <strong>improve the code</strong>.</li>
+  <li>Don’t let comments become <strong>outdated</strong>; wrong comments are worse than none.</li>
+</ul>
+
+<h2>7. 🧠 Minimum You MUST Remember</h2>
+<ul>
+  <li><code>//</code> → single line; <code>/* ... */</code> → multi-line; <code>/** ... */</code> → documentation.</li>
+  <li>Comments are for <strong>humans only</strong>; Java compiler ignores them.</li>
+  <li>Use comments to explain intent, not every tiny step.</li>
+</ul>
+
+<h2>8. ⚠️ Common Mistakes</h2>
+<ul>
+  <li>Forgetting to close multi-line comments → can "comment out" large parts of code accidentally.</li>
+  <li>Using documentation comments (<code>/**</code>) everywhere instead of for <strong>public classes/methods</strong>.</li>
+  <li>Writing comments that just repeat the code instead of adding meaning.</li>
+</ul>
+
+<h2>9. 🎤 Interviewer’s Perspective</h2>
+<p>Typical fresher questions:</p>
+<ul>
+  <li>"Why do we use comments in Java?"</li>
+  <li>"What is the difference between <code>//</code>, <code>/* */</code> and <code>/** */</code>?"</li>
+  <li>"What is Javadoc? How is it related to comments?"</li>
+</ul>
+
+<h2>10. 📝 Practice Questions ⭐</h2>
+<ol>
+  <li>
+    <strong>Very Easy:</strong>
+    <p>Write a small program with at least 3 single-line comments describing what each section does.</p>
+  </li>
+  <li>
+    <strong>Easy:</strong>
+    <p>Convert a block of 3–4 single-line comments into one multi-line comment.</p>
+  </li>
+  <li>
+    <strong>Medium:</strong>
+    <p>Write a class called <code>Calculator</code> with Javadoc comments for the class and one method, then generate Javadoc (if possible in your IDE).</p>
+  </li>
+  <li>
+    <strong>Thinking:</strong>
+    <p>Open any open-source Java file online and observe how comments are written. Note 3 good patterns you see.</p>
+  </li>
+</ol>

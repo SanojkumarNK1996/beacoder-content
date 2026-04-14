@@ -1,0 +1,41 @@
+<h1>Form Interactivity</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>To give instant feedback on forms (showing errors, enabling/disabling buttons, etc.) without reloading the page.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>Using JavaScript to validate inputs, show messages, and control form submission.</li>
+</ul>
+
+<h2>Basic example</h2>
+<pre><code>// HTML:
+// &lt;form id="loginForm"&gt;
+//   &lt;input id="email" type="email" /&gt;
+//   &lt;button type="submit"&gt;Login&lt;/button&gt;
+// &lt;/form&gt;
+
+const form = document.getElementById('loginForm');
+const emailInput = document.getElementById('email');
+
+form.addEventListener('submit', function (event) {
+  if (!emailInput.value) {
+    event.preventDefault();
+    alert('Email is required');
+  }
+});
+</code></pre>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>Use event.preventDefault() to stop default submission when validation fails.</li>
+  <li>Always also validate on the server.</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Build a form that requires both email and password before allowing submit.</li>
+  <li>Show a success message on valid submission without reloading the page.</li>
+</ol>

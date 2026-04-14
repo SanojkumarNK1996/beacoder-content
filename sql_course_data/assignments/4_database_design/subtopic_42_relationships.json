@@ -1,0 +1,73 @@
+[
+  {
+    "title": "One-to-Many Relationships",
+    "description": {
+      "task": "Implement a one-to-many relationship between departments and employees, then write queries to explore the relationship from both ends.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE departments (\n  dept_id   INT PRIMARY KEY,\n  dept_name VARCHAR(50) NOT NULL,\n  location  VARCHAR(50)\n);\n\nCREATE TABLE employees (\n  emp_id    INT PRIMARY KEY,\n  name      VARCHAR(60),\n  role      VARCHAR(50),\n  salary    DECIMAL(10,2),\n  dept_id   INT,\n  FOREIGN KEY (dept_id) REFERENCES departments(dept_id)\n);\n\nINSERT INTO departments VALUES\n  (1, 'Engineering', 'Floor 3'),\n  (2, 'Marketing',   'Floor 2'),\n  (3, 'HR',          'Floor 1'),\n  (4, 'Finance',     'Floor 4');\n\nINSERT INTO employees VALUES\n  (101, 'Alice',  'Senior Dev',      95000, 1),\n  (102, 'Bob',    'Marketing Lead',  65000, 2),\n  (103, 'Carol',  'Dev',             80000, 1),\n  (104, 'Dave',   'HR Specialist',   55000, 3),\n  (105, 'Eve',    'Principal Dev',  105000, 1),\n  (106, 'Frank',  'Analyst',         60000, 4);\n\n-- Query 1: Show each employee with their department name\nSELECT e.name, e.role, d.dept_name, e.salary\nFROM employees e\nJOIN departments d ON e.dept_id = d.dept_id\nORDER BY d.dept_name, e.name;\n\n-- Query 2: How many employees per department?\nSELECT d.dept_name, COUNT(e.emp_id) AS headcount\nFROM departments d\nLEFT JOIN employees e ON d.dept_id = e.dept_id\nGROUP BY d.dept_name\nORDER BY headcount DESC;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run Query 1 to show all employees with department names.",
+        "Run Query 2 — Finance has no employees yet (should show 0 with LEFT JOIN).",
+        "Write a Query 3: find the average salary per department for departments with more than 1 employee."
+      ],
+      "hint": "Query 3: Use GROUP BY dept_name and HAVING COUNT(*) > 1. AVG(salary) computes the mean.",
+      "expectedOutput": "Q1: 6 rows with dept names\nQ2: Engineering:3, Marketing:1, HR:1, Finance:0\nQ3: Engineering avg salary ~93333"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 42,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Many-to-Many with Junction Table",
+    "description": {
+      "task": "Design a many-to-many relationship between students and clubs using a junction table, and query it from both sides.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE students (\n  student_id INT PRIMARY KEY,\n  name VARCHAR(50),\n  year_level INT\n);\n\nCREATE TABLE clubs (\n  club_id INT PRIMARY KEY,\n  club_name VARCHAR(60),\n  max_members INT\n);\n\nCREATE TABLE memberships (\n  student_id  INT,\n  club_id     INT,\n  joined_date DATE,\n  role        VARCHAR(30) DEFAULT 'member',\n  PRIMARY KEY (student_id, club_id),\n  FOREIGN KEY (student_id) REFERENCES students(student_id),\n  FOREIGN KEY (club_id)    REFERENCES clubs(club_id)\n);\n\nINSERT INTO students VALUES (1,'Alice',2),(2,'Bob',3),(3,'Carol',1),(4,'Dave',2);\nINSERT INTO clubs VALUES (10,'Chess Club',20),(11,'Coding Club',15),(12,'Art Club',25);\nINSERT INTO memberships VALUES\n  (1,10,'2026-01-10','member'),\n  (1,11,'2026-01-10','president'),\n  (2,11,'2026-01-15','member'),\n  (3,10,'2026-02-01','member'),\n  (3,12,'2026-02-01','member'),\n  (4,12,'2026-02-10','secretary');\n\n-- Query 1: Which clubs is Alice in?\nSELECT c.club_name, m.role, m.joined_date\nFROM memberships m\nJOIN clubs c ON m.club_id = c.club_id\nWHERE m.student_id = 1;\n\n-- Query 2: Who are the members of Coding Club?\nSELECT s.name, m.role\nFROM memberships m\nJOIN students s ON m.student_id = s.student_id\nWHERE m.club_id = 11;\n\n-- Query 3: Member count per club\nSELECT c.club_name, COUNT(*) AS member_count\nFROM memberships m\nJOIN clubs c ON m.club_id = c.club_id\nGROUP BY c.club_name\nORDER BY member_count DESC;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run all three queries.",
+        "Write a Query 4: find students who are in MORE than one club.",
+        "Explain: why can't we store the many-to-many relationship directly in either students or clubs?"
+      ],
+      "hint": "Q4: SELECT student_id, COUNT(*) FROM memberships GROUP BY student_id HAVING COUNT(*) > 1 — then join with students for names.",
+      "expectedOutput": "Q1: Alice in Chess Club(member) and Coding Club(president)\nQ2: Alice(president), Bob(member)\nQ3: Chess:2, Art:2, Coding:2\nQ4: Alice and Carol (both in 2 clubs)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 42,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Self-Referential Relationship",
+    "description": {
+      "task": "Implement a self-referential (recursive) relationship where employees report to other employees, then query the hierarchy.",
+      "language": "sql",
+      "context": "A self-referential relationship is when a table has a foreign key that references its own primary key — common in organisational hierarchies, category trees, and thread replies.",
+      "starterCode": "CREATE TABLE staff (\n  staff_id    INT PRIMARY KEY,\n  name        VARCHAR(60),\n  role        VARCHAR(50),\n  manager_id  INT,  -- FK to staff.staff_id (NULL = top-level)\n  FOREIGN KEY (manager_id) REFERENCES staff(staff_id)\n);\n\nINSERT INTO staff VALUES\n  (1,  'CEO Sarah',      'CEO',              NULL),  -- top level\n  (2,  'CTO Mark',       'CTO',              1),     -- reports to CEO\n  (3,  'CFO Lisa',       'CFO',              1),     -- reports to CEO\n  (4,  'Dev Lead Alice', 'Dev Lead',         2),     -- reports to CTO\n  (5,  'Dev Alice',      'Developer',        4),     -- reports to Dev Lead\n  (6,  'Dev Bob',        'Developer',        4),     -- reports to Dev Lead\n  (7,  'Finance Ana',    'Budget Analyst',   3);     -- reports to CFO\n\n-- Query 1: Show each employee and their manager's name\nSELECT e.name AS employee, e.role, m.name AS manager\nFROM staff e\nLEFT JOIN staff m ON e.manager_id = m.staff_id\nORDER BY e.staff_id;\n\n-- Query 2: Find all direct reports of the CTO (manager_id = 2)\nSELECT name, role FROM staff WHERE manager_id = 2;\n",
+      "instructions": [
+        "Run all CREATE and INSERT statements.",
+        "Run Query 1 to see the full hierarchy — CEO should show NULL manager.",
+        "Run Query 2 to find CTO's direct reports.",
+        "Write a Query 3: find all employees with NO direct reports (individual contributors).",
+        "In a comment, explain: what other real-world data structures use self-referential tables?"
+      ],
+      "hint": "Q3: NOT IN — SELECT name FROM staff WHERE staff_id NOT IN (SELECT DISTINCT manager_id FROM staff WHERE manager_id IS NOT NULL).",
+      "expectedOutput": "Q1: 7 rows with manager names (CEO shows NULL)\nQ2: Dev Lead Alice (only direct CTO report)\nQ3: Developers Alice, Bob, Finance Ana, CFO Lisa (leaf nodes)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 13,
+    "subtopicId": 42,
+    "allowedSubmissionType": "TEXT"
+  }
+]

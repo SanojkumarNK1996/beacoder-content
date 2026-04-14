@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Compare Java EE and Spring in Code",
+    "description": {
+      "task": "Write a Java program that demonstrates Dependency Injection using a Spring-style manual approach. Create an interface and two implementations, then manually inject a dependency into a service class.",
+      "language": "java",
+      "starterCode": "// Interface\npublic interface MessageService {\n    String getMessage();\n}\n\n// Implementation 1: Email\npublic class EmailService implements MessageService {\n    // TODO: Return \"Email message sent\"\n}\n\n// Implementation 2: SMS\npublic class SmsService implements MessageService {\n    // TODO: Return \"SMS message sent\"\n}\n\n// Consumer\npublic class NotificationService {\n    private MessageService messageService;\n    // TODO: Constructor injection\n    // TODO: notify() method\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Demonstrate DI by injecting different implementations\n    }\n}",
+      "instructions": [
+        "Implement EmailService and SmsService with the getMessage() method.",
+        "Add a constructor to NotificationService that accepts a MessageService parameter.",
+        "Add a notify() method to NotificationService that prints the result of messageService.getMessage().",
+        "In Main, create NotificationService twice — once with EmailService and once with SmsService."
+      ],
+      "hint": "This is the core idea behind both Java EE CDI and Spring DI: the consumer does not create its dependencies; they are provided from outside.",
+      "expectedOutput": "Email message sent\nSMS message sent"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 79,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Interface-based Programming",
+    "description": {
+      "task": "Demonstrate the use of interfaces for defining contracts — a key principle used in both Java EE and Spring. Build a simple payment system with multiple implementations behind a common interface.",
+      "language": "java",
+      "starterCode": "public interface PaymentProcessor {\n    boolean processPayment(double amount);\n    String getProviderName();\n}\n\npublic class CreditCardProcessor implements PaymentProcessor {\n    // TODO: Implement methods\n}\n\npublic class PayPalProcessor implements PaymentProcessor {\n    // TODO: Implement methods\n}\n\npublic class CheckoutService {\n    private PaymentProcessor processor;\n    // TODO: Constructor and processOrder method\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Use each processor via the interface\n    }\n}",
+      "instructions": [
+        "Implement CreditCardProcessor: getProviderName() returns 'Credit Card', processPayment() prints a message and returns true.",
+        "Implement PayPalProcessor: getProviderName() returns 'PayPal', processPayment() prints a message and returns true.",
+        "Add CheckoutService with a constructor taking PaymentProcessor and a processOrder(double amount) method.",
+        "In Main, process an order of 250.0 with each processor."
+      ],
+      "hint": "Programming to an interface allows you to swap implementations without changing the consumer code.",
+      "expectedOutput": "Processing $250.0 via Credit Card\nPayment successful: true\nProcessing $250.0 via PayPal\nPayment successful: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 79,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Framework Benefits Analysis",
+    "description": {
+      "task": "Write a Java program that shows code duplication problems that Spring solves. Implement a 'before Spring' approach where you manually manage object creation vs a DI approach. Count lines of wiring code.",
+      "language": "java",
+      "context": "Before frameworks like Spring, developers had to manually wire all object dependencies, leading to boilerplate code and tight coupling.",
+      "starterCode": "// Without framework: tight coupling\npublic class ManualWiring {\n    public void setup() {\n        // TODO: Manually create repository, service, controller\n        // Each creating the next — 6+ lines of wiring\n    }\n}\n\n// With DI pattern: loose coupling\npublic class DIWiring {\n    public void setup(UserRepository repo, UserService service, UserController ctrl) {\n        // TODO: Show the clean injected version\n    }\n}\n\npublic class UserRepository { public String findAll() { return \"[User1, User2]\"; } }\npublic class UserService { \n    private UserRepository repo;\n    public UserService(UserRepository r) { this.repo = r; }\n    public String getUsers() { return repo.findAll(); }\n}\npublic class UserController {\n    private UserService svc;\n    public UserController(UserService s) { this.svc = s; }\n    public void display() { System.out.println(\"Users: \" + svc.getUsers()); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Show both approaches\n    }\n}",
+      "instructions": [
+        "In ManualWiring.setup(), create UserRepository, UserService (passing repo), and UserController (passing service), then call display().",
+        "In DIWiring.setup(), simply call ctrl.display() since dependencies are already injected.",
+        "In Main, demonstrate both approaches and note the difference.",
+        "Print a label before each approach."
+      ],
+      "hint": "Manual wiring accumulates rapidly in large applications. DI containers like Spring handle this automatically at startup.",
+      "expectedOutput": "--- Manual Wiring ---\nUsers: [User1, User2]\n--- DI Wiring ---\nUsers: [User1, User2]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 79,
+    "allowedSubmissionType": "TEXT"
+  }
+]

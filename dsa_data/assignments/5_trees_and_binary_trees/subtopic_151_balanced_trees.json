@@ -1,0 +1,74 @@
+[
+  {
+    "title": "AVL Tree Height Balance Check",
+    "description": {
+      "task": "Implement an AVLChecker class that checks whether a binary tree satisfies the AVL property (|height(left) - height(right)| <= 1 for every node). Also compute the balance factor of each node.",
+      "language": "java",
+      "starterCode": "public class AVLChecker {\n\n    static class Node {\n        int val; Node left, right;\n        Node(int v) { val = v; }\n    }\n\n    private int height(Node node) {\n        if (node == null) return -1;\n        return 1 + Math.max(height(node.left), height(node.right));\n    }\n\n    public int balanceFactor(Node node) {\n        if (node == null) return 0;\n        return height(node.left) - height(node.right);\n    }\n\n    public boolean isAVL(Node root) {\n        // TODO: true if |balanceFactor| <= 1 at EVERY node (including subtrees)\n        return false;\n    }\n\n    public void printBalanceFactors(Node root) {\n        if (root == null) return;\n        printBalanceFactors(root.left);\n        System.out.println(\"Node \" + root.val + \": BF=\" + balanceFactor(root));\n        printBalanceFactors(root.right);\n    }\n\n    public static void main(String[] args) {\n        AVLChecker avl = new AVLChecker();\n        // Balanced AVL tree\n        Node balanced = new Node(10);\n        balanced.left = new Node(5); balanced.right = new Node(15);\n        balanced.left.left = new Node(3); balanced.left.right = new Node(7);\n        System.out.println(\"Balanced AVL: \" + avl.isAVL(balanced));\n        avl.printBalanceFactors(balanced);\n        // Unbalanced tree\n        Node unbalanced = new Node(10);\n        unbalanced.left = new Node(5);\n        unbalanced.left.left = new Node(3);\n        unbalanced.left.left.left = new Node(1);\n        System.out.println(\"Unbalanced: \" + avl.isAVL(unbalanced));\n    }\n}",
+      "instructions": [
+        "isAVL: if root==null return true; if Math.abs(balanceFactor(root))>1 return false; return isAVL(root.left)&&isAVL(root.right)",
+        "balanceFactor and height are already implemented",
+        "Balanced tree {10,5{3,7},15}: all BFs are -1,0,1 → isAVL=true",
+        "Unbalanced chain 10→5→3→1: height difference at 10 is 3 vs 0 → isAVL=false",
+        "printBalanceFactors prints inorder (left sorted) showing each node's balance factor"
+      ],
+      "hint": "isAVL: if(root==null)return true; if(Math.abs(balanceFactor(root))>1)return false; return isAVL(root.left)&&isAVL(root.right);",
+      "expectedOutput": "Balanced AVL: true\nNode 3: BF=0\nNode 5: BF=0\nNode 7: BF=0\nNode 10: BF=1\nNode 15: BF=0\nUnbalanced: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 151,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "AVL Rotations",
+    "description": {
+      "task": "Implement an AVLRotations class with right rotation, left rotation, and the composite left-right and right-left rotations used in AVL tree balancing. Demonstrate each rotation on a small subtree.",
+      "language": "java",
+      "starterCode": "public class AVLRotations {\n\n    static class Node {\n        int val, height;\n        Node left, right;\n        Node(int v) { val = v; height = 1; }\n    }\n\n    private int height(Node n) { return n == null ? 0 : n.height; }\n    private void updateHeight(Node n) {\n        if (n != null) n.height = 1 + Math.max(height(n.left), height(n.right));\n    }\n\n    public Node rotateRight(Node y) {\n        // y's left child (x) becomes new root; y becomes x's right child\n        Node x = y.left;\n        Node T2 = x.right;\n        x.right = y;\n        y.left = T2;\n        updateHeight(y);\n        updateHeight(x);\n        return x; // new root\n    }\n\n    public Node rotateLeft(Node x) {\n        // TODO: symmetric to rotateRight\n        return x;\n    }\n\n    public Node rotateLR(Node z) {\n        // Left-Right case: rotate left on z.left, then rotate right on z\n        z.left = rotateLeft(z.left);\n        return rotateRight(z);\n    }\n\n    public Node rotateRL(Node z) {\n        // TODO: Right-Left case: rotate right on z.right, then rotate left on z\n        return z;\n    }\n\n    private void printTree(Node root, String prefix) {\n        if (root == null) return;\n        System.out.println(prefix + root.val + \"(h=\" + root.height + \")\");\n        printTree(root.left, prefix + \"L:\");\n        printTree(root.right, prefix + \"R:\");\n    }\n\n    public static void main(String[] args) {\n        AVLRotations ar = new AVLRotations();\n        // Right rotation: 30->20->10 (left-heavy)\n        Node z = new Node(30);\n        z.left = new Node(20); z.left.left = new Node(10);\n        ar.updateHeight(z.left.left); ar.updateHeight(z.left); ar.updateHeight(z);\n        System.out.println(\"Before right rotation:\");\n        ar.printTree(z, \"\");\n        z = ar.rotateRight(z);\n        System.out.println(\"After right rotation:\");\n        ar.printTree(z, \"\");\n    }\n}",
+      "instructions": [
+        "rotateLeft(x): Node y=x.right; Node T2=y.left; y.left=x; x.right=T2; updateHeight(x); updateHeight(y); return y;",
+        "rotateRL(z): z.right=rotateRight(z.right); return rotateLeft(z);",
+        "rotateRight is already implemented — mirror it for rotateLeft",
+        "After right rotating 30→20→10: new root is 20 with left=10, right=30",
+        "rotateLR and rotateRL use the two single rotations"
+      ],
+      "hint": "rotateLeft: Node y=x.right; Node T2=y.left; y.left=x; x.right=T2; updateHeight(x); updateHeight(y); return y;",
+      "expectedOutput": "Before right rotation:\n30(h=3)\nL:20(h=2)\nL:10(h=1)\nAfter right rotation:\n20(h=2)\nL:10(h=1)\nR:30(h=1)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 151,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Self-Balancing Insert Demo",
+    "description": {
+      "task": "Implement a SimpleAVL class that inserts integers and automatically rebalances using AVL rotations. Implement insert with balance factor checks and appropriate single/double rotations.",
+      "language": "java",
+      "starterCode": "public class SimpleAVL {\n\n    static class Node {\n        int val, height;\n        Node left, right;\n        Node(int v) { val = v; height = 1; }\n    }\n\n    private int height(Node n) { return n == null ? 0 : n.height; }\n    private int bf(Node n) { return n == null ? 0 : height(n.left) - height(n.right); }\n    private void updateHeight(Node n) { if(n!=null) n.height=1+Math.max(height(n.left),height(n.right)); }\n\n    private Node rotateRight(Node y) {\n        Node x=y.left,T2=x.right; x.right=y; y.left=T2; updateHeight(y); updateHeight(x); return x;\n    }\n    private Node rotateLeft(Node x) {\n        Node y=x.right,T2=y.left; y.left=x; x.right=T2; updateHeight(x); updateHeight(y); return y;\n    }\n\n    public Node insert(Node node, int val) {\n        if (node == null) return new Node(val);\n        if (val < node.val) node.left = insert(node.left, val);\n        else if (val > node.val) node.right = insert(node.right, val);\n        else return node;\n        updateHeight(node);\n        int balance = bf(node);\n        // TODO: apply rotations for 4 imbalance cases\n        // LL: balance>1 && val < node.left.val -> rotateRight\n        // RR: balance<-1 && val > node.right.val -> rotateLeft\n        // LR: balance>1 && val > node.left.val -> rotateLeft(node.left), rotateRight\n        // RL: balance<-1 && val < node.right.val -> rotateRight(node.right), rotateLeft\n        return node;\n    }\n\n    private void inorder(Node root) {\n        if (root == null) return;\n        inorder(root.left); System.out.print(root.val + \" \"); inorder(root.right);\n    }\n\n    public static void main(String[] args) {\n        SimpleAVL avl = new SimpleAVL();\n        Node root = null;\n        for (int v : new int[]{30, 20, 10, 25, 40}) root = avl.insert(root, v);\n        System.out.print(\"Inorder (must be sorted): \");\n        avl.inorder(root);\n        System.out.println();\n        System.out.println(\"Root (balanced): \" + root.val);\n    }\n}",
+      "instructions": [
+        "LL case: if(balance>1&&val<node.left.val) return rotateRight(node);",
+        "RR case: if(balance<-1&&val>node.right.val) return rotateLeft(node);",
+        "LR case: if(balance>1&&val>node.left.val){ node.left=rotateLeft(node.left); return rotateRight(node); }",
+        "RL case: if(balance<-1&&val<node.right.val){ node.right=rotateRight(node.right); return rotateLeft(node); }",
+        "After inserting [30,20,10,25,40]: AVL tree is balanced, inorder = 10 20 25 30 40, root=20 or 25 depending on rotations"
+      ],
+      "hint": "Add the 4 if-blocks before 'return node': LL→return rotateRight; RR→return rotateLeft; LR→left=rotateLeft(left); return rotateRight; RL→right=rotateRight(right); return rotateLeft.",
+      "expectedOutput": "Inorder (must be sorted): 10 20 25 30 40 \nRoot (balanced): 25"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 151,
+    "allowedSubmissionType": "TEXT"
+  }
+]

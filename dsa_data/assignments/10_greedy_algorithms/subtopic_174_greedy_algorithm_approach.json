@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Greedy Coin Change (Canonical Systems)",
+    "description": {
+      "task": "Implement a greedy coin change algorithm that works on canonical coin systems (like US coins: 1, 5, 10, 25 cents). At each step, pick the largest coin that fits. Count how many coins are used and list them.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GreedyCoinChange {\n\n    public List<Integer> makeChange(int[] coins, int amount) {\n        // coins should be sorted descending\n        List<Integer> used = new ArrayList<>();\n        Arrays.sort(coins);\n        // Reverse to use largest first\n        for (int i = coins.length - 1; i >= 0 && amount > 0; i--) {\n            // TODO: while amount >= coins[i], add coins[i] to used and subtract from amount\n        }\n        return used;\n    }\n\n    public static void main(String[] args) {\n        GreedyCoinChange gcc = new GreedyCoinChange();\n        int[] usCoins = {1, 5, 10, 25};\n\n        List<Integer> result = gcc.makeChange(usCoins, 41);\n        System.out.println(\"41 cents: \" + result + \" (\" + result.size() + \" coins)\");\n\n        result = gcc.makeChange(usCoins, 30);\n        System.out.println(\"30 cents: \" + result + \" (\" + result.size() + \" coins)\");\n\n        result = gcc.makeChange(usCoins, 11);\n        System.out.println(\"11 cents: \" + result + \" (\" + result.size() + \" coins)\");\n    }\n}",
+      "instructions": [
+        "while(amount>=coins[i]){used.add(coins[i]);amount-=coins[i];}",
+        "41 cents: 25+10+5+1 = [25,10,5,1] = 4 coins",
+        "30 cents: 25+5 = [25,5] = 2 coins",
+        "11 cents: 10+1 = [10,1] = 2 coins",
+        "Greedy works optimally for canonical coin systems but may fail for arbitrary denominations (e.g., {1,3,4}, amount=6)"
+      ],
+      "hint": "while(amount>=coins[i]){used.add(coins[i]);amount-=coins[i];}",
+      "expectedOutput": "41 cents: [25, 10, 5, 1] (4 coins)\n30 cents: [25, 5] (2 coins)\n11 cents: [10, 1] (2 coins)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 174,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Greedy vs DP Comparison",
+    "description": {
+      "task": "Demonstrate when greedy fails by solving coin change for non-canonical coin sets with both greedy and DP. Show that greedy can choose suboptimally while DP always finds the minimum.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GreedyVsDP {\n\n    public int greedyCoins(int[] coins, int amount) {\n        Arrays.sort(coins);\n        int count = 0;\n        for (int i = coins.length - 1; i >= 0 && amount > 0; i--)\n            while (amount >= coins[i]) { amount -= coins[i]; count++; }\n        return amount == 0 ? count : -1;\n    }\n\n    public int dpCoins(int[] coins, int amount) {\n        int[] dp = new int[amount + 1];\n        Arrays.fill(dp, amount + 1);\n        dp[0] = 0;\n        for (int a = 1; a <= amount; a++)\n            for (int c : coins) if (c <= a && dp[a-c]+1 < dp[a]) dp[a] = dp[a-c]+1;\n        return dp[amount] > amount ? -1 : dp[amount];\n    }\n\n    public static void main(String[] args) {\n        GreedyVsDP gvd = new GreedyVsDP();\n        // Non-canonical system: {1, 3, 4}, amount = 6\n        // Greedy: 4+1+1 = 3 coins; DP: 3+3 = 2 coins\n        int[] coins = {1, 3, 4};\n        System.out.println(\"Coins {1,3,4} amount=6:\");\n        System.out.println(\"  Greedy: \" + gvd.greedyCoins(coins, 6) + \" coins\");\n        System.out.println(\"  DP:     \" + gvd.dpCoins(coins, 6) + \" coins\");\n\n        // Canonical: greedy and DP agree\n        int[] usCoins = {1, 5, 10, 25};\n        System.out.println(\"Coins {1,5,10,25} amount=30:\");\n        System.out.println(\"  Greedy: \" + gvd.greedyCoins(usCoins, 30) + \" coins\");\n        System.out.println(\"  DP:     \" + gvd.dpCoins(usCoins, 30) + \" coins\");\n    }\n}",
+      "instructions": [
+        "All implementations are provided — this is a read-and-run demonstration exercise",
+        "Non-canonical {1,3,4}: greedy picks 4, then 1+1 = 3 coins; DP finds 3+3 = 2 coins",
+        "Canonical {1,5,10,25}: both give 2 coins for 30 (25+5)",
+        "The greedy choice property only guarantees optimality for canonical coin systems",
+        "Understand why: greedy commits to the first choice without reconsidering"
+      ],
+      "hint": "This is a read-and-run exercise. All code is implemented. Focus on understanding when greedy produces a suboptimal solution vs the globally optimal DP solution.",
+      "expectedOutput": "Coins {1,3,4} amount=6:\n  Greedy: 3 coins\n  DP:     2 coins\nCoins {1,5,10,25} amount=30:\n  Greedy: 2 coins\n  DP:     2 coins"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 174,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Jump Game — Greedy Reachability",
+    "description": {
+      "task": "Given an array where each element is the maximum jump length from that position, determine if you can reach the last index from index 0. Use a greedy approach: track the farthest index reachable at each step.",
+      "language": "java",
+      "starterCode": "public class JumpGame {\n\n    public boolean canJump(int[] nums) {\n        int maxReach = 0;\n        for (int i = 0; i < nums.length; i++) {\n            if (i > maxReach) return false; // current position is unreachable\n            // TODO: maxReach = Math.max(maxReach, i + nums[i])\n        }\n        return true;\n    }\n\n    public int minJumps(int[] nums) {\n        // Greedy BFS-like: track current range and next range\n        int jumps = 0, curEnd = 0, farthest = 0;\n        for (int i = 0; i < nums.length - 1; i++) {\n            farthest = Math.max(farthest, i + nums[i]);\n            if (i == curEnd) {\n                jumps++;\n                curEnd = farthest;\n                if (curEnd >= nums.length - 1) break;\n            }\n        }\n        return jumps;\n    }\n\n    public static void main(String[] args) {\n        JumpGame jg = new JumpGame();\n        System.out.println(\"[2,3,1,1,4] can jump: \" + jg.canJump(new int[]{2,3,1,1,4}));\n        System.out.println(\"[3,2,1,0,4] can jump: \" + jg.canJump(new int[]{3,2,1,0,4}));\n        System.out.println(\"[2,3,1,1,4] min jumps: \" + jg.minJumps(new int[]{2,3,1,1,4}));\n        System.out.println(\"[2,3,0,1,4] min jumps: \" + jg.minJumps(new int[]{2,3,0,1,4}));\n    }\n}",
+      "instructions": [
+        "maxReach=Math.max(maxReach,i+nums[i]);",
+        "[2,3,1,1,4]: can always reach end → true",
+        "[3,2,1,0,4]: index 3 has nums[3]=0 and is the max reach → stuck, false",
+        "[2,3,1,1,4] min jumps: from 0 jump to index 1(val=3), then jump to end → 2 jumps",
+        "[2,3,0,1,4] min jumps: 0→1→4 = 2 jumps"
+      ],
+      "hint": "maxReach=Math.max(maxReach,i+nums[i]);",
+      "expectedOutput": "[2,3,1,1,4] can jump: true\n[3,2,1,0,4] can jump: false\n[2,3,1,1,4] min jumps: 2\n[2,3,0,1,4] min jumps: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 174,
+    "allowedSubmissionType": "TEXT"
+  }
+]

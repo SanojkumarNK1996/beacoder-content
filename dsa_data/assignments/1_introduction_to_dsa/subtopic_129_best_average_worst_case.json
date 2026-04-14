@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Search Algorithm Case Timer",
+    "description": {
+      "task": "Implement a SearchCaseTimer class that measures best, average, and worst case operation counts for linear search on an integer array. Best case: target is the first element. Worst case: target is the last element or not found. Average case: target is in the middle.",
+      "language": "java",
+      "starterCode": "public class SearchCaseTimer {\n\n    public int linearSearch(int[] arr, int target) {\n        for (int i = 0; i < arr.length; i++) {\n            if (arr[i] == target) return i;\n        }\n        return -1;\n    }\n\n    public long countBestCase(int n) {\n        // Best case: target is arr[0]\n        int[] arr = buildArray(n);\n        int target = arr[0];\n        long ops = 0;\n        for (int i = 0; i < arr.length; i++) {\n            ops++;\n            if (arr[i] == target) break;\n        }\n        return ops;\n    }\n\n    public long countWorstCase(int n) {\n        // TODO: target is arr[n-1] (last element), count comparisons\n        return 0;\n    }\n\n    public long countAverageCase(int n) {\n        // TODO: target is arr[n/2] (middle element), count comparisons\n        return 0;\n    }\n\n    private int[] buildArray(int n) {\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) arr[i] = i + 1;\n        return arr;\n    }\n\n    public void printCaseAnalysis(int n) {\n        System.out.printf(\"n=%d | Best=%d | Average=%d | Worst=%d%n\",\n            n, countBestCase(n), countAverageCase(n), countWorstCase(n));\n    }\n\n    public static void main(String[] args) {\n        SearchCaseTimer sct = new SearchCaseTimer();\n        sct.printCaseAnalysis(10);\n        sct.printCaseAnalysis(100);\n        sct.printCaseAnalysis(1000);\n    }\n}",
+      "instructions": [
+        "countWorstCase(n): build array of size n using buildArray(), set target = arr[n-1], loop counting ops until found, return count",
+        "countAverageCase(n): build array, set target = arr[n/2], loop counting ops until found, return count",
+        "Both methods must use the same counting pattern as countBestCase()",
+        "countBestCase always returns 1 for any n",
+        "countWorstCase(10) = 10, countAverageCase(10) = 6 (index 5 in 0-based)"
+      ],
+      "hint": "For countWorstCase: int target = arr[n-1]; then the same for-loop with ops++ and break on match. For average: target = arr[n/2];",
+      "expectedOutput": "n=10 | Best=1 | Average=6 | Worst=10\nn=100 | Best=1 | Average=51 | Worst=100\nn=1000 | Best=1 | Average=501 | Worst=1000"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 129,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Sorting Case Comparator",
+    "description": {
+      "task": "Implement a BubbleSortAnalyzer class for bubble sort that counts comparisons in three scenarios: best case (already sorted array — O(n) with early exit), worst case (reverse-sorted array — O(n²)), and average case (random-ish array).",
+      "language": "java",
+      "starterCode": "public class BubbleSortAnalyzer {\n\n    // Optimized bubble sort that stops early if no swaps were made\n    public long sortAndCount(int[] arr) {\n        long comparisons = 0;\n        int n = arr.length;\n        for (int i = 0; i < n - 1; i++) {\n            boolean swapped = false;\n            for (int j = 0; j < n - i - 1; j++) {\n                comparisons++;\n                if (arr[j] > arr[j + 1]) {\n                    int tmp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = tmp;\n                    swapped = true;\n                }\n            }\n            if (!swapped) break; // early exit\n        }\n        return comparisons;\n    }\n\n    public long bestCaseComparisons(int n) {\n        // TODO: build already-sorted array [1,2,...,n] and return comparison count\n        return 0;\n    }\n\n    public long worstCaseComparisons(int n) {\n        // TODO: build reverse-sorted array [n,n-1,...,1] and return comparison count\n        return 0;\n    }\n\n    public void printAnalysis(int n) {\n        System.out.printf(\"n=%d | Best=%d | Worst=%d%n\",\n            n, bestCaseComparisons(n), worstCaseComparisons(n));\n    }\n\n    public static void main(String[] args) {\n        BubbleSortAnalyzer ba = new BubbleSortAnalyzer();\n        ba.printAnalysis(5);\n        ba.printAnalysis(10);\n    }\n}",
+      "instructions": [
+        "bestCaseComparisons(n): create int[n] filled [1..n] (already sorted), call sortAndCount, return result",
+        "worstCaseComparisons(n): create int[n] filled [n..1] (reverse sorted), call sortAndCount, return result",
+        "Best case with optimized bubble sort = n-1 comparisons (one pass, no swaps)",
+        "Worst case = n*(n-1)/2 comparisons",
+        "Use sortAndCount() for both — do not write separate sorting logic"
+      ],
+      "hint": "For bestCase: int[] arr = new int[n]; for(int i=0;i<n;i++) arr[i]=i+1; return sortAndCount(arr). For worst: arr[i]=n-i;",
+      "expectedOutput": "n=5 | Best=4 | Worst=10\nn=10 | Best=9 | Worst=45"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 129,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Binary Search Case Analysis",
+    "description": {
+      "task": "Implement a BinarySearchAnalyzer class that counts comparisons for best, average, and worst cases in binary search. Best: target is exactly at mid on first iteration. Worst: target is not found or at a leaf. Average: target in the second half of the search range.",
+      "language": "java",
+      "starterCode": "public class BinarySearchAnalyzer {\n\n    public long binarySearchCount(int[] arr, int target) {\n        int lo = 0, hi = arr.length - 1;\n        long comparisons = 0;\n        while (lo <= hi) {\n            comparisons++;\n            int mid = lo + (hi - lo) / 2;\n            if (arr[mid] == target) return comparisons;\n            else if (arr[mid] < target) lo = mid + 1;\n            else hi = mid - 1;\n        }\n        return comparisons;\n    }\n\n    public long bestCase(int n) {\n        // Target is the exact middle element\n        int[] arr = buildSortedArray(n);\n        int mid = arr[arr.length / 2];\n        return binarySearchCount(arr, mid);\n    }\n\n    public long worstCase(int n) {\n        // TODO: target is -1 (not in array), so search exhausts all steps\n        return 0;\n    }\n\n    private int[] buildSortedArray(int n) {\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) arr[i] = i;\n        return arr;\n    }\n\n    public void printCases(int n) {\n        System.out.printf(\"n=%d | Best=%d | Worst=%d%n\",\n            n, bestCase(n), worstCase(n));\n    }\n\n    public static void main(String[] args) {\n        BinarySearchAnalyzer bsa = new BinarySearchAnalyzer();\n        bsa.printCases(8);\n        bsa.printCases(16);\n        bsa.printCases(1024);\n    }\n}",
+      "instructions": [
+        "worstCase(n): build sorted array, search for -1 (not present), return comparison count",
+        "bestCase always returns 1 (middle element found immediately)",
+        "worstCase(8) = 4, worstCase(16) = 5, worstCase(1024) = 11 (approx floor(log2(n))+1)",
+        "Use binarySearchCount() in both methods",
+        "Do not modify bestCase() or binarySearchCount()"
+      ],
+      "hint": "int[] arr = buildSortedArray(n); return binarySearchCount(arr, -1); The target -1 is never present so the loop runs until lo > hi.",
+      "expectedOutput": "n=8 | Best=1 | Worst=4\nn=16 | Best=1 | Worst=5\nn=1024 | Best=1 | Worst=11"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 34,
+    "subtopicId": 129,
+    "allowedSubmissionType": "TEXT"
+  }
+]

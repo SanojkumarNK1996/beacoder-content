@@ -1,0 +1,20 @@
+<h1>⚡ Amazon CloudFront CDN</h1>
+<h2>🎯 What is CloudFront?</h2>
+<p><strong>Amazon CloudFront</strong> is a Content Delivery Network (CDN) that delivers content with low latency by caching it at <strong>400+ edge locations</strong> globally, close to end users.</p>
+<h2>📋 How It Works</h2>
+<ol>
+  <li>User requests content (image, video, web page)</li>
+  <li>Request goes to nearest CloudFront edge location</li>
+  <li>If cached (cache hit): served immediately from edge</li>
+  <li>If not cached (cache miss): CloudFront fetches from origin (S3, EC2, ELB), caches it, then serves</li>
+</ol>
+<h2>📌 Use Cases</h2>
+<ul>
+  <li>Static asset delivery (images, JS, CSS) from S3</li>
+  <li>Video streaming at scale</li>
+  <li>DDoS protection (integrated with AWS Shield)</li>
+  <li>API acceleration for REST/GraphQL APIs</li>
+  <li>HTTPS for S3-hosted static sites</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Put CloudFront in front of S3 or your web app for: faster global delivery, reduced origin load, and built-in DDoS protection.</p>

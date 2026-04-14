@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Sorting Algorithm Complexity Chart",
+    "description": {
+      "task": "Create a SortingComparison class that runs Bubble Sort, Merge Sort, and Quick Sort with operation counters for different input patterns (sorted, reverse-sorted, random). Print a comparison table.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class SortingComparison {\n    static long ops;\n\n    static void bubbleSort(int[] a) {\n        ops=0; int n=a.length;\n        for(int i=0;i<n-1;i++) for(int j=0;j<n-i-1;j++){ops++; if(a[j]>a[j+1]){int t=a[j];a[j]=a[j+1];a[j+1]=t;}}\n    }\n    static void mergeSort(int[] a,int l,int r){\n        if(l>=r)return; int m=(l+r)/2;\n        mergeSort(a,l,m); mergeSort(a,m+1,r);\n        int[] tmp=Arrays.copyOfRange(a,l,r+1);\n        int i=0,j=m-l+1,k=l;\n        while(i<=m-l&&j<tmp.length){ops++;a[k++]=(tmp[i]<=tmp[j])?tmp[i++]:tmp[j++];}\n        while(i<=m-l)a[k++]=tmp[i++]; while(j<tmp.length)a[k++]=tmp[j++];\n    }\n    static void quickSort(int[] a,int lo,int hi){\n        if(lo>=hi)return; int p=a[hi],i=lo;\n        for(int j=lo;j<hi;j++){ops++;if(a[j]<=p){int t=a[i];a[i]=a[j];a[j]=t;i++;}}\n        int t=a[i];a[i]=a[hi];a[hi]=t;\n        quickSort(a,lo,i-1);quickSort(a,i+1,hi);\n    }\n\n    static int[] random10()  { return new int[]{64,34,25,12,22,11,90,55,43,77}; }\n    static int[] sorted10()  { return new int[]{1,2,3,4,5,6,7,8,9,10}; }\n    static int[] reverse10() { return new int[]{10,9,8,7,6,5,4,3,2,1}; }\n\n    public static void main(String[] args) {\n        System.out.printf(\"%-12s %-10s %-10s %-10s%n\",\"Algorithm\",\"Random\",\"Sorted\",\"Reverse\");\n        System.out.println(\"----------------------------------------------\");\n\n        // TODO: Run bubbleSort on random10,sorted10,reverse10, capture ops each time\n        //       Print a row: printf(\"%-12s %-10d %-10d %-10d%n\",\"Bubble\",r,s,rv)\n        // TODO: Same for mergeSort (mergeSort(a,0,a.length-1))\n        // TODO: Same for quickSort (quickSort(a,0,a.length-1))\n    }\n}",
+      "instructions": [
+        "For Bubble: int[] a=random10();bubbleSort(a);long r=ops; a=sorted10();bubbleSort(a);long s=ops; a=reverse10();bubbleSort(a);long rv=ops; then printf",
+        "Same pattern for Merge (using mergeSort(a,0,a.length-1)) and Quick (quickSort(a,0,a.length-1))",
+        "Bubble worst (reverse): 45 ops; best (sorted with early-exit NOT implemented here): 45 ops",
+        "Merge sort: roughly same ops regardless of input pattern (~24)",
+        "Quick sort worst case on sorted input (last-element pivot): ~45 comparisons"
+      ],
+      "hint": "Run each algorithm three times (random, sorted, reverse), capture ops each time, then print with printf. Pattern: int[] a=random10(); bubbleSort(a); long r=ops; ...",
+      "expectedOutput": "Algorithm    Random     Sorted     Reverse   \n----------------------------------------------\nBubble       45         45         45        \nMerge        24         15         15        \nQuick        32         45         45        "
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 163,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Choosing the Right Sort",
+    "description": {
+      "task": "Implement a SortSelector class with a method that recommends and applies the best sorting algorithm given the input size, whether the data is nearly sorted, and whether stability is required. Print the recommendation and sorted result.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SortSelector {\n\n    void insertionSort(int[] a){for(int i=1;i<a.length;i++){int k=a[i],j=i-1;while(j>=0&&a[j]>k){a[j+1]=a[j];j--;}a[j+1]=k;}}\n    void mergeSort(int[] a,int l,int r){if(l>=r)return;int m=(l+r)/2;mergeSort(a,l,m);mergeSort(a,m+1,r);int[]t=Arrays.copyOfRange(a,l,r+1);int i=0,j=m-l+1,k=l;while(i<=m-l&&j<t.length)a[k++]=(t[i]<=t[j])?t[i++]:t[j++];while(i<=m-l)a[k++]=t[i++];while(j<t.length)a[k++]=t[j++];}\n    void quickSort(int[] a,int lo,int hi){if(lo>=hi)return;int p=a[hi],i=lo;for(int j=lo;j<hi;j++)if(a[j]<=p){int t=a[i];a[i]=a[j];a[j]=t;i++;}int t=a[i];a[i]=a[hi];a[hi]=t;quickSort(a,lo,i-1);quickSort(a,i+1,hi);}\n\n    int inversions(int[] a){int c=0;for(int i=0;i<a.length;i++)for(int j=i+1;j<a.length;j++)if(a[i]>a[j])c++;return c;}\n\n    public void select(int[] arr, boolean needStable) {\n        int n = arr.length;\n        int inv = inversions(arr);\n        // TODO: if n <= 10: print \"InsertionSort\" and apply insertionSort\n        //       else if inv < n && needStable: print \"MergeSort\" and apply mergeSort\n        //       else: print \"QuickSort\" and apply quickSort\n        System.out.println(\"Result: \" + Arrays.toString(arr));\n    }\n\n    public static void main(String[] args) {\n        SortSelector ss = new SortSelector();\n        ss.select(new int[]{5,3,1,4,2}, true);\n        ss.select(new int[]{1,2,3,5,4,6,7,8,9,10,11,12}, true);\n        ss.select(new int[]{50,20,80,10,90,30,70,40,60,15,25,85}, false);\n    }\n}",
+      "instructions": [
+        "if(n<=10){System.out.println(\"InsertionSort\");insertionSort(arr);}",
+        "else if(inv<n&&needStable){System.out.println(\"MergeSort\");mergeSort(arr,0,n-1);}",
+        "else{System.out.println(\"QuickSort\");quickSort(arr,0,n-1);}",
+        "First call: n=5 → InsertionSort; Second: n=12, 1 inversion < 12, stable=true → MergeSort; Third: n=12, many inversions → QuickSort",
+        "Place the if/else BEFORE the println(\"Result: ...\") line"
+      ],
+      "hint": "if(n<=10){System.out.println(\"InsertionSort\");insertionSort(arr);}else if(inv<n&&needStable){System.out.println(\"MergeSort\");mergeSort(arr,0,n-1);}else{System.out.println(\"QuickSort\");quickSort(arr,0,n-1);}",
+      "expectedOutput": "InsertionSort\nResult: [1, 2, 3, 4, 5]\nMergeSort\nResult: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\nQuickSort\nResult: [10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 85, 90]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 163,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Sort Stability Demonstration",
+    "description": {
+      "task": "Demonstrate sorting stability by sorting Employee records first by department, then by salary. Use a stable sort to preserve department ordering during the salary sort. Compare stable vs unstable sort results.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class StabilitySortDemo {\n\n    static class Employee {\n        String name, dept;\n        int salary;\n        Employee(String n, String d, int s){name=n;dept=d;salary=s;}\n        public String toString(){return name+\"[\"+dept+\",\"+salary+\"]\";}\n    }\n\n    public static void main(String[] args) {\n        List<Employee> employees = Arrays.asList(\n            new Employee(\"Alice\",  \"Eng\",  90000),\n            new Employee(\"Bob\",    \"HR\",   70000),\n            new Employee(\"Carol\",  \"Eng\",  80000),\n            new Employee(\"Dave\",   \"HR\",   75000),\n            new Employee(\"Eve\",    \"Eng\",  85000)\n        );\n\n        // TODO: Step 1 — sort by department (stable) so Eng group and HR group are together\n        // TODO: Step 2 — sort by salary ascending (stable) to get: within each dept, lower salary first\n        //               but since we use a STABLE sort, dept ordering from step 1 is preserved ONLY\n        //               if we sort by salary while keeping dept-equivalent items in original order.\n        //               Actually: sort only by salary (stable); dept grouping from step 1 is maintained.\n\n        // Use Collections.sort (stable) for both steps\n        // Step 1: sort by dept\n        // Step 2: sort by salary\n\n        System.out.println(\"After stable sort (dept then salary):\");\n        for (Employee e : employees) System.out.println(\"  \" + e);\n    }\n}",
+      "instructions": [
+        "Step 1: employees.sort(Comparator.comparing(e->e.dept));",
+        "Step 2: employees.sort(Comparator.comparingInt(e->e.salary));",
+        "After step 1 employees are grouped by dept (Eng: Alice,Carol,Eve then HR: Bob,Dave within original relative order)",
+        "After step 2 (stable sort by salary): global order by salary but stability means within same salary, dept order is preserved — result is fully salary-ordered",
+        "Final order by salary ascending: Bob(70000), Dave(75000), Carol(80000), Eve(85000), Alice(90000)"
+      ],
+      "hint": "employees.sort(Comparator.comparing(e->e.dept)); then employees.sort(Comparator.comparingInt(e->e.salary));",
+      "expectedOutput": "After stable sort (dept then salary):\n  Bob[HR,70000]\n  Dave[HR,75000]\n  Carol[Eng,80000]\n  Eve[Eng,85000]\n  Alice[Eng,90000]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 163,
+    "allowedSubmissionType": "TEXT"
+  }
+]

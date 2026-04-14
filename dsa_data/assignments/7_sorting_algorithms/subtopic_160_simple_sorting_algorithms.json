@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Bubble Sort Implementation",
+    "description": {
+      "task": "Implement optimized Bubble Sort with an early-exit flag. If no swaps occur in a pass, the array is already sorted and the algorithm can terminate early. Print the array after each pass.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class BubbleSort {\n\n    public int[] sort(int[] arr) {\n        int n = arr.length;\n        for (int i = 0; i < n - 1; i++) {\n            boolean swapped = false;\n            for (int j = 0; j < n - i - 1; j++) {\n                // TODO: if arr[j] > arr[j+1], swap them and set swapped = true\n            }\n            System.out.println(\"Pass \" + (i+1) + \": \" + Arrays.toString(arr));\n            // TODO: if !swapped, break (already sorted)\n        }\n        return arr;\n    }\n\n    public static void main(String[] args) {\n        BubbleSort bs = new BubbleSort();\n        int[] arr1 = {64, 34, 25, 12, 22};\n        System.out.println(\"Sorting: \" + Arrays.toString(arr1));\n        bs.sort(arr1);\n        System.out.println(\"Result: \" + Arrays.toString(arr1));\n\n        System.out.println();\n        int[] arr2 = {1, 2, 3, 4, 5}; // already sorted\n        System.out.println(\"Sorting: \" + Arrays.toString(arr2));\n        bs.sort(arr2);\n        System.out.println(\"Result: \" + Arrays.toString(arr2));\n    }\n}",
+      "instructions": [
+        "Swap: if(arr[j]>arr[j+1]){int t=arr[j];arr[j]=arr[j+1];arr[j+1]=t;swapped=true;}",
+        "After inner loop: if(!swapped) break;",
+        "For arr1={64,34,25,12,22}: Pass 1 bubbles 64 to end → [34,25,12,22,64]; Pass 2 → [25,12,22,34,64]; etc.",
+        "For arr2={1,2,3,4,5}: Pass 1 makes no swaps → early exit after 1 pass",
+        "Early exit optimization avoids unnecessary passes on sorted/nearly-sorted arrays"
+      ],
+      "hint": "if(arr[j]>arr[j+1]){int t=arr[j];arr[j]=arr[j+1];arr[j+1]=t;swapped=true;} and after inner loop: if(!swapped) break;",
+      "expectedOutput": "Sorting: [64, 34, 25, 12, 22]\nPass 1: [34, 25, 12, 22, 64]\nPass 2: [25, 12, 22, 34, 64]\nPass 3: [12, 22, 25, 34, 64]\nPass 4: [12, 22, 25, 34, 64]\nResult: [12, 22, 25, 34, 64]\n\nSorting: [1, 2, 3, 4, 5]\nPass 1: [1, 2, 3, 4, 5]\nResult: [1, 2, 3, 4, 5]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 160,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Selection Sort Implementation",
+    "description": {
+      "task": "Implement Selection Sort that finds the minimum element in each unsorted pass and swaps it into position. Track and print the minimum index found in each pass.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class SelectionSort {\n\n    public int[] sort(int[] arr) {\n        int n = arr.length;\n        for (int i = 0; i < n - 1; i++) {\n            int minIdx = i;\n            // TODO: find the index of the minimum element in arr[i+1..n-1]\n            for (int j = i + 1; j < n; j++) {\n                // TODO: if arr[j] < arr[minIdx], update minIdx = j\n            }\n            // Swap arr[i] with arr[minIdx]\n            int temp = arr[i]; arr[i] = arr[minIdx]; arr[minIdx] = temp;\n            System.out.println(\"Pass \" + (i+1) + \" (min idx=\" + minIdx + \"): \" + Arrays.toString(arr));\n        }\n        return arr;\n    }\n\n    public static void main(String[] args) {\n        SelectionSort ss = new SelectionSort();\n        int[] arr = {64, 25, 12, 22, 11};\n        System.out.println(\"Input:  \" + Arrays.toString(arr));\n        ss.sort(arr);\n        System.out.println(\"Sorted: \" + Arrays.toString(arr));\n    }\n}",
+      "instructions": [
+        "Inside inner loop: if(arr[j]<arr[minIdx]) minIdx=j;",
+        "Swap is already provided: temp=arr[i]; arr[i]=arr[minIdx]; arr[minIdx]=temp;",
+        "Pass 1: min is 11 at index 4 → swap with index 0 → [11,25,12,22,64]",
+        "Pass 2: min is 12 at index 2 → swap with index 1 → [11,12,25,22,64]",
+        "Selection sort always makes exactly n-1 swaps (unlike bubble sort)"
+      ],
+      "hint": "if(arr[j]<arr[minIdx]) minIdx=j; The swap is already written — just complete the inner loop.",
+      "expectedOutput": "Input:  [64, 25, 12, 22, 11]\nPass 1 (min idx=4): [11, 25, 12, 22, 64]\nPass 2 (min idx=2): [11, 12, 25, 22, 64]\nPass 3 (min idx=3): [11, 12, 22, 25, 64]\nPass 4 (min idx=3): [11, 12, 22, 25, 64]\nSorted: [11, 12, 22, 25, 64]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 160,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Insertion Sort Implementation",
+    "description": {
+      "task": "Implement Insertion Sort that builds the sorted portion one element at a time by shifting elements right to make room. Show the partially sorted array after each insertion.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class InsertionSort {\n\n    public int[] sort(int[] arr) {\n        int n = arr.length;\n        for (int i = 1; i < n; i++) {\n            int key = arr[i];\n            int j = i - 1;\n            // TODO: shift arr[j] right while j >= 0 and arr[j] > key\n            // TODO: place key at arr[j+1]\n            System.out.println(\"Insert \" + key + \": \" + Arrays.toString(arr));\n        }\n        return arr;\n    }\n\n    public static void main(String[] args) {\n        InsertionSort is = new InsertionSort();\n        int[] arr = {12, 11, 13, 5, 6};\n        System.out.println(\"Input:  \" + Arrays.toString(arr));\n        is.sort(arr);\n        System.out.println(\"Sorted: \" + Arrays.toString(arr));\n    }\n}",
+      "instructions": [
+        "Shift loop: while(j>=0 && arr[j]>key){ arr[j+1]=arr[j]; j--; }",
+        "Place key: arr[j+1]=key; (after the while loop)",
+        "Starting arr={12,11,13,5,6}: key=11: shift 12 right → [11,12,13,5,6]; key=13: no shift; etc.",
+        "Print happens AFTER placing key, so output shows the state post-insertion",
+        "Insertion sort is efficient for nearly-sorted arrays and small n"
+      ],
+      "hint": "while(j>=0&&arr[j]>key){arr[j+1]=arr[j];j--;} arr[j+1]=key;",
+      "expectedOutput": "Input:  [12, 11, 13, 5, 6]\nInsert 11: [11, 12, 13, 5, 6]\nInsert 13: [11, 12, 13, 5, 6]\nInsert 5: [5, 11, 12, 13, 6]\nInsert 6: [5, 6, 11, 12, 13]\nSorted: [5, 6, 11, 12, 13]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 160,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,45 @@
+<h1>🧩 Common Array Problems</h1>
+
+<h2>🔁 Two Pointers Technique</h2>
+<p>Use two indices that move toward each other to solve problems in O(n) instead of O(n²).</p>
+
+<div class="code-example">
+  <pre>
+// Check if array has a pair summing to target
+public boolean hasPairWithSum(int[] sorted, int target) {
+    int left = 0, right = sorted.length - 1;
+    while (left &lt; right) {
+        int sum = sorted[left] + sorted[right];
+        if (sum == target) return true;
+        else if (sum &lt; target) left++;
+        else right--;
+    }
+    return false;
+}
+  </pre>
+</div>
+
+<h2>🪟 Sliding Window Technique</h2>
+<p>Maintain a window of fixed or variable size as you scan the array.</p>
+
+<div class="code-example">
+  <pre>
+// Maximum sum subarray of size k
+public int maxSumSubarray(int[] arr, int k) {
+    int sum = 0;
+    for (int i = 0; i &lt; k; i++) sum += arr[i];
+    int max = sum;
+    for (int i = k; i &lt; arr.length; i++) {
+        sum += arr[i] - arr[i - k];
+        max = Math.max(max, sum);
+    }
+    return max;
+}
+  </pre>
+</div>
+
+<h2>➕ Prefix Sums</h2>
+<p>Precompute cumulative sums to answer range-sum queries in O(1).</p>
+
+<h2>🎯 Summary</h2>
+<p>Two pointers, sliding window, and prefix sums are essential <strong>array problem patterns</strong> that appear frequently in coding interviews.</p>

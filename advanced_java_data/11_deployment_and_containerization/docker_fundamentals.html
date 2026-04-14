@@ -1,0 +1,82 @@
+<h1>🐳 Docker Fundamentals</h1>
+
+<h2>🎯 What is Docker?</h2>
+<p><strong>Docker</strong> is a platform for building, shipping, and running applications in <strong>containers</strong>.</p>
+
+<ul>
+  <li>Containers package your app plus its dependencies</li>
+  <li>They run consistently across environments (dev, test, prod)</li>
+  <li>Lighter than full virtual machines</li>
+</ul>
+
+<h2>🏗️ Image vs Container</h2>
+<ul>
+  <li><strong>Image</strong> – Read-only template describing the filesystem and configuration</li>
+  <li><strong>Container</strong> – A running instance of an image</li>
+</ul>
+
+<h2>📄 Dockerfile</h2>
+<p>A <strong>Dockerfile</strong> is a text file with instructions to build an image.</p>
+
+<div class="code-example">
+  <pre>
+# Simple Java runtime image
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+COPY target/app.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+  </pre>
+</div>
+
+<h2>🧪 Basic Docker Commands</h2>
+<div class="code-example">
+  <pre>
+# Build an image with tag my-app:1.0
+docker build -t my-app:1.0 .
+
+# List images
+docker images
+
+# Run a container from an image
+docker run --name my-app-container -p 8080:8080 my-app:1.0
+
+# List running containers
+docker ps
+
+# Stop and remove container
+docker stop my-app-container
+docker rm my-app-container
+  </pre>
+</div>
+
+<h2>📦 Layers and Caching</h2>
+<ul>
+  <li>Docker images are built in <strong>layers</strong>, each corresponding to a Dockerfile instruction</li>
+  <li>Layers are cached – small changes can reuse previous layers, speeding up builds</li>
+  <li>Order of instructions affects cache efficiency</li>
+</ul>
+
+<h2>🌍 Ports and Networking</h2>
+<ul>
+  <li><code>-p hostPort:containerPort</code> maps ports between host and container</li>
+  <li>Multiple containers can be connected with Docker networks</li>
+</ul>
+
+<h2>📂 Volumes</h2>
+<p><strong>Volumes</strong> allow data to persist outside the container filesystem.</p>
+
+<div class="code-example">
+  <pre>
+# Mount host directory ./logs into container
+docker run -v $(pwd)/logs:/app/logs my-app:1.0
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Docker packages apps into <strong>portable containers</strong></li>
+  <li>Images are built from <strong>Dockerfiles</strong>, containers are running instances</li>
+  <li>Understanding images, containers, ports, and volumes is the foundation for containerizing Java apps</li>
+</ul>

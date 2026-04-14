@@ -1,0 +1,38 @@
+<h1>🔎 SEO and Accessibility in React SPAs</h1>
+<h2>🎯 SEO Challenges with SPAs</h2>
+<p>Traditional React SPAs render content with JavaScript. Search engine crawlers see an empty HTML shell initially — bad for SEO.</p>
+<h2>🔧 Solutions</h2>
+<ul>
+  <li><strong>Server-Side Rendering (SSR)</strong>: Use <strong>Next.js</strong> — renders HTML on the server, ideal for SEO</li>
+  <li><strong>Pre-rendering</strong>: Generate static HTML at build time for known routes</li>
+  <li><strong>SSG</strong>: Static Site Generation with Next.js for content-heavy sites</li>
+</ul>
+<h2>🏷️ Meta Tags with React Helmet</h2>
+<div class="code-example">
+  <pre>
+import { Helmet } from 'react-helmet-async';
+
+function ProductPage({ product }) {
+  return (
+    &lt;&gt;
+      &lt;Helmet&gt;
+        &lt;title&gt;{product.name} | MyShop&lt;/title&gt;
+        &lt;meta name="description" content={product.description} /&gt;
+        &lt;meta property="og:image" content={product.image} /&gt;
+      &lt;/Helmet&gt;
+      &lt;ProductDetails product={product} /&gt;
+    &lt;/&gt;
+  );
+}
+  </pre>
+</div>
+<h2>♿ Accessibility (a11y) Basics</h2>
+<ul>
+  <li>Use semantic HTML: <code>&lt;button&gt;</code> not <code>&lt;div onClick&gt;</code></li>
+  <li>Add <code>alt</code> text to all images</li>
+  <li>Ensure sufficient color contrast (WCAG AA: 4.5:1 ratio)</li>
+  <li>All interactive elements reachable by keyboard (Tab key)</li>
+  <li>Use ARIA labels for icon-only buttons: <code>&lt;button aria-label="Close"&gt;</code></li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>For SEO-critical apps, use Next.js instead of CRA/Vite. For accessibility — semantic HTML, keyboard navigation, and proper ARIA labels cover 80% of requirements.</p>

@@ -1,0 +1,23 @@
+<h1>🔗 API Gateway with Lambda</h1>
+<h2>🎯 Building a Serverless REST API</h2>
+<p><strong>Amazon API Gateway</strong> + <strong>Lambda</strong> = a fully serverless REST API. No servers, no scaling configuration — just code and routes.</p>
+<h2>🗺️ Architecture</h2>
+<div class="code-example">
+  <pre>
+Client → API Gateway → Lambda → DynamoDB/RDS/S3
+  GET /users → listUsersFunction
+  POST /users → createUserFunction
+  GET /users/{id} → getUserFunction
+  </pre>
+</div>
+<h2>📋 API Gateway Features</h2>
+<ul>
+  <li><strong>Request/response transformation</strong></li>
+  <li><strong>Authentication</strong>: Cognito, JWT, API Keys, Lambda Authorizer</li>
+  <li><strong>Throttling and rate limiting</strong></li>
+  <li><strong>Caching</strong>: Cache responses at the edge</li>
+  <li><strong>CORS configuration</strong></li>
+  <li>Stages (dev, staging, prod) with separate deployments</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>API Gateway + Lambda is the most common serverless pattern for building REST APIs. Scale to zero when idle, scale to millions of requests automatically.</p>

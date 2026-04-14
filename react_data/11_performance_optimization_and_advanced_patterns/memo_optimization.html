@@ -1,0 +1,36 @@
+<h1>🧠 React.memo and Memoization</h1>
+<h2>🎯 React.memo</h2>
+<p><code>React.memo</code> is a Higher Order Component that prevents re-rendering if props haven't changed (shallow comparison).</p>
+<div class="code-example">
+  <pre>
+// Without memo: re-renders every time parent re-renders
+function UserCard({ user }) {
+  return &lt;div&gt;{user.name}&lt;/div&gt;;
+}
+
+// With memo: only re-renders when user prop changes
+const UserCard = React.memo(function UserCard({ user }) {
+  return &lt;div&gt;{user.name}&lt;/div&gt;;
+});
+  </pre>
+</div>
+<h2>⚠️ Pitfall: New Objects Break Memoization</h2>
+<div class="code-example">
+  <pre>
+// BAD: new object created every render → memo is useless
+&lt;UserCard style={{ color: 'red' }} /&gt;  
+
+// GOOD: stable reference
+const style = useMemo(() =&gt; ({ color: 'red' }), []);
+&lt;UserCard style={style} /&gt;
+
+// BAD: new function every render
+&lt;UserCard onClick={() =&gt; handleClick(id)} /&gt;  
+
+// GOOD: stable function
+const handleClick = useCallback(() =&gt; doSomething(id), [id]);
+&lt;UserCard onClick={handleClick} /&gt;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p><code>React.memo</code> works only when combined with stable props (<code>useMemo</code> + <code>useCallback</code>). Use it for expensive components that receive the same props often.</p>

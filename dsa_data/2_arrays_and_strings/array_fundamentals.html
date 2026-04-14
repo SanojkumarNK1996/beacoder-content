@@ -1,0 +1,34 @@
+<h1>📦 Array Fundamentals</h1>
+
+<h2>🎯 What is an Array?</h2>
+<p>An <strong>array</strong> is a collection of elements stored in <strong>contiguous memory</strong>, each accessible by an index.</p>
+
+<div class="code-example">
+  <pre>
+int[] numbers = {10, 20, 30, 40, 50};
+System.out.println(numbers[2]); // 30 (O(1) access)
+  </pre>
+</div>
+
+<h2>📐 Properties</h2>
+<ul>
+  <li>Fixed size (in Java, arrays have a fixed length)</li>
+  <li>O(1) random access by index</li>
+  <li>O(n) insertion/deletion (requires shifting)</li>
+  <li>Homogeneous elements (same type)</li>
+</ul>
+
+<h2>🧪 Declaring and Initializing</h2>
+<div class="code-example">
+  <pre>
+// Declaration
+int[] arr;
+
+// Initialization
+arr = new int[5];          // [0, 0, 0, 0, 0]
+int[] arr2 = {1, 2, 3};   // [1, 2, 3]
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<p>Arrays are the simplest and most fundamental data structure. They shine for <strong>indexed access</strong> but are poor for frequent insertions or deletions in the middle.</p>

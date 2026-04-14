@@ -1,0 +1,41 @@
+<h1>🖱️ Handling Click and Mouse Events</h1>
+<h2>🎯 Event Handlers in React</h2>
+<p>React uses <strong>synthetic events</strong> — cross-browser wrappers around native DOM events. Handlers are passed as props using camelCase names.</p>
+<div class="code-example">
+  <pre>
+function EventDemo() {
+  const handleClick = (e) =&gt; {
+    e.preventDefault();  // Prevent default browser behavior
+    console.log('Clicked!', e.target);
+  };
+
+  const handleDoubleClick = () =&gt; console.log('Double click!');
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={handleClick}&gt;Click me&lt;/button&gt;
+      &lt;button onDoubleClick={handleDoubleClick}&gt;Double click&lt;/button&gt;
+      &lt;div
+        onMouseEnter={() =&gt; console.log('Mouse in')}
+        onMouseLeave={() =&gt; console.log('Mouse out')}
+      &gt;
+        Hover me
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}
+  </pre>
+</div>
+<h2>📌 Passing Arguments to Handlers</h2>
+<div class="code-example">
+  <pre>
+// Use arrow function wrapper to pass args:
+{items.map(item =&gt; (
+  &lt;button key={item.id} onClick={() =&gt; handleDelete(item.id)}&gt;
+    Delete {item.name}
+  &lt;/button&gt;
+))}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Events in React are camelCase (<code>onClick</code>), passed as functions (not strings like HTML). Use arrow wrappers to pass arguments in event handlers.</p>

@@ -1,0 +1,25 @@
+<h1>🚀 Building a Real-World Serverless App</h1>
+<h2>🎯 Project: Serverless Task Management API</h2>
+<p>Build a fully serverless REST API with create/read/update/delete operations for tasks, using AWS services only.</p>
+<h2>🗺️ Architecture</h2>
+<div class="code-example">
+  <pre>
+Client (React App)
+  → CloudFront (CDN, HTTPS)
+  → S3 (Static hosting for React)
+  → API Gateway (REST API)
+    POST   /tasks    → createTaskFunction (Lambda)
+    GET    /tasks    → listTasksFunction (Lambda)
+    GET    /tasks/{id} → getTaskFunction (Lambda)
+    PUT    /tasks/{id} → updateTaskFunction (Lambda)
+    DELETE /tasks/{id} → deleteTaskFunction (Lambda)
+  → DynamoDB (Tasks table, partition key: userId, sort key: taskId)
+  → Cognito (Authentication, JWT tokens)
+  → CloudWatch (Logging + Alarms)
+  → X-Ray (Distributed tracing)
+  </pre>
+</div>
+<h2>📋 AWS Services Used</h2>
+<p>S3, CloudFront, API Gateway, Lambda (Python/Node.js), DynamoDB, Cognito, CloudWatch, X-Ray, IAM, Secrets Manager.</p>
+<h2>🎯 Summary</h2>
+<p>This architecture is fully serverless: zero servers to manage, scales to millions of users, and you only pay per request. It demonstrates the full AWS serverless toolkit in a real-world context.</p>

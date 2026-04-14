@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Array Insertion and Deletion",
+    "description": {
+      "task": "Implement an ArrayOperations class with methods for inserting an element at a specific position and deleting an element by value in a logical array (tracked by a 'size' field, backed by a fixed array). Return the new logical size after each operation.",
+      "language": "java",
+      "starterCode": "public class ArrayOperations {\n\n    private int[] data;\n    private int size;\n\n    public ArrayOperations(int capacity) {\n        data = new int[capacity];\n        size = 0;\n    }\n\n    public void fill(int[] values) {\n        for (int v : values) data[size++] = v;\n    }\n\n    // Insert value at position pos, shifting right\n    public int insert(int pos, int value) {\n        if (size >= data.length || pos < 0 || pos > size) return size;\n        // TODO: shift elements right from size-1 down to pos, then set data[pos]=value, size++\n        return size;\n    }\n\n    // Delete first occurrence of value, shifting left; return -1 if not found\n    public int delete(int value) {\n        // TODO: find index of value, shift elements left, size--, return new size; -1 if not found\n        return -1;\n    }\n\n    public void print() {\n        java.util.StringJoiner sj = new java.util.StringJoiner(\", \", \"[\", \"]\");\n        for (int i = 0; i < size; i++) sj.add(String.valueOf(data[i]));\n        System.out.println(sj);\n    }\n\n    public static void main(String[] args) {\n        ArrayOperations ao = new ArrayOperations(10);\n        ao.fill(new int[]{1, 2, 3, 4, 5});\n        ao.print();\n        ao.insert(2, 99);\n        ao.print();\n        ao.delete(99);\n        ao.print();\n        System.out.println(\"Delete 999: \" + ao.delete(999));\n    }\n}",
+      "instructions": [
+        "insert(pos, value): shift elements at indices size-1..pos one position right, set data[pos]=value, increment size, return new size",
+        "delete(value): find first index i where data[i]==value; shift elements from i+1..size-1 one position left; decrement size; return new size. Return -1 if not found",
+        "Both methods must respect the capacity guard (given in insert) — do not add elements beyond data.length",
+        "print() is already implemented and prints only the logical portion (0..size-1)",
+        "After fill([1,2,3,4,5]), insert(2,99) makes [1,2,99,3,4,5]; then delete(99) restores [1,2,3,4,5]"
+      ],
+      "hint": "insert: for(int i=size-1;i>=pos;i--) data[i+1]=data[i]; data[pos]=value; size++; return size. delete: find idx, then for(int i=idx;i<size-1;i++) data[i]=data[i+1]; size--; return size;",
+      "expectedOutput": "[1, 2, 3, 4, 5]\n[1, 2, 99, 3, 4, 5]\n[1, 2, 3, 4, 5]\nDelete 999: -1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 132,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Linear Search with Count",
+    "description": {
+      "task": "Implement a SearchOperations class with linear search that returns both the index and the number of comparisons made. Also implement findAll() that returns all indices where a value appears, and countOccurrences().",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SearchOperations {\n\n    public int[] searchWithCount(int[] arr, int target) {\n        // TODO: return int[]{index, comparisons}\n        // index = first occurrence index, or -1 if not found\n        // comparisons = total comparisons made\n        return new int[]{-1, 0};\n    }\n\n    public List<Integer> findAll(int[] arr, int target) {\n        // TODO: return list of all indices where arr[i] == target\n        return new ArrayList<>();\n    }\n\n    public int countOccurrences(int[] arr, int target) {\n        return findAll(arr, target).size();\n    }\n\n    public static void main(String[] args) {\n        SearchOperations so = new SearchOperations();\n        int[] arr = {3, 1, 4, 1, 5, 9, 2, 6, 1};\n        int[] result = so.searchWithCount(arr, 4);\n        System.out.println(\"Index: \" + result[0] + \", Comparisons: \" + result[1]);\n        result = so.searchWithCount(arr, 7);\n        System.out.println(\"Index: \" + result[0] + \", Comparisons: \" + result[1]);\n        System.out.println(\"All indices of 1: \" + so.findAll(arr, 1));\n        System.out.println(\"Count of 1: \" + so.countOccurrences(arr, 1));\n    }\n}",
+      "instructions": [
+        "searchWithCount(arr, target): iterate arr; increment comparisons each step; when arr[i]==target return {i, comparisons}; after loop return {-1, comparisons}",
+        "findAll(arr, target): iterate all elements, add index to list when arr[i]==target",
+        "countOccurrences uses findAll — do not modify it",
+        "Array {3,1,4,1,5,9,2,6,1}: searching for 4 finds it at index 2 with 3 comparisons",
+        "Searching for 7 (not in array) requires 9 comparisons"
+      ],
+      "hint": "searchWithCount: int comparisons=0; for(int i=0;i<arr.length;i++){ comparisons++; if(arr[i]==target) return new int[]{i,comparisons}; } return new int[]{-1,comparisons};",
+      "expectedOutput": "Index: 2, Comparisons: 3\nIndex: -1, Comparisons: 9\nAll indices of 1: [1, 3, 8]\nCount of 1: 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 132,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Array Traversal Patterns",
+    "description": {
+      "task": "Implement a TraversalPatterns class with three traversal methods: forward (left-to-right), backward (right-to-left), and alternating (first from ends moving inward). Each method returns the elements in the visiting order as an int array.",
+      "language": "java",
+      "starterCode": "public class TraversalPatterns {\n\n    public int[] forward(int[] arr) {\n        // Return elements in order arr[0], arr[1], ..., arr[n-1]\n        int[] result = new int[arr.length];\n        for (int i = 0; i < arr.length; i++) result[i] = arr[i];\n        return result;\n    }\n\n    public int[] backward(int[] arr) {\n        // TODO: return elements in reverse order arr[n-1], ..., arr[0]\n        return new int[0];\n    }\n\n    public int[] alternating(int[] arr) {\n        // TODO: visit arr[0], arr[n-1], arr[1], arr[n-2], ...\n        // Use two pointers left=0, right=n-1 moving inward\n        return new int[0];\n    }\n\n    private String arrayToStr(int[] arr) {\n        StringBuilder sb = new StringBuilder(\"[\");\n        for (int i = 0; i < arr.length; i++) {\n            if (i > 0) sb.append(\", \");\n            sb.append(arr[i]);\n        }\n        return sb.append(\"]\").toString();\n    }\n\n    public static void main(String[] args) {\n        TraversalPatterns tp = new TraversalPatterns();\n        int[] arr = {1, 2, 3, 4, 5};\n        System.out.println(\"Forward:     \" + tp.arrayToStr(tp.forward(arr)));\n        System.out.println(\"Backward:    \" + tp.arrayToStr(tp.backward(arr)));\n        System.out.println(\"Alternating: \" + tp.arrayToStr(tp.alternating(arr)));\n    }\n}",
+      "instructions": [
+        "backward(arr): create result[n], fill from index n-1 down to 0 reading from arr left-to-right (or equivalently, read arr right-to-left into result left-to-right)",
+        "alternating(arr): use left=0, right=arr.length-1, and a result index k; while left<=right, add arr[left++] then (if left<=right) add arr[right--] to result",
+        "All return arrays must have length == arr.length",
+        "forward() is already implemented as a reference for backward()",
+        "alternating([1,2,3,4,5]) → [1,5,2,4,3]"
+      ],
+      "hint": "backward: for(int i=arr.length-1;i>=0;i--) result[arr.length-1-i]=arr[i]; alternating: int k=0,l=0,r=arr.length-1; while(l<=r){result[k++]=arr[l++]; if(l<=r)result[k++]=arr[r--];}",
+      "expectedOutput": "Forward:     [1, 2, 3, 4, 5]\nBackward:    [5, 4, 3, 2, 1]\nAlternating: [1, 5, 2, 4, 3]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 132,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Identify Layers in a Layered Architecture",
+    "description": {
+      "task": "Write a Java program that simulates a simple 3-layer architecture (Presentation, Business Logic, Data Access). Create three separate classes representing each layer and demonstrate a request flowing through them.",
+      "language": "java",
+      "starterCode": "// Presentation Layer\npublic class UserController {\n    // TODO: Use BusinessService to handle requests\n}\n\n// Business Layer\npublic class BusinessService {\n    // TODO: Use DataRepository for data operations\n}\n\n// Data Access Layer\npublic class DataRepository {\n    // TODO: Simulate data retrieval\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Demonstrate layer interaction\n    }\n}",
+      "instructions": [
+        "Create a DataRepository class with a method findUserById(int id) that returns a hardcoded user name string.",
+        "Create a BusinessService class that uses DataRepository to get user data and returns a formatted message.",
+        "Create a UserController class that uses BusinessService and prints the result.",
+        "In Main, demonstrate a request: UserController -> BusinessService -> DataRepository."
+      ],
+      "hint": "Each layer should only communicate with the layer directly below or above it. This enforces separation of concerns.",
+      "expectedOutput": "User found: John Doe (ID: 1)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 78,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Implement MVC Pattern",
+    "description": {
+      "task": "Implement a simple MVC (Model-View-Controller) pattern in Java for a Student management scenario. The Model holds data, the View displays it, and the Controller mediates.",
+      "language": "java",
+      "starterCode": "// Model\npublic class Student {\n    private int id;\n    private String name;\n    private double grade;\n    // TODO: Add constructor, getters, setters\n}\n\n// View\npublic class StudentView {\n    // TODO: Method to print student details\n}\n\n// Controller\npublic class StudentController {\n    private Student model;\n    private StudentView view;\n    // TODO: Constructor and update/display methods\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Create and use MVC components\n    }\n}",
+      "instructions": [
+        "Complete the Student model with id, name, and grade fields plus getters and setters.",
+        "Implement StudentView with a printStudentDetails(Student s) method.",
+        "Implement StudentController with methods to get/set student name and grade, and to update the view.",
+        "In Main, create a student, display them, update a field, and display again."
+      ],
+      "hint": "The Controller never directly manipulates the View fields; it calls View methods. The View never modifies the Model directly.",
+      "expectedOutput": "Student: Alice | Grade: 90.0\nUpdated Student: Alice | Grade: 95.0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 78,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Separation of Concerns Demo",
+    "description": {
+      "task": "Refactor a poorly written monolithic Java class into separate classes that follow the Separation of Concerns principle. The original class mixes UI, business logic, and data access.",
+      "language": "java",
+      "context": "Separation of Concerns (SoC) is a design principle where each module/class has responsibility over a single part of the program's functionality.",
+      "starterCode": "// BAD: Everything in one class\npublic class OrderMonolith {\n    public void processOrder(int orderId) {\n        // Data retrieval mixed with business logic mixed with display\n        System.out.println(\"Fetching order \" + orderId + \" from database\");\n        double total = 100.0 * 1.1; // tax calculation\n        System.out.println(\"Order total with tax: \" + total);\n        System.out.println(\"Displaying receipt for order \" + orderId);\n    }\n}\n\n// TODO: Refactor into OrderRepository, OrderService, OrderView",
+      "instructions": [
+        "Create OrderRepository with a method getOrderAmount(int id) returning a double.",
+        "Create OrderService with a method calculateTotal(double amount) that adds 10% tax.",
+        "Create OrderView with a method displayReceipt(int orderId, double total) that prints the receipt.",
+        "Create a refactored OrderProcessor class that coordinates the three classes.",
+        "Output must match the expected output exactly."
+      ],
+      "hint": "Each class should do ONE thing: repository fetches, service computes, view displays.",
+      "expectedOutput": "Fetching order 42 from database\nOrder total with tax: 110.0\nDisplaying receipt for order 42"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 22,
+    "subtopicId": 78,
+    "allowedSubmissionType": "TEXT"
+  }
+]

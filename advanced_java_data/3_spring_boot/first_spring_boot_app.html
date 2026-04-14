@@ -1,0 +1,975 @@
+<h1>🚀 First Spring Boot Application</h1>
+
+<h2>🎯 What We'll Build</h2>
+<p>We'll create a complete <strong>Spring Boot web application</strong> from scratch - a simple <strong>Book Management API</strong> that demonstrates all core Spring Boot concepts in action.</p>
+
+<div class="project-overview">
+    <div class="analogy-card">
+        <h3>🏗️ Building a House Analogy</h3>
+        <p>Creating a Spring Boot application is like <strong>building a house</strong>:</p>
+        <ul>
+            <li>🏠 <strong>Foundation:</strong> Spring Boot Starter Dependencies</li>
+            <li>🏗️ <strong>Framework:</strong> Main Application Class</li>
+            <li>📦 <strong>Rooms:</strong> Controllers, Services, Models</li>
+            <li>🚪 <strong>Entrances:</strong> REST Endpoints</li>
+            <li>⚙️ <strong>Utilities:</strong> Configuration & Properties</li>
+        </ul>
+        <p><em>Spring Boot provides the blueprint and tools!</em></p>
+    </div>
+</div>
+
+<h2>🎯 Learning Objectives</h2>
+<div class="objectives-grid">
+    <div class="objective">✅ Set up a Spring Boot project from scratch</div>
+    <div class="objective">✅ Understand project structure and key files</div>
+    <div class="objective">✅ Create REST API endpoints</div>
+    <div class="objective">✅ Implement business logic with Services</div>
+    <div class="objective">✅ Handle data with Models and DTOs</div>
+    <div class="objective">✅ Configure and run the application</div>
+</div>
+
+<h2>🏁 Step 1: Project Setup</h2>
+
+<h3>📋 Using Spring Initializr</h3>
+<div class="setup-option">
+    <h4>🌐 Web Interface (start.spring.io)</h4>
+    <div class="setup-details">
+        <p><strong>Project Settings:</strong></p>
+        <ul>
+            <li>🔧 <strong>Project:</strong> Maven Project</li>
+            <li>☕ <strong>Language:</strong> Java</li>
+            <li>🌱 <strong>Spring Boot:</strong> 3.1.x (latest stable)</li>
+            <li>📦 <strong>Group:</strong> com.example</li>
+            <li>🏷️ <strong>Artifact:</strong> book-management</li>
+            <li>📝 <strong>Name:</strong> Book Management API</li>
+            <li>📄 <strong>Description:</strong> Spring Boot Book Management System</li>
+            <li>📁 <strong>Package name:</strong> com.example.bookmanagement</li>
+            <li>☕ <strong>Packaging:</strong> Jar</li>
+            <li>🔢 <strong>Java:</strong> 17</li>
+        </ul>
+        
+        <p><strong>Dependencies to Add:</strong></p>
+        <ul>
+            <li>🌐 <strong>Spring Web</strong> - For REST APIs</li>
+            <li>🛠️ <strong>Spring Boot DevTools</strong> - For development</li>
+            <li>🧪 <strong>Spring Boot Starter Test</strong> - For testing</li>
+        </ul>
+    </div>
+</div>
+
+<h3>📁 Generated Project Structure</h3>
+<div class="project-structure">
+    <pre>
+book-management/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/example/bookmanagement/
+│   │   │       └── BookManagementApplication.java
+│   │   └── resources/
+│   │       ├── static/
+│   │       ├── templates/
+│   │       └── application.properties
+│   └── test/
+│       └── java/
+│           └── com/example/bookmanagement/
+│               └── BookManagementApplicationTests.java
+├── target/                    # Build output directory
+├── mvnw                      # Maven wrapper (Unix)
+├── mvnw.cmd                  # Maven wrapper (Windows)
+├── pom.xml                   # Project dependencies
+└── README.md
+    </pre>
+</div>
+
+<h2>🔧 Step 2: Understanding Key Files</h2>
+
+<h3>📄 pom.xml (Project Dependencies)</h3>
+<div class="key-file">
+    <div class="code-example">
+        <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         https://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    
+    &lt;!-- Spring Boot Parent - provides dependency management --&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;3.1.5&lt;/version&gt;
+        &lt;relativePath/&gt;
+    &lt;/parent&gt;
+    
+    &lt;!-- Project Information --&gt;
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;artifactId&gt;book-management&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;book-management&lt;/name&gt;
+    &lt;description&gt;Spring Boot Book Management System&lt;/description&gt;
+    
+    &lt;properties&gt;
+        &lt;java.version&gt;17&lt;/java.version&gt;
+    &lt;/properties&gt;
+    
+    &lt;dependencies&gt;
+        &lt;!-- Spring Boot Web Starter --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        
+        &lt;!-- Development Tools --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+            &lt;scope&gt;runtime&lt;/scope&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+        
+        &lt;!-- Testing --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;!-- Spring Boot Maven Plugin --&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+    
+&lt;/project&gt;
+        </pre>
+    </div>
+</div>
+
+<h3>📄 Main Application Class</h3>
+<div class="key-file">
+    <div class="code-example">
+        <pre>
+package com.example.bookmanagement;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * Main entry point for the Spring Boot application
+ * 
+ * @SpringBootApplication is equivalent to:
+ * - @Configuration: Indicates this is a configuration class
+ * - @EnableAutoConfiguration: Enables Spring Boot's auto-configuration
+ * - @ComponentScan: Enables component scanning for this package and sub-packages
+ */
+@SpringBootApplication
+public class BookManagementApplication {
+
+    public static void main(String[] args) {
+        // Start the Spring Boot application
+        SpringApplication.run(BookManagementApplication.class, args);
+        System.out.println("🚀 Book Management API is running!");
+        System.out.println("📚 Access API at: http://localhost:8080/api/books");
+    }
+}
+        </pre>
+    </div>
+</div>
+
+<h2>📚 Step 3: Create the Data Model</h2>
+
+<h3>📖 Book Entity Class</h3>
+<div class="model-creation">
+    <p><strong>File:</strong> src/main/java/com/example/bookmanagement/model/Book.java</p>
+    <div class="code-example">
+        <pre>
+package com.example.bookmanagement.model;
+
+import java.time.LocalDate;
+
+/**
+ * Book entity representing a book in our system
+ * This is a POJO (Plain Old Java Object) that represents our data model
+ */
+public class Book {
+    
+    // Primary fields
+    private Long id;
+    private String title;
+    private String author;
+    private String isbn;
+    private LocalDate publishDate;
+    private Double price;
+    private Integer pages;
+    private String genre;
+    private String description;
+    private Boolean available;
+    
+    // Default constructor (required for JSON serialization)
+    public Book() {}
+    
+    // Parameterized constructor for easy object creation
+    public Book(Long id, String title, String author, String isbn, 
+                LocalDate publishDate, Double price, Integer pages, 
+                String genre, String description, Boolean available) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+        this.publishDate = publishDate;
+        this.price = price;
+        this.pages = pages;
+        this.genre = genre;
+        this.description = description;
+        this.available = available;
+    }
+    
+    // Getters and Setters (required for JSON serialization/deserialization)
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
+    
+    public String getIsbn() { return isbn; }
+    public void setIsbn(String isbn) { this.isbn = isbn; }
+    
+    public LocalDate getPublishDate() { return publishDate; }
+    public void setPublishDate(LocalDate publishDate) { this.publishDate = publishDate; }
+    
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
+    
+    public Integer getPages() { return pages; }
+    public void setPages(Integer pages) { this.pages = pages; }
+    
+    public String getGenre() { return genre; }
+    public void setGenre(String genre) { this.genre = genre; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    
+    public Boolean getAvailable() { return available; }
+    public void setAvailable(Boolean available) { this.available = available; }
+    
+    // toString method for debugging
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", price=" + price +
+                ", available=" + available +
+                '}';
+    }
+}
+        </pre>
+    </div>
+</div>
+
+<h2>🏪 Step 4: Create the Service Layer</h2>
+
+<h3>📋 BookService Class (Business Logic)</h3>
+<div class="service-creation">
+    <p><strong>File:</strong> src/main/java/com/example/bookmanagement/service/BookService.java</p>
+    <div class="code-example">
+        <pre>
+package com.example.bookmanagement.service;
+
+import com.example.bookmanagement.model.Book;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Service layer for Book operations
+ * Contains business logic and data manipulation
+ * 
+ * @Service annotation marks this as a Spring service component
+ * Spring will automatically detect and register this as a bean
+ */
+@Service
+public class BookService {
+    
+    // In-memory storage for demonstration (in real apps, this would be a database)
+    private List&lt;Book&gt; books = new ArrayList&lt;&gt;();
+    private Long nextId = 1L;
+    
+    // Constructor to initialize some sample data
+    public BookService() {
+        initializeSampleData();
+    }
+    
+    /**
+     * Get all books
+     * @return List of all books
+     */
+    public List&lt;Book&gt; getAllBooks() {
+        return new ArrayList&lt;&gt;(books); // Return a copy to prevent external modification
+    }
+    
+    /**
+     * Get a book by ID
+     * @param id The book ID
+     * @return Optional containing the book if found, empty otherwise
+     */
+    public Optional&lt;Book&gt; getBookById(Long id) {
+        return books.stream()
+                   .filter(book -&gt; book.getId().equals(id))
+                   .findFirst();
+    }
+    
+    /**
+     * Create a new book
+     * @param book The book to create
+     * @return The created book with assigned ID
+     */
+    public Book createBook(Book book) {
+        book.setId(nextId++);
+        books.add(book);
+        System.out.println("📚 Created new book: " + book.getTitle());
+        return book;
+    }
+    
+    /**
+     * Update an existing book
+     * @param id The book ID
+     * @param updatedBook The updated book data
+     * @return Optional containing the updated book if successful
+     */
+    public Optional&lt;Book&gt; updateBook(Long id, Book updatedBook) {
+        for (int i = 0; i &lt; books.size(); i++) {
+            if (books.get(i).getId().equals(id)) {
+                updatedBook.setId(id);
+                books.set(i, updatedBook);
+                System.out.println("📝 Updated book: " + updatedBook.getTitle());
+                return Optional.of(updatedBook);
+            }
+        }
+        return Optional.empty();
+    }
+    
+    /**
+     * Delete a book by ID
+     * @param id The book ID
+     * @return true if deleted successfully, false otherwise
+     */
+    public boolean deleteBook(Long id) {
+        boolean removed = books.removeIf(book -&gt; book.getId().equals(id));
+        if (removed) {
+            System.out.println("🗑️ Deleted book with ID: " + id);
+        }
+        return removed;
+    }
+    
+    /**
+     * Search books by title or author
+     * @param query Search query
+     * @return List of matching books
+     */
+    public List&lt;Book&gt; searchBooks(String query) {
+        String lowerQuery = query.toLowerCase();
+        return books.stream()
+                   .filter(book -&gt; 
+                       book.getTitle().toLowerCase().contains(lowerQuery) ||
+                       book.getAuthor().toLowerCase().contains(lowerQuery))
+                   .toList();
+    }
+    
+    /**
+     * Get books by availability
+     * @param available Whether to get available or unavailable books
+     * @return List of books matching availability status
+     */
+    public List&lt;Book&gt; getBooksByAvailability(boolean available) {
+        return books.stream()
+                   .filter(book -&gt; book.getAvailable() == available)
+                   .toList();
+    }
+    
+    /**
+     * Initialize some sample data for demonstration
+     */
+    private void initializeSampleData() {
+        books.add(new Book(nextId++, "The Great Gatsby", "F. Scott Fitzgerald", 
+                  "978-0-7432-7356-5", LocalDate.of(1925, 4, 10), 
+                  12.99, 180, "Classic Fiction", 
+                  "A classic American novel about the Jazz Age", true));
+        
+        books.add(new Book(nextId++, "To Kill a Mockingbird", "Harper Lee", 
+                  "978-0-06-112008-4", LocalDate.of(1960, 7, 11), 
+                  14.99, 281, "Literary Fiction", 
+                  "A gripping tale of racial injustice and childhood innocence", true));
+        
+        books.add(new Book(nextId++, "1984", "George Orwell", 
+                  "978-0-452-28423-4", LocalDate.of(1949, 6, 8), 
+                  13.99, 328, "Dystopian Fiction", 
+                  "A dystopian social science fiction novel", false));
+        
+        System.out.println("📚 Initialized " + books.size() + " sample books");
+    }
+}
+        </pre>
+    </div>
+</div>
+
+<h2>🌐 Step 5: Create the REST Controller</h2>
+
+<h3>📡 BookController Class (REST API)</h3>
+<div class="controller-creation">
+    <p><strong>File:</strong> src/main/java/com/example/bookmanagement/controller/BookController.java</p>
+    <div class="code-example">
+        <pre>
+package com.example.bookmanagement.controller;
+
+import com.example.bookmanagement.model.Book;
+import com.example.bookmanagement.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * REST Controller for Book Management API
+ * Handles HTTP requests and responses
+ * 
+ * @RestController combines @Controller and @ResponseBody
+ * @RequestMapping provides the base URL path for all endpoints
+ */
+@RestController
+@RequestMapping("/api/books")
+@CrossOrigin(origins = "*") // Allow cross-origin requests (for frontend development)
+public class BookController {
+    
+    // Inject the BookService dependency
+    private final BookService bookService;
+    
+    // Constructor injection (recommended over @Autowired on field)
+    @Autowired
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
+    
+    /**
+     * GET /api/books - Get all books
+     * @return List of all books
+     */
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Book&gt;&gt; getAllBooks() {
+        List&lt;Book&gt; books = bookService.getAllBooks();
+        return ResponseEntity.ok(books);
+    }
+    
+    /**
+     * GET /api/books/{id} - Get a specific book by ID
+     * @param id Book ID from URL path
+     * @return ResponseEntity with book data or 404 if not found
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;Book&gt; getBookById(@PathVariable Long id) {
+        Optional&lt;Book&gt; book = bookService.getBookById(id);
+        
+        if (book.isPresent()) {
+            return ResponseEntity.ok(book.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    /**
+     * POST /api/books - Create a new book
+     * @param book Book data from request body (JSON)
+     * @return ResponseEntity with created book data
+     */
+    @PostMapping
+    public ResponseEntity&lt;Book&gt; createBook(@RequestBody Book book) {
+        try {
+            Book createdBook = bookService.createBook(book);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
+    /**
+     * PUT /api/books/{id} - Update an existing book
+     * @param id Book ID from URL path
+     * @param book Updated book data from request body
+     * @return ResponseEntity with updated book data or 404 if not found
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity&lt;Book&gt; updateBook(@PathVariable Long id, @RequestBody Book book) {
+        Optional&lt;Book&gt; updatedBook = bookService.updateBook(id, book);
+        
+        if (updatedBook.isPresent()) {
+            return ResponseEntity.ok(updatedBook.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    /**
+     * DELETE /api/books/{id} - Delete a book
+     * @param id Book ID from URL path
+     * @return ResponseEntity with appropriate status
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity&lt;Void&gt; deleteBook(@PathVariable Long id) {
+        boolean deleted = bookService.deleteBook(id);
+        
+        if (deleted) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+    }
+    
+    /**
+     * GET /api/books/search?q={query} - Search books by title or author
+     * @param query Search query parameter
+     * @return List of matching books
+     */
+    @GetMapping("/search")
+    public ResponseEntity&lt;List&lt;Book&gt;&gt; searchBooks(@RequestParam("q") String query) {
+        List&lt;Book&gt; books = bookService.searchBooks(query);
+        return ResponseEntity.ok(books);
+    }
+    
+    /**
+     * GET /api/books/available - Get available books only
+     * @return List of available books
+     */
+    @GetMapping("/available")
+    public ResponseEntity&lt;List&lt;Book&gt;&gt; getAvailableBooks() {
+        List&lt;Book&gt; books = bookService.getBooksByAvailability(true);
+        return ResponseEntity.ok(books);
+    }
+    
+    /**
+     * GET /api/books/unavailable - Get unavailable books only
+     * @return List of unavailable books
+     */
+    @GetMapping("/unavailable")
+    public ResponseEntity&lt;List&lt;Book&gt;&gt; getUnavailableBooks() {
+        List&lt;Book&gt; books = bookService.getBooksByAvailability(false);
+        return ResponseEntity.ok(books);
+    }
+    
+    /**
+     * GET /api/books/health - Health check endpoint
+     * @return Simple status message
+     */
+    @GetMapping("/health")
+    public ResponseEntity&lt;String&gt; healthCheck() {
+        return ResponseEntity.ok("📚 Book Management API is running smoothly!");
+    }
+}
+        </pre>
+    </div>
+</div>
+
+<h2>⚙️ Step 6: Configure Application Properties</h2>
+
+<h3>📄 application.properties</h3>
+<div class="config-file">
+    <p><strong>File:</strong> src/main/resources/application.properties</p>
+    <div class="code-example">
+        <pre>
+# Application Information
+spring.application.name=Book Management API
+server.port=8080
+
+# Server Configuration
+server.servlet.context-path=/
+
+# Logging Configuration
+logging.level.com.example.bookmanagement=INFO
+logging.level.org.springframework.web=DEBUG
+logging.pattern.console=%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+
+# Development Configuration
+spring.devtools.restart.enabled=true
+spring.devtools.livereload.enabled=true
+
+# JSON Configuration
+spring.jackson.serialization.indent-output=true
+spring.jackson.serialization.write-dates-as-timestamps=false
+
+# Custom Application Properties
+app.name=Book Management System
+app.version=1.0.0
+app.description=A Spring Boot application for managing books
+        </pre>
+    </div>
+</div>
+
+<h2>🏃‍♂️ Step 7: Running the Application</h2>
+
+<div class="running-methods">
+    <div class="run-method">
+        <h3>1️⃣ Using Maven</h3>
+        <div class="code-example">
+            <pre>
+# Navigate to project directory
+cd book-management
+
+# Run using Maven wrapper
+./mvnw spring-boot:run
+
+# Or using system Maven
+mvn spring-boot:run
+            </pre>
+        </div>
+    </div>
+
+    <div class="run-method">
+        <h3>2️⃣ Using Java JAR</h3>
+        <div class="code-example">
+            <pre>
+# Build the project first
+./mvnw clean package
+
+# Run the generated JAR
+java -jar target/book-management-0.0.1-SNAPSHOT.jar
+            </pre>
+        </div>
+    </div>
+
+    <div class="run-method">
+        <h3>3️⃣ Using IDE</h3>
+        <div class="code-example">
+            <p>🖱️ <strong>Right-click</strong> on <code>BookManagementApplication.java</code></p>
+            <p>▶️ Select <strong>"Run BookManagementApplication"</strong></p>
+        </div>
+    </div>
+</div>
+
+<h3>🎉 Success Indicators</h3>
+<div class="success-output">
+    <div class="code-example">
+        <pre>
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.5)
+
+2024-01-15T10:30:25.123  INFO --- [main] c.e.b.BookManagementApplication : Starting BookManagementApplication
+2024-01-15T10:30:25.456  INFO --- [main] c.e.b.BookManagementApplication : No active profile set, falling back to 1 default profile: "default"
+2024-01-15T10:30:26.789  INFO --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-01-15T10:30:27.123  INFO --- [main] c.e.b.BookManagementApplication : Started BookManagementApplication in 2.456 seconds
+📚 Initialized 3 sample books
+🚀 Book Management API is running!
+📚 Access API at: http://localhost:8080/api/books
+        </pre>
+    </div>
+</div>
+
+<h2>🧪 Step 8: Testing the API</h2>
+
+<h3>🌐 Using Browser (GET Requests)</h3>
+<div class="testing-section">
+    <div class="test-case">
+        <h4>📊 Get All Books</h4>
+        <p><strong>URL:</strong> <code>http://localhost:8080/api/books</code></p>
+        <p><strong>Expected Response:</strong></p>
+        <div class="code-example">
+            <pre>
+[
+  {
+    "id": 1,
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "isbn": "978-0-7432-7356-5",
+    "publishDate": "1925-04-10",
+    "price": 12.99,
+    "pages": 180,
+    "genre": "Classic Fiction",
+    "description": "A classic American novel about the Jazz Age",
+    "available": true
+  },
+  {
+    "id": 2,
+    "title": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "isbn": "978-0-06-112008-4",
+    "publishDate": "1960-07-11",
+    "price": 14.99,
+    "pages": 281,
+    "genre": "Literary Fiction",
+    "description": "A gripping tale of racial injustice and childhood innocence",
+    "available": true
+  }
+]
+            </pre>
+        </div>
+    </div>
+
+    <div class="test-case">
+        <h4>🔍 Search Books</h4>
+        <p><strong>URL:</strong> <code>http://localhost:8080/api/books/search?q=gatsby</code></p>
+        <p><strong>Expected:</strong> Returns books matching "gatsby" in title or author</p>
+    </div>
+
+    <div class="test-case">
+        <h4>✅ Health Check</h4>
+        <p><strong>URL:</strong> <code>http://localhost:8080/api/books/health</code></p>
+        <p><strong>Expected:</strong> "📚 Book Management API is running smoothly!"</p>
+    </div>
+</div>
+
+<h3>📮 Using Postman/cURL (All HTTP Methods)</h3>
+<div class="testing-section">
+    <div class="test-case">
+        <h4>📚 Create a New Book (POST)</h4>
+        <div class="code-example">
+            <pre>
+# cURL Example
+curl -X POST http://localhost:8080/api/books \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "isbn": "978-0-13-235088-4",
+    "publishDate": "2008-08-01",
+    "price": 45.99,
+    "pages": 464,
+    "genre": "Programming",
+    "description": "A handbook of agile software craftsmanship",
+    "available": true
+  }'
+            </pre>
+        </div>
+    </div>
+
+    <div class="test-case">
+        <h4>📝 Update a Book (PUT)</h4>
+        <div class="code-example">
+            <pre>
+# Update book with ID 1
+curl -X PUT http://localhost:8080/api/books/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "The Great Gatsby - Second Edition",
+    "author": "F. Scott Fitzgerald",
+    "isbn": "978-0-7432-7356-5",
+    "publishDate": "1925-04-10",
+    "price": 15.99,
+    "pages": 180,
+    "genre": "Classic Fiction",
+    "description": "A classic American novel about the Jazz Age - Updated Edition",
+    "available": true
+  }'
+            </pre>
+        </div>
+    </div>
+
+    <div class="test-case">
+        <h4>🗑️ Delete a Book (DELETE)</h4>
+        <div class="code-example">
+            <pre>
+# Delete book with ID 3
+curl -X DELETE http://localhost:8080/api/books/3
+            </pre>
+        </div>
+    </div>
+</div>
+
+<h2>📊 Step 9: Understanding HTTP Status Codes</h2>
+
+<div class="status-codes">
+    <div class="status-section">
+        <h3>✅ Success Codes</h3>
+        <ul>
+            <li><strong>200 OK:</strong> GET requests successful</li>
+            <li><strong>201 Created:</strong> POST request created new resource</li>
+            <li><strong>204 No Content:</strong> DELETE request successful</li>
+        </ul>
+    </div>
+    
+    <div class="status-section">
+        <h3>❌ Error Codes</h3>
+        <ul>
+            <li><strong>400 Bad Request:</strong> Invalid JSON or request data</li>
+            <li><strong>404 Not Found:</strong> Resource doesn't exist</li>
+            <li><strong>500 Internal Server Error:</strong> Server-side error</li>
+        </ul>
+    </div>
+</div>
+
+<h2>🔍 Step 10: Understanding Key Annotations</h2>
+
+<div class="annotations-guide">
+    <div class="annotation-card">
+        <h3>🌱 @SpringBootApplication</h3>
+        <p><strong>Purpose:</strong> Main application entry point</p>
+        <p><strong>Contains:</strong> @Configuration + @EnableAutoConfiguration + @ComponentScan</p>
+        <p><strong>Usage:</strong> Only on main class</p>
+    </div>
+
+    <div class="annotation-card">
+        <h3>🌐 @RestController</h3>
+        <p><strong>Purpose:</strong> Marks class as REST API controller</p>
+        <p><strong>Contains:</strong> @Controller + @ResponseBody</p>
+        <p><strong>Effects:</strong> Automatic JSON serialization</p>
+    </div>
+
+    <div class="annotation-card">
+        <h3>🛠️ @Service</h3>
+        <p><strong>Purpose:</strong> Marks class as business logic service</p>
+        <p><strong>Effects:</strong> Spring component scanning and registration</p>
+        <p><strong>Best Practice:</strong> Contains business logic, not web logic</p>
+    </div>
+
+    <div class="annotation-card">
+        <h3>🗺️ @RequestMapping</h3>
+        <p><strong>Purpose:</strong> Maps HTTP requests to methods</p>
+        <p><strong>Variants:</strong> @GetMapping, @PostMapping, @PutMapping, @DeleteMapping</p>
+        <p><strong>Parameters:</strong> path, method, headers, params</p>
+    </div>
+
+    <div class="annotation-card">
+        <h3>📨 @RequestBody</h3>
+        <p><strong>Purpose:</strong> Deserializes JSON to Java object</p>
+        <p><strong>Usage:</strong> POST/PUT method parameters</p>
+        <p><strong>Effect:</strong> Automatic JSON → Object conversion</p>
+    </div>
+
+    <div class="annotation-card">
+        <h3>🛣️ @PathVariable</h3>
+        <p><strong>Purpose:</strong> Extracts values from URL path</p>
+        <p><strong>Example:</strong> /api/books/{id} → @PathVariable Long id</p>
+        <p><strong>Usage:</strong> RESTful URL parameters</p>
+    </div>
+</div>
+
+<h2>🎯 Step 11: Project Structure Best Practices</h2>
+
+<div class="best-practices">
+    <h3>📁 Recommended Package Structure</h3>
+    <div class="code-example">
+        <pre>
+com.example.bookmanagement/
+├── BookManagementApplication.java    # Main application class
+├── controller/                       # REST controllers (web layer)
+│   ├── BookController.java
+│   └── AuthorController.java
+├── service/                          # Business logic (service layer)
+│   ├── BookService.java
+│   └── AuthorService.java
+├── model/                           # Data models/entities
+│   ├── Book.java
+│   └── Author.java
+├── repository/                      # Data access layer (future)
+│   ├── BookRepository.java
+│   └── AuthorRepository.java
+├── dto/                            # Data Transfer Objects
+│   ├── BookDTO.java
+│   └── CreateBookRequest.java
+├── config/                         # Configuration classes
+│   ├── WebConfig.java
+│   └── SecurityConfig.java
+└── exception/                      # Custom exceptions
+    ├── BookNotFoundException.java
+    └── GlobalExceptionHandler.java
+        </pre>
+    </div>
+</div>
+
+<h3>🎯 Layered Architecture Benefits</h3>
+<div class="benefits-grid">
+    <div class="benefit">
+        <h4>🌐 Controller Layer</h4>
+        <p>Handles HTTP requests, validation, and response formatting</p>
+    </div>
+    <div class="benefit">
+        <h4>🏪 Service Layer</h4>
+        <p>Contains business logic, orchestrates operations</p>
+    </div>
+    <div class="benefit">
+        <h4>📊 Model Layer</h4>
+        <p>Represents data structure and business entities</p>
+    </div>
+    <div class="benefit">
+        <h4>💾 Repository Layer</h4>
+        <p>Handles data persistence and database operations</p>
+    </div>
+</div>
+
+<h2>🚨 Common Issues and Solutions</h2>
+
+<div class="troubleshooting">
+    <div class="issue-card">
+        <h3>🔴 Port 8080 Already in Use</h3>
+        <p><strong>Error:</strong> "Port 8080 was already in use"</p>
+        <p><strong>Solution:</strong> Change port in application.properties:</p>
+        <div class="code-example">
+            <pre>server.port=8081</pre>
+        </div>
+    </div>
+
+    <div class="issue-card">
+        <h3>🔴 404 - API Not Found</h3>
+        <p><strong>Issue:</strong> Endpoints return 404</p>
+        <p><strong>Check:</strong> URL mapping and controller annotations</p>
+        <p><strong>Solution:</strong> Verify @RestController and @RequestMapping</p>
+    </div>
+
+    <div class="issue-card">
+        <h3>🔴 JSON Serialization Errors</h3>
+        <p><strong>Issue:</strong> Objects not converting to JSON</p>
+        <p><strong>Solution:</strong> Add getters/setters and default constructor</p>
+    </div>
+
+    <div class="issue-card">
+        <h3>🔴 Dependency Injection Fails</h3>
+        <p><strong>Issue:</strong> @Autowired not working</p>
+        <p><strong>Solution:</strong> Check @Service, @Component annotations and package scanning</p>
+    </div>
+</div>
+
+<div class="key-takeaway">
+    <h3>🎯 Key Takeaway</h3>
+    <p>You've built a complete <strong>Spring Boot REST API</strong>! This application demonstrates:</p>
+    <ul>
+        <li>🏗️ <strong>Layered Architecture:</strong> Controller → Service → Model separation</li>
+        <li>🌐 <strong>RESTful Design:</strong> HTTP methods and proper status codes</li>
+        <li>📦 <strong>Dependency Injection:</strong> Spring container managing components</li>
+        <li>⚙️ <strong>Auto-Configuration:</strong> Spring Boot handling setup automatically</li>
+        <li>🧪 <strong>Testing Ready:</strong> Endpoints ready for integration testing</li>
+    </ul>
+    
+    <p>💡 <strong>Next Steps:</strong> Add database integration, authentication, validation, and deploy to cloud!</p>
+</div>
+
+<h2>🛤️ What's Next?</h2>
+<p>With your first Spring Boot application complete, you're ready for:</p>
+<ul>
+    <li>💾 <strong>Database Integration:</strong> JPA, Hibernate, and real data persistence</li>
+    <li>🔒 <strong>Security:</strong> Authentication and authorization</li>
+    <li>✅ <strong>Validation:</strong> Input validation and error handling</li>
+    <li>🧪 <strong>Testing:</strong> Unit and integration testing</li>
+    <li>☁️ <strong>Deployment:</strong> Packaging and cloud deployment</li>
+    <li>📊 <strong>Monitoring:</strong> Actuator and application health</li>
+</ul>

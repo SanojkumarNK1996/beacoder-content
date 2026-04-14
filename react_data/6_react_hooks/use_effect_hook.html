@@ -1,0 +1,40 @@
+<h1>🔄 useEffect Hook</h1>
+<h2>🎯 What it does</h2>
+<p><code>useEffect</code> handles <strong>side effects</strong> — operations that interact with the outside world: API calls, subscriptions, timers, DOM manipulation.</p>
+<div class="code-example">
+  <pre>
+useEffect(() =&gt; {
+  // Side effect code here
+  return () =&gt; {
+    // Cleanup (called before next effect or unmount)
+  };
+}, [dependencies]);  // Re-runs when dependencies change
+  </pre>
+</div>
+<h2>📋 Common Patterns</h2>
+<div class="code-example">
+  <pre>
+// On mount only (empty deps):
+useEffect(() =&gt; {
+  fetchData();
+}, []);
+
+// On every render (no deps):
+useEffect(() =&gt; { document.title = 'Updated'; });
+
+// When a value changes:
+useEffect(() =&gt; {
+  fetchUserById(userId);
+}, [userId]);   // Re-runs when userId changes
+
+// Cleanup (subscriptions, timers):
+useEffect(() =&gt; {
+  const timer = setInterval(() =&gt; tick(), 1000);
+  return () =&gt; clearInterval(timer);  // Cleanup
+}, []);
+  </pre>
+</div>
+<h2>⚠️ Pitfall: Infinite Loop</h2>
+<p>If you update state inside useEffect without proper dependencies, you'll cause an infinite re-render loop. Always specify the dependency array.</p>
+<h2>🎯 Summary</h2>
+<p><code>useEffect</code> is the Swiss Army knife for side effects. The dependency array controls when it runs. Always return a cleanup function for subscriptions/timers.</p>

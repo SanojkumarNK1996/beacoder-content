@@ -1,0 +1,74 @@
+[
+  {
+    "title": "JSON Serialization",
+    "description": {
+      "task": "Implement a simple JSON serializer in Java that converts Java objects to JSON strings using reflection. Handle strings, numbers, booleans, lists, and nested objects.",
+      "language": "java",
+      "starterCode": "import java.lang.reflect.*;\nimport java.util.*;\n\npublic class JsonSerializer {\n    \n    public String serialize(Object obj) throws Exception {\n        if (obj == null) return \"null\";\n        if (obj instanceof String) return \"\\\"\" + obj + \"\\\"\";\n        if (obj instanceof Number || obj instanceof Boolean) return obj.toString();\n        if (obj instanceof List) {\n            return serializeList((List<?>) obj);\n        }\n        return serializeObject(obj);\n    }\n    \n    private String serializeList(List<?> list) throws Exception {\n        // TODO: Serialize as JSON array [item1, item2, ...]\n        return \"[]\";\n    }\n    \n    private String serializeObject(Object obj) throws Exception {\n        // TODO: Use reflection to get all fields and serialize as JSON object\n        // {\"fieldName\": value, ...}\n        return \"{}\";\n    }\n}\n\npublic class Address {\n    public String street;\n    public String city;\n    \n    public Address(String street, String city) {\n        this.street = street; this.city = city;\n    }\n}\n\npublic class Person {\n    public int id;\n    public String name;\n    public boolean active;\n    public List<String> skills;\n    \n    public Person(int id, String name, boolean active, List<String> skills) {\n        this.id = id; this.name = name; this.active = active; this.skills = skills;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        JsonSerializer serializer = new JsonSerializer();\n        \n        Person person = new Person(1, \"Alice\", true, Arrays.asList(\"Java\", \"Spring\"));\n        System.out.println(serializer.serialize(person));\n        \n        System.out.println(serializer.serialize(\"Hello World\"));\n        System.out.println(serializer.serialize(42));\n        System.out.println(serializer.serialize(Arrays.asList(1, 2, 3)));\n    }\n}",
+      "instructions": [
+        "Implement serializeList() by iterating items, calling serialize() on each, joining with ', ', and wrapping in '[' and ']'.",
+        "Implement serializeObject() by iterating getDeclaredFields(), calling serialize() on each field value, building 'fieldName: value' pairs, and wrapping in '{' and '}'.",
+        "Run Main as-is.",
+        "Output JSON should be valid for the 4 test cases."
+      ],
+      "hint": "Spring uses Jackson's ObjectMapper for JSON serialization. @RequestBody triggers deserialization; the return value of @RestController methods triggers serialization.",
+      "expectedOutput": "{\"id\": 1, \"name\": \"Alice\", \"active\": true, \"skills\": [\"Java\", \"Spring\"]}\n\"Hello World\"\n42\n[1, 2, 3]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 96,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "JSON Deserialization",
+    "description": {
+      "task": "Implement a simple JSON deserializer that parses a JSON string into a Java Map, then extracts typed values from it.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SimpleJsonParser {\n    \n    public Map<String, Object> parseObject(String json) {\n        // TODO: Parse simple flat JSON object (no nesting) into a Map\n        // Input: '{\"name\":\"Alice\",\"age\":30,\"active\":true}'\n        // Handles: string values (quoted), number values, boolean values\n        Map<String, Object> result = new LinkedHashMap<>();\n        // Strip curly braces\n        json = json.trim();\n        if (json.startsWith(\"{\")) json = json.substring(1, json.length() - 1);\n        \n        // TODO: Split by comma (outside quotes), then split each pair by ':'\n        // Parse value: if quoted -> String, if 'true'/'false' -> Boolean, else -> Integer\n        return result;\n    }\n    \n    public String getString(Map<String, Object> parsed, String key) {\n        Object val = parsed.get(key);\n        return val != null ? val.toString() : null;\n    }\n    \n    public int getInt(Map<String, Object> parsed, String key, int defaultValue) {\n        Object val = parsed.get(key);\n        if (val instanceof Integer) return (Integer) val;\n        if (val instanceof String) { try { return Integer.parseInt((String) val); } catch (Exception e) {} }\n        return defaultValue;\n    }\n    \n    public boolean getBoolean(Map<String, Object> parsed, String key) {\n        Object val = parsed.get(key);\n        return Boolean.TRUE.equals(val);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        SimpleJsonParser parser = new SimpleJsonParser();\n        \n        String json = \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30,\\\"active\\\":true}\";\n        Map<String, Object> parsed = parser.parseObject(json);\n        \n        System.out.println(\"Name: \" + parser.getString(parsed, \"name\"));\n        System.out.println(\"Age: \" + parser.getInt(parsed, \"age\", 0));\n        System.out.println(\"Active: \" + parser.getBoolean(parsed, \"active\"));\n        System.out.println(\"Missing: \" + parser.getString(parsed, \"email\"));\n    }\n}",
+      "instructions": [
+        "In parseObject(), after stripping braces, split remaining string by ',' to get pairs.",
+        "For each pair, split by first ':' to get key and value.",
+        "Strip quotes from key. For value: if starts with '\"', strip quotes -> String; if 'true'/'false' -> Boolean; otherwise -> Integer.parseInt().",
+        "Run Main as-is."
+      ],
+      "hint": "Spring's @RequestBody uses Jackson to deserialize JSON request bodies into Java objects automatically. Custom deserializers can be registered with ObjectMapper for complex types.",
+      "expectedOutput": "Name: Alice\nAge: 30\nActive: true\nMissing: null"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 96,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Request Body Validation",
+    "description": {
+      "task": "Build a request body validator that validates incoming JSON data before processing. Implement field-level validation with required fields, type checks, and constraint validation.",
+      "language": "java",
+      "context": "Spring Boot uses Bean Validation (JSR-380) with @Valid and @NotNull, @Size, @Min annotations to validate @RequestBody. This prevents invalid data from reaching the service layer.",
+      "starterCode": "import java.util.*;\n\npublic class ValidationResult {\n    private List<String> errors = new ArrayList<>();\n    \n    public void addError(String field, String message) {\n        errors.add(field + \": \" + message);\n    }\n    \n    public boolean isValid() { return errors.isEmpty(); }\n    public List<String> getErrors() { return errors; }\n}\n\npublic class CreateUserRequest {\n    private String name;\n    private String email;\n    private int age;\n    private String password;\n    \n    public CreateUserRequest(String name, String email, int age, String password) {\n        this.name = name; this.email = email; this.age = age; this.password = password;\n    }\n    \n    public String getName() { return name; }\n    public String getEmail() { return email; }\n    public int getAge() { return age; }\n    public String getPassword() { return password; }\n}\n\npublic class UserRequestValidator {\n    public ValidationResult validate(CreateUserRequest request) {\n        ValidationResult result = new ValidationResult();\n        \n        // TODO: Validate name: not null, not blank, min 2 chars, max 50 chars\n        // TODO: Validate email: not null, contains '@' and '.'\n        // TODO: Validate age: must be >= 18 and <= 120\n        // TODO: Validate password: not null, min 8 chars\n        \n        return result;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        UserRequestValidator validator = new UserRequestValidator();\n        \n        CreateUserRequest valid = new CreateUserRequest(\"Alice Smith\", \"alice@example.com\", 25, \"securePass123\");\n        CreateUserRequest invalid = new CreateUserRequest(\"\", \"not-an-email\", 15, \"short\");\n        \n        ValidationResult r1 = validator.validate(valid);\n        System.out.println(\"Valid request: \" + r1.isValid());\n        \n        ValidationResult r2 = validator.validate(invalid);\n        System.out.println(\"Invalid request errors:\");\n        r2.getErrors().forEach(e -> System.out.println(\"  - \" + e));\n    }\n}",
+      "instructions": [
+        "Implement validate() with all 4 field validations using if-checks and result.addError().",
+        "name: not null/blank, length 2-50.",
+        "email: not null, must contain '@' and '.'.",
+        "age: >= 18 and <= 120.",
+        "password: not null, length >= 8.",
+        "Run Main as-is."
+      ],
+      "hint": "Spring Boot + Jakarta Validation: annotate fields with @NotBlank, @Email, @Min(18), @Size(min=8). Then add @Valid to @RequestBody in controller. Spring rejects invalid requests with 400.",
+      "expectedOutput": "Valid request: true\nInvalid request errors:\n  - name: must not be blank\n  - email: must be a valid email address\n  - age: must be at least 18\n  - password: must be at least 8 characters"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 26,
+    "subtopicId": 96,
+    "allowedSubmissionType": "TEXT"
+  }
+]

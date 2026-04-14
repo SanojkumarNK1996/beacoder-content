@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Custom Hash Functions",
+    "description": {
+      "task": "Implement and compare several hash functions for strings: (1) sum of ASCII values (poor), (2) polynomial rolling hash (good), (3) Java's built-in hashCode (reference). Show distribution quality by counting collisions.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class HashFunctions {\n\n    public int sumHash(String s, int m) {\n        // TODO: return (sum of char values) % m\n        int sum = 0;\n        return sum % m;\n    }\n\n    public int polynomialHash(String s, int m) {\n        // polynomial rolling hash: h = (h*31 + char) % m for each char\n        long h = 0;\n        // TODO: for each char c in s: h = (h * 31 + c) % m\n        return (int) h;\n    }\n\n    public void analyzeDistribution(String[] words, int m) {\n        int[] sumBuckets  = new int[m];\n        int[] polyBuckets = new int[m];\n        for (String w : words) {\n            sumBuckets[sumHash(w, m)]++;\n            polyBuckets[polynomialHash(w, m)]++;\n        }\n        long sumCollisions  = Arrays.stream(sumBuckets).filter(x -> x > 1).map(x -> x-1).sum();\n        long polyCollisions = Arrays.stream(polyBuckets).filter(x -> x > 1).map(x -> x-1).sum();\n        System.out.println(\"Sum hash collisions:  \" + sumCollisions);\n        System.out.println(\"Poly hash collisions: \" + polyCollisions);\n        System.out.println(\"Poly is better: \" + (polyCollisions < sumCollisions));\n    }\n\n    public static void main(String[] args) {\n        HashFunctions hf = new HashFunctions();\n        String[] words = {\"cat\",\"act\",\"tac\",\"dog\",\"god\",\"god\",\"log\",\"fog\",\"bog\"};\n        System.out.println(\"sumHash('cat',10): \"  + hf.sumHash(\"cat\", 10));\n        System.out.println(\"polyHash('cat',10): \" + hf.polynomialHash(\"cat\", 10));\n        System.out.println();\n        hf.analyzeDistribution(words, 10);\n    }\n}",
+      "instructions": [
+        "sumHash: for(char c:s.toCharArray()) sum+=c; return sum%m;",
+        "polynomialHash: for(char c:s.toCharArray()) h=(h*31+c)%m;",
+        "'cat','act','tac' all have ASCII sum 99+97+116=312 → same sum hash = 2; polyHash distinguishes them",
+        "Sum hash has many anagram collisions; polynomial hash is much better",
+        "Words: 9 words, 10 buckets; sum hash likely has 4-5 collisions; poly hash 2-3"
+      ],
+      "hint": "sumHash: for(char c:s.toCharArray()) sum+=c; return sum%m; polyHash: for(char c:s.toCharArray()) h=(h*31+c)%m;",
+      "expectedOutput": "sumHash('cat',10): 2\npolyHash('cat',10): 4\n\nSum hash collisions:  5\nPoly hash collisions: 2\nPoly is better: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 181,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Rolling Hash for Substring Search",
+    "description": {
+      "task": "Implement Rabin-Karp string search using a rolling hash. Compute the hash of the pattern and use a sliding window hash over the text. When hashes match, verify character-by-character to handle collisions (spurious hits).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class RabinKarp {\n    private static final int BASE  = 31;\n    private static final int MOD   = 1_000_000_007;\n\n    public List<Integer> search(String text, String pattern) {\n        List<Integer> positions = new ArrayList<>();\n        int n = text.length(), m = pattern.length();\n        if (m > n) return positions;\n\n        // Compute BASE^(m-1) % MOD\n        long power = 1;\n        for (int i = 0; i < m - 1; i++) power = power * BASE % MOD;\n\n        // Compute hash of pattern and first window\n        long patHash = 0, winHash = 0;\n        for (int i = 0; i < m; i++) {\n            patHash = (patHash * BASE + pattern.charAt(i)) % MOD;\n            winHash = (winHash * BASE + text.charAt(i))   % MOD;\n        }\n\n        for (int i = 0; i <= n - m; i++) {\n            if (winHash == patHash) {\n                // TODO: verify character by character; if match, add i to positions\n            }\n            if (i < n - m) {\n                // TODO: slide window: remove leftmost char, add next char\n                // winHash = (winHash - text.charAt(i)*power) * BASE + text.charAt(i+m)) % MOD\n                // ensure non-negative: +MOD before final %MOD\n            }\n        }\n        return positions;\n    }\n\n    public static void main(String[] args) {\n        RabinKarp rk = new RabinKarp();\n        System.out.println(rk.search(\"AABAACAADAABAABA\", \"AABA\"));\n        System.out.println(rk.search(\"abcabcabc\", \"abc\"));\n        System.out.println(rk.search(\"hello\", \"world\"));\n    }\n}",
+      "instructions": [
+        "Verify: if(text.substring(i,i+m).equals(pattern)) positions.add(i);",
+        "Slide: winHash=(winHash-text.charAt(i)*power%MOD+MOD)*BASE%MOD; winHash=(winHash+text.charAt(i+m))%MOD;",
+        "Rabin-Karp is O(n+m) average, O(nm) worst (with many hash collisions)",
+        "AABA found at indices [0,9,12]; abc found at [0,3,6]; world not in hello → []",
+        "The rolling hash avoids recomputing from scratch at each window position"
+      ],
+      "hint": "Verify: if(text.substring(i,i+m).equals(pattern))positions.add(i); Slide: winHash=(winHash-text.charAt(i)*power%MOD+MOD)*BASE%MOD; winHash=(winHash+text.charAt(i+m))%MOD;",
+      "expectedOutput": "[0, 9, 12]\n[0, 3, 6]\n[]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 181,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Consistent Hashing Simulation",
+    "description": {
+      "task": "Simulate consistent hashing used in distributed systems. Map servers and keys to positions on a virtual ring (hash circle 0..360). Each key is served by the first server clockwise from it. Add/remove a server and see minimal key reassignment.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ConsistentHashing {\n    private TreeMap<Integer, String> ring = new TreeMap<>();\n\n    private int hash(String key) {\n        return Math.abs(key.hashCode()) % 360;\n    }\n\n    public void addServer(String server) {\n        ring.put(hash(server), server);\n    }\n\n    public void removeServer(String server) {\n        ring.remove(hash(server));\n    }\n\n    public String getServer(String key) {\n        if (ring.isEmpty()) return null;\n        int h = hash(key);\n        // TODO: Find the first server clockwise from h\n        //       Use ring.ceilingKey(h); if null, wrap around to ring.firstKey()\n        return null; // replace\n    }\n\n    public static void main(String[] args) {\n        ConsistentHashing ch = new ConsistentHashing();\n        ch.addServer(\"ServerA\");\n        ch.addServer(\"ServerB\");\n        ch.addServer(\"ServerC\");\n\n        String[] keys = {\"user1\", \"user2\", \"user3\", \"user4\", \"user5\"};\n        System.out.println(\"Initial distribution:\");\n        for (String k : keys) System.out.println(\"  \" + k + \" -> \" + ch.getServer(k));\n\n        System.out.println(\"\\nAfter removing ServerB:\");\n        ch.removeServer(\"ServerB\");\n        for (String k : keys) System.out.println(\"  \" + k + \" -> \" + ch.getServer(k));\n    }\n}",
+      "instructions": [
+        "Integer k = ring.ceilingKey(h); if(k==null) k=ring.firstKey(); return ring.get(k);",
+        "TreeMap.ceilingKey gives the smallest key >= h (first server clockwise)",
+        "If no such key (h > all servers), wrap around to ring.firstKey()",
+        "When ServerB is removed, only keys that were mapped to ServerB get reassigned — not all keys",
+        "This demonstrates consistent hashing's minimal disruption property"
+      ],
+      "hint": "Integer k=ring.ceilingKey(h); if(k==null)k=ring.firstKey(); return ring.get(k);",
+      "expectedOutput": "Initial distribution:\n  user1 -> ServerA\n  user2 -> ServerC\n  user3 -> ServerC\n  user4 -> ServerB\n  user5 -> ServerA\n\nAfter removing ServerB:\n  user1 -> ServerA\n  user2 -> ServerC\n  user3 -> ServerC\n  user4 -> ServerC\n  user5 -> ServerA"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 181,
+    "allowedSubmissionType": "TEXT"
+  }
+]

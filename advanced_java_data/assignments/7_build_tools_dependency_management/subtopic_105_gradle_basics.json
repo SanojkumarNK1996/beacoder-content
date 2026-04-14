@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Gradle Task Dependency Graph",
+    "description": {
+      "task": "Implement a GradleTaskGraph class that models Gradle's task dependency system. Tasks can depend on other tasks, and when a task is executed, all its dependencies must execute first (topological order). Detect circular dependencies and throw an exception.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GradleTaskGraph {\n\n    private final Map<String, List<String>> dependencies = new HashMap<>();\n\n    public void addTask(String task) {\n        dependencies.putIfAbsent(task, new ArrayList<>());\n    }\n\n    public void dependsOn(String task, String dependency) {\n        // task depends on dependency (dependency runs first)\n        addTask(task);\n        addTask(dependency);\n        dependencies.get(task).add(dependency);\n    }\n\n    public List<String> executionOrder(String targetTask) {\n        // Return tasks in order they must execute (dependencies first)\n        // Throw IllegalStateException if circular dependency detected\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        GradleTaskGraph graph = new GradleTaskGraph();\n        graph.dependsOn(\"build\", \"test\");\n        graph.dependsOn(\"test\", \"compile\");\n        graph.dependsOn(\"build\", \"jar\");\n        graph.dependsOn(\"jar\", \"compile\");\n\n        System.out.println(graph.executionOrder(\"build\"));\n    }\n}",
+      "instructions": [
+        "addTask() registers a task with no dependencies if not already present",
+        "dependsOn() adds a directed edge: 'task' requires 'dependency' to run first",
+        "executionOrder() performs a topological sort starting from targetTask",
+        "No task should appear more than once in the result, even if depended on by multiple tasks",
+        "If a circular dependency exists, throw IllegalStateException with message 'Circular dependency detected'"
+      ],
+      "hint": "Use DFS with a visited set and a recursion stack (in-progress set) to detect cycles. Add tasks to result list after all their dependencies complete (post-order).",
+      "expectedOutput": "[compile, test, jar, build]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 105,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Gradle Build Script DSL Simulator",
+    "description": {
+      "task": "Create a GradleScriptSimulator class that models Gradle's build script configuration using a fluent builder API. Support configuring plugins, repositories, and dependencies programmatically (mimicking what would appear in a build.gradle file).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GradleScriptSimulator {\n\n    private final List<String> plugins = new ArrayList<>();\n    private final List<String> repositories = new ArrayList<>();\n    private final List<String> dependencies = new ArrayList<>();\n\n    public GradleScriptSimulator plugin(String pluginId) {\n        plugins.add(pluginId);\n        return this;\n    }\n\n    public GradleScriptSimulator repository(String repoUrl) {\n        repositories.add(repoUrl);\n        return this;\n    }\n\n    public GradleScriptSimulator dependency(String configuration, String gav) {\n        // Store as 'configuration: gav'\n        return this;\n    }\n\n    public String generateSummary() {\n        // Return a summary string listing plugin count, repository count, dependency count\n        return \"\";\n    }\n\n    public List<String> getDependencies() {\n        return dependencies;\n    }\n\n    public static void main(String[] args) {\n        GradleScriptSimulator script = new GradleScriptSimulator()\n            .plugin(\"java\")\n            .plugin(\"org.springframework.boot\")\n            .repository(\"https://repo.maven.apache.org/maven2\")\n            .dependency(\"implementation\", \"org.springframework.boot:spring-boot-starter-web:3.0.0\")\n            .dependency(\"testImplementation\", \"org.junit.jupiter:junit-jupiter:5.9.0\");\n\n        System.out.println(script.generateSummary());\n        System.out.println(script.getDependencies());\n    }\n}",
+      "instructions": [
+        "plugin() and repository() append to their respective lists and return 'this' for chaining",
+        "dependency() stores the entry as 'configuration: gav' in the dependencies list and returns 'this'",
+        "generateSummary() returns a string in format: 'Plugins: N, Repositories: N, Dependencies: N'",
+        "All three counts reflect the number of items added at call time",
+        "The fluent API must support method chaining as shown in main()"
+      ],
+      "hint": "dependency() should do dependencies.add(configuration + \": \" + gav). generateSummary() uses String.format with the three list sizes.",
+      "expectedOutput": "Plugins: 2, Repositories: 1, Dependencies: 2\n[implementation: org.springframework.boot:spring-boot-starter-web:3.0.0, testImplementation: org.junit.jupiter:junit-jupiter:5.9.0]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 105,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Incremental Build Tracker",
+    "description": {
+      "task": "Implement an IncrementalBuildTracker class that simulates Gradle's incremental build feature. Track which source files have changed since the last build and determine which tasks need to be re-run (UP-TO-DATE vs NEEDS EXECUTION).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class IncrementalBuildTracker {\n\n    private final Map<String, Long> lastBuildTimestamps = new HashMap<>();\n    private final Map<String, Set<String>> taskInputFiles = new HashMap<>();\n\n    public void registerTask(String taskName, Set<String> inputFiles) {\n        taskInputFiles.put(taskName, new HashSet<>(inputFiles));\n    }\n\n    public void recordBuild(Map<String, Long> fileTimestamps) {\n        // Store the current file timestamps as the last-build baseline\n        lastBuildTimestamps.putAll(fileTimestamps);\n    }\n\n    public Map<String, String> checkTasks(Map<String, Long> currentTimestamps) {\n        // For each registered task, check if any input file has a newer timestamp\n        // Return map of taskName -> \"UP-TO-DATE\" or \"NEEDS EXECUTION\"\n        return new HashMap<>();\n    }\n\n    public static void main(String[] args) {\n        IncrementalBuildTracker tracker = new IncrementalBuildTracker();\n        tracker.registerTask(\"compileJava\", Set.of(\"Main.java\", \"Utils.java\"));\n        tracker.registerTask(\"processResources\", Set.of(\"application.properties\"));\n\n        Map<String, Long> baseline = Map.of(\n            \"Main.java\", 1000L, \"Utils.java\", 1000L, \"application.properties\", 1000L\n        );\n        tracker.recordBuild(baseline);\n\n        Map<String, Long> current = Map.of(\n            \"Main.java\", 2000L, \"Utils.java\", 1000L, \"application.properties\", 1000L\n        );\n        Map<String, String> result = tracker.checkTasks(current);\n        System.out.println(\"compileJava: \" + result.get(\"compileJava\"));\n        System.out.println(\"processResources: \" + result.get(\"processResources\"));\n    }\n}",
+      "instructions": [
+        "registerTask() maps a task name to its set of input file paths",
+        "recordBuild() copies all entries from fileTimestamps into lastBuildTimestamps",
+        "checkTasks() iterates over all registered tasks",
+        "A task 'NEEDS EXECUTION' if any of its input files has a currentTimestamp > lastBuildTimestamp",
+        "A task is 'UP-TO-DATE' if all input files have unchanged or missing timestamps"
+      ],
+      "hint": "For each task, iterate over its inputFiles. Look up both the lastBuildTimestamps and currentTimestamps for each file. If current > last, mark the task as NEEDS EXECUTION.",
+      "expectedOutput": "compileJava: NEEDS EXECUTION\nprocessResources: UP-TO-DATE"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 28,
+    "subtopicId": 105,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,51 @@
+<h1>📡 Axios Library</h1>
+<h2>🎯 Why Axios?</h2>
+<p><strong>Axios</strong> is a popular HTTP client library with a cleaner API than Fetch: automatic JSON parsing, request/response interceptors, better error handling, and built-in timeout support.</p>
+<div class="code-example">
+  <pre>
+npm install axios
+  </pre>
+</div>
+<h2>🔧 Basic Usage</h2>
+<div class="code-example">
+  <pre>
+import axios from 'axios';
+
+// GET request
+const response = await axios.get('/api/users');
+const users = response.data;  // Auto-parses JSON
+
+// POST request
+const newUser = await axios.post('/api/users', { name: 'Alice', email: 'alice@example.com' });
+  </pre>
+</div>
+<h2>🏗️ Axios Instance (Recommended)</h2>
+<div class="code-example">
+  <pre>
+// api.js - create a configured instance
+const api = axios.create({
+  baseURL: 'https://api.myapp.com',
+  timeout: 10000,
+  headers: { 'Content-Type': 'application/json' }
+});
+
+// Request interceptor: add auth token
+api.interceptors.request.use(config =&gt; {
+  config.headers.Authorization = `Bearer ${getToken()}`;
+  return config;
+});
+
+// Response interceptor: handle errors globally
+api.interceptors.response.use(
+  response =&gt; response,
+  error =&gt; {
+    if (error.response?.status === 401) logout();
+    return Promise.reject(error);
+  }
+);
+
+export default api;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Create one Axios instance with your base URL and interceptors. Import that instance everywhere — centralized auth header injection and global error handling.</p>

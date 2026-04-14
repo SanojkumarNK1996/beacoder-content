@@ -1,0 +1,34 @@
+[
+  {
+    "subtopicId": 111,
+    "title": "Introduction to Spring Security",
+    "dataType": "notes",
+    "data": "introduction_to_spring_security.html",
+    "displayOrder": 1,
+    "verified": false
+  },
+  {
+    "subtopicId": 112,
+    "title": "User Authentication",
+    "dataType": "notes",
+    "data": "user_authentication.html",
+    "displayOrder": 2,
+    "verified": false
+  },
+  {
+    "subtopicId": 113,
+    "title": "Authorization",
+    "dataType": "notes",
+    "data": "authorization.html",
+    "displayOrder": 3,
+    "verified": false
+  },
+  {
+    "subtopicId": 114,
+    "title": "Security Best Practices",
+    "dataType": "notes",
+    "data": "security_best_practices.html",
+    "displayOrder": 4,
+    "verified": false
+  }
+]

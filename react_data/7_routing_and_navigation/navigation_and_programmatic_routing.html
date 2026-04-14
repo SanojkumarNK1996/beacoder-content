@@ -1,0 +1,45 @@
+<h1>🧭 Navigation and Programmatic Routing</h1>
+<h2>🔗 Link and NavLink</h2>
+<div class="code-example">
+  <pre>
+import { Link, NavLink } from 'react-router-dom';
+
+// Link: basic navigation
+&lt;Link to="/about"&gt;About&lt;/Link&gt;
+&lt;Link to={`/users/${user.id}`}&gt;View Profile&lt;/Link&gt;
+
+// NavLink: adds "active" CSS class when route matches
+&lt;NavLink to="/home" className={({ isActive }) =&gt; isActive ? 'active-link' : ''}&gt;
+  Home
+&lt;/NavLink&gt;
+  </pre>
+</div>
+<h2>🚗 Programmatic Navigation with useNavigate</h2>
+<div class="code-example">
+  <pre>
+import { useNavigate } from 'react-router-dom';
+
+function LoginForm() {
+  const navigate = useNavigate();
+
+  const handleLogin = async () =&gt; {
+    await loginUser(credentials);
+    navigate('/dashboard');           // Redirect after login
+    navigate('/dashboard', { replace: true });  // Replace history (no back button)
+    navigate(-1);                      // Go back
+    navigate(1);                       // Go forward
+  };
+  ...
+}
+  </pre>
+</div>
+<h2>🔍 Query Parameters with useSearchParams</h2>
+<div class="code-example">
+  <pre>
+const [searchParams, setSearchParams] = useSearchParams();
+const query = searchParams.get('q');       // /search?q=react
+setSearchParams({ q: 'react hooks' });    // Update URL query
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Use <code>&lt;Link&gt;</code> for navigation in JSX. Use <code>useNavigate()</code> for programmatic routing after events (form submit, login success).</p>

@@ -1,0 +1,72 @@
+[
+  {
+    "title": "JDBC vs ORM Comparison",
+    "description": {
+      "task": "Implement the same database operation (save and retrieve a user) using two approaches: raw JDBC simulation and ORM simulation. Compare the code complexity of each.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class User {\n    private int id;\n    private String name;\n    private String email;\n    \n    public User(int id, String name, String email) {\n        this.id = id; this.name = name; this.email = email;\n    }\n    \n    // TODO: Add getters\n    \n    @Override\n    public String toString() { return \"User{id=\" + id + \", name='\" + name + \"', email='\" + email + \"'}\"; }\n}\n\n// Approach 1: JDBC-style (manual SQL)\npublic class JdbcUserDao {\n    private Map<Integer, String[]> table = new HashMap<>(); // Simulates DB table\n    \n    public void save(User user) {\n        // TODO: Simulate 'INSERT INTO users VALUES (...)'\n        // Store as String[] {name, email}\n        System.out.println(\"JDBC: INSERT INTO users VALUES (\" + user.getId() + \", '\" + user.getName() + \"', '\" + user.getEmail() + \"')\");\n    }\n    \n    public User findById(int id) {\n        // TODO: Simulate 'SELECT * FROM users WHERE id=?'\n        // Print the SQL, retrieve from table and return User\n        return null;\n    }\n}\n\n// Approach 2: ORM-style (automatic mapping)\npublic class OrmUserRepository {\n    private Map<Integer, User> entityStore = new HashMap<>();\n    \n    public void save(User user) {\n        entityStore.put(user.getId(), user);\n        System.out.println(\"ORM: Persisting entity \" + user);\n    }\n    \n    public User findById(int id) {\n        System.out.println(\"ORM: Finding User with id=\" + id);\n        return entityStore.get(id);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        User user = new User(1, \"Alice\", \"alice@example.com\");\n        \n        System.out.println(\"--- JDBC Approach ---\");\n        JdbcUserDao jdbcDao = new JdbcUserDao();\n        jdbcDao.save(user);\n        System.out.println(\"Found: \" + jdbcDao.findById(1));\n        \n        System.out.println(\"--- ORM Approach ---\");\n        OrmUserRepository ormRepo = new OrmUserRepository();\n        ormRepo.save(user);\n        System.out.println(\"Found: \" + ormRepo.findById(1));\n    }\n}",
+      "instructions": [
+        "Add getters getId(), getName(), getEmail() to User.",
+        "JdbcUserDao.save() stores {name, email} array in table map and prints the SQL.",
+        "JdbcUserDao.findById() prints 'JDBC: SELECT * FROM users WHERE id=N', retrieves from table, returns new User(id, name, email) or null.",
+        "Run Main as-is — the rest is already provided."
+      ],
+      "hint": "Spring JDBC Template reduces JDBC boilerplate by 80%. Spring Data JPA (ORM) eliminates even more with auto-generated queries.",
+      "expectedOutput": "--- JDBC Approach ---\nJDBC: INSERT INTO users VALUES (1, 'Alice', 'alice@example.com')\nJDBC: SELECT * FROM users WHERE id=1\nFound: User{id=1, name='Alice', email='alice@example.com'}\n--- ORM Approach ---\nORM: Persisting entity User{id=1, name='Alice', email='alice@example.com'}\nORM: Finding User with id=1\nFound: User{id=1, name='Alice', email='alice@example.com'}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 89,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Spring Data Overview Simulation",
+    "description": {
+      "task": "Build a Spring Data-inspired repository hierarchy. Create base interfaces and their implementations to understand how CrudRepository, JpaRepository, and PagingAndSortingRepository relate.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\n// Base repository interface\npublic interface Repository<T, ID> {}\n\n// CRUD operations\npublic interface CrudRepository<T, ID> extends Repository<T, ID> {\n    T save(T entity);\n    Optional<T> findById(ID id);\n    Iterable<T> findAll();\n    void delete(T entity);\n    long count();\n}\n\n// Adds pagination\npublic interface PagingAndSortingRepository<T, ID> extends CrudRepository<T, ID> {\n    List<T> findAll(int page, int pageSize);\n    List<T> findAllSorted(Comparator<T> comparator);\n}\n\n// Adds JPA-specific features\npublic interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID> {\n    void flush();\n    List<T> saveAll(Iterable<T> entities);\n}\n\npublic class Customer {\n    private int id;\n    private String name;\n    public Customer(int id, String name) { this.id = id; this.name = name; }\n    public int getId() { return id; }\n    public String getName() { return name; }\n    @Override public String toString() { return \"Customer{\" + id + \", \" + name + \"}\"; }\n}\n\npublic class CustomerRepository implements JpaRepository<Customer, Integer> {\n    private Map<Integer, Customer> store = new LinkedHashMap<>();\n    \n    // TODO: Implement all methods\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        CustomerRepository repo = new CustomerRepository();\n        repo.saveAll(Arrays.asList(\n            new Customer(1, \"Alice\"), new Customer(2, \"Bob\"),\n            new Customer(3, \"Charlie\"), new Customer(4, \"Diana\")\n        ));\n        \n        System.out.println(\"Count: \" + repo.count());\n        System.out.println(\"Page 1 (size 2): \" + repo.findAll(0, 2));\n        System.out.println(\"Sorted: \" + repo.findAllSorted(Comparator.comparing(Customer::getName)));\n    }\n}",
+      "instructions": [
+        "Implement all methods of CustomerRepository: save, findById, findAll, delete (by object), count, flush (print 'Flushing to database'), saveAll, pagination, and sorting.",
+        "findAll(page, pageSize) uses page as 0-based page index.",
+        "Run Main as-is.",
+        "Expected output shows count, paged result, and sorted names."
+      ],
+      "hint": "Spring Data JPA's JpaRepository extends CrudRepository and PagingAndSortingRepository. You get all these methods for free — Spring generates the implementation.",
+      "expectedOutput": "Count: 4\nPage 1 (size 2): [Customer{1, Alice}, Customer{2, Bob}]\nSorted: [Customer{1, Alice}, Customer{2, Bob}, Customer{3, Charlie}, Customer{4, Diana}]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 89,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Connection Pool Simulation",
+    "description": {
+      "task": "Implement a simple database connection pool in Java. The pool pre-creates connections and lends them out to callers, returning them after use.",
+      "language": "java",
+      "context": "Spring's DataSource manages a connection pool (HikariCP by default). Connection pooling is critical for performance — creating DB connections is expensive.",
+      "starterCode": "import java.util.*;\nimport java.util.concurrent.*;\n\npublic class MockConnection {\n    private static int counter = 0;\n    private final int id;\n    private boolean inUse = false;\n    \n    public MockConnection() { this.id = ++counter; }\n    public int getId() { return id; }\n    public boolean isInUse() { return inUse; }\n    public void setInUse(boolean inUse) { this.inUse = inUse; }\n    \n    public String execute(String sql) {\n        return \"[Conn#\" + id + \"] Result of: \" + sql;\n    }\n    \n    @Override public String toString() { return \"Connection#\" + id + \"(inUse=\" + inUse + \")\"; }\n}\n\npublic class ConnectionPool {\n    private final Queue<MockConnection> available = new LinkedList<>();\n    private final List<MockConnection> allConnections = new ArrayList<>();\n    private final int maxSize;\n    \n    public ConnectionPool(int maxSize) {\n        this.maxSize = maxSize;\n        // TODO: Pre-create maxSize connections and add to both lists\n    }\n    \n    public MockConnection borrow() {\n        // TODO: Take available connection, mark as in-use, return it\n        // If none available, throw RuntimeException(\"No available connections\")\n        return null;\n    }\n    \n    public void returnConnection(MockConnection conn) {\n        // TODO: Mark as not in use and return to available queue\n    }\n    \n    public void printStatus() {\n        long inUse = allConnections.stream().filter(MockConnection::isInUse).count();\n        System.out.println(\"Pool: \" + inUse + \"/\" + maxSize + \" connections in use\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ConnectionPool pool = new ConnectionPool(3);\n        pool.printStatus();\n        \n        MockConnection c1 = pool.borrow();\n        MockConnection c2 = pool.borrow();\n        pool.printStatus();\n        \n        System.out.println(c1.execute(\"SELECT * FROM orders\"));\n        pool.returnConnection(c1);\n        pool.printStatus();\n    }\n}",
+      "instructions": [
+        "In constructor, create maxSize MockConnections, add each to both available queue and allConnections list.",
+        "borrow() polls from available, marks inUse=true, returns it. If available is empty, throw RuntimeException.",
+        "returnConnection() marks inUse=false and offers back to available.",
+        "Run Main as-is."
+      ],
+      "hint": "HikariCP is Spring Boot's default connection pool. It maintains a pool of pre-created connections to eliminate the overhead of creating a new DB connection per request.",
+      "expectedOutput": "Pool: 0/3 connections in use\nPool: 2/3 connections in use\n[Conn#1] Result of: SELECT * FROM orders\nPool: 1/3 connections in use"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 89,
+    "allowedSubmissionType": "TEXT"
+  }
+]

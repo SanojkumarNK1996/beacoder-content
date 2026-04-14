@@ -1,0 +1,202 @@
+<h1>🧪 JUnit 5</h1>
+
+<h2>🎯 What is JUnit 5?</h2>
+<p><strong>JUnit 5</strong> is the modern version of the JUnit testing framework for Java. It consists of:</p>
+<ul>
+  <li><strong>JUnit Platform</strong> – Launches tests</li>
+  <li><strong>JUnit Jupiter</strong> – New programming model and annotations</li>
+  <li><strong>JUnit Vintage</strong> – Backward compatibility with JUnit 3/4</li>
+</ul>
+
+<h2>⚙️ Dependency (Maven)</h2>
+
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+  &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
+  &lt;version&gt;5.10.0&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<p>In Spring Boot projects, <code>spring-boot-starter-test</code> already includes JUnit 5 by default.</p>
+
+<h2>🔑 Core Annotations</h2>
+
+<ul>
+  <li><code>@Test</code> – Marks a test method</li>
+  <li><code>@BeforeEach</code> – Runs before each test</li>
+  <li><code>@AfterEach</code> – Runs after each test</li>
+  <li><code>@BeforeAll</code> – Runs once before all tests (static method)</li>
+  <li><code>@AfterAll</code> – Runs once after all tests (static method)</li>
+  <li><code>@Disabled</code> – Temporarily disable a test</li>
+  <li><code>@DisplayName</code> – Custom name for test in reports</li>
+</ul>
+
+<h2>🧪 Example: Lifecycle Methods</h2>
+
+<div class="code-example">
+  <pre>
+import org.junit.jupiter.api.*;
+
+class UserServiceTest {
+
+    @BeforeAll
+    static void initAll() {
+        System.out.println("Runs once before all tests");
+    }
+
+    @BeforeEach
+    void init() {
+        System.out.println("Runs before each test");
+    }
+
+    @Test
+    @DisplayName("Create user should succeed with valid data")
+    void createUser_validData_success() {
+        System.out.println("Running test 1");
+        // your test code here
+    }
+
+    @Test
+    void anotherTest() {
+        System.out.println("Running test 2");
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.out.println("Runs after each test");
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        System.out.println("Runs once after all tests");
+    }
+}
+  </pre>
+</div>
+
+<h2>📏 Assertions</h2>
+<p>Assertions verify that the actual result matches the expected result.</p>
+
+<div class="code-example">
+  <pre>
+import static org.junit.jupiter.api.Assertions.*;
+
+@Test
+void assertionsExamples() {
+    int result = 2 + 3;
+
+    assertEquals(5, result);              // equality
+    assertNotEquals(4, result);           // inequality
+
+    assertTrue(result &gt; 0);               // boolean condition
+    assertFalse(result &lt; 0);
+
+    String name = "JUnit";
+    assertNotNull(name);                  // not null
+
+    int[] numbers = {1, 2, 3};
+    assertArrayEquals(new int[]{1, 2, 3}, numbers);
+}
+  </pre>
+</div>
+
+<h3>🧨 Asserting Exceptions</h3>
+
+<div class="code-example">
+  <pre>
+@Test
+void shouldThrowExceptionWhenInvalid() {
+    IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -&gt; {
+                // Code under test
+                throw new IllegalArgumentException("Invalid input");
+            }
+    );
+
+    assertEquals("Invalid input", exception.getMessage());
+}
+  </pre>
+</div>
+
+<h2>🧪 Parameterized Tests</h2>
+<p>Run the same test logic with different inputs.</p>
+
+<div class="code-example">
+  <pre>
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+class StringUtilsTest {
+
+    @ParameterizedTest
+    @ValueSource(strings = {"racecar", "madam", "level"})
+    void isPalindrome_shouldReturnTrueForPalindromes(String candidate) {
+        assertTrue(StringUtils.isPalindrome(candidate));
+    }
+}
+  </pre>
+</div>
+
+<h2>🏷️ Tagging and Filtering Tests</h2>
+<p>Use <code>@Tag</code> to group tests (e.g., <code>slow</code>, <code>integration</code>).</p>
+
+<div class="code-example">
+  <pre>
+@Tag("slow")
+@Test
+void longRunningTest() {
+    // ...
+}
+  </pre>
+</div>
+
+<p>You can configure Maven/Gradle to run or skip certain tags (e.g., skip slow tests in CI).</p>
+
+<h2>🧪 Example: Testing a Service Class</h2>
+
+<div class="code-example">
+  <pre>
+// Service under test
+public class DiscountService {
+
+    public double applyDiscount(double amount, int percentage) {
+        if (percentage &lt; 0 || percentage &gt; 100) {
+            throw new IllegalArgumentException("Invalid discount percentage");
+        }
+        return amount - (amount * percentage / 100.0);
+    }
+}
+
+// Unit tests
+class DiscountServiceTest {
+
+    private DiscountService discountService = new DiscountService();
+
+    @Test
+    void applyDiscount_validPercentage_returnsDiscountedAmount() {
+        double result = discountService.applyDiscount(1000, 10);
+        assertEquals(900.0, result);
+    }
+
+    @Test
+    void applyDiscount_invalidPercentage_throwsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -&gt; discountService.applyDiscount(1000, -5));
+    }
+}
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>JUnit 5 is the <strong>standard testing framework</strong> in modern Java</li>
+  <li>Provides rich <strong>annotations</strong>, <strong>assertions</strong>, and <strong>parameterized tests</strong></li>
+  <li>Forms the foundation for more advanced tools like <strong>Mockito</strong> and <strong>Spring Boot Testing</strong></li>
+</ul>
+
+<p>Next, you&apos;ll learn how to use the <strong>Mockito framework</strong> to mock dependencies and test classes in isolation.</p>

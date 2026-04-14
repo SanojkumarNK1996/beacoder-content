@@ -1,0 +1,36 @@
+<h1>✂️ Code Splitting and Lazy Loading</h1>
+<h2>🎯 The Problem</h2>
+<p>By default, all your JavaScript is bundled into one file. Users download everything even for routes they never visit. Code splitting loads code on demand.</p>
+<h2>🔧 React.lazy and Suspense</h2>
+<div class="code-example">
+  <pre>
+import { lazy, Suspense } from 'react';
+
+// Lazy load — the component's JS bundle loads only when it renders
+const DashboardPage = lazy(() =&gt; import('./pages/DashboardPage'));
+const SettingsPage = lazy(() =&gt; import('./pages/SettingsPage'));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;LoadingSpinner /&gt;}&gt;  {/* Shows while loading */}
+      &lt;Routes&gt;
+        &lt;Route path="/dashboard" element={&lt;DashboardPage /&gt;} /&gt;
+        &lt;Route path="/settings" element={&lt;SettingsPage /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  );
+}
+  </pre>
+</div>
+<h2>📦 Vite / Webpack Code Splitting</h2>
+<div class="code-example">
+  <pre>
+// Dynamic import creates a separate chunk:
+const { default: heavyLib } = await import('./heavyLibrary');
+
+// Named chunks for better debugging:
+const Dashboard = lazy(() =&gt; import(/* webpackChunkName: "dashboard" */ './Dashboard'));
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Route-level code splitting is the easiest win and should be default in any SPA. Combine with preloading critical routes for a fast perceived experience.</p>

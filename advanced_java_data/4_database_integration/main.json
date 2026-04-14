@@ -1,0 +1,47 @@
+[
+    {
+        "subtopicId": 89,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Introduction to Data Access",
+        "data": "intro_to_data_access.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 90,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Spring JDBC Template",
+        "data": "spring_jdbc_template.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 91,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Java Persistence API (JPA)",
+        "data": "java_persistence_api_jpa.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 92,
+        "dataType": "notes",
+        "displayOrder": 4,
+        "title": "Spring Data JPA",
+        "data": "spring_data_jpa.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 93,
+        "dataType": "notes",
+        "displayOrder": 5,
+        "title": "Database Transactions",
+        "data": "database_transactions.html",
+        "verified": false,
+        "priority": 1
+    }
+]

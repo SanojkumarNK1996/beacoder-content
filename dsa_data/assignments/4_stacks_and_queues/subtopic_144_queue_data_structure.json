@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Queue FIFO Demonstration",
+    "description": {
+      "task": "Implement a SimpleQueue class using a linked list of nodes. Support enqueue (add to rear), dequeue (remove from front), peek, isEmpty, and size. Demonstrate FIFO ordering.",
+      "language": "java",
+      "starterCode": "public class SimpleQueue {\n\n    static class Node {\n        int val; Node next;\n        Node(int v) { val = v; }\n    }\n\n    private Node front, rear;\n    private int size;\n\n    public void enqueue(int val) {\n        Node n = new Node(val);\n        if (rear == null) { front = rear = n; }\n        else {\n            // TODO: append to rear, advance rear\n        }\n        size++;\n    }\n\n    public int dequeue() {\n        if (front == null) throw new RuntimeException(\"Queue empty\");\n        int v = front.val;\n        // TODO: advance front; if front becomes null, set rear to null too\n        size--;\n        return v;\n    }\n\n    public int peek() {\n        if (front == null) throw new RuntimeException(\"Queue empty\");\n        return front.val;\n    }\n\n    public boolean isEmpty() { return front == null; }\n    public int size() { return size; }\n\n    public static void main(String[] args) {\n        SimpleQueue q = new SimpleQueue();\n        q.enqueue(10); q.enqueue(20); q.enqueue(30);\n        System.out.println(\"Peek: \" + q.peek());\n        System.out.println(\"Size: \" + q.size());\n        System.out.println(\"Dequeue: \" + q.dequeue());\n        System.out.println(\"Dequeue: \" + q.dequeue());\n        System.out.println(\"Size: \" + q.size());\n        System.out.println(\"Peek: \" + q.peek());\n    }\n}",
+      "instructions": [
+        "enqueue (when rear != null): rear.next=n; rear=n;",
+        "dequeue: front=front.next; if(front==null) rear=null;",
+        "After enqueue(10,20,30): front=10, rear=30; peek=10 (FIFO)",
+        "First dequeue returns 10, second returns 20 (in order)",
+        "peek(), isEmpty(), size() are already implemented"
+      ],
+      "hint": "enqueue else: rear.next=n; rear=n. dequeue: front=front.next; if(front==null) rear=null;",
+      "expectedOutput": "Peek: 10\nSize: 3\nDequeue: 10\nDequeue: 20\nSize: 1\nPeek: 30"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 144,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Queue Using Two Stacks",
+    "description": {
+      "task": "Implement a QueueUsingStacks class that simulates a FIFO queue using two java.util.ArrayDeque instances acting as stacks. Enqueue always pushes to stack1; dequeue transfers all of stack1 to stack2 (if stack2 empty) then pops from stack2.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class QueueUsingStacks {\n\n    private Deque<Integer> stack1 = new ArrayDeque<>(); // for enqueue\n    private Deque<Integer> stack2 = new ArrayDeque<>(); // for dequeue\n\n    public void enqueue(int val) {\n        // TODO: push val onto stack1\n    }\n\n    public int dequeue() {\n        // TODO: if stack2 empty, transfer all from stack1 to stack2 (reversing order)\n        // then pop from stack2; throw RuntimeException if both empty\n        return -1;\n    }\n\n    public int peek() {\n        if (stack2.isEmpty()) {\n            while (!stack1.isEmpty()) stack2.push(stack1.pop());\n        }\n        if (stack2.isEmpty()) throw new RuntimeException(\"Queue empty\");\n        return stack2.peek();\n    }\n\n    public static void main(String[] args) {\n        QueueUsingStacks q = new QueueUsingStacks();\n        q.enqueue(1); q.enqueue(2); q.enqueue(3);\n        System.out.println(q.dequeue());\n        q.enqueue(4);\n        System.out.println(q.dequeue());\n        System.out.println(q.dequeue());\n        System.out.println(q.dequeue());\n    }\n}",
+      "instructions": [
+        "enqueue: stack1.push(val);",
+        "dequeue: if(stack2.isEmpty()) while(!stack1.isEmpty()) stack2.push(stack1.pop()); if(stack2.isEmpty()) throw RuntimeException; return stack2.pop();",
+        "Peek is already implemented — use same pattern as dequeue",
+        "FIFO: enqueue(1,2,3) then dequeue returns 1, enqueue(4), dequeue returns 2, then 3, then 4",
+        "The transfer reverses element order so stack2 serves them in FIFO order"
+      ],
+      "hint": "enqueue: stack1.push(val). dequeue: if(stack2.isEmpty()){while(!stack1.isEmpty()) stack2.push(stack1.pop());} if(stack2.isEmpty()) throw new RuntimeException('Empty'); return stack2.pop();",
+      "expectedOutput": "1\n2\n3\n4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 144,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Hot Potato Simulation",
+    "description": {
+      "task": "Implement a HotPotato class using a Queue to simulate the hot potato game. N players sit in a circle; the potato is passed k times per round; the player holding it after k passes is eliminated. Return the winner's name.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class HotPotato {\n\n    public String simulate(String[] players, int k) {\n        Queue<String> queue = new LinkedList<>(Arrays.asList(players));\n\n        while (queue.size() > 1) {\n            // Pass the potato k times: move front to back k-1 times, then eliminate front\n            for (int i = 0; i < k - 1; i++) {\n                // TODO: move front player to back of queue\n            }\n            // TODO: eliminate the current front player\n        }\n        return queue.peek(); // winner\n    }\n\n    public static void main(String[] args) {\n        HotPotato hp = new HotPotato();\n        String[] players = {\"Alice\", \"Bob\", \"Carol\", \"Dave\", \"Eve\"};\n        System.out.println(\"Winner (k=2): \" + hp.simulate(players.clone(), 2));\n        System.out.println(\"Winner (k=3): \" + hp.simulate(players.clone(), 3));\n    }\n}",
+      "instructions": [
+        "Move front to back: queue.add(queue.poll())",
+        "Eliminate front: queue.poll() (discard the returned value)",
+        "Repeat while queue.size() > 1",
+        "For players=[Alice,Bob,Carol,Dave,Eve] and k=2: winner is Carol",
+        "For k=3: winner is Eve (Josephus variant)"
+      ],
+      "hint": "for(int i=0;i<k-1;i++) queue.add(queue.poll()); queue.poll(); // eliminate",
+      "expectedOutput": "Winner (k=2): Carol\nWinner (k=3): Eve"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 144,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,39 @@
+<h1>🐻 Zustand State Management</h1>
+<h2>🎯 What is Zustand?</h2>
+<p><strong>Zustand</strong> is a small, fast, and unopinionated state manager for React. Minimal boilerplate, no Provider needed, works outside React too.</p>
+<div class="code-example">
+  <pre>
+npm install zustand
+  </pre>
+</div>
+<h2>🔧 Creating a Store</h2>
+<div class="code-example">
+  <pre>
+import { create } from 'zustand';
+
+const useCartStore = create((set, get) =&gt; ({
+  items: [],
+  total: 0,
+
+  addItem: (item) =&gt; set(state =&gt; ({
+    items: [...state.items, item],
+    total: state.total + item.price,
+  })),
+
+  removeItem: (id) =&gt; set(state =&gt; ({
+    items: state.items.filter(i =&gt; i.id !== id),
+  })),
+
+  getItemCount: () =&gt; get().items.length,  // get() reads current state
+}));
+
+// Usage — no Provider needed!
+function CartIcon() {
+  const items = useCartStore(state =&gt; state.items);        // Subscribed to items only
+  const addItem = useCartStore(state =&gt; state.addItem);
+  return &lt;span&gt;{items.length} items&lt;/span&gt;;
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Zustand is the pragmatic choice for new projects. Zero boilerplate, no Provider, fine-grained subscriptions. Choose Redux Toolkit for large teams needing strict conventions and devtools.</p>

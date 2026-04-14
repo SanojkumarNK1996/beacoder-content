@@ -1,0 +1,45 @@
+<h1>⌨️ Keyboard and Input Events</h1>
+<h2>📋 Input Change Events</h2>
+<div class="code-example">
+  <pre>
+function SearchBar() {
+  const [query, setQuery] = useState('');
+
+  const handleChange = (e) =&gt; {
+    setQuery(e.target.value);  // e.target.value is the input's current value
+  };
+
+  return &lt;input value={query} onChange={handleChange} placeholder="Search..." /&gt;;
+}
+  </pre>
+</div>
+<h2>⌨️ Keyboard Events</h2>
+<div class="code-example">
+  <pre>
+function SearchBar() {
+  const [query, setQuery] = useState('');
+
+  const handleKeyDown = (e) =&gt; {
+    if (e.key === 'Enter') submitSearch(query);
+    if (e.key === 'Escape') setQuery('');
+  };
+
+  return (
+    &lt;input
+      value={query}
+      onChange={e =&gt; setQuery(e.target.value)}
+      onKeyDown={handleKeyDown}
+    /&gt;
+  );
+}
+  </pre>
+</div>
+<h2>📌 Common Input Events</h2>
+<ul>
+  <li><code>onChange</code>: Fires every time the value changes</li>
+  <li><code>onFocus</code>: When input gains focus</li>
+  <li><code>onBlur</code>: When input loses focus (great for validation)</li>
+  <li><code>onKeyDown/onKeyUp/onKeyPress</code>: Keyboard events</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p><code>onChange</code> + <code>onKeyDown</code> cover 90% of input interactions. Use <code>onBlur</code> for "touched" validation (show error after user leaves the field).</p>

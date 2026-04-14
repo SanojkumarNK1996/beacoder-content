@@ -1,0 +1,98 @@
+<h1>🧩 Structural Patterns</h1>
+
+<h2>🎯 Goal</h2>
+<p><strong>Structural design patterns</strong> are about <strong>how classes and objects are composed</strong> to form larger structures while keeping them flexible and efficient.</p>
+
+<h2>🔌 Adapter Pattern</h2>
+<p>Converts the interface of a class into another interface the clients expect. It lets classes work together that couldn&apos;t otherwise because of incompatible interfaces.</p>
+
+<h3>Example</h3>
+<p>Suppose your code expects a <code>PaymentProcessor</code> interface, but you need to integrate with a third-party library that exposes a different API.</p>
+
+<div class="code-example">
+  <pre>
+public interface PaymentProcessor {
+    void pay(double amount);
+}
+
+// Third-party class
+public class StripeClient {
+    public void makePayment(double amountInDollars) { /* ... */ }
+}
+
+// Adapter
+public class StripePaymentAdapter implements PaymentProcessor {
+
+    private final StripeClient stripeClient;
+
+    public StripePaymentAdapter(StripeClient stripeClient) {
+        this.stripeClient = stripeClient;
+    }
+
+    @Override
+    public void pay(double amount) {
+        stripeClient.makePayment(amount);
+    }
+}
+  </pre>
+</div>
+
+<h2>🎨 Decorator Pattern</h2>
+<p>Adds responsibilities to objects <strong>dynamically</strong> without modifying their code. Often used for cross-cutting concerns like logging, caching, security.</p>
+
+<div class="code-example">
+  <pre>
+public interface MessageService {
+    void send(String message);
+}
+
+public class EmailService implements MessageService {
+    public void send(String message) { /* send email */ }
+}
+
+public class LoggingMessageDecorator implements MessageService {
+
+    private final MessageService delegate;
+
+    public LoggingMessageDecorator(MessageService delegate) {
+        this.delegate = delegate;
+    }
+
+    public void send(String message) {
+        System.out.println("Logging: " + message);
+        delegate.send(message);
+    }
+}
+  </pre>
+</div>
+
+<h2>🏛️ Facade Pattern</h2>
+<p>Provides a <strong>simple interface</strong> to a complex subsystem.</p>
+
+<p>Example: a <code>OrderFacade</code> that internally coordinates payment, inventory, and shipping services, exposing a single <code>placeOrder()</code> method.</p>
+
+<h2>🧱 Composite Pattern</h2>
+<p>Lets you treat <strong>individual objects and compositions</strong> of objects uniformly.</p>
+
+<ul>
+  <li>Tree structures: file systems, UI components, menus</li>
+  <li>Operations applied to both leaf nodes and composite nodes</li>
+</ul>
+
+<h2>🚪 Proxy Pattern</h2>
+<p>Provides a surrogate or placeholder for another object to control access to it.</p>
+
+<ul>
+  <li><strong>Remote proxy</strong> – Access remote objects</li>
+  <li><strong>Virtual proxy</strong> – Lazy initialization</li>
+  <li><strong>Protection proxy</strong> – Access control</li>
+</ul>
+
+<p>In Spring, proxies are heavily used for AOP, transactions, and security.</p>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Structural patterns focus on <strong>class and object composition</strong></li>
+  <li>Adapter and Facade help with <strong>integration and simplification</strong></li>
+  <li>Decorator and Proxy are useful for adding <strong>cross-cutting behavior</strong> without changing core classes</li>
+</ul>

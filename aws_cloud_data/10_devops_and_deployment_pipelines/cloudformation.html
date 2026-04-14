@@ -1,0 +1,27 @@
+<h1>🏗️ Infrastructure as Code with CloudFormation</h1>
+<h2>🎯 What is CloudFormation?</h2>
+<p><strong>AWS CloudFormation</strong> lets you model your entire AWS infrastructure as code (IaC) using <strong>YAML or JSON templates</strong>. Provision and manage resources consistently and repeatably.</p>
+<h2>📋 Key Benefits</h2>
+<ul>
+  <li><strong>Reproducible</strong>: Deploy identical environments (dev, staging, prod) from the same template</li>
+  <li><strong>Version controlled</strong>: Infrastructure changes tracked in Git like application code</li>
+  <li><strong>Automated rollback</strong>: If a stack update fails, CloudFormation rolls back automatically</li>
+  <li><strong>No manual config</strong>: Reduces human error</li>
+</ul>
+<div class="code-example">
+  <pre>
+# Simple CloudFormation template (YAML)
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-app-data-bucket
+      VersioningConfiguration:
+        Status: Enabled
+  </pre>
+</div>
+<h2>📌 CloudFormation vs Terraform</h2>
+<p>CloudFormation is AWS-native (free, deep AWS service support). Terraform is multi-cloud (same tool for AWS, GCP, Azure). Many teams use Terraform for multi-cloud but CloudFormation for AWS-only.</p>
+<h2>🎯 Summary</h2>
+<p>Move from clicking in the console to IaC immediately. CloudFormation (or Terraform/CDK) is essential for production-grade, repeatable AWS deployments.</p>

@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Build a Mock Object",
+    "description": {
+      "task": "Implement a simple mock object for a database repository. The mock should record method calls and return preset responses, simulating Mockito's when().thenReturn() behavior.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic interface UserRepository {\n    Optional<User> findById(int id);\n    List<User> findAll();\n    User save(User user);\n    void deleteById(int id);\n}\n\npublic class User {\n    private int id;\n    private String name;\n    public User(int id, String name) { this.id = id; this.name = name; }\n    public int getId() { return id; }\n    public String getName() { return name; }\n    @Override public String toString() { return \"User{\" + id + \", \" + name + \"}\"; }\n}\n\npublic class MockUserRepository implements UserRepository {\n    private Map<String, Object> stubbedReturns = new HashMap<>();\n    private List<String> callLog = new ArrayList<>();\n    \n    // Stub setup: stub(\"findById_1\", Optional.of(user))\n    public void stub(String callKey, Object returnValue) {\n        stubbedReturns.put(callKey, returnValue);\n    }\n    \n    private void recordCall(String callSignature) {\n        callLog.add(callSignature);\n    }\n    \n    @Override\n    @SuppressWarnings(\"unchecked\")\n    public Optional<User> findById(int id) {\n        recordCall(\"findById(\" + id + \")\");\n        return (Optional<User>) stubbedReturns.getOrDefault(\"findById_\" + id, Optional.empty());\n    }\n    \n    @Override\n    @SuppressWarnings(\"unchecked\")\n    public List<User> findAll() {\n        recordCall(\"findAll()\");\n        return (List<User>) stubbedReturns.getOrDefault(\"findAll\", new ArrayList<>());\n    }\n    \n    @Override\n    public User save(User user) {\n        // TODO: Record call and return stubbed value or the user itself\n        return user;\n    }\n    \n    @Override\n    public void deleteById(int id) {\n        // TODO: Record the call\n    }\n    \n    public boolean wasCalled(String method) {\n        return callLog.stream().anyMatch(c -> c.contains(method));\n    }\n    \n    public int callCount(String methodPrefix) {\n        return (int) callLog.stream().filter(c -> c.startsWith(methodPrefix)).count();\n    }\n    \n    public List<String> getCallLog() { return Collections.unmodifiableList(callLog); }\n}\n\npublic class UserService {\n    private UserRepository repository;\n    \n    public UserService(UserRepository repository) {\n        this.repository = repository;\n    }\n    \n    public String getUserName(int id) {\n        return repository.findById(id)\n            .map(User::getName)\n            .orElse(\"Unknown\");\n    }\n    \n    public int getTotalUsers() {\n        return repository.findAll().size();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        MockUserRepository mockRepo = new MockUserRepository();\n        \n        // Stub responses\n        mockRepo.stub(\"findById_1\", Optional.of(new User(1, \"Alice\")));\n        mockRepo.stub(\"findAll\", Arrays.asList(new User(1, \"Alice\"), new User(2, \"Bob\")));\n        \n        UserService service = new UserService(mockRepo);\n        \n        System.out.println(service.getUserName(1));       // Should print Alice\n        System.out.println(service.getUserName(99));      // Should print Unknown\n        System.out.println(service.getTotalUsers());      // Should print 2\n        \n        System.out.println(\"findById called: \" + mockRepo.wasCalled(\"findById\"));\n        System.out.println(\"findById call count: \" + mockRepo.callCount(\"findById\"));\n        System.out.println(\"Call log: \" + mockRepo.getCallLog());\n    }\n}",
+      "instructions": [
+        "Implement save() to record the call as 'save([user id])' and return the user.",
+        "Implement deleteById() to record the call as 'deleteById([id])'.",
+        "Run Main as-is.",
+        "Output should show the two service calls working correctly plus verification data."
+      ],
+      "hint": "In Mockito: UserRepository mock = Mockito.mock(UserRepository.class); when(mock.findById(1)).thenReturn(Optional.of(user)); verify(mock, times(1)).findById(1);",
+      "expectedOutput": "Alice\nUnknown\n2\nfindById called: true\nfindById call count: 2\nCall log: [findById(1), findById(99), findAll()]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 101,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Verify Interactions with Mocks",
+    "description": {
+      "task": "Test a service class by verifying it calls the correct repository methods with the correct arguments. Build a verification system that checks interaction contracts.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic interface EmailService {\n    void sendWelcomeEmail(String to);\n    void sendOrderConfirmation(String to, int orderId);\n    void sendPasswordReset(String to, String token);\n}\n\npublic class TrackingEmailService implements EmailService {\n    private List<String[]> calls = new ArrayList<>();\n    \n    @Override\n    public void sendWelcomeEmail(String to) {\n        calls.add(new String[]{\"sendWelcomeEmail\", to});\n    }\n    \n    @Override\n    public void sendOrderConfirmation(String to, int orderId) {\n        calls.add(new String[]{\"sendOrderConfirmation\", to, String.valueOf(orderId)});\n    }\n    \n    @Override\n    public void sendPasswordReset(String to, String token) {\n        calls.add(new String[]{\"sendPasswordReset\", to, token});\n    }\n    \n    public boolean verifyCalledOnceWith(String method, String... args) {\n        long count = calls.stream().filter(call -> {\n            if (!call[0].equals(method)) return false;\n            for (int i = 0; i < args.length; i++) {\n                if (i + 1 >= call.length || !call[i + 1].equals(args[i])) return false;\n            }\n            return true;\n        }).count();\n        return count == 1;\n    }\n    \n    public boolean verifyNeverCalled(String method) {\n        return calls.stream().noneMatch(call -> call[0].equals(method));\n    }\n}\n\npublic class UserRegistrationService {\n    private EmailService emailService;\n    \n    public UserRegistrationService(EmailService emailService) {\n        this.emailService = emailService;\n    }\n    \n    public void register(String email) {\n        // Simulate registration\n        System.out.println(\"Registering user: \" + email);\n        emailService.sendWelcomeEmail(email);\n        // Note: Should NOT send order confirmation on registration\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        TrackingEmailService mockEmail = new TrackingEmailService();\n        UserRegistrationService service = new UserRegistrationService(mockEmail);\n        \n        service.register(\"alice@example.com\");\n        \n        // Verify interactions\n        boolean welcomeSent = mockEmail.verifyCalledOnceWith(\"sendWelcomeEmail\", \"alice@example.com\");\n        boolean orderConfirmNotSent = mockEmail.verifyNeverCalled(\"sendOrderConfirmation\");\n        boolean passwordResetNotSent = mockEmail.verifyNeverCalled(\"sendPasswordReset\");\n        \n        System.out.println(\"Welcome email sent: \" + welcomeSent);\n        System.out.println(\"Order confirmation NOT sent: \" + orderConfirmNotSent);\n        System.out.println(\"Password reset NOT sent: \" + passwordResetNotSent);\n        System.out.println(\"All interactions verified: \" + (welcomeSent && orderConfirmNotSent && passwordResetNotSent));\n    }\n}",
+      "instructions": [
+        "Run Main as-is — the implementation is already provided.",
+        "Understand how verifyCalledOnceWith() and verifyNeverCalled() work.",
+        "Trace the flow: register() -> sendWelcomeEmail() only.",
+        "All verification checks should pass."
+      ],
+      "hint": "In Mockito: verify(mockEmail, times(1)).sendWelcomeEmail('alice@example.com'); verify(mockEmail, never()).sendOrderConfirmation(any(), anyInt());",
+      "expectedOutput": "Registering user: alice@example.com\nWelcome email sent: true\nOrder confirmation NOT sent: true\nPassword reset NOT sent: true\nAll interactions verified: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 101,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Spy vs Mock Behavior",
+    "description": {
+      "task": "Implement both a Mock (fully controlled fake) and a Spy (wraps real object, can override specific methods) and demonstrate when to use each.",
+      "language": "java",
+      "context": "Mockito.mock() creates a fake that does nothing by default. Mockito.spy() wraps a real object but allows overriding specific methods. Spies are useful when you want to test real behavior but control side effects.",
+      "starterCode": "import java.util.*;\n\npublic class InventoryService {\n    private Map<String, Integer> stock = new HashMap<>();\n    \n    public void addStock(String product, int quantity) {\n        stock.merge(product, quantity, Integer::sum);\n    }\n    \n    public int getStock(String product) {\n        return stock.getOrDefault(product, 0);\n    }\n    \n    public boolean reserveStock(String product, int quantity) {\n        int current = getStock(product);\n        if (current >= quantity) {\n            stock.put(product, current - quantity);\n            return true;\n        }\n        return false;\n    }\n    \n    public void sendLowStockAlert(String product) {\n        // In production: sends email/notification\n        System.out.println(\"ALERT: Low stock for \" + product);\n    }\n    \n    public boolean checkAndReserve(String product, int quantity) {\n        boolean reserved = reserveStock(product, quantity);\n        if (getStock(product) < 5) {\n            sendLowStockAlert(product);\n        }\n        return reserved;\n    }\n}\n\npublic class SpyInventoryService extends InventoryService {\n    private List<String> alertsSuppressed = new ArrayList<>();\n    private boolean suppressAlerts = false;\n    \n    public void setSuppressAlerts(boolean suppress) {\n        this.suppressAlerts = suppress;\n    }\n    \n    @Override\n    public void sendLowStockAlert(String product) {\n        if (suppressAlerts) {\n            // Spy behavior: suppress the side effect but record the call\n            alertsSuppressed.add(product);\n        } else {\n            super.sendLowStockAlert(product);\n        }\n    }\n    \n    public List<String> getAlertsTriggered() { return alertsSuppressed; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(\"--- Spy: Uses real logic, suppresses alert side effect ---\");\n        SpyInventoryService spy = new SpyInventoryService();\n        spy.setSuppressAlerts(true);\n        spy.addStock(\"Laptop\", 6);\n        \n        boolean reserved = spy.checkAndReserve(\"Laptop\", 4); // Leaves 2 < 5 -> alert triggered\n        System.out.println(\"Reserved: \" + reserved);\n        System.out.println(\"Remaining stock: \" + spy.getStock(\"Laptop\"));\n        System.out.println(\"Alerts suppressed for: \" + spy.getAlertsTriggered());\n        \n        System.out.println(\"\\n--- Real object: alert fires in console ---\");\n        InventoryService real = new InventoryService();\n        real.addStock(\"Mouse\", 3);\n        real.checkAndReserve(\"Mouse\", 0); // Starts below 5, alert fires\n    }\n}",
+      "instructions": [
+        "Run Main as-is — the implementation is complete.",
+        "Understand: SpyInventoryService extends the real class and overrides only sendLowStockAlert() to suppress it.",
+        "Real business logic (reserveStock, stock tracking) runs normally.",
+        "Verify spy captures the alert trigger without printing it."
+      ],
+      "hint": "Use Mockito.spy() for objects where you want real behavior but need to stub specific methods. Use Mockito.mock() when you want full control over all return values.",
+      "expectedOutput": "--- Spy: Uses real logic, suppresses alert side effect ---\nReserved: true\nRemaining stock: 2\nAlerts suppressed for: [Laptop]\n\n--- Real object: alert fires in console ---\nALERT: Low stock for Mouse"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 101,
+    "allowedSubmissionType": "TEXT"
+  }
+]

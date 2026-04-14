@@ -1,0 +1,17 @@
+<h1>📦 S3 Storage Classes</h1>
+<h2>🎯 Why Storage Classes?</h2>
+<p>Different data has different access patterns. S3 storage classes let you optimize cost vs. access speed vs. durability.</p>
+<h2>📋 Storage Classes Overview</h2>
+<ul>
+  <li><strong>S3 Standard</strong>: Frequently accessed data. High durability + availability. Default class.</li>
+  <li><strong>S3 Intelligent-Tiering</strong>: Automatically moves data between tiers based on access patterns. Best for unpredictable access.</li>
+  <li><strong>S3 Standard-IA</strong>: Infrequent access but need instant retrieval. Lower storage cost, retrieval fee.</li>
+  <li><strong>S3 One Zone-IA</strong>: IA data stored in a single AZ. 20% cheaper than Standard-IA, lower resilience.</li>
+  <li><strong>S3 Glacier Instant Retrieval</strong>: Archive data, millisecond retrieval.</li>
+  <li><strong>S3 Glacier Flexible Retrieval</strong>: Archive data, retrieval in minutes to hours.</li>
+  <li><strong>S3 Glacier Deep Archive</strong>: Cheapest storage, retrieval in 12 hours. For long-term archives.</li>
+</ul>
+<h2>🔄 S3 Lifecycle Policies</h2>
+<p>Automate transitioning objects between storage classes (e.g., move to Glacier after 90 days).</p>
+<h2>🎯 Summary</h2>
+<p>Use Standard for active data, Intelligent-Tiering for unknown patterns, Glacier for archiving. Lifecycle policies automate the transitions.</p>

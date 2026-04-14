@@ -1,0 +1,26 @@
+<h1>📅 Activity Selection & Interval Problems</h1>
+<h2>🎯 Activity Selection Problem</h2>
+<p>Given n activities with start and end times, find the maximum number of non-overlapping activities.</p>
+<p><strong>Greedy choice</strong>: Always pick the activity that ends earliest and doesn't conflict with the last selected.</p>
+<div class="code-example">
+  <pre>
+int maxActivities(int[] start, int[] end) {
+    // Sort by end time
+    Integer[] indices = IntStream.range(0, start.length).boxed().toArray(Integer[]::new);
+    Arrays.sort(indices, (a, b) -> end[a] - end[b]);
+    int count = 1, lastEnd = end[indices[0]];
+    for (int i = 1; i &lt; indices.length; i++) {
+        if (start[indices[i]] >= lastEnd) { count++; lastEnd = end[indices[i]]; }
+    }
+    return count;
+}
+  </pre>
+</div>
+<h2>📌 Related Problems</h2>
+<ul>
+  <li>Meeting Rooms (can one person attend all meetings?)</li>
+  <li>Minimum Meeting Rooms needed</li>
+  <li>Merge Intervals</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Sort by end time + greedy selection is the key pattern for interval scheduling. It appears frequently in interview problems.</p>

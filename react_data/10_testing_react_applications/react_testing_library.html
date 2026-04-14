@@ -1,0 +1,37 @@
+<h1>🔬 React Testing Library (RTL)</h1>
+<h2>🎯 Philosophy</h2>
+<p>RTL's guiding principle: <em>"The more your tests resemble the way your software is used, the more confidence they can give you."</em> Query elements by accessible roles, text, and labels — not by CSS classes or component internals.</p>
+<div class="code-example">
+  <pre>
+npm install -D @testing-library/react @testing-library/jest-dom @testing-library/user-event
+  </pre>
+</div>
+<h2>🔧 Setup and Queries</h2>
+<div class="code-example">
+  <pre>
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+test('shows welcome message after login', async () =&gt; {
+  const user = userEvent.setup();
+  render(&lt;LoginPage /&gt;);
+
+  await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+  await user.type(screen.getByLabelText(/password/i), 'password123');
+  await user.click(screen.getByRole('button', { name: /login/i }));
+
+  expect(await screen.findByText(/welcome/i)).toBeInTheDocument();
+});
+  </pre>
+</div>
+<h2>📌 Query Priority Order</h2>
+<p>Prefer queries in this order (most accessible to least):</p>
+<ol>
+  <li><code>getByRole</code> — accessibility roles (button, input, heading)</li>
+  <li><code>getByLabelText</code> — form fields with labels</li>
+  <li><code>getByPlaceholderText</code></li>
+  <li><code>getByText</code> — text content</li>
+  <li><code>getByTestId</code> — last resort</li>
+</ol>
+<h2>🎯 Summary</h2>
+<p>RTL makes you write tests from the user's perspective. Use <code>userEvent</code> over <code>fireEvent</code> for more realistic interactions. Use <code>findBy</code> (async) for elements that appear after async operations.</p>

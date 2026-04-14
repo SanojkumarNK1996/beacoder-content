@@ -1,0 +1,19 @@
+<h1>🆚 S3 vs EBS vs EFS</h1>
+<h2>📋 Comparison Table</h2>
+<table border="1" style="border-collapse:collapse; width:100%">
+  <tr><th>Feature</th><th>S3</th><th>EBS</th><th>EFS</th></tr>
+  <tr><td>Type</td><td>Object storage</td><td>Block storage</td><td>File storage (NFS)</td></tr>
+  <tr><td>Attached to</td><td>Any service (API)</td><td>One EC2 instance</td><td>Multiple EC2 instances</td></tr>
+  <tr><td>Persistence</td><td>Permanent</td><td>Permanent</td><td>Permanent</td></tr>
+  <tr><td>Capacity</td><td>Unlimited</td><td>Up to 64 TB</td><td>Auto-scales</td></tr>
+  <tr><td>Access</td><td>HTTP REST API</td><td>Block device (like HDD)</td><td>POSIX file system</td></tr>
+  <tr><td>Best for</td><td>Files, media, backups</td><td>OS, databases</td><td>Shared files across EC2</td></tr>
+</table>
+<h2>📌 Decision Guide</h2>
+<ul>
+  <li>Need to store files accessed by many services → <strong>S3</strong></li>
+  <li>EC2 OS disk or database storage → <strong>EBS</strong></li>
+  <li>Shared file system for multiple EC2 instances (e.g., CMS, HPC) → <strong>EFS</strong></li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Each storage type has its niche. Most apps use S3 + EBS combination. EFS is for workloads needing shared POSIX filesystem access.</p>

@@ -1,0 +1,33 @@
+<h1>⏳ Handling Loading and Error States</h1>
+<h2>🎯 The Three States Pattern</h2>
+<p>Every async operation has three states: <strong>loading</strong>, <strong>success</strong>, <strong>error</strong>. Always handle all three.</p>
+<div class="code-example">
+  <pre>
+function UserProfile({ userId }) {
+  const [user, setUser] = useState(null);
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    setStatus('loading');
+    api.getUser(userId)
+      .then(data =&gt; { setUser(data); setStatus('success'); })
+      .catch(err =&gt; { setError(err.message); setStatus('error'); });
+  }, [userId]);
+
+  if (status === 'loading') return &lt;Skeleton /&gt;;
+  if (status === 'error') return &lt;ErrorMessage message={error} retry={reload} /&gt;;
+  if (!user) return null;
+  return &lt;UserCard user={user} /&gt;;
+}
+  </pre>
+</div>
+<h2>📋 UX Best Practices</h2>
+<ul>
+  <li>Show <strong>skeleton screens</strong> instead of spinners for content (less jarring)</li>
+  <li>Always show a <strong>retry button</strong> on error states</li>
+  <li>Preserve stale data during re-fetching (don't blank the UI)</li>
+  <li>Debounce rapidly triggered fetches (search inputs)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Model async state with status enum (idle/loading/success/error) rather than separate booleans to avoid impossible states like <code>isLoading=true &amp;&amp; isError=true</code>.</p>

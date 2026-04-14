@@ -1,0 +1,55 @@
+<h1>Flexbox</h1>
+
+<h2>Why this exists</h2>
+<ul>
+  <li>To easily build responsive layouts like navbars, card grids, and equal-height columns without complex floats.</li>
+</ul>
+
+<h2>What is this</h2>
+<ul>
+  <li>Flexbox is a one-dimensional layout system for arranging items in rows or columns.</li>
+</ul>
+
+<h2>Syntax / Basic usage</h2>
+<pre><code>.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item {
+  flex: 1;
+}
+</code></pre>
+
+<h2>How it works</h2>
+<ol>
+  <li>Set display: flex on a parent container.</li>
+  <li>Child elements become flex items.</li>
+  <li>Use justify-content to control horizontal alignment and spacing.</li>
+  <li>Use align-items to control vertical alignment.</li>
+</ol>
+
+<h2>Minimum you must remember</h2>
+<ul>
+  <li>display: flex on the parent, not the children.</li>
+  <li>justify-content (main axis) and align-items (cross axis).</li>
+</ul>
+
+<h2>Common mistakes</h2>
+<ul>
+  <li>Forgetting that flex direction changes the meaning of main and cross axis.</li>
+  <li>Overusing margins where flex properties would work better.</li>
+</ul>
+
+<h2>Interviewer perspective</h2>
+<ul>
+  <li>How is flexbox different from CSS grid?</li>
+  <li>Explain justify-content vs align-items.</li>
+</ul>
+
+<h2>Practice questions</h2>
+<ol>
+  <li>Create a responsive navbar using flexbox.</li>
+  <li>Build a three-column layout where each column takes equal width.</li>
+</ol>

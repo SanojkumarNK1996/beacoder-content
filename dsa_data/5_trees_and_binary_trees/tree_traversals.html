@@ -1,0 +1,20 @@
+<h1>🔁 Tree Traversals</h1>
+<h2>🎯 Types</h2>
+<ul>
+  <li><strong>Inorder (Left → Root → Right)</strong> – Gives sorted output for BST</li>
+  <li><strong>Preorder (Root → Left → Right)</strong> – Used to copy/serialize a tree</li>
+  <li><strong>Postorder (Left → Right → Root)</strong> – Used to delete/free a tree</li>
+  <li><strong>Level-Order (BFS)</strong> – Visit level by level using a queue</li>
+</ul>
+<div class="code-example">
+  <pre>
+void inorder(TreeNode node) {
+    if (node == null) return;
+    inorder(node.left);
+    System.out.print(node.val + " ");
+    inorder(node.right);
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Choose traversal based on goal: inorder for sorted sequence, level-order for shortest path, postorder for deletion.</p>

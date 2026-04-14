@@ -1,102 +1,65 @@
 <h1>Savepoints in SQL</h1>
-
-<p>When working with transactions, sometimes you might want to undo only a <strong>part</strong> of your changes —  
-not the entire transaction.  
-That’s where <strong>Savepoints</strong> come in.</p>
-
-<p>A <strong>Savepoint</strong> is like a “checkpoint” inside a transaction.  
-It allows you to roll back to a specific point without canceling the entire transaction.</p>
-
 <hr>
+<h2>1️⃣ Why Does This Topic Exist?</h2>
+<p>Savepoints help you undo only part of a transaction, not the whole thing. In Indian banking or railway booking, this can help fix just the last step if something goes wrong, without losing all progress.</p>
 
-<h2>1️⃣ What Is a Savepoint?</h2>
+<h2>2️⃣ What Is a Savepoint?</h2>
+<p>A savepoint is a checkpoint inside a transaction. You can roll back to a savepoint if you make a mistake, instead of rolling back the entire transaction.</p>
 
-<p>Normally, when you use <code>ROLLBACK</code>, all the changes made in the transaction are undone.  
-But with <strong>Savepoints</strong>, you can mark a position in your transaction and roll back only to that point if needed.</p>
-
-<p>Think of it like a video game: you save your progress before facing a tough challenge.  
-If you fail, you can go back to the saved point — not start the whole game over!</p>
-
-<hr>
-
-<h2>2️⃣ Savepoint Commands</h2>
-
-<p>There are two main commands for working with savepoints:</p>
-
-<ul>
-  <li><code>SAVEPOINT</code> — creates a named checkpoint within a transaction.</li>
-  <li><code>ROLLBACK TO SAVEPOINT</code> — undoes the changes made after the specified savepoint.</li>
-</ul>
-
-<p>You can also use <code>RELEASE SAVEPOINT</code> in some databases to remove a savepoint once it’s no longer needed.</p>
-
-<hr>
-
-<h2>3️⃣ Syntax</h2>
-
+<h2>3️⃣ Syntax/Structure</h2>
 <pre>
 SAVEPOINT savepoint_name;
-
+-- SQL statements
 ROLLBACK TO SAVEPOINT savepoint_name;
-
 RELEASE SAVEPOINT savepoint_name;
 </pre>
 
-<hr>
+<h2>4️⃣ Step-by-Step Execution</h2>
+<ol>
+  <li>Start a transaction with <code>BEGIN</code>.</li>
+  <li>Do some work, then set a savepoint.</li>
+  <li>Do more work. If there’s a mistake, use <code>ROLLBACK TO SAVEPOINT</code> to undo only the recent changes.</li>
+  <li>Commit the transaction when done.</li>
+</ol>
 
-<h2>4️⃣ Example of Using Savepoints</h2>
-
-<p>Let’s look at a practical example to understand how savepoints work:</p>
-
-<pre>
-BEGIN;
-
-INSERT INTO employees VALUES (1, 'Alice', 'HR');
-SAVEPOINT step1;
-
-INSERT INTO employees VALUES (2, 'Bob', 'Finance');
-SAVEPOINT step2;
-
-INSERT INTO employees VALUES (3, 'Charlie', 'IT');
-
--- Suppose we realize the last insert was wrong
-ROLLBACK TO SAVEPOINT step2;
-
-COMMIT;
-</pre>
-
-<p><strong>What happens here:</strong></p>
+<h2>5️⃣ When to Use</h2>
 <ul>
-  <li><code>step1</code> marks a checkpoint after adding Alice.</li>
-  <li><code>step2</code> marks another checkpoint after adding Bob.</li>
-  <li>After inserting Charlie, an error occurs.</li>
-  <li><code>ROLLBACK TO SAVEPOINT step2</code> undoes Charlie’s insert but keeps Alice and Bob’s data.</li>
-  <li><code>COMMIT</code> permanently saves the remaining valid changes.</li>
+  <li>When you want to undo only part of a transaction (e.g., batch updates, multi-step processes).</li>
+  <li>When debugging or testing complex changes.</li>
 </ul>
 
-<hr>
-
-<h2>5️⃣ Real-World Analogy</h2>
-
-<p>Imagine writing a long document:</p>
+<h2>6️⃣ When Not to Use</h2>
 <ul>
-  <li>You save your work halfway (that’s a <strong>savepoint</strong>).</li>
-  <li>You continue writing but make a mistake.</li>
-  <li>You undo changes up to your last save (that’s <strong>ROLLBACK TO SAVEPOINT</strong>).</li>
+  <li>For very simple transactions with only one or two steps.</li>
+  <li>If your database does not support savepoints.</li>
 </ul>
 
-<p>This lets you correct errors without losing all your earlier progress.</p>
-
-<hr>
-
-<h2>6️⃣ Advantages of Using Savepoints</h2>
-
+<h2>7️⃣ Minimum to Remember</h2>
 <ul>
-  <li>They provide finer control within a transaction.</li>
-  <li>They help recover only a portion of work when errors occur.</li>
-  <li>They make complex transactions easier to manage and debug.</li>
-  <li>They improve reliability without restarting the whole process.</li>
+  <li>Savepoints are checkpoints inside a transaction.</li>
+  <li>Use <code>ROLLBACK TO SAVEPOINT</code> to undo only recent changes.</li>
 </ul>
+
+<h2>8️⃣ Common Mistakes</h2>
+<ul>
+  <li>Forgetting to release savepoints (in some databases, this can use extra resources).</li>
+  <li>Assuming all databases support savepoints.</li>
+</ul>
+
+<h2>9️⃣ Interviewer’s Perspective</h2>
+<ul>
+  <li>What is a savepoint? How is it different from a transaction?</li>
+  <li>Give a real-life Indian example where savepoints are useful (e.g., batch salary processing).</li>
+  <li>How do you roll back to a savepoint?</li>
+</ul>
+
+<h2>🔟 Practice Questions</h2>
+<ol>
+  <li>Write SQL to use a savepoint and roll back to it after an error.</li>
+  <li>What is the difference between ROLLBACK and ROLLBACK TO SAVEPOINT?</li>
+  <li>When would you use multiple savepoints in a transaction?</li>
+  <li>How do you release a savepoint?</li>
+</ol>
 
 <hr>
 

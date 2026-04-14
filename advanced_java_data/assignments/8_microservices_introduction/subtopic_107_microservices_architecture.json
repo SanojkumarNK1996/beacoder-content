@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Microservice Boundary Identifier",
+    "description": {
+      "task": "Create a ServiceBoundaryAnalyzer class that models a microservices domain decomposition. Given a list of business capabilities, group them into cohesive services based on shared domain context and report the suggested service breakdown.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ServiceBoundaryAnalyzer {\n\n    private final Map<String, List<String>> serviceCapabilities = new LinkedHashMap<>();\n\n    public void addCapability(String serviceName, String capability) {\n        serviceCapabilities\n            .computeIfAbsent(serviceName, k -> new ArrayList<>())\n            .add(capability);\n    }\n\n    public int serviceCount() {\n        return serviceCapabilities.size();\n    }\n\n    public List<String> capabilitiesOf(String serviceName) {\n        // Return capabilities for the given service, or empty list if not found\n        return new ArrayList<>();\n    }\n\n    public boolean violatesSingleResponsibility(String serviceName, int maxCapabilities) {\n        // Returns true if the service has more capabilities than the allowed max\n        return false;\n    }\n\n    public static void main(String[] args) {\n        ServiceBoundaryAnalyzer analyzer = new ServiceBoundaryAnalyzer();\n        analyzer.addCapability(\"UserService\", \"register\");\n        analyzer.addCapability(\"UserService\", \"login\");\n        analyzer.addCapability(\"UserService\", \"updateProfile\");\n        analyzer.addCapability(\"OrderService\", \"placeOrder\");\n        analyzer.addCapability(\"OrderService\", \"cancelOrder\");\n\n        System.out.println(\"Services: \" + analyzer.serviceCount());\n        System.out.println(\"UserService capabilities: \" + analyzer.capabilitiesOf(\"UserService\"));\n        System.out.println(\"Violates SRP (max 2): \" + analyzer.violatesSingleResponsibility(\"UserService\", 2));\n    }\n}",
+      "instructions": [
+        "addCapability() uses computeIfAbsent to append the capability to the named service's list",
+        "capabilitiesOf() returns the list for the service, or an empty list if the service name is unknown",
+        "violatesSingleResponsibility() returns true when the service has strictly more than maxCapabilities",
+        "serviceCount() returns the total number of distinct service names registered",
+        "The order of capabilities must match the order they were added"
+      ],
+      "hint": "Use serviceCapabilities.getOrDefault(serviceName, List.of()) in capabilitiesOf(). For violatesSingleResponsibility(), compare capabilitiesOf(serviceName).size() > maxCapabilities.",
+      "expectedOutput": "Services: 2\nUserService capabilities: [register, login, updateProfile]\nViolates SRP (max 2): true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 107,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Service Registry Simulation",
+    "description": {
+      "task": "Implement a ServiceRegistry class that models a microservices service discovery mechanism (like Eureka). Services register with their host/port, can be deregistered, and clients can discover healthy instances of a service.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class ServiceRegistry {\n\n    public record ServiceInstance(String host, int port, boolean healthy) {}\n\n    private final Map<String, List<ServiceInstance>> registry = new HashMap<>();\n\n    public void register(String serviceName, String host, int port) {\n        // Register a new healthy instance for the service\n        registry.computeIfAbsent(serviceName, k -> new ArrayList<>())\n                .add(new ServiceInstance(host, port, true));\n    }\n\n    public boolean deregister(String serviceName, String host, int port) {\n        // Remove the instance matching host+port from the registry\n        // Return true if removed, false if not found\n        return false;\n    }\n\n    public List<ServiceInstance> discover(String serviceName) {\n        // Return all healthy instances of the service\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        ServiceRegistry registry = new ServiceRegistry();\n        registry.register(\"payment-service\", \"10.0.0.1\", 8080);\n        registry.register(\"payment-service\", \"10.0.0.2\", 8080);\n        registry.register(\"inventory-service\", \"10.0.0.3\", 9090);\n\n        System.out.println(\"Payment instances: \" + registry.discover(\"payment-service\").size());\n        boolean removed = registry.deregister(\"payment-service\", \"10.0.0.1\", 8080);\n        System.out.println(\"Removed: \" + removed);\n        System.out.println(\"Payment instances after: \" + registry.discover(\"payment-service\").size());\n    }\n}",
+      "instructions": [
+        "register() appends a new ServiceInstance with healthy=true to the service's list",
+        "deregister() removes the first instance matching both host and port; returns true if found",
+        "discover() returns only instances where healthy=true",
+        "discover() returns an empty list for unknown service names",
+        "Multiple instances of the same service can coexist (load balancing scenario)"
+      ],
+      "hint": "For deregister(), use removeIf() on the list: list.removeIf(i -> i.host().equals(host) && i.port() == port). Track whether any element was actually removed.",
+      "expectedOutput": "Payment instances: 2\nRemoved: true\nPayment instances after: 1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 107,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Circuit Breaker State Machine",
+    "description": {
+      "task": "Implement a CircuitBreaker class that protects microservices from cascading failures. The circuit breaker transitions between CLOSED (normal), OPEN (blocking calls), and HALF_OPEN (trial calls) states based on failure thresholds and recovery attempts.",
+      "language": "java",
+      "starterCode": "public class CircuitBreaker {\n\n    public enum State { CLOSED, OPEN, HALF_OPEN }\n\n    private State state = State.CLOSED;\n    private int failureCount = 0;\n    private int successCount = 0;\n    private final int failureThreshold;\n    private final int successThreshold;\n\n    public CircuitBreaker(int failureThreshold, int successThreshold) {\n        this.failureThreshold = failureThreshold;\n        this.successThreshold = successThreshold;\n    }\n\n    public void recordFailure() {\n        // Increment failure count; move to OPEN if threshold exceeded\n    }\n\n    public void recordSuccess() {\n        // In HALF_OPEN: increment successCount; move to CLOSED when successThreshold reached\n        // In CLOSED: reset failureCount\n    }\n\n    public void attemptReset() {\n        // Move from OPEN to HALF_OPEN (simulates timeout expiry)\n    }\n\n    public boolean allowRequest() {\n        // Return true if state is CLOSED or HALF_OPEN\n        return false;\n    }\n\n    public State getState() { return state; }\n\n    public static void main(String[] args) {\n        CircuitBreaker cb = new CircuitBreaker(3, 2);\n        cb.recordFailure();\n        cb.recordFailure();\n        cb.recordFailure();\n        System.out.println(\"After 3 failures: \" + cb.getState());\n        cb.attemptReset();\n        System.out.println(\"After reset attempt: \" + cb.getState());\n        cb.recordSuccess();\n        cb.recordSuccess();\n        System.out.println(\"After 2 successes: \" + cb.getState());\n    }\n}",
+      "instructions": [
+        "recordFailure() increments failureCount; when failureCount >= failureThreshold, set state=OPEN",
+        "recordSuccess() only acts when state is HALF_OPEN: increment successCount, set CLOSED when successCount >= successThreshold",
+        "recordSuccess() in CLOSED state resets failureCount to 0",
+        "attemptReset() transitions state from OPEN to HALF_OPEN and resets successCount to 0",
+        "allowRequest() returns true for CLOSED and HALF_OPEN, false for OPEN"
+      ],
+      "hint": "In recordFailure(), after incrementing, check if failureCount >= failureThreshold and set state = State.OPEN. In attemptReset(), only change state if currently OPEN.",
+      "expectedOutput": "After 3 failures: OPEN\nAfter reset attempt: HALF_OPEN\nAfter 2 successes: CLOSED"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 29,
+    "subtopicId": 107,
+    "allowedSubmissionType": "TEXT"
+  }
+]

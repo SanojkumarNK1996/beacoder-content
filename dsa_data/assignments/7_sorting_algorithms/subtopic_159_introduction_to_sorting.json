@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Stability and In-Place Sort Concepts",
+    "description": {
+      "task": "Create a class SortProperties that demonstrates the concept of stable vs unstable sorting and in-place vs out-of-place sorting. Implement a stable sort by key for a list of Student records using a custom comparator.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SortProperties {\n\n    static class Student {\n        String name;\n        int grade;\n        Student(String name, int grade) { this.name=name; this.grade=grade; }\n        public String toString() { return name+\"(\"+grade+\")\"; }\n    }\n\n    // Stable sort by grade (ascending) — equal grades preserve original name order\n    public List<Student> stableSortByGrade(List<Student> students) {\n        // TODO: Use Collections.sort with a stable comparator by grade\n        // Collections.sort is guaranteed to be stable in Java\n        List<Student> sorted = new ArrayList<>(students);\n        // sort here\n        return sorted;\n    }\n\n    // Count inversions in array (measures how unsorted an array is)\n    public int countInversions(int[] arr) {\n        // TODO: Count pairs (i,j) where i<j and arr[i]>arr[j]\n        int count = 0;\n        for (int i = 0; i < arr.length; i++)\n            for (int j = i + 1; j < arr.length; j++)\n                // TODO: if arr[i] > arr[j], increment count\n                ;\n        return count;\n    }\n\n    public static void main(String[] args) {\n        SortProperties sp = new SortProperties();\n\n        List<Student> students = Arrays.asList(\n            new Student(\"Alice\", 85),\n            new Student(\"Bob\",   72),\n            new Student(\"Carol\", 85),\n            new Student(\"Dave\",  72),\n            new Student(\"Eve\",   90)\n        );\n        System.out.println(\"Sorted: \" + sp.stableSortByGrade(students));\n\n        int[] arr = {5, 3, 1, 4, 2};\n        System.out.println(\"Inversions: \" + sp.countInversions(arr));\n    }\n}",
+      "instructions": [
+        "stableSortByGrade: sorted.sort(Comparator.comparingInt(s->s.grade));",
+        "countInversions: if(arr[i]>arr[j]) count++;",
+        "Stable sort means Alice(85) comes before Carol(85), Bob(72) before Dave(72) — original order preserved within tied grades",
+        "Inversions in {5,3,1,4,2}: (5,3),(5,1),(5,4),(5,2),(3,1),(3,2),(4,2) = 7 inversions",
+        "Java's Collections.sort / List.sort uses TimSort which is stable"
+      ],
+      "hint": "sorted.sort(Comparator.comparingInt(s->s.grade)); and if(arr[i]>arr[j]) count++;",
+      "expectedOutput": "Sorted: [Bob(72), Dave(72), Alice(85), Carol(85), Eve(90)]\nInversions: 7"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 159,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Sorting Complexity Analysis",
+    "description": {
+      "task": "Implement a SortBenchmark class that runs Bubble Sort, Merge Sort, and Java's built-in sort on the same array and compares their operation counts. Count the number of comparisons made by each algorithm.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class SortBenchmark {\n    static long comparisons;\n\n    static void bubbleSort(int[] arr) {\n        int n = arr.length;\n        comparisons = 0;\n        for (int i = 0; i < n-1; i++)\n            for (int j = 0; j < n-i-1; j++) {\n                comparisons++;\n                if (arr[j] > arr[j+1]) { int t=arr[j]; arr[j]=arr[j+1]; arr[j+1]=t; }\n            }\n    }\n\n    static void merge(int[] arr, int l, int m, int r) {\n        int[] left = Arrays.copyOfRange(arr, l, m+1);\n        int[] right = Arrays.copyOfRange(arr, m+1, r+1);\n        int i=0, j=0, k=l;\n        while (i<left.length && j<right.length) {\n            comparisons++;\n            if (left[i] <= right[j]) arr[k++]=left[i++];\n            else arr[k++]=right[j++];\n        }\n        while (i<left.length) arr[k++]=left[i++];\n        while (j<right.length) arr[k++]=right[j++];\n    }\n\n    static void mergeSort(int[] arr, int l, int r) {\n        if (l < r) {\n            int m = (l+r)/2;\n            mergeSort(arr, l, m);\n            mergeSort(arr, m+1, r);\n            merge(arr, l, m, r);\n        }\n    }\n\n    public static void main(String[] args) {\n        int[] base = {64, 34, 25, 12, 22, 11, 90, 55, 43, 77};\n\n        int[] a1 = base.clone();\n        bubbleSort(a1);\n        long bubbleCmp = comparisons;\n\n        int[] a2 = base.clone();\n        comparisons = 0;\n        mergeSort(a2, 0, a2.length-1);\n        long mergeCmp = comparisons;\n\n        // TODO: Print sorted arrays and comparison counts\n        System.out.println(\"Bubble sorted: \" + Arrays.toString(a1));\n        System.out.println(\"Bubble comparisons: \" + bubbleCmp);\n        System.out.println(\"Merge sorted:  \" + Arrays.toString(a2));\n        System.out.println(\"Merge comparisons:  \" + mergeCmp);\n        System.out.println(\"Merge is faster: \" + (mergeCmp < bubbleCmp));\n    }\n}",
+      "instructions": [
+        "All implementations are provided — run the code and understand the output",
+        "Bubble sort makes O(n²) comparisons: n=10 array → up to 45 comparisons in worst case",
+        "Merge sort makes O(n log n) comparisons: n=10 → roughly 24 comparisons",
+        "The arrays should be sorted identically, but merge sort uses far fewer comparisons",
+        "This illustrates why O(n log n) algorithms are preferred over O(n²) for large inputs"
+      ],
+      "hint": "This is a read-and-run exercise. All code is provided. Focus on how comparison counts differ between O(n²) and O(n log n) algorithms.",
+      "expectedOutput": "Bubble sorted: [11, 12, 22, 25, 34, 43, 55, 64, 77, 90]\nBubble comparisons: 45\nMerge sorted:  [11, 12, 22, 25, 34, 43, 55, 64, 77, 90]\nMerge comparisons:  24\nMerge is faster: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 159,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "When to Use Which Sort",
+    "description": {
+      "task": "Implement a SmartSorter class that selects the most appropriate sorting strategy based on input characteristics: use Insertion Sort for small arrays (n≤10), Merge Sort for partially sorted arrays, and Quick Sort otherwise. Print which strategy was chosen.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class SmartSorter {\n\n    void insertionSort(int[] arr) {\n        for (int i=1;i<arr.length;i++){\n            int key=arr[i], j=i-1;\n            while(j>=0 && arr[j]>key){ arr[j+1]=arr[j]; j--; }\n            arr[j+1]=key;\n        }\n    }\n\n    void mergeSort(int[] arr, int l, int r) {\n        if(l>=r) return;\n        int m=(l+r)/2;\n        mergeSort(arr,l,m); mergeSort(arr,m+1,r);\n        int[] tmp=Arrays.copyOfRange(arr,l,r+1);\n        int i=0,j=m-l+1,k=l;\n        while(i<=m-l && j<tmp.length) arr[k++]=(tmp[i]<=tmp[j])?tmp[i++]:tmp[j++];\n        while(i<=m-l) arr[k++]=tmp[i++];\n        while(j<tmp.length) arr[k++]=tmp[j++];\n    }\n\n    void quickSort(int[] arr, int lo, int hi) {\n        if(lo>=hi) return;\n        int pivot=arr[hi], i=lo;\n        for(int j=lo;j<hi;j++) if(arr[j]<=pivot){int t=arr[i];arr[i]=arr[j];arr[j]=t;i++;}\n        int t=arr[i];arr[i]=arr[hi];arr[hi]=t;\n        quickSort(arr,lo,i-1); quickSort(arr,i+1,hi);\n    }\n\n    int countInversions(int[] arr) {\n        int c=0;\n        for(int i=0;i<arr.length;i++) for(int j=i+1;j<arr.length;j++) if(arr[i]>arr[j]) c++;\n        return c;\n    }\n\n    public void smartSort(int[] arr) {\n        if (arr.length <= 10) {\n            System.out.println(\"Strategy: Insertion Sort (small)\");\n            // TODO: call insertionSort\n        } else if (countInversions(arr) < arr.length) {\n            System.out.println(\"Strategy: Merge Sort (nearly sorted)\");\n            // TODO: call mergeSort\n        } else {\n            System.out.println(\"Strategy: Quick Sort (general)\");\n            // TODO: call quickSort\n        }\n    }\n\n    public static void main(String[] args) {\n        SmartSorter ss = new SmartSorter();\n\n        int[] small = {5,2,8,1,9};\n        ss.smartSort(small);\n        System.out.println(Arrays.toString(small));\n\n        int[] nearlySorted = {1,2,3,5,4,6,7,8,9,10,11,12};\n        ss.smartSort(nearlySorted);\n        System.out.println(Arrays.toString(nearlySorted));\n\n        int[] general = {50,20,80,10,90,30,70,40,60,15,25,85};\n        ss.smartSort(general);\n        System.out.println(Arrays.toString(general));\n    }\n}",
+      "instructions": [
+        "insertionSort(arr) for small arrays, mergeSort(arr,0,arr.length-1) for nearly sorted, quickSort(arr,0,arr.length-1) for general",
+        "small has 5 elements → Insertion Sort; nearlySorted has 1 inversion < 12 → Merge Sort; general has many inversions → Quick Sort",
+        "All sorting algorithms are already fully implemented",
+        "Just add the three method calls inside the conditionals"
+      ],
+      "hint": "insertionSort(arr); / mergeSort(arr,0,arr.length-1); / quickSort(arr,0,arr.length-1);",
+      "expectedOutput": "Strategy: Insertion Sort (small)\n[1, 2, 5, 8, 9]\nStrategy: Merge Sort (nearly sorted)\n[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\nStrategy: Quick Sort (general)\n[10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 85, 90]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 40,
+    "subtopicId": 159,
+    "allowedSubmissionType": "TEXT"
+  }
+]

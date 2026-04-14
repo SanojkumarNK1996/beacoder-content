@@ -1,0 +1,76 @@
+[
+  {
+    "title": "Well-Commented Temperature Converter",
+    "description": {
+      "task": "Write a Java program that converts a temperature from Celsius to Fahrenheit, with proper single-line comments and a Javadoc comment explaining the code.",
+      "language": "java",
+      "starterCode": "/**\n * TemperatureConverter.java\n * TODO: Add a multi-line Javadoc comment here explaining the program's purpose.\n */\npublic class TemperatureConverter {\n    public static void main(String[] args) {\n        double celsius = 37.0;\n\n        // TODO: Add a single-line comment explaining the formula before this line\n        double fahrenheit; // Apply the formula: F = (C * 9.0 / 5.0) + 32\n\n        // Print the result in format: 37.0 C = 98.6 F\n    }\n}",
+      "instructions": [
+        "Use 37.0 as the Celsius value (normal human body temperature).",
+        "Apply the formula: fahrenheit = (celsius * 9.0 / 5.0) + 32",
+        "Write a Javadoc comment (/** ... */) at the top of the class explaining what the program does.",
+        "Add at least one single-line comment (//) inside main() explaining the formula.",
+        "Print the result in the exact format: '37.0C = 98.6F'"
+      ],
+      "hint": "Use 9.0 / 5.0 (with .0) instead of 9 / 5 to avoid integer division. Comments have no effect on program output — only System.out.println() produces output.",
+      "expectedOutput": "37.0C = 98.6F"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 7,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Add Comments to Mystery Code",
+    "description": {
+      "task": "The starter code is a working program but has zero comments. Add meaningful comments to explain every section of the code.",
+      "language": "java",
+      "context": "Reading and annotating existing code is a real developer skill — you will often need to understand code written by others.",
+      "starterCode": "public class MysteryCode {\n    public static void main(String[] args) {\n        int n = 10;\n        int sum = 0;\n        for (int i = 1; i <= n; i++) {\n            sum = sum + i;\n        }\n        System.out.println(sum);\n    }\n}",
+      "instructions": [
+        "Do NOT change any of the logic or variable names in the code.",
+        "Add a single-line comment above the class explaining what the program does overall.",
+        "Add a comment before 'int n = 10;' explaining what n represents.",
+        "Add a comment before the for-loop explaining what it does.",
+        "Add a comment on the line 'sum = sum + i;' explaining the accumulation.",
+        "The output must remain the same: 55."
+      ],
+      "hint": "This program calculates the sum of all integers from 1 to 10. The answer is 1+2+3+...+10 = 55.",
+      "expectedOutput": "55"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 7,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Javadoc for a Simple Calculator Class",
+    "description": {
+      "task": "Write a Java class called SimpleCalculator that has two static methods (add and multiply). Add proper Javadoc comments to the class and both methods.",
+      "language": "java",
+      "context": "Javadoc is a documentation standard used in professional Java development. IDEs like IntelliJ use Javadoc to show tooltips when you hover over methods.",
+      "starterCode": "// Add your class-level Javadoc here\npublic class SimpleCalculator {\n\n    // Add method-level Javadoc here\n    public static int add(int a, int b) {\n        return a + b;\n    }\n\n    // Add method-level Javadoc here\n    public static int multiply(int a, int b) {\n        return a * b;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"3 + 4 = \" + add(3, 4));\n        System.out.println(\"3 x 4 = \" + multiply(3, 4));\n    }\n}",
+      "instructions": [
+        "Replace the '// Add your class-level Javadoc here' placeholder with a proper /** ... */ Javadoc block.",
+        "Add a Javadoc comment before each method that includes a @param tag for each parameter and a @return tag.",
+        "Do NOT change the method logic.",
+        "The program must still print the expected output."
+      ],
+      "hint": "Javadoc format: /** \\n * Description.\\n * @param a first number\\n * @return the result\\n */",
+      "expectedOutput": "3 + 4 = 7\n3 x 4 = 12"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 7,
+    "allowedSubmissionType": "TEXT"
+  }
+]

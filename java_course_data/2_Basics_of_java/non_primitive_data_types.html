@@ -1,65 +1,130 @@
-<h2>Non-Primitive Data Types</h2>
+<h1>🧩 Non-Primitive (Reference) Data Types</h1>
 
-<p>Non-primitive types (also known as <strong>reference types</strong>) are more complex. They are created from classes and can store multiple values or objects.  
-Unlike primitive types, non-primitive types have methods (functions) you can use to perform operations.</p>
+<h2>1. 🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>In a <strong>Swiggy order</strong>, you don’t just store one value:</li>
+  <ul>
+    <li>Restaurant name (text)</li>
+    <li>List of items</li>
+    <li>Each item has name, price, quantity</li>
+  </ul>
+  <li>Primitive types alone (int, double, etc.) are not enough to model this.</li>
+  <li>We need <strong>non-primitive types</strong> like <code>String</code>, <code>arrays</code>, and <strong>classes/objects</strong> to represent real-world data.</li>
+</ul>
 
-<h3>1. Strings</h3>
-<p>A <strong>String</strong> is used to store text. It is actually a class in Java, not a primitive type.</p>
+<h2>2. 📖 What Are Non-Primitive Data Types?</h2>
+<ul>
+  <li>Also called <strong>reference types</strong>.</li>
+  <li>They are created from <strong>classes</strong>.</li>
+  <li>They can store <strong>multiple values</strong> and have <strong>methods</strong>.</li>
+  <li>Examples: <code>String</code>, arrays, classes, interfaces, objects.</li>
+</ul>
 
+<h2>3. 🧾 Syntax / Basic Structure ⭐</h2>
+<p>Examples:</p>
+<pre><code>// String
+String city = "Bengaluru";
+
+// Array of integers
+int[] marks = {85, 90, 78, 92};
+
+// Custom class object (imagine Student class exists)
+Student s = new Student();
+</code></pre>
+
+<h2>4. 🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<h3>Example with String</h3>
 <pre><code>public class StringExample {
-    public static void main(String[] args) {
-        String name = "Java Programming";
-        System.out.println("Welcome to " + name);
-        System.out.println("Length: " + name.length());
-        System.out.println("Uppercase: " + name.toUpperCase());
-    }
-}</code></pre>
+  public static void main(String[] args) {
+    String course = "Java Programming";      // 1
+    System.out.println(course);              // 2
+    System.out.println(course.length());     // 3
+    System.out.println(course.toUpperCase()); // 4
+  }
+}
+</code></pre>
+<ol>
+  <li>Line 3 – <code>String</code> variable <code>course</code> is created.</li>
+  <li>Line 4 – Prints the text as it is.</li>
+  <li>Line 5 – Calls method <code>length()</code> to get number of characters.</li>
+  <li>Line 6 – Calls <code>toUpperCase()</code> to convert text to uppercase.</li>
+</ol>
 
-<p>Strings can be combined, compared, and modified using built-in methods like <code>length()</code>, <code>toUpperCase()</code>, and <code>concat()</code>.</p>
-
-<h3>2. Arrays</h3>
-<p>An <strong>Array</strong> is a collection of elements of the same type, stored in a single variable.  
-For example, you can store multiple numbers or names together.</p>
-
+<h3>Example with Array</h3>
 <pre><code>public class ArrayExample {
-    public static void main(String[] args) {
-        int[] numbers = {10, 20, 30, 40, 50};
-        
-        System.out.println("First number: " + numbers[0]);
-        System.out.println("All numbers:");
-        
-        for (int num : numbers) {
-            System.out.println(num);
-        }
+  public static void main(String[] args) {
+    int[] marks = {85, 90, 78};        // 1
+    System.out.println(marks[0]);     // 2
+
+    for (int mark : marks) {          // 3
+      System.out.println(mark);     // 4
     }
-}</code></pre>
+  }
+}
+</code></pre>
+<ol>
+  <li>Line 3 – Creates an array of three integers.</li>
+  <li>Line 4 – Accesses the first element using index <code>0</code>.</li>
+  <li>Lines 6–8 – Loop through the array and print each mark.</li>
+</ol>
 
-<p>Arrays make it easy to manage multiple values using indexes. The first element starts at position <strong>0</strong>.</p>
+<h2>5. ✅ When to Use Non-Primitive Types</h2>
+<ul>
+  <li>When you need to store <strong>text</strong> (names, cities, email) → <code>String</code>.</li>
+  <li>When you have a <strong>list of similar values</strong> (marks, ticket numbers) → arrays.</li>
+  <li>When you model <strong>real-world entities</strong> (Student, Order, Account) → classes/objects.</li>
+</ul>
 
-<hr>
+<h2>6. ⛔ When NOT to Use Non-Primitive Types</h2>
+<ul>
+  <li>For very small, simple values like counters, flags, or tiny calculations – primitives are enough.</li>
+  <li>When performance is ultra-critical and object overhead is unnecessary.</li>
+</ul>
 
-<h3>3. Summary</h3>
-<table border="1" cellpadding="8" cellspacing="0">
-  <thead>
-    <tr>
-      <th>Category</th>
-      <th>Type</th>
-      <th>Example</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Primitive</td>
-      <td>int, float, double, char, boolean, byte, short, long</td>
-      <td><code>int age = 30;</code></td>
-    </tr>
-    <tr>
-      <td>Non-Primitive</td>
-      <td>String, Array, Classes, Interfaces, Objects</td>
-      <td><code>String name = "Java";</code></td>
-    </tr>
-  </tbody>
-</table>
+<h2>7. 🧠 Minimum You MUST Remember</h2>
+<ul>
+  <li>Non-primitive = <strong>reference</strong> types (they refer to objects in memory).</li>
+  <li><code>String</code> and arrays are the most commonly used non-primitive types for beginners.</li>
+  <li>They have <strong>methods</strong> (like <code>length()</code>, <code>toUpperCase()</code>).</li>
+</ul>
 
-<p>Understanding data types is essential in Java. They decide what kind of data you can store, how much memory it uses, and what operations you can perform.  
-Always choose the type that best fits your data for efficient and clean code.</p>
+<h2>8. ⚠️ Common Mistakes</h2>
+<ul>
+  <li>Confusing <code>String</code> with a primitive type (it is a <strong>class</strong>).</li>
+  <li>Forgetting that array indices start from <strong>0</strong> (not 1).</li>
+  <li>Trying to access an index outside the array range → <code>ArrayIndexOutOfBoundsException</code>.</li>
+</ul>
+
+<h2>9. 🎤 Interviewer’s Perspective</h2>
+<p>Common questions:</p>
+<ul>
+  <li>"Difference between primitive and non-primitive data types?"</li>
+  <li>"Is String a primitive type in Java? Explain."</li>
+  <li>"What is the default value of reference types?" (Answer: <code>null</code>).</li>
+  <li>"How do you declare and use an array?"</li>
+</ul>
+
+<h2>10. 📝 Practice Questions ⭐</h2>
+<ol>
+  <li>
+    <strong>Very Easy:</strong>
+    <p>Declare a <code>String</code> variable with your full name and print:</p>
+    <ul>
+      <li>The name.</li>
+      <li>The length of the name.</li>
+      <li>The name in uppercase.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>Easy:</strong>
+    <p>Create an <code>int</code> array with 5 marks and print all marks using a loop.</p>
+  </li>
+  <li>
+    <strong>Medium:</strong>
+    <p>Explain in your own words the differences between primitive and non-primitive data types with 2–3 examples each.</p>
+  </li>
+  <li>
+    <strong>Medium:</strong>
+    <p>Think of a "Student" – list 5 fields you would store (like name, rollNo, marks[]) and mention which data type (primitive / non-primitive) each one should be.</p>
+  </li>
+</ol>

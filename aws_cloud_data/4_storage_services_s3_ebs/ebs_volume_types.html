@@ -1,0 +1,21 @@
+<h1>📊 EBS Volume Types</h1>
+<h2>🎯 SSD-Backed Volumes</h2>
+<ul>
+  <li><strong>gp3 (General Purpose SSD)</strong>: Baseline 3,000 IOPS, up to 16,000 IOPS. Best overall choice for most workloads. Default boot volume.</li>
+  <li><strong>io2 Block Express (Provisioned IOPS SSD)</strong>: Ultra-high performance, up to 256,000 IOPS. Best for critical databases (Oracle, SQL Server) requiring consistent IOPS.</li>
+</ul>
+<h2>🎯 HDD-Backed Volumes</h2>
+<ul>
+  <li><strong>st1 (Throughput Optimized HDD)</strong>: High throughput for sequential workloads. Big data, data warehouses, log processing. Cannot be boot volume.</li>
+  <li><strong>sc1 (Cold HDD)</strong>: Lowest cost, infrequently accessed data. Cannot be boot volume.</li>
+</ul>
+<h2>📊 Comparison</h2>
+<table border="1" style="border-collapse:collapse; width:100%">
+  <tr><th>Type</th><th>Use Case</th><th>Max IOPS</th></tr>
+  <tr><td>gp3</td><td>General/Boot</td><td>16,000</td></tr>
+  <tr><td>io2</td><td>Critical DB</td><td>256,000</td></tr>
+  <tr><td>st1</td><td>Big Data</td><td>500 MB/s throughput</td></tr>
+  <tr><td>sc1</td><td>Archive/Cold</td><td>250 MB/s throughput</td></tr>
+</table>
+<h2>🎯 Summary</h2>
+<p>Use gp3 as your default. Use io2 only when you need guaranteed high IOPS for mission-critical databases.</p>

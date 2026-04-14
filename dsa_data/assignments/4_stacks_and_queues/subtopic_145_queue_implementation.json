@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Circular Queue Implementation",
+    "description": {
+      "task": "Implement a CircularQueue class using a fixed-size array with head and tail indices that wrap around. When the array is full, enqueue should throw an exception. Demonstrate isFull and isEmpty correctly reflect state.",
+      "language": "java",
+      "starterCode": "public class CircularQueue {\n\n    private int[] data;\n    private int head, tail, size, capacity;\n\n    public CircularQueue(int capacity) {\n        this.capacity = capacity;\n        data = new int[capacity];\n        head = tail = size = 0;\n    }\n\n    public void enqueue(int val) {\n        if (isFull()) throw new RuntimeException(\"Queue full\");\n        // TODO: store val at tail, advance tail circularly, increment size\n    }\n\n    public int dequeue() {\n        if (isEmpty()) throw new RuntimeException(\"Queue empty\");\n        int val = data[head];\n        // TODO: advance head circularly, decrement size\n        return val;\n    }\n\n    public int peek() {\n        if (isEmpty()) throw new RuntimeException(\"Queue empty\");\n        return data[head];\n    }\n\n    public boolean isEmpty() { return size == 0; }\n    public boolean isFull() { return size == capacity; }\n\n    public void printState() {\n        System.out.print(\"Queue: \");\n        int idx = head;\n        for (int i = 0; i < size; i++) {\n            System.out.print(data[idx]);\n            if (i < size - 1) System.out.print(\", \");\n            idx = (idx + 1) % capacity;\n        }\n        System.out.println(\" [size=\" + size + \"]\");\n    }\n\n    public static void main(String[] args) {\n        CircularQueue cq = new CircularQueue(4);\n        cq.enqueue(1); cq.enqueue(2); cq.enqueue(3);\n        cq.printState();\n        System.out.println(\"Dequeue: \" + cq.dequeue());\n        cq.enqueue(4); cq.enqueue(5);\n        cq.printState();\n        System.out.println(\"Full: \" + cq.isFull());\n    }\n}",
+      "instructions": [
+        "enqueue: data[tail]=val; tail=(tail+1)%capacity; size++;",
+        "dequeue: head=(head+1)%capacity; size--; (val is already saved before this)",
+        "printState() is already implemented",
+        "After enqueue(1,2,3): size=3; after dequeue(): head advances, returns 1",
+        "After enqueue(4,5): queue wraps around; isFull=true (size==capacity=4)"
+      ],
+      "hint": "enqueue: data[tail]=val; tail=(tail+1)%capacity; size++. dequeue: head=(head+1)%capacity; size--;",
+      "expectedOutput": "Queue: 1, 2, 3 [size=3]\nDequeue: 1\nQueue: 2, 3, 4, 5 [size=4]\nFull: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 145,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Priority Queue Implementation",
+    "description": {
+      "task": "Implement a MaxPriorityQueue class backed by a max-heap (int array). Support insert and extractMax. The heap invariant: parent >= children. Use swim-up on insert and sink-down on extract.",
+      "language": "java",
+      "starterCode": "public class MaxPriorityQueue {\n\n    private int[] heap;\n    private int size;\n\n    public MaxPriorityQueue(int capacity) {\n        heap = new int[capacity + 1]; // 1-indexed\n        size = 0;\n    }\n\n    private void swap(int i, int j) {\n        int tmp = heap[i]; heap[i] = heap[j]; heap[j] = tmp;\n    }\n\n    public void insert(int val) {\n        heap[++size] = val;\n        // TODO: swim up: while size > 1 and heap[k] > heap[k/2], swap k with k/2\n        int k = size;\n        while (k > 1 && heap[k] > heap[k / 2]) {\n            swap(k, k / 2);\n            k = k / 2;\n        }\n    }\n\n    public int extractMax() {\n        int max = heap[1];\n        swap(1, size--);\n        // TODO: sink down from position 1\n        //   while 2*k <= size: find larger child j; if heap[k]>=heap[j] break; swap k,j; k=j\n        return max;\n    }\n\n    public int peek() { return heap[1]; }\n    public int size() { return size; }\n\n    public static void main(String[] args) {\n        MaxPriorityQueue pq = new MaxPriorityQueue(10);\n        pq.insert(3); pq.insert(1); pq.insert(4); pq.insert(1); pq.insert(5);\n        System.out.println(\"Max: \" + pq.peek());\n        System.out.println(pq.extractMax());\n        System.out.println(pq.extractMax());\n        System.out.println(pq.extractMax());\n    }\n}",
+      "instructions": [
+        "insert swim-up is already implemented — read it to understand the pattern",
+        "extractMax sink-down: int k=1; while(2*k<=size){int j=2*k; if(j<size&&heap[j]<heap[j+1]) j++; if(heap[k]>=heap[j]) break; swap(k,j); k=j;}",
+        "After inserting [3,1,4,1,5]: max=5",
+        "ExtractMax sequence: 5, 4, 3",
+        "Heap is 1-indexed: root at index 1, children of k at 2k and 2k+1"
+      ],
+      "hint": "sink-down: int k=1; while(2*k<=size){int j=2*k; if(j<size&&heap[j]<heap[j+1])j++; if(heap[k]>=heap[j])break; swap(k,j); k=j;}",
+      "expectedOutput": "Max: 5\n5\n4\n3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 145,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Deque (Double-Ended Queue) Implementation",
+    "description": {
+      "task": "Implement a Deque class backed by a doubly linked list. Support addFirst, addLast, removeFirst, removeLast, peekFirst, and peekLast. Demonstrate using it as both a stack and a queue.",
+      "language": "java",
+      "starterCode": "public class Deque {\n\n    private static class Node {\n        int val; Node prev, next;\n        Node(int v) { val = v; }\n    }\n\n    private Node head, tail;\n    private int size;\n\n    public void addFirst(int val) {\n        Node n = new Node(val);\n        if (head == null) { head = tail = n; }\n        else { n.next = head; head.prev = n; head = n; }\n        size++;\n    }\n\n    public void addLast(int val) {\n        // TODO: add to tail end\n    }\n\n    public int removeFirst() {\n        if (head == null) throw new RuntimeException(\"Empty\");\n        int v = head.val;\n        if (head == tail) { head = tail = null; }\n        else { head = head.next; head.prev = null; }\n        size--;\n        return v;\n    }\n\n    public int removeLast() {\n        // TODO: remove from tail end\n        return -1;\n    }\n\n    public int peekFirst() { return head != null ? head.val : -1; }\n    public int peekLast() { return tail != null ? tail.val : -1; }\n    public int size() { return size; }\n\n    public static void main(String[] args) {\n        Deque dq = new Deque();\n        dq.addLast(1); dq.addLast(2); dq.addLast(3);\n        System.out.println(\"As queue (FIFO):\");\n        System.out.println(dq.removeFirst() + \", \" + dq.removeFirst() + \", \" + dq.removeFirst());\n        dq.addFirst(3); dq.addFirst(2); dq.addFirst(1);\n        System.out.println(\"As stack (LIFO):\");\n        System.out.println(dq.removeFirst() + \", \" + dq.removeFirst() + \", \" + dq.removeFirst());\n    }\n}",
+      "instructions": [
+        "addLast(val): Node n=new Node(val); if(tail==null){head=tail=n;} else {tail.next=n; n.prev=tail; tail=n;} size++;",
+        "removeLast(): if(head==tail){int v=tail.val; head=tail=null; size--; return v;} int v=tail.val; tail=tail.prev; tail.next=null; size--; return v;",
+        "addFirst and removeFirst are already implemented as reference",
+        "As queue: addLast(1,2,3) then removeFirst three times → 1, 2, 3",
+        "As stack: addFirst(3,2,1) then removeFirst three times → 1, 2, 3"
+      ],
+      "hint": "addLast: Node n=new Node(val); if(tail==null){head=tail=n;}else{tail.next=n;n.prev=tail;tail=n;} size++;",
+      "expectedOutput": "As queue (FIFO):\n1, 2, 3\nAs stack (LIFO):\n1, 2, 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 145,
+    "allowedSubmissionType": "TEXT"
+  }
+]

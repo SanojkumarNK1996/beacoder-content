@@ -1,0 +1,150 @@
+<h1>🏗️ Introduction to Build Tools</h1>
+
+<h2>🎯 Why Do We Need Build Tools?</h2>
+<p>As Java projects grow, manual compilation and packaging become painful:</p>
+<ul>
+  <li>Compiling dozens or hundreds of .java files</li>
+  <li>Managing library jars and versions</li>
+  <li>Running tests, generating reports</li>
+  <li>Packaging apps into JAR/WAR files</li>
+</ul>
+<p><strong>Build tools</strong> automate these tasks so you can focus on writing code.</p>
+
+<div class="analogy-card">
+  <h3>🏭 Factory Analogy</h3>
+  <p>Think of your project as a product:</p>
+  <ul>
+    <li>🔩 Source files = Raw materials</li>
+    <li>⚙️ Build tool = Assembly line</li>
+    <li>📦 JAR/WAR = Finished product</li>
+  </ul>
+  <p>Build tools define and automate the steps to go from raw materials to final product.</p>
+</div>
+
+<h2>🔧 Common Java Build Tools</h2>
+
+<ul>
+  <li>🧱 <strong>Ant</strong> – Older, XML-based, very flexible but verbose</li>
+  <li>📦 <strong>Maven</strong> – Convention-over-configuration, dependency management via POM</li>
+  <li>⚡ <strong>Gradle</strong> – Modern, Groovy/Kotlin DSL, powerful and flexible</li>
+</ul>
+
+<p>In modern Java and Spring projects, <strong>Maven and Gradle</strong> are the most popular.</p>
+
+<h2>📦 What Do Build Tools Handle?</h2>
+
+<ul>
+  <li>🔨 <strong>Compilation</strong> – Compile Java source to bytecode</li>
+  <li>🧪 <strong>Testing</strong> – Run unit/integration tests</li>
+  <li>📦 <strong>Packaging</strong> – Create JAR/WAR artifacts</li>
+  <li>📥 <strong>Dependency Management</strong> – Download and resolve libraries from repositories</li>
+  <li>🚀 <strong>Deployment</strong> – Publish artifacts, run apps, build Docker images (via plugins)</li>
+</ul>
+
+<h2>🌐 Repositories</h2>
+<p>Build tools download dependencies from <strong>artifact repositories</strong>:</p>
+<ul>
+  <li>🌍 <strong>Maven Central</strong> (https://repo.maven.apache.org/maven2)</li>
+  <li>📦 <strong>JCenter</strong> (historically popular, now read-only)</li>
+  <li>🏢 Private repositories like Nexus, Artifactory</li>
+</ul>
+
+<h2>🧱 Project Structure Conventions</h2>
+<p>Both Maven and Gradle typically follow a standard structure:</p>
+
+<div class="code-example">
+  <pre>
+my-project/
+├── src/
+│   ├── main/
+│   │   ├── java/          # Application source code
+│   │   └── resources/     # Config files, templates, static assets
+│   └── test/
+│       ├── java/          # Test source code
+│       └── resources/     # Test resources
+├── target/ or build/      # Compiled output
+├── pom.xml or build.gradle
+└── README.md
+  </pre>
+</div>
+
+<p>Following conventions means tools & frameworks (like Spring Boot) can auto-detect your code and resources.</p>
+
+<h2>⚙️ Build Lifecycle (High Level)</h2>
+
+<p>Build tools define a lifecycle: ordered steps that run in sequence.</p>
+<ul>
+  <li>🧹 <strong>clean</strong> – Remove previous build output</li>
+  <li>🔨 <strong>compile</strong> – Compile source code</li>
+  <li>🧪 <strong>test</strong> – Run tests</li>
+  <li>📦 <strong>package</strong> – Create JAR/WAR</li>
+  <li>🚀 <strong>install</strong> – Install artifact to local repository</li>
+  <li>☁️ <strong>deploy</strong> – Deploy artifact to remote repository</li>
+</ul>
+
+<h2>🧪 Running Common Tasks</h2>
+
+<h3>With Maven</h3>
+<div class="code-example">
+  <pre>
+# Clean and compile
+mvn clean compile
+
+# Run tests
+mvn test
+
+# Package as JAR/WAR
+mvn package
+
+# Install to local repository (~/.m2/repository)
+mvn install
+  </pre>
+</div>
+
+<h3>With Gradle</h3>
+<div class="code-example">
+  <pre>
+# Using Gradle wrapper (recommended)
+./gradlew clean build
+
+# Run tests
+./gradlew test
+
+# Build JAR
+./gradlew jar
+  </pre>
+</div>
+
+<h2>📦 Dependency Coordinates</h2>
+<p>Libraries are identified by their <strong>coordinates</strong>:</p>
+
+<ul>
+  <li><strong>groupId</strong> – Organization (e.g., <code>org.springframework.boot</code>)</li>
+  <li><strong>artifactId</strong> – Library name (e.g., <code>spring-boot-starter-web</code>)</li>
+  <li><strong>version</strong> – Version number (e.g., <code>3.2.0</code>)</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+# Maven example
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+  &lt;version&gt;3.2.0&lt;/version&gt;
+&lt;/dependency&gt;
+
+# Gradle example
+dependencies {
+  implementation "org.springframework.boot:spring-boot-starter-web:3.2.0"
+}
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Build tools automate compilation, testing, packaging, and dependency management</li>
+  <li>Maven and Gradle are the main tools for modern Java/Spring projects</li>
+  <li>They use standard project structures and lifecycles to simplify builds</li>
+</ul>
+
+<p>Next, you&apos;ll dive deeper into <strong>Maven fundamentals</strong> and then compare it with <strong>Gradle</strong>.</p>

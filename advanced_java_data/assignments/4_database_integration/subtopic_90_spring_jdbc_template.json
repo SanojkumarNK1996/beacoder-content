@@ -1,0 +1,72 @@
+[
+  {
+    "title": "JdbcTemplate Row Mapper",
+    "description": {
+      "task": "Implement a RowMapper interface that converts a database row (represented as a Map) into a Java object. Use it in a query method to map multiple rows.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic interface RowMapper<T> {\n    T mapRow(Map<String, Object> row, int rowNum);\n}\n\npublic class Employee {\n    private int id;\n    private String name;\n    private String department;\n    private double salary;\n    \n    public Employee(int id, String name, String department, double salary) {\n        this.id = id; this.name = name; this.department = department; this.salary = salary;\n    }\n    \n    @Override\n    public String toString() {\n        return \"Employee{id=\" + id + \", name='\" + name + \"', dept='\" + department + \"', salary=\" + salary + \"}\";\n    }\n}\n\npublic class EmployeeRowMapper implements RowMapper<Employee> {\n    @Override\n    public Employee mapRow(Map<String, Object> row, int rowNum) {\n        // TODO: Extract id, name, department, salary from row map and return Employee\n        return null;\n    }\n}\n\npublic class MockJdbcTemplate {\n    private List<Map<String, Object>> simulatedData;\n    \n    public MockJdbcTemplate() {\n        simulatedData = new ArrayList<>();\n        Map<String, Object> row1 = new HashMap<>();\n        row1.put(\"id\", 1); row1.put(\"name\", \"Alice\"); row1.put(\"department\", \"Engineering\"); row1.put(\"salary\", 85000.0);\n        Map<String, Object> row2 = new HashMap<>();\n        row2.put(\"id\", 2); row2.put(\"name\", \"Bob\"); row2.put(\"department\", \"Marketing\"); row2.put(\"salary\", 72000.0);\n        Map<String, Object> row3 = new HashMap<>();\n        row3.put(\"id\", 3); row3.put(\"name\", \"Carol\"); row3.put(\"department\", \"Engineering\"); row3.put(\"salary\", 91000.0);\n        simulatedData.addAll(Arrays.asList(row1, row2, row3));\n    }\n    \n    public <T> List<T> query(String sql, RowMapper<T> mapper) {\n        System.out.println(\"Executing: \" + sql);\n        // TODO: Map each row using mapper and return result list\n        return new ArrayList<>();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        MockJdbcTemplate template = new MockJdbcTemplate();\n        List<Employee> employees = template.query(\n            \"SELECT * FROM employees\",\n            new EmployeeRowMapper()\n        );\n        employees.forEach(System.out::println);\n    }\n}",
+      "instructions": [
+        "Implement EmployeeRowMapper.mapRow() by extracting values from the row map using proper casting.",
+        "Implement MockJdbcTemplate.query() by iterating simulatedData, calling mapper.mapRow() for each row with index, and collecting results.",
+        "Run Main as-is.",
+        "Output should show the SQL and all 3 employees."
+      ],
+      "hint": "Spring's JdbcTemplate.query() works exactly like this. The RowMapper converts each ResultSet row into a domain object, eliminating manual ResultSet getters.",
+      "expectedOutput": "Executing: SELECT * FROM employees\nEmployee{id=1, name='Alice', dept='Engineering', salary=85000.0}\nEmployee{id=2, name='Bob', dept='Marketing', salary=72000.0}\nEmployee{id=3, name='Carol', dept='Engineering', salary=91000.0}"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 90,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Parameterized Query Execution",
+    "description": {
+      "task": "Implement a parameterized query executor that prevents SQL injection by separating SQL logic from parameters. Simulate JdbcTemplate.update() and JdbcTemplate.queryForObject().",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MockJdbcTemplate {\n    private Map<Integer, String[]> usersTable = new LinkedHashMap<>();\n    // Format: id -> [name, email]\n    \n    public int update(String sql, Object... params) {\n        System.out.println(\"SQL: \" + sql);\n        System.out.println(\"Params: \" + Arrays.toString(params));\n        \n        if (sql.startsWith(\"INSERT\")) {\n            // TODO: Parse params as (id, name, email) and store in usersTable\n            return 1;\n        } else if (sql.startsWith(\"UPDATE\")) {\n            // TODO: Update name (params[0]) for id (params[1])\n            return 1;\n        } else if (sql.startsWith(\"DELETE\")) {\n            // TODO: Remove user with id (params[0])\n            return 1;\n        }\n        return 0;\n    }\n    \n    public String queryForObject(String sql, Class<String> requiredType, Object... params) {\n        System.out.println(\"SQL: \" + sql);\n        System.out.println(\"Params: \" + Arrays.toString(params));\n        // TODO: Find user by id (params[0]) and return name\n        return null;\n    }\n    \n    public void printTable() {\n        System.out.println(\"Users table:\");\n        usersTable.forEach((id, data) -> System.out.println(\"  [\" + id + \"] \" + data[0] + \" <\" + data[1] + \">\"));\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        MockJdbcTemplate template = new MockJdbcTemplate();\n        template.update(\"INSERT INTO users VALUES (?, ?, ?)\", 1, \"Alice\", \"alice@example.com\");\n        template.update(\"INSERT INTO users VALUES (?, ?, ?)\", 2, \"Bob\", \"bob@example.com\");\n        template.update(\"UPDATE users SET name=? WHERE id=?\", \"Alice Smith\", 1);\n        \n        String name = template.queryForObject(\"SELECT name FROM users WHERE id=?\", String.class, 1);\n        System.out.println(\"Found name: \" + name);\n        \n        template.update(\"DELETE FROM users WHERE id=?\", 2);\n        template.printTable();\n    }\n}",
+      "instructions": [
+        "Implement all three SQL operations in update(): INSERT stores {name, email} in usersTable; UPDATE changes name; DELETE removes the entry.",
+        "Implement queryForObject() to look up user by id and return their name.",
+        "Run Main as-is.",
+        "Output should match the expected SQL executions and table state."
+      ],
+      "hint": "Spring's JdbcTemplate uses PreparedStatements under the hood for parameterized queries, preventing SQL injection attacks. Never concatenate SQL and user inputs!",
+      "expectedOutput": "SQL: INSERT INTO users VALUES (?, ?, ?)\nParams: [1, Alice, alice@example.com]\nSQL: INSERT INTO users VALUES (?, ?, ?)\nParams: [2, Bob, bob@example.com]\nSQL: UPDATE users SET name=? WHERE id=?\nParams: [Alice Smith, 1]\nSQL: SELECT name FROM users WHERE id=?\nParams: [1]\nFound name: Alice Smith\nSQL: DELETE FROM users WHERE id=?\nParams: [2]\nUsers table:\n  [1] Alice Smith <alice@example.com>"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 90,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Batch Update Operations",
+    "description": {
+      "task": "Implement a batch update operation using Spring JdbcTemplate style. Process multiple records in a single batch instead of individual inserts.",
+      "language": "java",
+      "context": "JdbcTemplate.batchUpdate() is far more efficient than looping individual inserts. It sends all SQL statements in one round-trip to the database.",
+      "starterCode": "import java.util.*;\n\npublic class Order {\n    private int orderId;\n    private String product;\n    private int quantity;\n    \n    public Order(int orderId, String product, int quantity) {\n        this.orderId = orderId; this.product = product; this.quantity = quantity;\n    }\n    public int getOrderId() { return orderId; }\n    public String getProduct() { return product; }\n    public int getQuantity() { return quantity; }\n}\n\npublic class MockJdbcTemplate {\n    private List<Order> ordersTable = new ArrayList<>();\n    \n    public int[] batchUpdate(String sql, List<Object[]> batchArgs) {\n        System.out.println(\"Batch SQL: \" + sql);\n        System.out.println(\"Batch size: \" + batchArgs.size());\n        int[] results = new int[batchArgs.size()];\n        // TODO: Process each arg array, create Order and store in ordersTable\n        // Set results[i] = 1 for each successful insert\n        // Print each batch item as it processes\n        return results;\n    }\n    \n    public int count() { return ordersTable.size(); }\n    \n    public void printAll() {\n        ordersTable.forEach(o -> \n            System.out.println(\"  Order#\" + o.getOrderId() + \" - \" + o.getProduct() + \" x\" + o.getQuantity()));\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        MockJdbcTemplate template = new MockJdbcTemplate();\n        \n        List<Object[]> batch = new ArrayList<>();\n        batch.add(new Object[]{101, \"Laptop\", 2});\n        batch.add(new Object[]{102, \"Mouse\", 5});\n        batch.add(new Object[]{103, \"Keyboard\", 3});\n        batch.add(new Object[]{104, \"Monitor\", 1});\n        \n        int[] results = template.batchUpdate(\"INSERT INTO orders VALUES (?, ?, ?)\", batch);\n        System.out.println(\"Inserted: \" + results.length + \" rows\");\n        System.out.println(\"Total orders: \" + template.count());\n        template.printAll();\n    }\n}",
+      "instructions": [
+        "In batchUpdate(), iterate batchArgs. For each Object[] arg, create an Order(orderId, product, quantity) from arg[0], arg[1], arg[2] and add to ordersTable.",
+        "Print each inserted row: 'Inserting: Order[orderId, product, quantity]'.",
+        "Set results[i] = 1 for each.",
+        "Run Main as-is."
+      ],
+      "hint": "JdbcTemplate.batchUpdate() uses PreparedStatement.addBatch() and executeBatch() internally, making bulk inserts much faster than individual inserts in a loop.",
+      "expectedOutput": "Batch SQL: INSERT INTO orders VALUES (?, ?, ?)\nBatch size: 4\nInserting: Order[101, Laptop, 2]\nInserting: Order[102, Mouse, 5]\nInserting: Order[103, Keyboard, 3]\nInserting: Order[104, Monitor, 1]\nInserted: 4 rows\nTotal orders: 4\n  Order#101 - Laptop x2\n  Order#102 - Mouse x5\n  Order#103 - Keyboard x3\n  Order#104 - Monitor x1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 90,
+    "allowedSubmissionType": "TEXT"
+  }
+]

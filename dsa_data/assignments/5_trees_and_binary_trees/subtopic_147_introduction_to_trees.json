@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Tree Terminology Explorer",
+    "description": {
+      "task": "Implement a TreeInfo class that, given a binary tree built from TreeNode objects, computes the height, counts leaf nodes, counts internal nodes, and determines if the tree is a full binary tree (every node has 0 or 2 children).",
+      "language": "java",
+      "starterCode": "public class TreeInfo {\n\n    static class TreeNode {\n        int val;\n        TreeNode left, right;\n        TreeNode(int v) { val = v; }\n    }\n\n    public int height(TreeNode root) {\n        if (root == null) return -1;\n        return 1 + Math.max(height(root.left), height(root.right));\n    }\n\n    public int leafCount(TreeNode root) {\n        if (root == null) return 0;\n        if (root.left == null && root.right == null) return 1;\n        return leafCount(root.left) + leafCount(root.right);\n    }\n\n    public int internalCount(TreeNode root) {\n        // TODO: return count of nodes with at least one child\n        return 0;\n    }\n\n    public boolean isFullBinaryTree(TreeNode root) {\n        // TODO: true if every node has 0 or 2 children\n        return false;\n    }\n\n    public static void main(String[] args) {\n        // Full binary tree:\n        //        1\n        //      /   \\\n        //     2     3\n        //    / \\   / \\\n        //   4   5 6   7\n        TreeNode root = new TreeNode(1);\n        root.left = new TreeNode(2); root.right = new TreeNode(3);\n        root.left.left = new TreeNode(4); root.left.right = new TreeNode(5);\n        root.right.left = new TreeNode(6); root.right.right = new TreeNode(7);\n\n        TreeInfo ti = new TreeInfo();\n        System.out.println(\"Height: \" + ti.height(root));\n        System.out.println(\"Leaves: \" + ti.leafCount(root));\n        System.out.println(\"Internal: \" + ti.internalCount(root));\n        System.out.println(\"Full: \" + ti.isFullBinaryTree(root));\n    }\n}",
+      "instructions": [
+        "internalCount: if root==null return 0; if leaf (both children null) return 0; return 1 + internalCount(left) + internalCount(right)",
+        "isFullBinaryTree: if root==null return true; if both children null return true (leaf); if one child null return false; return isFullBinaryTree(left) && isFullBinaryTree(right)",
+        "height and leafCount are already implemented as reference",
+        "The 7-node perfect binary tree: height=2, leaves=4, internal=3, full=true",
+        "An internal node has at least one child"
+      ],
+      "hint": "internalCount: if(root==null)return 0; if(root.left==null&&root.right==null)return 0; return 1+internalCount(root.left)+internalCount(root.right);",
+      "expectedOutput": "Height: 2\nLeaves: 4\nInternal: 3\nFull: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 147,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Tree Comparison: Complete vs Perfect",
+    "description": {
+      "task": "Implement a TreeTypeChecker class that determines whether a given binary tree is: perfect (all leaves at same level, all internal nodes have 2 children), complete (filled left-to-right with possible missing rightmost leaves at last level).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TreeTypeChecker {\n\n    static class TreeNode {\n        int val; TreeNode left, right;\n        TreeNode(int v) { val = v; }\n    }\n\n    private int height(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + Math.max(height(root.left), height(root.right));\n    }\n\n    public boolean isPerfect(TreeNode root) {\n        int h = height(root);\n        // A perfect tree of height h has 2^h - 1 nodes\n        // TODO: count nodes and compare with (int)Math.pow(2, h) - 1\n        return false;\n    }\n\n    public boolean isComplete(TreeNode root) {\n        // BFS: once a node with fewer than 2 children is seen, all subsequent must be leaves\n        if (root == null) return true;\n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.add(root);\n        boolean foundNonFull = false;\n        while (!queue.isEmpty()) {\n            TreeNode curr = queue.poll();\n            if (curr.left != null) {\n                if (foundNonFull) return false;\n                queue.add(curr.left);\n            } else foundNonFull = true;\n            if (curr.right != null) {\n                if (foundNonFull) return false;\n                queue.add(curr.right);\n            } else foundNonFull = true;\n        }\n        return true;\n    }\n\n    private int countNodes(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + countNodes(root.left) + countNodes(root.right);\n    }\n\n    public static void main(String[] args) {\n        TreeTypeChecker tc = new TreeTypeChecker();\n        // Perfect tree\n        TreeNode perfect = new TreeNode(1);\n        perfect.left = new TreeNode(2); perfect.right = new TreeNode(3);\n        perfect.left.left = new TreeNode(4); perfect.left.right = new TreeNode(5);\n        perfect.right.left = new TreeNode(6); perfect.right.right = new TreeNode(7);\n        System.out.println(\"Perfect tree - isPerfect: \" + tc.isPerfect(perfect));\n        System.out.println(\"Perfect tree - isComplete: \" + tc.isComplete(perfect));\n        // Complete but not perfect\n        TreeNode complete = new TreeNode(1);\n        complete.left = new TreeNode(2); complete.right = new TreeNode(3);\n        complete.left.left = new TreeNode(4);\n        System.out.println(\"Complete tree - isPerfect: \" + tc.isPerfect(complete));\n        System.out.println(\"Complete tree - isComplete: \" + tc.isComplete(complete));\n    }\n}",
+      "instructions": [
+        "isPerfect: compute h=height(root); count n=countNodes(root); return n == (int)Math.pow(2,h)-1",
+        "isComplete is already implemented — study it",
+        "countNodes helper is provided",
+        "7-node perfect tree: isPerfect=true, isComplete=true",
+        "4-node complete tree: isPerfect=false, isComplete=true"
+      ],
+      "hint": "isPerfect: int h=height(root); int n=countNodes(root); return n==(int)Math.pow(2,h)-1;",
+      "expectedOutput": "Perfect tree - isPerfect: true\nPerfect tree - isComplete: true\nComplete tree - isPerfect: false\nComplete tree - isComplete: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 147,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Binary Tree Size and Width",
+    "description": {
+      "task": "Implement a TreeMeasures class that computes: total node count, diameter (longest path between any two nodes, measured in edges), and maximum width (maximum number of nodes at any single level).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TreeMeasures {\n\n    static class TreeNode {\n        int val; TreeNode left, right;\n        TreeNode(int v) { val = v; }\n    }\n\n    public int size(TreeNode root) {\n        if (root == null) return 0;\n        return 1 + size(root.left) + size(root.right);\n    }\n\n    private int[] diameterHelper(TreeNode root) {\n        if (root == null) return new int[]{0, 0}; // {height, diameter}\n        int[] left = diameterHelper(root.left);\n        int[] right = diameterHelper(root.right);\n        int height = 1 + Math.max(left[0], right[0]);\n        int throughRoot = left[0] + right[0];\n        int diameter = Math.max(throughRoot, Math.max(left[1], right[1]));\n        return new int[]{height, diameter};\n    }\n\n    public int diameter(TreeNode root) {\n        return diameterHelper(root)[1];\n    }\n\n    public int maxWidth(TreeNode root) {\n        // TODO: BFS level by level, track max level size\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        TreeNode root = new TreeNode(1);\n        root.left = new TreeNode(2); root.right = new TreeNode(3);\n        root.left.left = new TreeNode(4); root.left.right = new TreeNode(5);\n        root.right.right = new TreeNode(6);\n        TreeMeasures tm = new TreeMeasures();\n        System.out.println(\"Size: \" + tm.size(root));\n        System.out.println(\"Diameter: \" + tm.diameter(root));\n        System.out.println(\"Max Width: \" + tm.maxWidth(root));\n    }\n}",
+      "instructions": [
+        "maxWidth: use BFS with a queue; for each level process all current queue size nodes and track max count",
+        "size and diameter are already implemented — do not modify",
+        "Tree: 1→{2→{4,5},3→{null,6}}; size=6, diameter=4 (path 4-2-1-3-6), maxWidth=2 (level 1 has nodes 2,3)",
+        "BFS level order: level 0=[1], level 1=[2,3], level 2=[4,5,6]",
+        "maxWidth = max over all levels of level.size() = 3 (level 2)"
+      ],
+      "hint": "maxWidth: Queue<TreeNode> q=new LinkedList<>(); q.add(root); int max=0; while(!q.isEmpty()){int sz=q.size(); max=Math.max(max,sz); for(int i=0;i<sz;i++){TreeNode n=q.poll(); if(n.left!=null)q.add(n.left); if(n.right!=null)q.add(n.right);}} return max;",
+      "expectedOutput": "Size: 6\nDiameter: 4\nMax Width: 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 147,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,37 @@
+<h1>⏳ Promises and Async/Await</h1>
+<h2>🎯 The Problem: Async Code</h2>
+<p>Fetching data, reading files, delays — these are asynchronous. JavaScript handles async code with <strong>Promises</strong> and <strong>async/await</strong>.</p>
+<h2>📋 Promises</h2>
+<div class="code-example">
+  <pre>
+fetch('/api/users')
+  .then(response =&gt; response.json())
+  .then(data =&gt; console.log(data))
+  .catch(error =&gt; console.error(error));
+  </pre>
+</div>
+<h2>✨ Async/Await (cleaner syntax)</h2>
+<div class="code-example">
+  <pre>
+async function fetchUsers() {
+  try {
+    const response = await fetch('/api/users');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch:', error);
+  }
+}
+
+// In React useEffect:
+useEffect(() =&gt; {
+  const load = async () =&gt; {
+    const users = await fetchUsers();
+    setUsers(users);
+  };
+  load();
+}, []);
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Use async/await in React for all API calls — it reads like synchronous code and is easier to reason about. Always wrap in try/catch for error handling.</p>

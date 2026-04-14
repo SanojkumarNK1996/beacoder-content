@@ -1,0 +1,71 @@
+[
+  {
+    "title": "JPA Entity Mapping",
+    "description": {
+      "task": "Implement entity mapping annotations from scratch using a custom annotation processor. Create @Entity, @Id, @Column annotations and a mapper that generates SQL DDL from annotated classes.",
+      "language": "java",
+      "starterCode": "import java.lang.annotation.*;\nimport java.lang.reflect.*;\nimport java.util.*;\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.TYPE)\n@interface Entity { String tableName() default \"\"; }\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.FIELD)\n@interface Id {}\n\n@Retention(RetentionPolicy.RUNTIME)\n@Target(ElementType.FIELD)\n@interface Column {\n    String name() default \"\";\n    boolean nullable() default true;\n    int length() default 255;\n}\n\n@Entity(tableName = \"books\")\npublic class Book {\n    @Id\n    private int id;\n    \n    @Column(name = \"book_title\", nullable = false, length = 200)\n    private String title;\n    \n    @Column(name = \"author_name\")\n    private String author;\n    \n    @Column(name = \"price\")\n    private double price;\n    \n    // TODO: Constructor with all 4 fields and getters\n}\n\npublic class EntityMapper {\n    public String generateCreateTableSQL(Class<?> entityClass) throws Exception {\n        // TODO: Read @Entity tableName, iterate fields,\n        // build CREATE TABLE SQL with column definitions\n        // @Id -> PRIMARY KEY, @Column -> column with name, NOT NULL, VARCHAR(length)\n        return \"\";\n    }\n    \n    public String generateInsertSQL(Object entity) throws Exception {\n        // TODO: Generate INSERT SQL with actual values from entity fields\n        return \"\";\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        EntityMapper mapper = new EntityMapper();\n        Book book = new Book(1, \"Effective Java\", \"Joshua Bloch\", 49.99);\n        \n        System.out.println(mapper.generateCreateTableSQL(Book.class));\n        System.out.println(mapper.generateInsertSQL(book));\n    }\n}",
+      "instructions": [
+        "Add constructor and getters to Book.",
+        "generateCreateTableSQL() reads @Entity.tableName(), iterates declared fields, and builds valid SQL. @Id field gets 'INT PRIMARY KEY', @Column fields use the name, length, and nullable attributes.",
+        "generateInsertSQL() reads field values via reflection and generates an INSERT statement.",
+        "Output should be valid-looking SQL strings."
+      ],
+      "hint": "Hibernate (the JPA implementation) does exactly this — it reads @Entity/@Column annotations and generates DDL automatically. This is ORM in a nutshell.",
+      "expectedOutput": "CREATE TABLE books (id INT PRIMARY KEY, book_title VARCHAR(200) NOT NULL, author_name VARCHAR(255), price VARCHAR(255));\nINSERT INTO books (id, book_title, author_name, price) VALUES (1, 'Effective Java', 'Joshua Bloch', '49.99');"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 91,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "One-to-Many Relationship Mapping",
+    "description": {
+      "task": "Implement a one-to-many relationship between two entity classes (Department has many Employees) and demonstrate how to navigate the relationship in both directions.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class Department {\n    private int id;\n    private String name;\n    private List<Employee> employees = new ArrayList<>();\n    \n    public Department(int id, String name) {\n        this.id = id; this.name = name;\n    }\n    \n    public void addEmployee(Employee e) {\n        employees.add(e);\n        e.setDepartment(this);\n    }\n    \n    public int getId() { return id; }\n    public String getName() { return name; }\n    public List<Employee> getEmployees() { return Collections.unmodifiableList(employees); }\n    \n    @Override\n    public String toString() { return \"Department{\" + id + \", \" + name + \"}\"; }\n}\n\npublic class Employee {\n    private int id;\n    private String name;\n    private Department department; // Many-to-One side\n    \n    public Employee(int id, String name) {\n        this.id = id; this.name = name;\n    }\n    \n    // TODO: setDepartment(), getDepartment(), getId(), getName()\n    \n    @Override\n    public String toString() { return \"Employee{\" + id + \", \" + name + \"}\"; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Department eng = new Department(1, \"Engineering\");\n        Department mkt = new Department(2, \"Marketing\");\n        \n        eng.addEmployee(new Employee(1, \"Alice\"));\n        eng.addEmployee(new Employee(2, \"Bob\"));\n        mkt.addEmployee(new Employee(3, \"Carol\"));\n        \n        // Print from department side\n        System.out.println(eng.getName() + \" employees:\");\n        eng.getEmployees().forEach(e -> System.out.println(\"  \" + e.getName()));\n        \n        // Print from employee side (inverse navigation)\n        Employee emp = eng.getEmployees().get(0);\n        System.out.println(emp.getName() + \" works in: \" + emp.getDepartment().getName());\n        \n        System.out.println(\"Engineering employee count: \" + eng.getEmployees().size());\n    }\n}",
+      "instructions": [
+        "Add setDepartment(), getDepartment(), getId(), getName() to Employee.",
+        "Run Main as-is — no other changes needed.",
+        "Verify both sides of the relationship work (department -> employees, employee -> department)."
+      ],
+      "hint": "In JPA, @OneToMany and @ManyToOne annotations map these relationships. The mappedBy attribute specifies the owning side of the relationship.",
+      "expectedOutput": "Engineering employees:\n  Alice\n  Bob\nAlice works in: Engineering\nEngineering employee count: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 91,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Lazy vs Eager Loading",
+    "description": {
+      "task": "Demonstrate Lazy vs Eager loading strategies in Java. Implement two types of proxy-based associations and show the timing difference in when data is loaded.",
+      "language": "java",
+      "context": "JPA's FetchType.LAZY defers loading associated data until first access. FetchType.EAGER loads everything upfront. Choosing correctly affects performance significantly.",
+      "starterCode": "import java.util.*;\n\npublic class LazyList<T> extends AbstractList<T> {\n    private List<T> data;\n    private boolean loaded = false;\n    private String entityName;\n    \n    public LazyList(String entityName) {\n        this.entityName = entityName;\n    }\n    \n    private void loadIfNeeded() {\n        if (!loaded) {\n            System.out.println(\"[LAZY] Loading \" + entityName + \" collection from database...\");\n            // Simulate loading\n            data = new ArrayList<>();\n            loaded = true;\n        }\n    }\n    \n    public void initData(T... items) {\n        if (data == null) data = new ArrayList<>();\n        data.addAll(Arrays.asList(items));\n        loaded = true;\n    }\n    \n    @Override public T get(int index) { loadIfNeeded(); return data.get(index); }\n    @Override public int size() { loadIfNeeded(); return data.size(); }\n}\n\npublic class AuthorEager {\n    private String name;\n    private List<String> books; // EAGER: loaded immediately\n    \n    public AuthorEager(String name, List<String> books) {\n        System.out.println(\"[EAGER] Loading author '\" + name + \"' AND all books immediately\");\n        this.name = name;\n        this.books = books;\n    }\n    public String getName() { return name; }\n    public List<String> getBooks() { return books; }\n}\n\npublic class AuthorLazy {\n    private String name;\n    private LazyList<String> books; // LAZY: loaded on access\n    \n    public AuthorLazy(String name) {\n        System.out.println(\"[LAZY] Loading author '\" + name + \"' only\");\n        this.name = name;\n        this.books = new LazyList<>(\"books for \" + name);\n    }\n    \n    public void setBooks(String... bookList) { books.initData(bookList); }\n    public String getName() { return name; }\n    public LazyList<String> getBooks() { return books; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(\"--- EAGER Loading ---\");\n        AuthorEager eager = new AuthorEager(\"Joshua Bloch\",\n            Arrays.asList(\"Effective Java\", \"Java Puzzlers\"));\n        System.out.println(\"Author created. Accessing books: \" + eager.getBooks());\n        \n        System.out.println(\"\\n--- LAZY Loading ---\");\n        AuthorLazy lazy = new AuthorLazy(\"Martin Fowler\");\n        lazy.setBooks(\"Refactoring\", \"Patterns of Enterprise Application Architecture\");\n        System.out.println(\"Author created. Not accessed books yet.\");\n        System.out.println(\"Now accessing: \" + lazy.getBooks().size() + \" books\");\n    }\n}",
+      "instructions": [
+        "The code is mostly complete. Run Main as-is.",
+        "Understand and verify: with EAGER, loading happens at creation time. With LAZY, loading message should NOT appear until getBooks() is accessed.",
+        "The LazyList already simulates this — since setBooks() calls initData(), the lazy load message won't appear (data is pre-set). Trace the flow.",
+        "Add one additional lazy author WITHOUT calling setBooks() and verify the lazy load message appears when accessing size()."
+      ],
+      "hint": "In JPA: @OneToMany(fetch = FetchType.LAZY) — default for collections. @ManyToOne(fetch = FetchType.EAGER) — default for single entities. Always prefer LAZY for collections.",
+      "expectedOutput": "--- EAGER Loading ---\n[EAGER] Loading author 'Joshua Bloch' AND all books immediately\nAuthor created. Accessing books: [Effective Java, Java Puzzlers]\n\n--- LAZY Loading ---\n[LAZY] Loading author 'Martin Fowler' only\nAuthor created. Not accessed books yet.\nNow accessing: 2 books"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 91,
+    "allowedSubmissionType": "TEXT"
+  }
+]

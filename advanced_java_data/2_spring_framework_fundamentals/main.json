@@ -1,0 +1,38 @@
+[
+    {
+        "subtopicId": 81,
+        "dataType": "notes",
+        "displayOrder": 1,
+        "title": "Introduction to Spring Framework",
+        "data": "intro_to_spring.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 82,
+        "dataType": "notes",
+        "displayOrder": 2,
+        "title": "Inversion of Control (IoC)",
+        "data": "inversion_of_control.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 83,
+        "dataType": "notes",
+        "displayOrder": 3,
+        "title": "Dependency Injection",
+        "data": "dependency_injection.html",
+        "verified": false,
+        "priority": 1
+    },
+    {
+        "subtopicId": 84,
+        "dataType": "notes",
+        "displayOrder": 4,
+        "title": "Spring Configuration",
+        "data": "spring_configuration.html",
+        "verified": false,
+        "priority": 1
+    }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Observer Pattern for Event System",
+    "description": {
+      "task": "Implement an event bus using the Observer pattern. Publishers emit named events; subscribers register interest in specific event types. When an event is published, all registered subscribers for that event type are notified in registration order.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.function.Consumer;\n\npublic class EventBus {\n\n    private final Map<String, List<Consumer<Object>>> subscribers = new LinkedHashMap<>();\n\n    public void subscribe(String eventType, Consumer<Object> handler) {\n        subscribers.computeIfAbsent(eventType, k -> new ArrayList<>()).add(handler);\n    }\n\n    public void unsubscribe(String eventType, Consumer<Object> handler) {\n        List<Consumer<Object>> handlers = subscribers.get(eventType);\n        if (handlers != null) handlers.remove(handler);\n    }\n\n    public int publish(String eventType, Object payload) {\n        // Notify all subscribers for eventType, return count of notified subscribers\n        return 0; // TODO\n    }\n\n    public int subscriberCount(String eventType) {\n        return subscribers.getOrDefault(eventType, List.of()).size();\n    }\n\n    public static void main(String[] args) {\n        EventBus bus = new EventBus();\n        List<String> received = new ArrayList<>();\n\n        Consumer<Object> handler1 = e -> received.add(\"H1: \" + e);\n        Consumer<Object> handler2 = e -> received.add(\"H2: \" + e);\n\n        bus.subscribe(\"order.created\", handler1);\n        bus.subscribe(\"order.created\", handler2);\n        bus.subscribe(\"order.cancelled\", handler1);\n\n        int notified = bus.publish(\"order.created\", \"Order#42\");\n        System.out.println(\"Notified: \" + notified);\n        System.out.println(received);\n\n        bus.unsubscribe(\"order.created\", handler1);\n        System.out.println(\"After unsub count: \" + bus.subscriberCount(\"order.created\"));\n    }\n}",
+      "instructions": [
+        "subscribe() adds the handler to the event type's list using computeIfAbsent",
+        "unsubscribe() removes the exact handler reference from the event type's list",
+        "publish() iterates over all handlers for eventType and calls each with the payload",
+        "publish() returns the number of handlers notified; returns 0 for unknown event types",
+        "Events with no subscribers are silently ignored (return 0)"
+      ],
+      "hint": "In publish(), use subscribers.getOrDefault(eventType, List.of()). Copy the list before iterating to avoid ConcurrentModificationException if a handler unsubscribes itself. Return the size of the handler list.",
+      "expectedOutput": "Notified: 2\n[H1: Order#42, H2: Order#42]\nAfter unsub count: 1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 117,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Strategy Pattern for Sorting Algorithms",
+    "description": {
+      "task": "Implement a SortContext class using the Strategy pattern. The context delegates sorting to interchangeable strategy implementations: BubbleSort, QuickSort proxy, and natural ordering. Allow switching strategies at runtime.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SortContext {\n\n    interface SortStrategy {\n        List<Integer> sort(List<Integer> input);\n        String strategyName();\n    }\n\n    static class BubbleSortStrategy implements SortStrategy {\n        public List<Integer> sort(List<Integer> input) {\n            List<Integer> list = new ArrayList<>(input);\n            int n = list.size();\n            for (int i = 0; i < n - 1; i++)\n                for (int j = 0; j < n - i - 1; j++)\n                    if (list.get(j) > list.get(j + 1)) {\n                        int tmp = list.get(j);\n                        list.set(j, list.get(j + 1));\n                        list.set(j + 1, tmp);\n                    }\n            return list;\n        }\n        public String strategyName() { return \"BubbleSort\"; }\n    }\n\n    static class NaturalOrderStrategy implements SortStrategy {\n        public List<Integer> sort(List<Integer> input) {\n            // Sort using Collections.sort() on a copy and return it\n            return null; // TODO\n        }\n        public String strategyName() { return \"NaturalOrder\"; }\n    }\n\n    private SortStrategy strategy;\n\n    public SortContext(SortStrategy strategy) {\n        this.strategy = strategy;\n    }\n\n    public void setStrategy(SortStrategy strategy) {\n        this.strategy = strategy;\n    }\n\n    public List<Integer> executeSort(List<Integer> input) {\n        // Delegate to current strategy\n        return null; // TODO\n    }\n\n    public static void main(String[] args) {\n        List<Integer> data = List.of(5, 2, 8, 1, 9, 3);\n\n        SortContext ctx = new SortContext(new BubbleSortStrategy());\n        System.out.println(ctx.strategy.strategyName() + \": \" + ctx.executeSort(data));\n\n        ctx.setStrategy(new NaturalOrderStrategy());\n        System.out.println(ctx.strategy.strategyName() + \": \" + ctx.executeSort(data));\n    }\n}",
+      "instructions": [
+        "NaturalOrderStrategy.sort() creates a copy of the input list, uses Collections.sort(), and returns it",
+        "SortContext.executeSort() delegates to strategy.sort(input)",
+        "setStrategy() replaces the current strategy at runtime",
+        "Neither sort strategy should modify the original input list",
+        "Both strategies must return a new list in ascending order for the same input"
+      ],
+      "hint": "NaturalOrderStrategy.sort(): List<Integer> copy = new ArrayList<>(input); Collections.sort(copy); return copy. executeSort(): return strategy.sort(input).",
+      "expectedOutput": "BubbleSort: [1, 2, 3, 5, 8, 9]\nNaturalOrder: [1, 2, 3, 5, 8, 9]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 117,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Command Pattern for Undo/Redo",
+    "description": {
+      "task": "Implement a text editor command system using the Command pattern. Commands like Insert and Delete encapsulate both the action and its inverse (undo). A CommandHistory stack supports multi-level undo and redo operations.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TextEditor {\n\n    interface Command {\n        void execute();\n        void undo();\n    }\n\n    private StringBuilder content = new StringBuilder();\n\n    public String getContent() { return content.toString(); }\n\n    class InsertCommand implements Command {\n        private final int position;\n        private final String text;\n\n        InsertCommand(int position, String text) {\n            this.position = position;\n            this.text = text;\n        }\n\n        public void execute() {\n            content.insert(position, text);\n        }\n\n        public void undo() {\n            content.delete(position, position + text.length());\n        }\n    }\n\n    class DeleteCommand implements Command {\n        private final int start;\n        private final int end;\n        private String deleted;\n\n        DeleteCommand(int start, int end) {\n            this.start = start;\n            this.end = end;\n        }\n\n        public void execute() {\n            // Save deleted text for undo, then remove it\n        }\n\n        public void undo() {\n            // Re-insert the saved deleted text\n        }\n    }\n\n    // Command history\n    private final Deque<Command> undoStack = new ArrayDeque<>();\n    private final Deque<Command> redoStack = new ArrayDeque<>();\n\n    public void executeCommand(Command cmd) {\n        cmd.execute();\n        undoStack.push(cmd);\n        redoStack.clear();\n    }\n\n    public void undo() {\n        if (!undoStack.isEmpty()) {\n            Command cmd = undoStack.pop();\n            cmd.undo();\n            redoStack.push(cmd);\n        }\n    }\n\n    public void redo() {\n        // TODO: implement redo\n    }\n\n    public static void main(String[] args) {\n        TextEditor editor = new TextEditor();\n        editor.executeCommand(editor.new InsertCommand(0, \"Hello\"));\n        editor.executeCommand(editor.new InsertCommand(5, \" World\"));\n        System.out.println(editor.getContent());\n        editor.undo();\n        System.out.println(editor.getContent());\n        editor.redo();\n        System.out.println(editor.getContent());\n        editor.executeCommand(editor.new DeleteCommand(5, 11));\n        System.out.println(editor.getContent());\n        editor.undo();\n        System.out.println(editor.getContent());\n    }\n}",
+      "instructions": [
+        "DeleteCommand.execute() saves content.substring(start, end) to 'deleted' field, then calls content.delete(start, end)",
+        "DeleteCommand.undo() calls content.insert(start, deleted) to restore the removed text",
+        "redo() pops from redoStack, calls execute(), and pushes to undoStack",
+        "executeCommand() must clear the redoStack to prevent stale redo history",
+        "undo() and redo() are no-ops when their respective stacks are empty"
+      ],
+      "hint": "DeleteCommand.execute(): deleted = content.substring(start, end); content.delete(start, end). redo(): if (!redoStack.isEmpty()) { cmd = redoStack.pop(); cmd.execute(); undoStack.push(cmd); }",
+      "expectedOutput": "Hello World\nHello\nHello World\nHello\nHello World"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 31,
+    "subtopicId": 117,
+    "allowedSubmissionType": "TEXT"
+  }
+]

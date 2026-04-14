@@ -1,0 +1,17 @@
+<h1>🌍 AWS Regions and Availability Zones</h1>
+<h2>📍 Regions</h2>
+<p>A <strong>Region</strong> is a separate geographic location. Each region is fully independent (separate infrastructure, billing, etc.). Examples: us-east-1 (N. Virginia), eu-west-1 (Ireland), ap-south-1 (Mumbai).</p>
+<h2>⚡ How to Choose a Region</h2>
+<ul>
+  <li><strong>Compliance</strong>: Data must stay in a specific country</li>
+  <li><strong>Latency</strong>: Pick region closest to your users</li>
+  <li><strong>Cost</strong>: Prices vary by region (us-east-1 is often cheapest)</li>
+  <li><strong>Services</strong>: New services launch in us-east-1 first</li>
+</ul>
+<h2>🏢 Availability Zones (AZs)</h2>
+<p>Each region has multiple AZs (3–6). AZs are physically separate but connected by low-latency fiber. Deploying across AZs = high availability.</p>
+<div class="highlight">
+  <p><strong>Rule:</strong> Design for Multi-AZ. If one AZ goes down, your app keeps running. RDS Multi-AZ, ALB, and Auto Scaling all span AZs automatically.</p>
+</div>
+<h2>🎯 Summary</h2>
+<p>Regions for global distribution, AZs for fault tolerance within a region. Multi-AZ deployment is non-negotiable for production.</p>

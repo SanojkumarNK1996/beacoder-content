@@ -1,0 +1,26 @@
+<h1>⚡ Quick Sort</h1>
+<h2>🎯 Concept</h2>
+<p>Quick Sort picks a <strong>pivot</strong>, partitions the array so all elements less than pivot go left and greater go right, then recursively sorts both halves.</p>
+<h2>📐 Complexity</h2>
+<ul>
+  <li><strong>Average</strong>: O(n log n)</li>
+  <li><strong>Worst case</strong>: O(n²) — pivot is always the min/max (always-sorted input)</li>
+  <li><strong>Space</strong>: O(log n) stack (in-place)</li>
+  <li><strong>Not stable</strong></li>
+</ul>
+<div class="code-example">
+  <pre>
+int partition(int[] arr, int low, int high) {
+    int pivot = arr[high], i = low - 1;
+    for (int j = low; j &lt; high; j++) {
+        if (arr[j] &lt;= pivot) { i++; int t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    }
+    int t = arr[i+1]; arr[i+1] = arr[high]; arr[high] = t;
+    return i + 1;
+}
+  </pre>
+</div>
+<h2>📌 Optimization</h2>
+<p>Use <strong>random pivot selection</strong> or <strong>median-of-three</strong> to avoid worst case.</p>
+<h2>🎯 Summary</h2>
+<p>Quick Sort is the fastest in practice due to cache locality. Java's <code>Arrays.sort()</code> uses a Dual-Pivot Quicksort for primitives.</p>

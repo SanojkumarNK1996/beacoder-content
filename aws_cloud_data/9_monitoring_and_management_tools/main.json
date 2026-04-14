@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 233, "title": "AWS CloudWatch", "dataType": "notes", "data": "cloudwatch.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 234, "title": "CloudWatch Metrics Alarms and Logs", "dataType": "notes", "data": "cloudwatch_metrics_alarms.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 235, "title": "AWS CloudTrail", "dataType": "notes", "data": "cloudtrail.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 236, "title": "AWS Systems Manager", "dataType": "notes", "data": "systems_manager.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 237, "title": "AWS Config and Compliance", "dataType": "notes", "data": "aws_config_and_compliance.html", "displayOrder": 5, "verified": false}
+]

@@ -1,0 +1,75 @@
+[
+  {
+    "title": "INSERT Single and Multiple Rows",
+    "description": {
+      "task": "Practice the INSERT statement in its various forms: single row, multiple rows, and INSERT with SELECT.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE students (\n  student_id  INT PRIMARY KEY,\n  first_name  VARCHAR(50) NOT NULL,\n  last_name   VARCHAR(50) NOT NULL,\n  email       VARCHAR(80) UNIQUE,\n  gpa         DECIMAL(3,2) DEFAULT 0.00\n);\n\n-- 1. Single-row INSERT with all columns in order\nINSERT INTO students VALUES (1, 'Alice', 'Smith', 'alice@school.edu', 3.85);\n\n-- 2. Single-row INSERT specifying column names (preferred style)\nINSERT INTO students (student_id, first_name, last_name, email)\nVALUES (2, 'Bob', 'Jones', 'bob@school.edu');  -- gpa uses DEFAULT\n\n-- 3. Multi-row INSERT (one statement, multiple value tuples)\nINSERT INTO students VALUES\n  (3, 'Carol', 'Williams', 'carol@school.edu', 3.60),\n  (4, 'Dave',  'Brown',    'dave@school.edu',  3.10),\n  (5, 'Eve',   'Davis',    'eve@school.edu',   3.90);\n\nSELECT * FROM students ORDER BY gpa DESC;\n\n-- 4. INSERT ... SELECT: copy high-GPA students to an honours table\nCREATE TABLE honours_students (\n  student_id INT, name VARCHAR(100), gpa DECIMAL(3,2)\n);\n\nINSERT INTO honours_students (student_id, name, gpa)\nSELECT student_id,\n       first_name || ' ' || last_name AS name,\n       gpa\nFROM students\nWHERE gpa >= 3.75;\n\nSELECT * FROM honours_students;\n",
+      "instructions": [
+        "Run all INSERT statements in sequence.",
+        "Run the first SELECT — note Bob's gpa is 0.00 (default).",
+        "Run the honours table CREATE and INSERT...SELECT.",
+        "Run the final SELECT — Alice(3.85) and Eve(3.90) should appear.",
+        "Add a comment: why is specifying column names in INSERT better practice than relying on column order?"
+      ],
+      "hint": "Specifying column names makes INSERT statements resilient to schema changes (e.g., if a new column is added). Positional inserts break silently when column order or count changes.",
+      "expectedOutput": "Main table: 5 students sorted by GPA: Eve>Alice>Carol>Dave>Bob(0.00)\nHonours: Alice(3.85) and Eve(3.90)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 49,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "INSERT with Conflict Handling",
+    "description": {
+      "task": "Use INSERT ... ON CONFLICT to handle duplicate key scenarios — either skip or update the existing row (upsert pattern).",
+      "language": "sql",
+      "context": "In production systems, you often need to insert a row if it doesn't exist, or update it if it does. This is known as an 'upsert'.",
+      "starterCode": "CREATE TABLE page_views (\n  page_id    INT PRIMARY KEY,\n  url        VARCHAR(200) UNIQUE,\n  view_count INT DEFAULT 0,\n  last_viewed TIMESTAMP DEFAULT NOW()\n);\n\nINSERT INTO page_views (page_id, url, view_count) VALUES\n  (1, '/home',     100),\n  (2, '/about',     50),\n  (3, '/products', 200);\n\n-- ON CONFLICT DO NOTHING: skip if URL already exists\nINSERT INTO page_views (page_id, url, view_count)\nVALUES (4, '/contact', 0)\nON CONFLICT (url) DO NOTHING;  -- new row, no conflict — inserts normally\n\n-- Attempt to re-insert existing /home with DO NOTHING — skips silently\nINSERT INTO page_views (page_id, url, view_count)\nVALUES (99, '/home', 999)\nON CONFLICT (url) DO NOTHING;\n\n-- UPSERT: increment view_count if URL already exists\nINSERT INTO page_views (page_id, url, view_count)\nVALUES (5, '/home', 1)  -- /home already exists\nON CONFLICT (url)\nDO UPDATE SET\n  view_count  = page_views.view_count + 1,\n  last_viewed = NOW();\n\nSELECT * FROM page_views ORDER BY page_id;\n",
+      "instructions": [
+        "Run CREATE and initial INSERT.",
+        "Run the DO NOTHING inserts.",
+        "Run the UPSERT insert for /home.",
+        "Run the final SELECT.",
+        "Verify: /home view_count = 101 (100 + 1 from upsert), /contact inserted with view_count=0."
+      ],
+      "hint": "ON CONFLICT (column) specifies WHICH constraint triggers the conflict. EXCLUDED refers to the row that was proposed for insertion — you can reference EXCLUDED.view_count to increment properly.",
+      "expectedOutput": "/home: view_count=101 (incremented by upsert)\n/contact: view_count=0 (new row)\n/home with id=99: was skipped by DO NOTHING"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 49,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Bulk INSERT from CSV-like Data",
+    "description": {
+      "task": "Practice inserting a large batch of rows to simulate a bulk load scenario and verify the result with aggregate queries.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE sales (\n  sale_id    INT PRIMARY KEY,\n  region     VARCHAR(30),\n  product    VARCHAR(60),\n  quantity   INT,\n  unit_price DECIMAL(8,2),\n  sale_date  DATE\n);\n\n-- Bulk insert: 12 rows simulating one quarter of sales data\nINSERT INTO sales VALUES\n  (1,  'North', 'Laptop',    2, 999.99, '2026-01-05'),\n  (2,  'South', 'Mouse',    10,  19.99, '2026-01-08'),\n  (3,  'East',  'Keyboard',  5,  49.99, '2026-01-12'),\n  (4,  'West',  'Monitor',   3, 299.99, '2026-01-15'),\n  (5,  'North', 'Laptop',    1, 999.99, '2026-02-03'),\n  (6,  'South', 'Headphones',4,  79.99, '2026-02-10'),\n  (7,  'East',  'Mouse',     8,  19.99, '2026-02-14'),\n  (8,  'West',  'Laptop',    3, 999.99, '2026-02-20'),\n  (9,  'North', 'Keyboard',  6,  49.99, '2026-03-01'),\n  (10, 'South', 'Monitor',   2, 299.99, '2026-03-08'),\n  (11, 'East',  'Laptop',    1, 999.99, '2026-03-15'),\n  (12, 'West',  'Mouse',    15,  19.99, '2026-03-22');\n\n-- Verify total rows\nSELECT COUNT(*) AS total_rows FROM sales;\n\n-- Revenue by region\nSELECT region, SUM(quantity * unit_price) AS revenue\nFROM sales\nGROUP BY region\nORDER BY revenue DESC;\n\n-- Top selling product by quantity\nSELECT product, SUM(quantity) AS total_qty\nFROM sales\nGROUP BY product\nORDER BY total_qty DESC\nLIMIT 3;\n",
+      "instructions": [
+        "Run the INSERT of 12 rows.",
+        "Verify total_rows = 12.",
+        "Run the revenue by region query.",
+        "Run the top products query — Mouse (33 units) should be first.",
+        "Add a comment: in production, how would you bulk load millions of rows efficiently (hint: COPY command in PostgreSQL)?"
+      ],
+      "hint": "The PostgreSQL COPY command loads a CSV file directly into a table at server speed, bypassing row-by-row INSERT overhead. Much faster for large datasets.",
+      "expectedOutput": "Total: 12 rows\nRevenue: North highest with 3 laptops + keyboard, West with 3 laptops + mouse\nTop products by qty: Mouse>Laptop>Keyboard"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 49,
+    "allowedSubmissionType": "TEXT"
+  }
+]

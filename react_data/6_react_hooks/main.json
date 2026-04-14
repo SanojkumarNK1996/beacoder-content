@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 282, "title": "Introduction to React Hooks", "dataType": "notes", "data": "intro_to_hooks.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 283, "title": "useEffect Hook", "dataType": "notes", "data": "use_effect_hook.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 284, "title": "useContext Hook", "dataType": "notes", "data": "use_context_hook.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 285, "title": "useRef and useCallback", "dataType": "notes", "data": "use_ref_and_callback.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 286, "title": "useMemo and useReducer", "dataType": "notes", "data": "use_memo_and_reducer.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 287, "title": "Custom Hooks", "dataType": "notes", "data": "custom_hooks.html", "displayOrder": 6, "verified": false}
+]

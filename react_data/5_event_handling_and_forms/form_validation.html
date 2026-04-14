@@ -1,0 +1,42 @@
+<h1>✅ Form Validation</h1>
+<h2>🎯 Manual Validation</h2>
+<div class="code-example">
+  <pre>
+function SignupForm() {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
+
+  const validate = () =&gt; {
+    const errs = {};
+    if (!form.email || !form.email.includes('@')) errs.email = 'Valid email required';
+    if (form.password.length &lt; 8) errs.password = 'Min 8 characters';
+    return errs;
+  };
+
+  const handleSubmit = (e) =&gt; {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length &gt; 0) { setErrors(errs); return; }
+    // Submit form
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input name="email" onChange={...} /&gt;
+      {errors.email &amp;&amp; &lt;span className="error"&gt;{errors.email}&lt;/span&gt;}
+      &lt;input type="password" name="password" /&gt;
+      {errors.password &amp;&amp; &lt;span className="error"&gt;{errors.password}&lt;/span&gt;}
+      &lt;button type="submit"&gt;Sign Up&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}
+  </pre>
+</div>
+<h2>📌 Validation Best Practices</h2>
+<ul>
+  <li>Show errors after field is "touched" (onBlur), not immediately</li>
+  <li>Show all errors at once on submit</li>
+  <li>Use HTML5 <code>required</code>, <code>type="email"</code> as first layer</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Manual validation is fine for small forms. For complex forms with many fields, React Hook Form or Formik eliminates the boilerplate.</p>

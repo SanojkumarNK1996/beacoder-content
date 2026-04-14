@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Repository Query Methods",
+    "description": {
+      "task": "Implement a Spring Data JPA-style repository with auto-derived query methods. Build a repository where methods like findByName(), findByAgeGreaterThan(), and findByDepartmentAndActive() work based on naming conventions.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Staff {\n    private int id;\n    private String name;\n    private String department;\n    private int age;\n    private boolean active;\n    \n    public Staff(int id, String name, String department, int age, boolean active) {\n        this.id = id; this.name = name; this.department = department;\n        this.age = age; this.active = active;\n    }\n    \n    public int getId() { return id; }\n    public String getName() { return name; }\n    public String getDepartment() { return department; }\n    public int getAge() { return age; }\n    public boolean isActive() { return active; }\n    \n    @Override\n    public String toString() {\n        return \"Staff{\" + id + \", \" + name + \", dept=\" + department + \", age=\" + age + \", active=\" + active + \"}\";\n    }\n}\n\npublic class StaffRepository {\n    private List<Staff> data = new ArrayList<>();\n    \n    public void saveAll(List<Staff> staff) { data.addAll(staff); }\n    \n    public List<Staff> findByName(String name) {\n        // TODO: Filter by exact name match\n        return new ArrayList<>();\n    }\n    \n    public List<Staff> findByDepartment(String department) {\n        // TODO: Filter by department\n        return new ArrayList<>();\n    }\n    \n    public List<Staff> findByAgeGreaterThan(int age) {\n        // TODO: Filter where age > given value\n        return new ArrayList<>();\n    }\n    \n    public List<Staff> findByDepartmentAndActive(String department, boolean active) {\n        // TODO: Filter by both department AND active status\n        return new ArrayList<>();\n    }\n    \n    public Optional<Staff> findById(int id) {\n        // TODO: Return matching staff by id\n        return Optional.empty();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        StaffRepository repo = new StaffRepository();\n        repo.saveAll(Arrays.asList(\n            new Staff(1, \"Alice\", \"Engineering\", 30, true),\n            new Staff(2, \"Bob\", \"Engineering\", 45, false),\n            new Staff(3, \"Carol\", \"HR\", 28, true),\n            new Staff(4, \"Dave\", \"Engineering\", 35, true),\n            new Staff(5, \"Eve\", \"HR\", 40, true)\n        ));\n        \n        System.out.println(\"findByDepartment(Engineering):\");\n        repo.findByDepartment(\"Engineering\").forEach(s -> System.out.println(\"  \" + s.getName()));\n        \n        System.out.println(\"findByAgeGreaterThan(35):\");\n        repo.findByAgeGreaterThan(35).forEach(s -> System.out.println(\"  \" + s.getName()));\n        \n        System.out.println(\"findByDepartmentAndActive(Engineering, true):\");\n        repo.findByDepartmentAndActive(\"Engineering\", true).forEach(s -> System.out.println(\"  \" + s.getName()));\n    }\n}",
+      "instructions": [
+        "Implement all 5 repository methods using Java Streams with appropriate filter conditions.",
+        "Run Main as-is.",
+        "Output should list names matching each query."
+      ],
+      "hint": "Spring Data JPA derives queries from method names automatically. findByDepartmentAndActive generates: SELECT * FROM staff WHERE department=? AND active=?",
+      "expectedOutput": "findByDepartment(Engineering):\n  Alice\n  Bob\n  Dave\nfindByAgeGreaterThan(35):\n  Bob\n  Eve\nfindByDepartmentAndActive(Engineering, true):\n  Alice\n  Dave"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 92,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Custom Query with JPQL-style",
+    "description": {
+      "task": "Implement a custom query executor that parses simple JPQL-like query strings and executes them against an in-memory data store.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Product {\n    private String name;\n    private String category;\n    private double price;\n    private int stock;\n    \n    public Product(String name, String category, double price, int stock) {\n        this.name = name; this.category = category; this.price = price; this.stock = stock;\n    }\n    \n    public String getName() { return name; }\n    public String getCategory() { return category; }\n    public double getPrice() { return price; }\n    public int getStock() { return stock; }\n    \n    @Override\n    public String toString() { return name + \"($\" + price + \", stock=\" + stock + \")\"; }\n}\n\npublic class ProductRepository {\n    private List<Product> products = new ArrayList<>();\n    \n    public void saveAll(List<Product> items) { products.addAll(items); }\n    \n    // Custom queries\n    public List<Product> findByPriceLessThan(double maxPrice) {\n        // TODO: Filter products with price < maxPrice\n        return new ArrayList<>();\n    }\n    \n    public List<Product> findByCategoryOrderByPriceAsc(String category) {\n        // TODO: Filter by category, sort by price ascending\n        return new ArrayList<>();\n    }\n    \n    public double findAvgPriceByCategory(String category) {\n        // TODO: Calculate and return average price for the category\n        return 0.0;\n    }\n    \n    public List<String> findDistinctCategories() {\n        // TODO: Return unique category names\n        return new ArrayList<>();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ProductRepository repo = new ProductRepository();\n        repo.saveAll(Arrays.asList(\n            new Product(\"Laptop\", \"Electronics\", 999.99, 10),\n            new Product(\"Phone\", \"Electronics\", 599.99, 25),\n            new Product(\"Tablet\", \"Electronics\", 399.99, 15),\n            new Product(\"Desk\", \"Furniture\", 249.99, 5),\n            new Product(\"Chair\", \"Furniture\", 149.99, 8),\n            new Product(\"Monitor\", \"Electronics\", 349.99, 12)\n        ));\n        \n        System.out.println(\"Under $400:\");\n        repo.findByPriceLessThan(400.0).forEach(p -> System.out.println(\"  \" + p));\n        \n        System.out.println(\"Electronics by price:\");\n        repo.findByCategoryOrderByPriceAsc(\"Electronics\").forEach(p -> System.out.println(\"  \" + p));\n        \n        System.out.printf(\"Avg Electronics price: $%.2f%n\", repo.findAvgPriceByCategory(\"Electronics\"));\n        System.out.println(\"Categories: \" + repo.findDistinctCategories());\n    }\n}",
+      "instructions": [
+        "Implement all 4 query methods using Java Streams.",
+        "findDistinctCategories() should return a sorted list.",
+        "Run Main as-is.",
+        "Output should match the expected results."
+      ],
+      "hint": "In Spring Data JPA, @Query allows writing custom JPQL: @Query(\"SELECT p FROM Product p WHERE p.price < :maxPrice\"). Spring executes it against the database.",
+      "expectedOutput": "Under $400:\n  Tablet($399.99, stock=15)\n  Desk($249.99, stock=5)\n  Chair($149.99, stock=8)\n  Monitor($349.99, stock=12)\nElectronics by price:\n  Monitor($349.99, stock=12)\n  Tablet($399.99, stock=15)\n  Phone($599.99, stock=25)\n  Laptop($999.99, stock=10)\nAvg Electronics price: $587.49\nCategories: [Electronics, Furniture]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 92,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Pagination Implementation",
+    "description": {
+      "task": "Implement a paginated repository that returns results in pages, similar to Spring Data's Pageable and Page interfaces.",
+      "language": "java",
+      "context": "Spring Data's Pageable allows clients to request specific pages: repository.findAll(PageRequest.of(0, 10)). This prevents loading thousands of records into memory.",
+      "starterCode": "import java.util.*;\n\npublic class PageRequest {\n    private final int page;    // 0-based\n    private final int size;\n    private final String sortBy;\n    \n    public PageRequest(int page, int size, String sortBy) {\n        this.page = page; this.size = size; this.sortBy = sortBy;\n    }\n    \n    public int getPage() { return page; }\n    public int getSize() { return size; }\n    public String getSortBy() { return sortBy; }\n    public int getOffset() { return page * size; }\n}\n\npublic class Page<T> {\n    private final List<T> content;\n    private final long totalElements;\n    private final int pageNumber;\n    private final int pageSize;\n    \n    public Page(List<T> content, long totalElements, int pageNumber, int pageSize) {\n        this.content = content; this.totalElements = totalElements;\n        this.pageNumber = pageNumber; this.pageSize = pageSize;\n    }\n    \n    public List<T> getContent() { return content; }\n    public long getTotalElements() { return totalElements; }\n    public int getTotalPages() { return (int) Math.ceil((double) totalElements / pageSize); }\n    public boolean hasNext() { return pageNumber < getTotalPages() - 1; }\n    \n    @Override\n    public String toString() {\n        return \"Page \" + (pageNumber+1) + \"/\" + getTotalPages() + \": \" + content;\n    }\n}\n\npublic class ArticleRepository {\n    private List<String> articles;\n    \n    public ArticleRepository() {\n        articles = new ArrayList<>();\n        for (int i = 1; i <= 25; i++) articles.add(\"Article-\" + i);\n    }\n    \n    public Page<String> findAll(PageRequest pageRequest) {\n        // TODO: Sort articles by sortBy (if 'name', sort alphabetically)\n        // TODO: Extract the correct page slice using offset and size\n        // TODO: Return Page with content, total, pageNumber, pageSize\n        return null;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ArticleRepository repo = new ArticleRepository();\n        \n        Page<String> page1 = repo.findAll(new PageRequest(0, 10, \"name\"));\n        System.out.println(page1);\n        System.out.println(\"Total articles: \" + page1.getTotalElements());\n        System.out.println(\"Has next page: \" + page1.hasNext());\n        \n        Page<String> page3 = repo.findAll(new PageRequest(2, 10, \"name\"));\n        System.out.println(page3);\n        System.out.println(\"Has next page: \" + page3.hasNext());\n    }\n}",
+      "instructions": [
+        "In findAll(), sort the articles list using the sortBy field (sort alphabetically if sortBy is 'name').",
+        "Use getOffset() and size to extract the correct sublist (handle edge cases with min).",
+        "Return a Page with the slice, total count, pageNumber, pageSize.",
+        "Run Main as-is."
+      ],
+      "hint": "Spring Data's PageRequest.of(page, size) + repository.findAll(pageable) implement server-side pagination. Always paginate API responses returning large datasets.",
+      "expectedOutput": "Page 1/3: [Article-1, Article-10, Article-11, Article-12, Article-13, Article-14, Article-15, Article-16, Article-17, Article-18]\nTotal articles: 25\nHas next page: true\nPage 3/3: [Article-7, Article-8, Article-9]\nHas next page: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 25,
+    "subtopicId": 92,
+    "allowedSubmissionType": "TEXT"
+  }
+]

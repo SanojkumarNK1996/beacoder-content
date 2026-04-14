@@ -1,0 +1,75 @@
+[
+  {
+    "title": "SAVEPOINT: Partial Rollback",
+    "description": {
+      "task": "Use SAVEPOINT and ROLLBACK TO SAVEPOINT within a transaction to undo only part of the work.",
+      "language": "sql",
+      "context": "A SAVEPOINT marks a point in a transaction to which you can rollback without losing all the work done so far. It enables fine-grained error recovery within a long transaction.",
+      "starterCode": "CREATE TABLE cart (\n  item_id   INT PRIMARY KEY,\n  product   VARCHAR(60),\n  quantity  INT,\n  price     DECIMAL(8,2)\n);\n\nINSERT INTO cart VALUES\n  (1, 'Laptop',    1, 999.99),\n  (2, 'Mouse',     2,  19.99),\n  (3, 'Keyboard',  1,  59.99);\n\nSELECT * FROM cart;\n\nBEGIN;\n  -- Add headphones\n  INSERT INTO cart VALUES (4, 'Headphones', 1, 79.99);\n  SAVEPOINT after_headphones;\n\n  -- Add monitor\n  INSERT INTO cart VALUES (5, 'Monitor', 1, 299.99);\n  SAVEPOINT after_monitor;\n\n  -- Add webcam (but user changes mind)\n  INSERT INTO cart VALUES (6, 'Webcam', 1, 49.99);\n  -- User removes webcam but keeps headphones and monitor\n  ROLLBACK TO SAVEPOINT after_monitor;\n\n  -- Confirm: webcam gone, headphones and monitor still there\n  SELECT * FROM cart ORDER BY item_id;\nCOMMIT;\n\n-- Final state\nSELECT * FROM cart ORDER BY item_id;\n",
+      "instructions": [
+        "Run CREATE, INSERT, initial SELECT.",
+        "Run the full BEGIN...COMMIT block with savepoints.",
+        "The inner SELECT (inside transaction) shows items 1-5 (webcam rolled back).",
+        "Final SELECT after COMMIT shows same 5 items.",
+        "Add a comment: can you ROLLBACK TO a savepoint that was defined BEFORE the current savepoint?"
+      ],
+      "hint": "Yes — you can ROLLBACK TO any savepoint defined earlier in the same transaction. The later savepoints are discarded when you rollback past them.",
+      "expectedOutput": "After ROLLBACK TO SAVEPOINT after_monitor: items 1-5 (webcam removed)\nAfter COMMIT: 5 items persist"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 62,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SAVEPOINT in Batch Processing",
+    "description": {
+      "task": "Use savepoints to process a batch of records — skipping failed records while preserving successful ones.",
+      "language": "sql",
+      "context": "In batch processing, you may want to commit successfully processed records even if some fail. Savepoints per record allow you to skip bad records without rolling back the entire batch.",
+      "starterCode": "CREATE TABLE imported_products (\n  product_id INT PRIMARY KEY,\n  name       VARCHAR(80) NOT NULL,\n  price      DECIMAL(8,2) CHECK (price > 0),\n  sku        VARCHAR(20) UNIQUE\n);\n\n-- Simulate batch processing with recovery from errors\nBEGIN;\n\n-- Record 1: valid\nSAVEPOINT before_record_1;\nINSERT INTO imported_products VALUES (1, 'Laptop', 999.99, 'LAP001');\nSAVEPOINT after_record_1;\n\n-- Record 2: valid\nSAVEPOINT before_record_2;\nINSERT INTO imported_products VALUES (2, 'Mouse', 19.99, 'MSE001');\nSAVEPOINT after_record_2;\n\n-- Record 3: would fail (negative price) — rollback just this record\nSAVEPOINT before_record_3;\n-- INSERT INTO imported_products VALUES (3, 'Bad Item', -10, 'BAD001'); -- would fail\n-- ROLLBACK TO SAVEPOINT before_record_3;  -- skip this record\n\n-- Record 4: valid\nSAVEPOINT before_record_4;\nINSERT INTO imported_products VALUES (4, 'Keyboard', 59.99, 'KBD001');\nSAVEPOINT after_record_4;\n\nCOMMIT;\n\n-- Result: 3 valid products, bad record skipped\nSELECT * FROM imported_products ORDER BY product_id;\n",
+      "instructions": [
+        "Run the entire batch transaction (Record 3 is commented out — simulating skip).",
+        "Verify: 3 products inserted (1, 2, 4).",
+        "Uncomment Record 3 insert and its ROLLBACK TO SAVEPOINT to see the skip pattern fully.",
+        "Add a comment: in a real batch import of 10,000 rows, how would you implement this per-row savepoint pattern in application code?"
+      ],
+      "hint": "In application code, wrap each record insert in a try-catch. On exception: ROLLBACK TO SAVEPOINT before_record_N, log the error, then continue to the next record. Finally COMMIT at the end.",
+      "expectedOutput": "3 products: Laptop(1), Mouse(2), Keyboard(4)\nRecord 3 skipped — no 'Bad Item' in table"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 62,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "RELEASE SAVEPOINT",
+    "description": {
+      "task": "Demonstrate RELEASE SAVEPOINT which removes a savepoint (freeing memory) while keeping all work done since the savepoint.",
+      "language": "sql",
+      "context": "RELEASE SAVEPOINT destroys the savepoint marker but does NOT rollback any work. It is used to clean up savepoints that are no longer needed — helpful in long transactions to avoid memory bloat.",
+      "starterCode": "CREATE TABLE tasks (\n  task_id  INT PRIMARY KEY,\n  title    VARCHAR(100),\n  status   VARCHAR(20) DEFAULT 'pending'\n);\n\nINSERT INTO tasks VALUES (1,'Task A','pending'),(2,'Task B','pending'),(3,'Task C','pending');\n\nBEGIN;\n\n-- Complete Task A\nUPDATE tasks SET status = 'done' WHERE task_id = 1;\nSAVEPOINT task_a_done;\n\n-- Complete Task B\nUPDATE tasks SET status = 'done' WHERE task_id = 2;\nSAVEPOINT task_b_done;\n\n-- Release task_a_done (no longer need to rollback to it)\nRELEASE SAVEPOINT task_a_done;\n-- Note: task A's UPDATE is NOT rolled back — RELEASE only removes the marker\n\n-- Complete Task C\nUPDATE tasks SET status = 'done' WHERE task_id = 3;\n\nCOMMIT;\n\nSELECT * FROM tasks ORDER BY task_id;\n",
+      "instructions": [
+        "Run the full transaction including RELEASE SAVEPOINT.",
+        "Run the final SELECT — all 3 tasks should be 'done'.",
+        "In a comment: why must you NOT confuse RELEASE SAVEPOINT with ROLLBACK TO SAVEPOINT?",
+        "Add a comment: what happens if you try to ROLLBACK TO SAVEPOINT task_a_done after releasing it?"
+      ],
+      "hint": "RELEASE SAVEPOINT is just bookkeeping — it removes the savepoint reference but keeps all DML changes. Trying to ROLLBACK TO a released savepoint will throw an error: 'savepoint does not exist'.",
+      "expectedOutput": "All 3 tasks: status = 'done'\nRELEASE does not undo Task A's update"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 18,
+    "subtopicId": 62,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Expression Tree Evaluator",
+    "description": {
+      "task": "Build an ExpressionTree class where each internal node is an operator (+,-,*,/) and each leaf is an integer. Implement evaluate() to recursively compute the expression value, and infix() to produce the infix string with proper parentheses.",
+      "language": "java",
+      "starterCode": "public class ExpressionTree {\n\n    static class Node {\n        String val;\n        Node left, right;\n        Node(String v) { val = v; }\n        Node(String v, Node l, Node r) { val=v; left=l; right=r; }\n    }\n\n    public int evaluate(Node root) {\n        if (root == null) return 0;\n        if (root.left == null && root.right == null) {\n            return Integer.parseInt(root.val); // leaf = number\n        }\n        int left = evaluate(root.left);\n        int right = evaluate(root.right);\n        // TODO: apply operator in root.val to left and right\n        return 0;\n    }\n\n    public String infix(Node root) {\n        if (root == null) return \"\";\n        if (root.left == null && root.right == null) return root.val;\n        // TODO: return \"(\" + infix(left) + root.val + infix(right) + \")\"\n        return \"\";\n    }\n\n    public static void main(String[] args) {\n        ExpressionTree et = new ExpressionTree();\n        // Build: (3 + (4 * 5))\n        Node tree1 = new Node(\"+\",\n            new Node(\"3\"),\n            new Node(\"*\", new Node(\"4\"), new Node(\"5\"))\n        );\n        System.out.println(\"Expression: \" + et.infix(tree1));\n        System.out.println(\"Result: \" + et.evaluate(tree1));\n        // Build: ((2 + 3) * (8 - 4))\n        Node tree2 = new Node(\"*\",\n            new Node(\"+\", new Node(\"2\"), new Node(\"3\")),\n            new Node(\"-\", new Node(\"8\"), new Node(\"4\"))\n        );\n        System.out.println(\"Expression: \" + et.infix(tree2));\n        System.out.println(\"Result: \" + et.evaluate(tree2));\n    }\n}",
+      "instructions": [
+        "evaluate: use a switch on root.val: '+' return left+right; '-' return left-right; '*' return left*right; '/' return left/right",
+        "infix: return '(' + infix(root.left) + root.val + infix(root.right) + ')'",
+        "(3+(4*5)) evaluates to 3+20=23",
+        "((2+3)*(8-4)) evaluates to 5*4=20",
+        "Both methods must be implemented"
+      ],
+      "hint": "evaluate switch: case '+': return left+right; case '-': return left-right; case '*': return left*right; case '/': return left/right; infix: return '('+infix(root.left)+root.val+infix(root.right)+')';",
+      "expectedOutput": "Expression: (3+(4*5))\nResult: 23\nExpression: ((2+3)*(8-4))\nResult: 20"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 152,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "File System Tree Simulation",
+    "description": {
+      "task": "Implement a FileSystemTree using a tree structure where each node is a file or directory. Directories can have children; files cannot. Implement addChild, totalSize (sum of all file sizes), and printTree (indented hierarchy).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class FileSystemTree {\n\n    static class FsNode {\n        String name;\n        boolean isDir;\n        int size; // 0 for directories, actual for files\n        List<FsNode> children = new ArrayList<>();\n        FsNode(String name, boolean isDir, int size) {\n            this.name = name; this.isDir = isDir; this.size = size;\n        }\n    }\n\n    public void addChild(FsNode parent, FsNode child) {\n        if (parent.isDir) parent.children.add(child);\n        // Silently ignore if parent is a file\n    }\n\n    public int totalSize(FsNode node) {\n        // TODO: if file return node.size; else sum totalSize of all children\n        return 0;\n    }\n\n    public void printTree(FsNode node, int depth) {\n        String indent = \"  \".repeat(depth);\n        String type = node.isDir ? \"[DIR]\" : \"[FILE \" + node.size + \"B]\";\n        System.out.println(indent + node.name + \" \" + type);\n        for (FsNode child : node.children) printTree(child, depth + 1);\n    }\n\n    public static void main(String[] args) {\n        FileSystemTree fs = new FileSystemTree();\n        FsNode root = new FsNode(\"root\", true, 0);\n        FsNode src = new FsNode(\"src\", true, 0);\n        FsNode main = new FsNode(\"Main.java\", false, 1024);\n        FsNode util = new FsNode(\"Utils.java\", false, 512);\n        FsNode readme = new FsNode(\"README.md\", false, 256);\n        fs.addChild(root, src); fs.addChild(root, readme);\n        fs.addChild(src, main); fs.addChild(src, util);\n        fs.printTree(root, 0);\n        System.out.println(\"Total size: \" + fs.totalSize(root) + \" bytes\");\n    }\n}",
+      "instructions": [
+        "totalSize: if(!node.isDir) return node.size; int sum=0; for each child: sum+=totalSize(child); return sum",
+        "addChild and printTree are already implemented",
+        "File sizes: Main.java=1024, Utils.java=512, README.md=256; total=1792",
+        "Tree structure: root/src/Main.java, root/src/Utils.java, root/README.md",
+        "printTree depth controls indentation (2 spaces per level)"
+      ],
+      "hint": "totalSize: if(!node.isDir) return node.size; int sum=0; for(FsNode c:node.children) sum+=totalSize(c); return sum;",
+      "expectedOutput": "root [DIR]\n  src [DIR]\n    Main.java [FILE 1024B]\n    Utils.java [FILE 512B]\n  README.md [FILE 256B]\nTotal size: 1792 bytes"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 152,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Trie (Prefix Tree) for Autocomplete",
+    "description": {
+      "task": "Implement a Trie class that supports insert, search (exact match), startsWith (prefix check), and autocomplete (list all words with a given prefix). Each TrieNode has an array of 26 children and an isEnd flag.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class Trie {\n\n    static class TrieNode {\n        TrieNode[] children = new TrieNode[26];\n        boolean isEnd;\n    }\n\n    private TrieNode root = new TrieNode();\n\n    public void insert(String word) {\n        TrieNode curr = root;\n        for (char c : word.toCharArray()) {\n            int idx = c - 'a';\n            if (curr.children[idx] == null) curr.children[idx] = new TrieNode();\n            curr = curr.children[idx];\n        }\n        curr.isEnd = true;\n    }\n\n    public boolean search(String word) {\n        // TODO: traverse trie; return true only if node at end has isEnd=true\n        return false;\n    }\n\n    public boolean startsWith(String prefix) {\n        // TODO: traverse trie for prefix; return true if all chars found\n        return false;\n    }\n\n    public List<String> autocomplete(String prefix) {\n        List<String> results = new ArrayList<>();\n        TrieNode curr = root;\n        for (char c : prefix.toCharArray()) {\n            int idx = c - 'a';\n            if (curr.children[idx] == null) return results;\n            curr = curr.children[idx];\n        }\n        // TODO: DFS from curr to collect all complete words, adding prefix\n        return results;\n    }\n\n    private void dfs(TrieNode node, String current, List<String> results) {\n        if (node.isEnd) results.add(current);\n        for (int i = 0; i < 26; i++) {\n            if (node.children[i] != null) dfs(node.children[i], current + (char)('a' + i), results);\n        }\n    }\n\n    public static void main(String[] args) {\n        Trie trie = new Trie();\n        for (String w : new String[]{\"apple\",\"app\",\"apply\",\"apt\",\"bat\",\"ball\"}) trie.insert(w);\n        System.out.println(trie.search(\"app\"));\n        System.out.println(trie.search(\"ap\"));\n        System.out.println(trie.startsWith(\"ap\"));\n        System.out.println(trie.autocomplete(\"app\"));\n    }\n}",
+      "instructions": [
+        "search: traverse for each char; if any char's child is null return false; after loop return curr.isEnd",
+        "startsWith: same traversal but return false only if a char's child is null; return true if full prefix traversed",
+        "autocomplete: traverse to prefix node (already done above TODO); then call dfs(curr, prefix, results) to collect all words",
+        "Search 'app'=true (inserted), search 'ap'=false (no isEnd), startsWith 'ap'=true",
+        "autocomplete('app') → [app, apple, apply] (sorted alphabetically by DFS left-to-right)"
+      ],
+      "hint": "search: TrieNode curr=root; for(char c:word.toCharArray()){int i=c-'a'; if(curr.children[i]==null)return false; curr=curr.children[i];} return curr.isEnd; autocomplete: call dfs(curr,prefix,results);",
+      "expectedOutput": "true\nfalse\ntrue\n[app, apple, apply]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 38,
+    "subtopicId": 152,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Lambda Expressions",
+    "description": {
+      "task": "Replace anonymous Runnable, Comparator, and custom functional interface implementations with lambda expressions.",
+      "language": "java",
+      "starterCode": "import java.util.ArrayList;\nimport java.util.Collections;\n\npublic class LambdaDemo {\n\n    @FunctionalInterface\n    interface Greeting {\n        String greet(String name);\n    }\n\n    public static void main(String[] args) {\n        // 1. Lambda as Runnable\n        Runnable r = () -> System.out.println(\"Hello from lambda thread!\");\n        new Thread(r).start();\n\n        // 2. Lambda as Comparator — sort strings by length\n        ArrayList<String> words = new ArrayList<>();\n        words.add(\"banana\");\n        words.add(\"kiwi\");\n        words.add(\"apple\");\n        words.add(\"fig\");\n\n        Collections.sort(words, (a, b) -> a.length() - b.length());\n        System.out.println(\"Sorted by length: \" + words);\n\n        // 3. Lambda with custom functional interface\n        Greeting formal = name -> \"Good day, \" + name + \".\";\n        Greeting casual = name -> \"Hey, \" + name + \"!\";\n\n        System.out.println(formal.greet(\"Alice\"));\n        System.out.println(casual.greet(\"Bob\"));\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is — it already uses lambdas.",
+        "In comments, rewrite the Comparator lambda as an equivalent anonymous class implementation.",
+        "In comments, explain: what makes Greeting a functional interface?",
+        "Submit the running code with both explanation comments."
+      ],
+      "hint": "A functional interface has exactly ONE abstract method. The lambda provides the implementation of that single method. @FunctionalInterface is optional but good practice.",
+      "expectedOutput": "Hello from lambda thread!\nSorted by length: [fig, kiwi, apple, banana]\nGood day, Alice.\nHey, Bob!"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 9,
+    "subtopicId": 27,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Streams API Pipeline",
+    "description": {
+      "task": "Use the Java Streams API to filter, transform, and collect a list of employee salaries.",
+      "language": "java",
+      "context": "The Streams API enables functional-style pipeline operations on collections: filter → map → collect. It improves readability and can be parallelised easily.",
+      "starterCode": "import java.util.Arrays;\nimport java.util.List;\nimport java.util.stream.Collectors;\n\npublic class StreamsDemo {\n    public static void main(String[] args) {\n        List<Integer> salaries = Arrays.asList(35000, 72000, 45000, 90000, 28000, 60000, 82000);\n\n        // 1. Filter salaries above 50000, collect to list, print\n        List<Integer> highEarners = salaries.stream()\n            // your filter here\n            .collect(Collectors.toList());\n        System.out.println(\"High earners: \" + highEarners);\n\n        // 2. Calculate average salary\n        double avg = salaries.stream()\n            // use mapToInt and average()\n            .getAsDouble();\n        System.out.printf(\"Average salary: %.2f%n\", avg);\n\n        // 3. Find count of salaries above 50000\n        long count = salaries.stream()\n            // filter and count\n            ;\n        System.out.println(\"Count above 50000: \" + count);\n    }\n}",
+      "instructions": [
+        "Complete the first pipeline: add .filter(s -> s > 50000) before .collect(...).",
+        "Complete the second pipeline: .mapToInt(Integer::intValue).average() then .getAsDouble().",
+        "Complete the third pipeline: .filter(s -> s > 50000).count().",
+        "Do NOT change the println statements."
+      ],
+      "hint": "Stream shortcuts: filter() narrows elements, mapToInt() converts to IntStream which has average(), count() returns the number of elements after filtering.",
+      "expectedOutput": "High earners: [72000, 90000, 60000, 82000]\nAverage salary: 58857.14\nCount above 50000: 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 9,
+    "subtopicId": 27,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Optional Class — Avoid NullPointerException",
+    "description": {
+      "task": "Use the Java Optional class to safely handle a method that may return null, demonstrating isPresent(), orElse(), and map().",
+      "language": "java",
+      "context": "Optional<T> is a container that may or may not hold a value. It forces callers to explicitly handle the 'no value' case, reducing NullPointerExceptions.",
+      "starterCode": "import java.util.Optional;\n\npublic class OptionalDemo {\n\n    static Optional<String> findUserById(int id) {\n        if (id == 1) return Optional.of(\"Alice\");\n        if (id == 2) return Optional.of(\"Bob\");\n        return Optional.empty(); // user not found\n    }\n\n    public static void main(String[] args) {\n        // Case 1: user exists\n        Optional<String> user1 = findUserById(1);\n        System.out.println(\"Found: \" + user1.isPresent());\n        System.out.println(\"Name: \" + user1.get());\n\n        // Case 2: user not found — use orElse()\n        Optional<String> user3 = findUserById(99);\n        String name = user3.orElse(\"Guest\");\n        System.out.println(\"Name or default: \" + name);\n\n        // Case 3: transform with map() — get length of name if present\n        Optional<Integer> nameLength = findUserById(2).map(n -> n.length());\n        System.out.println(\"Bob's name length: \" + nameLength.orElse(0));\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is — do not change it.",
+        "Verify all four output lines are correct.",
+        "In a comment, explain: why is calling .get() on an empty Optional dangerous? What should you use instead?",
+        "Submit the code with your explanation comment."
+      ],
+      "hint": "Calling .get() on Optional.empty() throws NoSuchElementException. Prefer .orElse(), .orElseGet(), or check with .isPresent() first. In modern Java, use .ifPresent(consumer) for the cleanest approach.",
+      "expectedOutput": "Found: true\nName: Alice\nName or default: Guest\nBob's name length: 3"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 9,
+    "subtopicId": 27,
+    "allowedSubmissionType": "TEXT"
+  }
+]

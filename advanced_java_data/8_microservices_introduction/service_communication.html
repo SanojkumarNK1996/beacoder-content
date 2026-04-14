@@ -1,0 +1,110 @@
+<h1>📡 Service Communication</h1>
+
+<h2>🎯 How Do Microservices Talk to Each Other?</h2>
+<p>In a microservices system, services must collaborate to fulfill a request. Communication can be:</p>
+<ul>
+  <li>📨 <strong>Synchronous</strong> – Request/response (e.g., HTTP/REST)</li>
+  <li>📬 <strong>Asynchronous</strong> – Messaging (e.g., Kafka, RabbitMQ)</li>
+</ul>
+
+<h2>🌐 Synchronous Communication (HTTP/REST)</h2>
+
+<ul>
+  <li>Client calls API Gateway</li>
+  <li>Gateway routes to one or more backend services</li>
+  <li>Services call each other over HTTP (often using REST)</li>
+</ul>
+
+<h3>Pros</h3>
+<ul>
+  <li>Simpler mental model (like calling a function)</li>
+  <li>Easy to debug with tools like Postman, curl</li>
+  <li>Good fit for request/response flows</li>
+</ul>
+
+<h3>Cons</h3>
+<ul>
+  <li>Tight temporal coupling – caller waits for callee</li>
+  <li>Chain failures – one slow/failing service can slow down many others</li>
+  <li>Harder to handle spikes gracefully</li>
+</ul>
+
+<h2>📨 Asynchronous Communication (Messaging)</h2>
+
+<p>Services communicate via <strong>message brokers</strong> (Kafka, RabbitMQ, ActiveMQ, etc.).</p>
+
+<ul>
+  <li>Producer sends a message to a topic/queue</li>
+  <li>Consumer services process messages independently</li>
+  <li>Supports <strong>event-driven architecture</strong></li>
+</ul>
+
+<h3>Pros</h3>
+<ul>
+  <li>Loose coupling – services don&apos;t need to be up at the same time</li>
+  <li>Better resilience and elasticity</li>
+  <li>Natural fit for <strong>event-driven</strong> and <strong>async</strong> workflows</li>
+</ul>
+
+<h3>Cons</h3>
+<ul>
+  <li>More complex debugging and tracing</li>
+  <li>Requires careful design for <strong>idempotency</strong> and <strong>ordering</strong></li>
+  <li>Eventual consistency instead of immediate consistency</li>
+</ul>
+
+<h2>🧬 Common Communication Patterns</h2>
+
+<ul>
+  <li><strong>Request/Response</strong> – HTTP/REST, typical for queries</li>
+  <li><strong>Publish/Subscribe</strong> – Producers publish events; multiple subscribers react</li>
+  <li><strong>Event Sourcing</strong> – State changes captured as a sequence of events</li>
+  <li><strong>Command and Event</strong> – Command to perform an action, events to describe results</li>
+</ul>
+
+<h2>🧱 Example: Order Placement Flow</h2>
+
+<ol>
+  <li>Client calls Order Service (HTTP)</li>
+  <li>Order Service creates an order and publishes <code>OrderCreated</code> event</li>
+  <li>Inventory Service consumes the event and reserves stock</li>
+  <li>Payment Service consumes the event and charges the customer</li>
+  <li>Notification Service sends confirmation emails/SMS</li>
+</ol>
+
+<p>Here, services collaborate via <strong>asynchronous events</strong>, decoupling their lifecycles.</p>
+
+<h2>🔍 Service Discovery</h2>
+<p>In a dynamic environment (containers, autoscaling), service instances come and go. Hardcoding URLs is not feasible.</p>
+
+<ul>
+  <li><strong>Service Registry</strong> – A directory of available services (Eureka, Consul, etc.)</li>
+  <li><strong>Service Discovery</strong> – Clients or gateways query the registry to find service instances</li>
+</ul>
+
+<h2>🛡️ Resilience Patterns</h2>
+<p>Network calls can fail. Use resilience patterns:</p>
+<ul>
+  <li><strong>Timeouts</strong> – Never wait forever</li>
+  <li><strong>Retries</strong> – Retry transient failures, with backoff</li>
+  <li><strong>Circuit Breaker</strong> – Stop calling a failing service for a while</li>
+  <li><strong>Bulkheads</strong> – Isolate resources so one failing dependency doesn&apos;t consume all threads</li>
+</ul>
+
+<h2>🧰 Tools & Libraries</h2>
+
+<ul>
+  <li><strong>Spring WebClient / RestTemplate</strong> – For HTTP calls between services</li>
+  <li><strong>Spring Cloud OpenFeign</strong> – Declarative HTTP clients</li>
+  <li><strong>Spring Cloud Netflix / Spring Cloud LoadBalancer</strong> – Load balancing & discovery integration</li>
+  <li><strong>Resilience4j</strong> – Circuit breakers, retries, rate limiting</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Choose <strong>HTTP/REST</strong> for simple request/response use cases</li>
+  <li>Use <strong>messaging</strong> for decoupled, event-driven flows</li>
+  <li>Implement <strong>resilience patterns</strong> and <strong>service discovery</strong> for production-grade systems</li>
+</ul>
+
+<p>Next, you&apos;ll see how <strong>Spring Cloud</strong> helps implement these patterns in Java.</p>

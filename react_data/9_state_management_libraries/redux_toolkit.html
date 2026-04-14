@@ -1,0 +1,50 @@
+<h1>🛠️ Redux Toolkit</h1>
+<h2>🎯 What is Redux Toolkit?</h2>
+<p><strong>Redux Toolkit (RTK)</strong> is the official, opinionated toolset for Redux. It eliminates boilerplate and includes best practices by default.</p>
+<div class="code-example">
+  <pre>
+npm install @reduxjs/toolkit react-redux
+  </pre>
+</div>
+<h2>🔧 Creating a Slice</h2>
+<div class="code-example">
+  <pre>
+// cartSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState: { items: [], total: 0 },
+  reducers: {
+    addItem: (state, action) =&gt; {
+      state.items.push(action.payload);       // Immer allows "mutations"
+      state.total += action.payload.price;
+    },
+    removeItem: (state, action) =&gt; {
+      state.items = state.items.filter(i =&gt; i.id !== action.payload);
+    },
+  },
+});
+
+export const { addItem, removeItem } = cartSlice.actions;
+export default cartSlice.reducer;
+  </pre>
+</div>
+<h2>🏪 Store Setup and Usage</h2>
+<div class="code-example">
+  <pre>
+// store.js
+import { configureStore } from '@reduxjs/toolkit';
+const store = configureStore({ reducer: { cart: cartReducer } });
+
+// main.jsx
+&lt;Provider store={store}&gt;&lt;App /&gt;&lt;/Provider&gt;
+
+// Component
+const items = useSelector(state =&gt; state.cart.items);
+const dispatch = useDispatch();
+dispatch(addItem({ id: 1, name: 'Book', price: 15 }));
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>RTK makes Redux enjoyable. Use <code>createSlice</code> for reducers/actions, <code>configureStore</code> for the store. RTK Query is an extension of RTK for data fetching.</p>

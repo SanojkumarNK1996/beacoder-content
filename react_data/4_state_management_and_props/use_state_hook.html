@@ -1,0 +1,40 @@
+<h1>🪝 useState Hook</h1>
+<h2>🎯 Basic Usage</h2>
+<div class="code-example">
+  <pre>
+import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);  // initial value = 0
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;+&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(count - 1)}&gt;-&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(0)}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+  </pre>
+</div>
+<h2>📋 Updating Object State</h2>
+<div class="code-example">
+  <pre>
+const [user, setUser] = useState({ name: 'Alice', age: 30 });
+
+// Always spread to avoid losing other fields:
+setUser({ ...user, age: 31 });
+
+// Functional update (when new state depends on old):
+setCount(prevCount =&gt; prevCount + 1);
+  </pre>
+</div>
+<h2>⚠️ Key Rules</h2>
+<ul>
+  <li><strong>Never mutate state directly</strong>: <code>count++</code> won't trigger re-render; use <code>setCount(count + 1)</code></li>
+  <li>State updates are <strong>asynchronous</strong> — don't read state right after setting it</li>
+  <li>For complex state, consider <code>useReducer</code></li>
+</ul>
+<h2>🎯 Summary</h2>
+<p><code>useState</code> is the most fundamental hook. Remember: always use the setter function, never mutate directly, spread objects to update.</p>

@@ -1,124 +1,144 @@
-<main class="course-content">
-  <article id="collections-framework">
-    <header>
-      <h1>8. Collections Framework</h1>
-      <p><strong>Goal:</strong> Learn how to store and manipulate groups of objects efficiently using Java Collections.</p>
-    </header>
+<h1>📦 Collections Framework (Lists, Sets, Maps)</h1>
 
-    <section>
-      <h2>What is the Collections Framework?</h2>
-      <p>
-        The <strong>Collections Framework</strong> in Java provides classes and interfaces to handle groups of objects 
-        such as lists, sets, and maps. It helps manage data dynamically — unlike arrays, collections can grow or shrink as needed.
-      </p>
-    </section>
+<h2>1. 🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>Swiggy/Zomato:
+    <ul>
+      <li>List of restaurants, list of items in cart, set of cuisines, map of item → price.</li>
+    </ul>
+  </li>
+  <li>IRCTC:
+    <ul>
+      <li>List of trains, set of stations, map of PNR → booking details.</li>
+    </ul>
+  </li>
+  <li>Arrays are <strong>fixed size</strong>; real apps need <strong>growable, flexible</strong> structures → Java <strong>Collections Framework</strong>.</li>
+</ul>
 
-    <section>
-      <h3>ArrayList</h3>
-      <p>
-        <strong>ArrayList</strong> is a dynamic array that can grow and shrink in size. 
-        It allows duplicate elements and maintains insertion order.
-      </p>
-      <pre><code class="language-java">
-// Example: Using ArrayList
+<h2>2. 📖 What Is the Collections Framework?</h2>
+<ul>
+  <li>A set of <strong>interfaces and classes</strong> to store and manage groups of objects.</li>
+  <li>Main groups:
+    <ul>
+      <li><strong>List</strong> – ordered, allows duplicates (e.g., <code>ArrayList</code>).</li>
+      <li><strong>Set</strong> – unique elements, no duplicates (e.g., <code>HashSet</code>).</li>
+      <li><strong>Map</strong> – key–value pairs (e.g., <code>HashMap</code>).</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>3. 🧾 Syntax / Basic Structure ⭐</h2>
+<pre><code class="language-java">// List (ArrayList)
 import java.util.ArrayList;
 
-public class ArrayListExample {
-    public static void main(String[] args) {
-        ArrayList<String> names = new ArrayList<>();
-        names.add("Alice");
-        names.add("Bob");
-        names.add("Charlie");
+ArrayList&lt;String&gt; names = new ArrayList&lt;&gt;();
+names.add("Rahul");
+names.add("Anjali");
 
-        System.out.println("Names: " + names);
-        names.remove("Bob");
-        System.out.println("After removal: " + names);
-    }
-}
-      </code></pre>
-    </section>
-
-    <section>
-      <h3>LinkedList</h3>
-      <p>
-        <strong>LinkedList</strong> stores elements in nodes, where each node points to the next. 
-        It’s efficient for inserting and removing elements in the middle of the list.
-      </p>
-      <pre><code class="language-java">
-// Example: Using LinkedList
-import java.util.LinkedList;
-
-public class LinkedListExample {
-    public static void main(String[] args) {
-        LinkedList<Integer> numbers = new LinkedList<>();
-        numbers.add(10);
-        numbers.add(20);
-        numbers.addFirst(5);
-        numbers.addLast(30);
-
-        System.out.println("LinkedList: " + numbers);
-    }
-}
-      </code></pre>
-    </section>
-
-    <section>
-      <h3>HashMap</h3>
-      <p>
-        <strong>HashMap</strong> stores data in key-value pairs. Each key is unique, and it allows fast retrieval based on keys.
-      </p>
-      <pre><code class="language-java">
-// Example: Using HashMap
-import java.util.HashMap;
-
-public class HashMapExample {
-    public static void main(String[] args) {
-        HashMap<String, Integer> ages = new HashMap<>();
-        ages.put("Alice", 25);
-        ages.put("Bob", 30);
-        ages.put("Charlie", 28);
-
-        System.out.println("Age of Bob: " + ages.get("Bob"));
-        System.out.println("All entries: " + ages);
-    }
-}
-      </code></pre>
-    </section>
-
-    <section>
-      <h3>HashSet</h3>
-      <p>
-        <strong>HashSet</strong> stores unique elements and does not maintain insertion order.
-      </p>
-      <pre><code class="language-java">
-// Example: Using HashSet
+// Set (HashSet)
 import java.util.HashSet;
 
-public class HashSetExample {
-    public static void main(String[] args) {
-        HashSet<String> fruits = new HashSet<>();
-        fruits.add("Apple");
-        fruits.add("Banana");
-        fruits.add("Apple"); // duplicate ignored
+HashSet&lt;String&gt; cities = new HashSet&lt;&gt;();
+cities.add("Kochi");
+cities.add("Kochi"); // duplicate ignored
 
-        System.out.println("Fruits: " + fruits);
+// Map (HashMap)
+import java.util.HashMap;
+
+HashMap&lt;String, Integer&gt; marks = new HashMap&lt;&gt;();
+marks.put("Maths", 90);
+marks.put("Science", 85);
+</code></pre>
+
+<h2>4. 🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<pre><code class="language-java">import java.util.*;
+
+public class CollectionsDemo {
+    public static void main(String[] args) {
+        // 1. List example
+        List&lt;String&gt; cart = new ArrayList&lt;&gt;();
+        cart.add("Pizza");
+        cart.add("Burger");
+        cart.add("Pizza");          // duplicates allowed
+
+        System.out.println(cart);    // [Pizza, Burger, Pizza]
+
+        // 2. Set example
+        Set&lt;String&gt; uniqueCities = new HashSet&lt;&gt;();
+        uniqueCities.add("Kochi");
+        uniqueCities.add("Kochi");  // ignored
+        uniqueCities.add("Chennai");
+
+        System.out.println(uniqueCities); // order not guaranteed
+
+        // 3. Map example
+        Map&lt;String, Integer&gt; itemToPrice = new HashMap&lt;&gt;();
+        itemToPrice.put("Pizza", 250);
+        itemToPrice.put("Burger", 150);
+
+        System.out.println(itemToPrice.get("Pizza")); // 250
     }
 }
-      </code></pre>
-    </section>
+</code></pre>
+<ol>
+  <li><strong>List</strong> keeps insertion order and allows duplicates.</li>
+  <li><strong>Set</strong> stores only unique values; duplicates are ignored.</li>
+  <li><strong>Map</strong> links keys (like item name) to values (like price).</li>
+</ol>
 
-    <section>
-      <h3>Key Points</h3>
-      <ul>
-        <li><strong>ArrayList</strong> – Fast access, slower insertion/removal in the middle.</li>
-        <li><strong>LinkedList</strong> – Efficient insertion/removal, slower random access.</li>
-        <li><strong>HashMap</strong> – Key-value storage, keys are unique.</li>
-        <li><strong>HashSet</strong> – Stores unique elements, no duplicates allowed.</li>
-      </ul>
-    </section>
+<h2>5. ✅ When to Use Which</h2>
+<ul>
+  <li><strong>List</strong> – when order matters and duplicates are allowed (cart items, message history).</li>
+  <li><strong>Set</strong> – when you need unique values (unique phone numbers, unique cities).</li>
+  <li><strong>Map</strong> – when you need key → value lookup (userId → details, PNR → booking).</li>
+</ul>
 
-    <footer>
-      <p><strong>Next:</strong> Learn about Iterators and how to loop through collections efficiently.</p>
-    </footer>
-  </article>
-</main>
+<h2>6. ⛔ When NOT to Use / Caution</h2>
+<ul>
+  <li>Don’t use a <strong>List</strong> when you require uniqueness – use a <strong>Set</strong> instead.</li>
+  <li>Don’t use a <strong>Map</strong> when you only need a simple list.</li>
+  <li>Don’t choose a collection blindly – think about <strong>order, duplicates, lookup needs</strong>.</li>
+</ul>
+
+<h2>7. 🧠 Minimum You MUST Remember</h2>
+<ul>
+  <li><strong>List</strong> → ordered, duplicates allowed.</li>
+  <li><strong>Set</strong> → unordered (mostly), unique elements.</li>
+  <li><strong>Map</strong> → key–value pairs.</li>
+  <li>Use generics: <code>List&lt;String&gt;</code>, <code>Set&lt;Integer&gt;</code>, <code>Map&lt;String, Integer&gt;</code>.</li>
+</ul>
+
+<h2>8. ⚠️ Common Mistakes</h2>
+<ul>
+  <li>Forgetting to use generics (<code>List&lt;String&gt;</code>) and ending up with <code>Object</code> casting issues.</li>
+  <li>Expecting <strong>HashSet</strong> or <strong>HashMap</strong> to maintain insertion order (they don’t).</li>
+  <li>Using wrong key type in Map (e.g., using <code>String</code> when an <code>Integer</code> ID is better).</li>
+</ul>
+
+<h2>9. 🎤 Interviewer’s Perspective</h2>
+<ul>
+  <li>"Difference between List, Set, and Map?"</li>
+  <li>"When would you use ArrayList vs HashSet vs HashMap?"</li>
+  <li>"What is the benefit of using generics with collections?"</li>
+</ul>
+
+<h2>10. 📝 Practice Questions ⭐</h2>
+<ol>
+  <li>
+    <strong>Very Easy:</strong>
+    <p>Create a <code>List&lt;String&gt;</code> of 5 friend names and print them.</p>
+  </li>
+  <li>
+    <strong>Easy:</strong>
+    <p>Create a <code>Set&lt;String&gt;</code> of cities, try adding duplicates, and print the Set.</p>
+  </li>
+  <li>
+    <strong>Medium:</strong>
+    <p>Create a <code>Map&lt;String, Integer&gt;</code> for subject → marks and print marks for a given subject.</p>
+  </li>
+  <li>
+    <strong>Medium (Thinking):</strong>
+    <p>For a Swiggy-like app, decide which collection you would use for (a) cart items, (b) supported cities list, (c) mapping restaurant ID → restaurant details.</p>
+  </li>
+</ol>
+

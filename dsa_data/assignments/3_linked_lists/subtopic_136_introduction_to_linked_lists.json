@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Node Class and Linked List Basics",
+    "description": {
+      "task": "Implement a Node class and a BasicLinkedList class. The list should support append (add to end), prepend (add to front), and print operations. Demonstrate creation of a linked list and traversal.",
+      "language": "java",
+      "starterCode": "public class BasicLinkedList {\n\n    static class Node {\n        int data;\n        Node next;\n        Node(int data) {\n            // TODO: initialize data and set next to null\n        }\n    }\n\n    private Node head;\n\n    public void append(int data) {\n        // TODO: add node to end of list\n    }\n\n    public void prepend(int data) {\n        // TODO: add node to front of list\n    }\n\n    public void print() {\n        Node curr = head;\n        StringBuilder sb = new StringBuilder();\n        while (curr != null) {\n            sb.append(curr.data);\n            if (curr.next != null) sb.append(\" -> \");\n            curr = curr.next;\n        }\n        System.out.println(sb.toString());\n    }\n\n    public int size() {\n        int count = 0;\n        Node curr = head;\n        while (curr != null) { count++; curr = curr.next; }\n        return count;\n    }\n\n    public static void main(String[] args) {\n        BasicLinkedList list = new BasicLinkedList();\n        list.append(1);\n        list.append(2);\n        list.append(3);\n        list.prepend(0);\n        list.print();\n        System.out.println(\"Size: \" + list.size());\n    }\n}",
+      "instructions": [
+        "Node constructor: set this.data=data and this.next=null",
+        "append(data): if head is null, set head=new Node(data); else traverse to last node (next==null) and set next=new Node(data)",
+        "prepend(data): create new Node(data), set newNode.next=head, set head=newNode",
+        "print() and size() are already implemented — do not modify them",
+        "After append(1,2,3) and prepend(0): list is 0->1->2->3, size=4"
+      ],
+      "hint": "append: Node curr=head; while(curr.next!=null) curr=curr.next; curr.next=new Node(data). prepend: Node n=new Node(data); n.next=head; head=n;",
+      "expectedOutput": "0 -> 1 -> 2 -> 3\nSize: 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 136,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Linked List vs Array Memory Allocation",
+    "description": {
+      "task": "Implement a MemoryComparison class that demonstrates the key difference between array (contiguous allocation) and linked list (scattered node allocation) by simulating addressOf for nodes. Each node has a data field and a pointer field.",
+      "language": "java",
+      "starterCode": "public class MemoryComparison {\n\n    static class Node {\n        int data;\n        Node next;\n        int simulatedAddress; // for demonstration\n        Node(int data, int address) {\n            this.data = data;\n            this.simulatedAddress = address;\n        }\n    }\n\n    public void showArrayLayout(int n) {\n        System.out.println(\"Array layout (contiguous):\");\n        int base = 1000;\n        for (int i = 0; i < n; i++) {\n            System.out.printf(\"  arr[%d] @ address %d = %d%n\", i, base + i * 4, i + 1);\n        }\n    }\n\n    public void showLinkedListLayout(int n) {\n        // TODO: simulate nodes at scattered addresses (base=2000, step=28 for realism)\n        // Print: node[i] @ address X, data=i+1, next-ptr -> next address (or NULL)\n        System.out.println(\"Linked list layout (scattered):\");\n    }\n\n    public static void main(String[] args) {\n        MemoryComparison mc = new MemoryComparison();\n        mc.showArrayLayout(4);\n        mc.showLinkedListLayout(4);\n    }\n}",
+      "instructions": [
+        "showLinkedListLayout(n): simulate n nodes with addresses starting at 2000, incrementing by 28 each",
+        "For each node i (0-based): print 'node[i] @ address A, data=i+1, next-ptr -> B' where B is the address of the next node",
+        "For the last node, print 'next-ptr -> NULL' instead of an address",
+        "showArrayLayout is already implemented as a reference",
+        "Output must show the scattered vs contiguous contrast"
+      ],
+      "hint": "int base=2000, step=28; for(int i=0;i<n;i++){ int addr=base+i*step; String next=(i<n-1)?String.valueOf(base+(i+1)*step):\"NULL\"; System.out.printf('  node[%d] @ address %d, data=%d, next-ptr -> %s%n',i,addr,i+1,next); }",
+      "expectedOutput": "Array layout (contiguous):\n  arr[0] @ address 1000 = 1\n  arr[1] @ address 1004 = 2\n  arr[2] @ address 1008 = 3\n  arr[3] @ address 1012 = 4\nLinked list layout (scattered):\n  node[0] @ address 2000, data=1, next-ptr -> 2028\n  node[1] @ address 2028, data=2, next-ptr -> 2056\n  node[2] @ address 2056, data=3, next-ptr -> 2084\n  node[3] @ address 2084, data=4, next-ptr -> NULL"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 136,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Linked List Advantages Demonstrator",
+    "description": {
+      "task": "Implement an InsertionComparison class that counts shift operations needed to insert into the middle of an array vs the pointer updates needed to insert into the middle of a linked list. Compare the two approaches for increasing n.",
+      "language": "java",
+      "starterCode": "public class InsertionComparison {\n\n    public int arrayMiddleInsertShifts(int n) {\n        // To insert at position n/2 in an array of size n,\n        // we must shift n - n/2 elements to make room\n        // TODO: return the number of element shifts required\n        return 0;\n    }\n\n    public int linkedListMiddleInsertOps(int n) {\n        // To insert after the middle node in a linked list:\n        // Traverse n/2 nodes (n/2 pointer-follows),\n        // then 2 pointer updates (newNode.next=mid.next; mid.next=newNode)\n        // TODO: return n/2 + 2\n        return 0;\n    }\n\n    public void compare(int n) {\n        System.out.printf(\"n=%d | Array shifts: %d | LL pointer ops: %d%n\",\n            n, arrayMiddleInsertShifts(n), linkedListMiddleInsertOps(n));\n    }\n\n    public static void main(String[] args) {\n        InsertionComparison ic = new InsertionComparison();\n        ic.compare(10);\n        ic.compare(100);\n        ic.compare(1000);\n    }\n}",
+      "instructions": [
+        "arrayMiddleInsertShifts(n): return n - n/2 (integer division; for n=10 returns 5)",
+        "linkedListMiddleInsertOps(n): return n/2 + 2 (traverse to middle + 2 pointer assignments)",
+        "compare() is already implemented — only the two calculation methods need code",
+        "For n=10: array=5, LL=7; for n=100: array=50, LL=52; for n=1000: array=500, LL=502",
+        "comment on why LL eventually wins for pure insertion (once traversal is O(1))"
+      ],
+      "hint": "arrayMiddleInsertShifts: return n - n/2; linkedListMiddleInsertOps: return n/2 + 2;",
+      "expectedOutput": "n=10 | Array shifts: 5 | LL pointer ops: 7\nn=100 | Array shifts: 50 | LL pointer ops: 52\nn=1000 | Array shifts: 500 | LL pointer ops: 502"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 36,
+    "subtopicId": 136,
+    "allowedSubmissionType": "TEXT"
+  }
+]

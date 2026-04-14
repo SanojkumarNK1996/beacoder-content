@@ -1,0 +1,110 @@
+<h1>🔐 Introduction to Spring Security</h1>
+
+<h2>🎯 Why Application Security Matters</h2>
+<p>Modern applications handle sensitive data: user profiles, payments, confidential business information. A single vulnerability can lead to:</p>
+<ul>
+  <li>Data breaches and financial loss</li>
+  <li>Reputation damage</li>
+  <li>Legal and compliance issues (GDPR, PCI-DSS, etc.)</li>
+</ul>
+
+<p>Security must be treated as a <strong>first-class concern</strong>, not an afterthought.</p>
+
+<h2>🧩 Authentication vs Authorization</h2>
+
+<ul>
+  <li><strong>Authentication</strong> – Who are you?<br>Verifying the identity of a user (login with username/password, tokens, etc.).</li>
+  <li><strong>Authorization</strong> – What are you allowed to do?<br>Controlling access to resources and actions (roles, permissions).</li>
+</ul>
+
+<p>Spring Security helps with both.</p>
+
+<h2>🌱 What is Spring Security?</h2>
+<p><strong>Spring Security</strong> is a powerful and highly customizable authentication and access-control framework for Java/Spring applications.</p>
+
+<p>Key capabilities:</p>
+<ul>
+  <li>Authentication (form login, HTTP Basic, OAuth2, JWT integration)</li>
+  <li>Authorization (URL-based, method-level)</li>
+  <li>Protection against common attacks (CSRF, session fixation)</li>
+  <li>Integration with Spring MVC and Spring Boot</li>
+</ul>
+
+<h2>🏗️ How Spring Security Works (High-Level)</h2>
+
+<ol>
+  <li>Incoming HTTP request reaches the <strong>Spring Security filter chain</strong></li>
+  <li>Filters perform authentication and authorization checks</li>
+  <li>If authentication is successful, a <strong>SecurityContext</strong> is created for the user</li>
+  <li>Authorization checks decide if the request is allowed</li>
+  <li>If checks pass, the request reaches your controller</li>
+</ol>
+
+<h2>🧱 Spring Security Building Blocks</h2>
+
+<ul>
+  <li><strong>SecurityFilterChain</strong> – Configures how requests are secured (HTTP endpoints, login, logout)</li>
+  <li><strong>Authentication</strong> – Represents the currently authenticated user</li>
+  <li><strong>SecurityContext</strong> – Stores Authentication information</li>
+  <li><strong>UserDetailsService</strong> – Loads user information from a data source</li>
+  <li><strong>PasswordEncoder</strong> – Hashes passwords (e.g., BCrypt)</li>
+</ul>
+
+<h2>⚙️ Basic Spring Security Setup (Spring Boot)</h2>
+
+<p>Add the Spring Security starter:</p>
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<p>By default, Spring Boot will:</p>
+<ul>
+  <li>Secure all endpoints</li>
+  <li>Generate a default user with a random password (printed in logs)</li>
+  <li>Require login via a <strong>form-based login page</strong></li>
+</ul>
+
+<h2>🧠 Security Configuration (Overview)</h2>
+
+<p>In modern Spring Security (Spring Boot 3+), you typically define a <strong>SecurityFilterChain</strong> bean:</p>
+
+<div class="code-example">
+  <pre>
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -&gt; csrf.disable())
+        .authorizeHttpRequests(auth -&gt; auth
+            .requestMatchers("/public/**").permitAll()
+            .anyRequest().authenticated()
+        )
+        .httpBasic(Customizer.withDefaults());
+    return http.build();
+}
+  </pre>
+</div>
+
+<p>This is just a taste; later sections will explore authentication and authorization in more detail.</p>
+
+<h2>🧪 Common Attack Types Spring Security Helps With</h2>
+
+<ul>
+  <li><strong>Brute-force login attempts</strong> – Strong authentication and password policies</li>
+  <li><strong>CSRF (Cross-Site Request Forgery)</strong> – Built-in CSRF protection for state-changing operations</li>
+  <li><strong>Session fixation</strong> – Secure session handling</li>
+  <li><strong>Clickjacking</strong> – Security headers (X-Frame-Options)</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Spring Security is the <strong>standard security framework</strong> for Spring applications</li>
+  <li>It provides robust support for authentication, authorization, and protection against common attacks</li>
+  <li>Understanding its core concepts (filter chain, SecurityContext, configuration) is essential for secure Java applications</li>
+</ul>
+
+<p>Next, you&apos;ll learn how <strong>user authentication</strong> works in practice.</p>

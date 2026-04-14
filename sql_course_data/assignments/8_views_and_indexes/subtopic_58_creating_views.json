@@ -1,0 +1,78 @@
+[
+  {
+    "title": "Create and Query a View",
+    "description": {
+      "task": "Create a database VIEW that encapsulates a complex JOIN query, then query the view like a regular table.",
+      "language": "sql",
+      "context": "A VIEW is a named, stored SQL query. It acts like a virtual table — you can SELECT from a view just like from a table. The view does not store data; it re-executes the query each time.",
+      "starterCode": "CREATE TABLE employees (\n  emp_id     INT PRIMARY KEY,\n  first_name VARCHAR(50),\n  last_name  VARCHAR(50),\n  dept_id    INT,\n  salary     DECIMAL(10,2),\n  hire_date  DATE\n);\n\nCREATE TABLE departments (\n  dept_id   INT PRIMARY KEY,\n  dept_name VARCHAR(50),\n  location  VARCHAR(50)\n);\n\nINSERT INTO departments VALUES (1,'Engineering','Floor 3'),(2,'Marketing','Floor 2'),(3,'HR','Floor 1');\nINSERT INTO employees VALUES\n  (101,'Alice',  'Smith',  1, 95000, '2020-01-15'),\n  (102,'Bob',    'Jones',  2, 65000, '2021-03-20'),\n  (103,'Carol',  'Lee',    1, 88000, '2019-06-10'),\n  (104,'Dave',   'Brown',  3, 55000, '2022-08-01'),\n  (105,'Eve',    'Davis',  1,105000, '2018-04-05');\n\n-- Create a view that joins employees and departments\nCREATE VIEW employee_details AS\n  SELECT\n    e.emp_id,\n    e.first_name || ' ' || e.last_name AS full_name,\n    d.dept_name,\n    d.location,\n    e.salary,\n    e.hire_date\n  FROM employees e\n  JOIN departments d ON e.dept_id = d.dept_id;\n\n-- Query the view like a regular table\nSELECT * FROM employee_details ORDER BY full_name;\n\n-- Query the view with WHERE\nSELECT full_name, salary FROM employee_details\nWHERE dept_name = 'Engineering'\nORDER BY salary DESC;\n",
+      "instructions": [
+        "Run CREATE TABLE, INSERT, and CREATE VIEW statements.",
+        "Run SELECT * on the view — 5 rows with joined data.",
+        "Run the filtered view query — 3 Engineering employees.",
+        "List all views: SELECT viewname FROM pg_views WHERE schemaname = 'public';",
+        "Add a comment: what is the difference between a VIEW and a CTE (WITH clause)?"
+      ],
+      "hint": "A VIEW persists across sessions — you create it once and query it any time. A CTE exists only within the single query where it's defined.",
+      "expectedOutput": "View query: 5 rows with dept name + location\nFiltered: Eve(105k), Alice(95k), Carol(88k)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 58,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Updatable Views",
+    "description": {
+      "task": "Create a simple updatable view and use it to INSERT and UPDATE data in the underlying table.",
+      "language": "sql",
+      "context": "A view is updatable when it maps directly to a single table with no aggregations, DISTINCT, UNION, or JOINs. DML operations on such views modify the underlying table.",
+      "starterCode": "CREATE TABLE products (\n  product_id INT PRIMARY KEY,\n  name       VARCHAR(80),\n  category   VARCHAR(40),\n  price      DECIMAL(8,2),\n  active     BOOLEAN DEFAULT TRUE\n);\n\nINSERT INTO products VALUES\n  (1,'Laptop',   'Electronics',999.99,TRUE),\n  (2,'Mouse',    'Electronics', 19.99,TRUE),\n  (3,'Desk',     'Furniture',  250.00,TRUE),\n  (4,'Old Model','Electronics', 79.99,FALSE);\n\n-- View: only active products\nCREATE VIEW active_products AS\n  SELECT product_id, name, category, price\n  FROM products\n  WHERE active = TRUE;\n\n-- Query through the view\nSELECT * FROM active_products ORDER BY category, name;\n\n-- UPDATE through the view — modifies the underlying products table\nUPDATE active_products SET price = 1099.99 WHERE product_id = 1;\n\n-- Verify in both view and base table\nSELECT * FROM active_products WHERE product_id = 1;\nSELECT * FROM products WHERE product_id = 1;\n\n-- INSERT through the view (active=TRUE assumed, but view doesn't include it)\n-- This INSERT will succeed and set active=TRUE by default\nINSERT INTO active_products (product_id, name, category, price)\nVALUES (5, 'Keyboard', 'Electronics', 59.99);\n\nSELECT * FROM products ORDER BY product_id;\n",
+      "instructions": [
+        "Run all CREATE TABLE, INSERT, CREATE VIEW statements.",
+        "Query active_products — 3 rows (Old Model excluded).",
+        "Run the UPDATE through the view and verify both view and base table show 1099.99.",
+        "Run the INSERT through the view and verify product 5 appears in products with active=TRUE.",
+        "Add a comment: why can a view with GROUP BY or JOIN NOT be updatable?"
+      ],
+      "hint": "Views with GROUP BY, DISTINCT, or JOINs are not updatable because the database cannot determine which base table row to modify from the aggregated/joined result.",
+      "expectedOutput": "Active view: 3 rows\nAfter UPDATE: Laptop price=1099.99 in both view and base table\nAfter INSERT: 5 products total, Keyboard visible in view"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 58,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Materialised View",
+    "description": {
+      "task": "Create a MATERIALIZED VIEW (PostgreSQL) that pre-computes and stores the results, then refresh it after data changes.",
+      "language": "sql",
+      "context": "A MATERIALIZED VIEW stores the query results on disk, unlike a regular view which re-runs the query. This dramatically speeds up expensive aggregate queries — at the cost of potential staleness until refreshed.",
+      "starterCode": "CREATE TABLE orders (\n  order_id   INT PRIMARY KEY,\n  customer   VARCHAR(50),\n  product    VARCHAR(60),\n  amount     DECIMAL(8,2),\n  order_date DATE\n);\n\nINSERT INTO orders VALUES\n  (1, 'Alice', 'Laptop',  999.99, '2026-01-05'),\n  (2, 'Bob',   'Mouse',    19.99, '2026-01-06'),\n  (3, 'Alice', 'Keyboard', 59.99, '2026-01-07'),\n  (4, 'Carol', 'Monitor', 299.99, '2026-01-08'),\n  (5, 'Bob',   'Laptop',  999.99, '2026-01-09');\n\n-- Create a materialised view for customer totals\nCREATE MATERIALIZED VIEW customer_totals AS\n  SELECT customer, COUNT(*) AS orders, SUM(amount) AS total_spent\n  FROM orders\n  GROUP BY customer\n  ORDER BY total_spent DESC;\n\n-- Query the materialised view (reads from stored data, not live)\nSELECT * FROM customer_totals;\n\n-- Add new order\nINSERT INTO orders VALUES (6, 'Carol', 'Headphones', 79.99, '2026-01-10');\n\n-- Before refresh: Carol's total is stale\nSELECT * FROM customer_totals WHERE customer = 'Carol';\n\n-- Refresh the materialised view\nREFRESH MATERIALIZED VIEW customer_totals;\n\n-- After refresh: Carol's total is up-to-date\nSELECT * FROM customer_totals;\n",
+      "instructions": [
+        "Run CREATE TABLE, INSERT, CREATE MATERIALIZED VIEW statements.",
+        "Query customer_totals — Alice=1059.98, Bob=1019.98, Carol=299.99.",
+        "Insert Carol's new order.",
+        "Query before REFRESH — Carol still shows 1 order, 299.99 (stale).",
+        "Run REFRESH MATERIALIZED VIEW then query again — Carol=379.98, 2 orders.",
+        "Add a comment: when would you schedule REFRESH MATERIALIZED VIEW in production?"
+      ],
+      "hint": "In production, REFRESH is typically scheduled via a cron job or pg_cron. REFRESH MATERIALIZED VIEW CONCURRENTLY allows refreshing without locking reads (requires a unique index on the view).",
+      "expectedOutput": "Before refresh: Carol=299.99 (1 order, stale)\nAfter refresh: Carol=379.98 (2 orders, current)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 17,
+    "subtopicId": 58,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,32 @@
+<h1>📚 Stack Data Structure</h1>
+
+<h2>🎯 What is a Stack?</h2>
+<p>A <strong>stack</strong> is a collection where the <strong>last element added is the first one removed</strong> (LIFO – Last In, First Out).</p>
+
+<div class="analogy-card">
+  <h3>🍽️ Plate Analogy</h3>
+  <p>A stack of plates: you always put new plates on top and take from the top. You can't grab from the middle.</p>
+</div>
+
+<h2>🔧 Core Operations</h2>
+<ul>
+  <li><strong>push(x)</strong> – Add element to top: O(1)</li>
+  <li><strong>pop()</strong> – Remove top element: O(1)</li>
+  <li><strong>peek()</strong> – View top without removing: O(1)</li>
+  <li><strong>isEmpty()</strong> – Check if stack is empty: O(1)</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+Deque&lt;Integer&gt; stack = new ArrayDeque&lt;&gt;();
+stack.push(10);
+stack.push(20);
+stack.push(30);
+System.out.println(stack.peek()); // 30
+stack.pop();
+System.out.println(stack.peek()); // 20
+  </pre>
+</div>
+
+<h2>🎯 Summary</h2>
+<p>Use <code>Deque</code> (ArrayDeque) in Java as a stack. Stacks are fundamental for recursion simulation, expression evaluation, and backtracking.</p>

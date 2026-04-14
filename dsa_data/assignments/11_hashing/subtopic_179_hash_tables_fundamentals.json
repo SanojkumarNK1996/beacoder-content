@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Custom Hash Table (Separate Chaining)",
+    "description": {
+      "task": "Implement a hash table from scratch using an array of linked lists (separate chaining) for collision resolution. Support put, get, remove, and size operations. Use a simple modulo hash function.",
+      "language": "java",
+      "starterCode": "public class HashTableChaining {\n    private static final int CAPACITY = 8;\n    private Object[][] table = new Object[CAPACITY][0]; // each bin is a list of [key, value] pairs\n    private java.util.List<Object[]>[] bins;\n    private int size;\n\n    @SuppressWarnings(\"unchecked\")\n    public HashTableChaining() {\n        bins = new java.util.ArrayList[CAPACITY];\n        for (int i = 0; i < CAPACITY; i++) bins[i] = new java.util.ArrayList<>();\n    }\n\n    private int hash(int key) { return Math.abs(key) % CAPACITY; }\n\n    public void put(int key, String value) {\n        int bin = hash(key);\n        for (Object[] entry : bins[bin]) {\n            if ((int) entry[0] == key) { entry[1] = value; return; } // update\n        }\n        // TODO: add new entry {key, value} to bins[bin]; increment size\n    }\n\n    public String get(int key) {\n        int bin = hash(key);\n        for (Object[] entry : bins[bin]) {\n            if ((int) entry[0] == key) return (String) entry[1];\n        }\n        return null;\n    }\n\n    public boolean remove(int key) {\n        int bin = hash(key);\n        // TODO: iterate bins[bin], remove the entry with matching key, decrement size, return true; return false if not found\n        for (int i = 0; i < bins[bin].size(); i++) {\n            if ((int) bins[bin].get(i)[0] == key) {\n                bins[bin].remove(i); size--; return true;\n            }\n        }\n        return false;\n    }\n\n    public int size() { return size; }\n\n    public static void main(String[] args) {\n        HashTableChaining ht = new HashTableChaining();\n        ht.put(1, \"one\"); ht.put(9, \"nine\"); ht.put(17, \"seventeen\"); // 1,9,17 all hash to 1\n        ht.put(5, \"five\"); ht.put(13, \"thirteen\");\n        System.out.println(\"get(9): \" + ht.get(9));\n        System.out.println(\"get(17): \" + ht.get(17));\n        System.out.println(\"size: \" + ht.size());\n        ht.remove(9);\n        System.out.println(\"after remove(9), get(9): \" + ht.get(9));\n        System.out.println(\"size: \" + ht.size());\n    }\n}",
+      "instructions": [
+        "put: bins[bin].add(new Object[]{key, value}); size++;",
+        "remove is already implemented — just the put needs completion",
+        "Keys 1, 9, 17 all hash to 1 (mod 8) — demonstrating chaining handles collisions",
+        "get(9)=nine, get(17)=seventeen; size=5 after 5 puts",
+        "After remove(9): get(9)=null, size=4"
+      ],
+      "hint": "bins[bin].add(new Object[]{key,value}); size++;",
+      "expectedOutput": "get(9): nine\nget(17): seventeen\nsize: 5\nafter remove(9), get(9): null\nsize: 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 179,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Load Factor and Rehashing",
+    "description": {
+      "task": "Build a hash table that tracks its load factor (size / capacity). When the load factor exceeds 0.75, rehash: create a new table with double the capacity and re-insert all entries. Print the load factor before and after rehashing.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class RehashTable {\n    private int capacity;\n    private List<int[]>[] bins; // {key, value} pairs\n    private int size;\n    private static final double LOAD_THRESHOLD = 0.75;\n\n    @SuppressWarnings(\"unchecked\")\n    public RehashTable(int initial) {\n        capacity = initial;\n        bins = new ArrayList[capacity];\n        for (int i = 0; i < capacity; i++) bins[i] = new ArrayList<>();\n    }\n\n    private int hash(int key) { return Math.abs(key) % capacity; }\n\n    @SuppressWarnings(\"unchecked\")\n    private void rehash() {\n        System.out.printf(\"Rehashing: capacity %d -> %d (load=%.2f)%n\",\n                          capacity, capacity*2, (double)size/capacity);\n        List<int[]>[] old = bins;\n        capacity *= 2;\n        bins = new ArrayList[capacity];\n        for (int i = 0; i < capacity; i++) bins[i] = new ArrayList<>();\n        size = 0;\n        for (List<int[]> bin : old)\n            for (int[] e : bin) putInternal(e[0], e[1]);\n    }\n\n    private void putInternal(int key, int val) {\n        int b = hash(key);\n        for (int[] e : bins[b]) if (e[0]==key) { e[1]=val; return; }\n        bins[b].add(new int[]{key, val}); size++;\n    }\n\n    public void put(int key, int val) {\n        putInternal(key, val);\n        // TODO: if load factor > LOAD_THRESHOLD, call rehash()\n    }\n\n    public int get(int key) {\n        for (int[] e : bins[hash(key)]) if (e[0]==key) return e[1];\n        return -1;\n    }\n\n    public double loadFactor() { return (double) size / capacity; }\n\n    public static void main(String[] args) {\n        RehashTable rt = new RehashTable(4);\n        System.out.println(\"Initial capacity: 4\");\n        for (int i = 1; i <= 8; i++) {\n            rt.put(i, i * 10);\n            System.out.printf(\"put(%d): size=%d cap=%d load=%.2f%n\", i, rt.size, rt.capacity, rt.loadFactor());\n        }\n        System.out.println(\"get(5): \" + rt.get(5));\n    }\n}",
+      "instructions": [
+        "if((double)size/capacity > LOAD_THRESHOLD) rehash();",
+        "With initial capacity=4 and threshold=0.75: first rehash at size=4 (load=1.0>0.75? — actually at 4 elements after insert since 4/4=1.0>0.75)",
+        "After putting 3 elements: load=3/4=0.75 (not > threshold), put 4th: load=4/4=1.0>0.75 → rehash to capacity=8",
+        "Second rehash when load exceeds 0.75 again at capacity 8",
+        "The rehash method is already implemented — just add the condition in put"
+      ],
+      "hint": "if((double)size/capacity>LOAD_THRESHOLD) rehash();",
+      "expectedOutput": "Initial capacity: 4\nput(1): size=1 cap=4 load=0.25\nput(2): size=2 cap=4 load=0.50\nput(3): size=3 cap=4 load=0.75\nRehashing: capacity 4 -> 8 (load=1.00)\nput(4): size=4 cap=8 load=0.50\nput(5): size=5 cap=8 load=0.63\nput(6): size=6 cap=8 load=0.75\nRehashing: capacity 8 -> 16 (load=0.88)\nput(7): size=7 cap=16 load=0.44\nput(8): size=8 cap=16 load=0.50\nget(5): 50"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 179,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "HashMap Key-Value Frequency Counter",
+    "description": {
+      "task": "Use Java's HashMap to solve classic frequency-counting problems: (1) count word frequencies in a sentence, (2) find the first non-repeating character, (3) detect duplicate values in an array.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class HashMapApplications {\n\n    public Map<String, Integer> wordFrequency(String sentence) {\n        Map<String, Integer> freq = new LinkedHashMap<>();\n        // TODO: split sentence by space, count each word\n        return freq;\n    }\n\n    public char firstNonRepeating(String s) {\n        Map<Character, Integer> count = new LinkedHashMap<>();\n        // TODO: build count map, then find first char with count==1\n        return '\\0'; // replace with found char, or '\\0' if none\n    }\n\n    public boolean hasDuplicate(int[] arr) {\n        Set<Integer> seen = new HashSet<>();\n        // TODO: add each element to seen; if already present, return true\n        return false;\n    }\n\n    public static void main(String[] args) {\n        HashMapApplications hma = new HashMapApplications();\n        System.out.println(hma.wordFrequency(\"the cat sat on the mat the cat\"));\n        System.out.println(\"First non-repeat in 'aabbcde': \" + hma.firstNonRepeating(\"aabbcde\"));\n        System.out.println(\"First non-repeat in 'aabb':    \" + hma.firstNonRepeating(\"aabb\"));\n        System.out.println(\"Has duplicate [1,2,3,4]: \" + hma.hasDuplicate(new int[]{1,2,3,4}));\n        System.out.println(\"Has duplicate [1,2,3,1]: \" + hma.hasDuplicate(new int[]{1,2,3,1}));\n    }\n}",
+      "instructions": [
+        "wordFrequency: for(String w:sentence.split(\" \")) freq.merge(w,1,Integer::sum);",
+        "firstNonRepeating: for(char c:s.toCharArray()) count.merge(c,1,Integer::sum); then for(char c:s.toCharArray()) if(count.get(c)==1) return c;",
+        "hasDuplicate: for(int x:arr){if(!seen.add(x))return true;} return false;",
+        "the=3, cat=2, sat=1, on=1, mat=1",
+        "First non-repeat in 'aabbcde': c; in 'aabb': \\0 (all repeating)"
+      ],
+      "hint": "wordFrequency: freq.merge(w,1,Integer::sum); firstNonRepeating: use LinkedHashMap to preserve insertion order; hasDuplicate: if(!seen.add(x))return true;",
+      "expectedOutput": "{the=3, cat=2, sat=1, on=1, mat=1}\nFirst non-repeat in 'aabbcde': c\nFirst non-repeat in 'aabb':    \u0000\nHas duplicate [1,2,3,4]: false\nHas duplicate [1,2,3,1]: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 44,
+    "subtopicId": 179,
+    "allowedSubmissionType": "TEXT"
+  }
+]

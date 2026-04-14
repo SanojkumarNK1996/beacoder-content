@@ -1,0 +1,40 @@
+<h1>🧩 Component Composition</h1>
+<h2>🎯 Building UIs with Composition</h2>
+<p>React favors <strong>composition over inheritance</strong>. Build complex UIs by combining small, focused components.</p>
+<div class="code-example">
+  <pre>
+// Small, focused components
+const Avatar = ({ src, alt }) =&gt; &lt;img src={src} alt={alt} className="avatar" /&gt;;
+
+const UserInfo = ({ name, role }) =&gt; (
+  &lt;div&gt;&lt;h3&gt;{name}&lt;/h3&gt;&lt;span&gt;{role}&lt;/span&gt;&lt;/div&gt;
+);
+
+// Composed from smaller parts
+const UserCard = ({ user }) =&gt; (
+  &lt;div className="card"&gt;
+    &lt;Avatar src={user.avatar} alt={user.name} /&gt;
+    &lt;UserInfo name={user.name} role={user.role} /&gt;
+  &lt;/div&gt;
+);
+  </pre>
+</div>
+<h2>👶 children Prop</h2>
+<p>The <code>children</code> prop passes anything between component tags — enables wrapper/container components:</p>
+<div class="code-example">
+  <pre>
+const Card = ({ children, title }) =&gt; (
+  &lt;div className="card"&gt;
+    &lt;h2&gt;{title}&lt;/h2&gt;
+    {children}
+  &lt;/div&gt;
+);
+
+// Usage:
+&lt;Card title="My Profile"&gt;
+  &lt;p&gt;Content goes here&lt;/p&gt;
+&lt;/Card&gt;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Compose small components into bigger ones. The <code>children</code> prop is the key to building reusable layout/wrapper components.</p>

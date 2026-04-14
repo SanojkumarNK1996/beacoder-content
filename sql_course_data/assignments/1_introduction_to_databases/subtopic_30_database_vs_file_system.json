@@ -1,0 +1,71 @@
+[
+  {
+    "title": "File System Limitations Query",
+    "description": {
+      "task": "Query a table that lists file system problems and explain how databases solve each limitation.",
+      "language": "sql",
+      "context": "Traditional file systems struggle with: data redundancy, no concurrent access control, no query language, poor data integrity, and difficulty in relating data across files. Databases solve all of these.",
+      "starterCode": "CREATE TABLE file_vs_db (\n  id INT PRIMARY KEY,\n  limitation VARCHAR(80),\n  file_system_approach VARCHAR(100),\n  database_solution VARCHAR(100)\n);\n\nINSERT INTO file_vs_db VALUES\n  (1, 'Data redundancy',       'Same data copied in multiple files', 'Normalisation eliminates duplication'),\n  (2, 'Data inconsistency',   'Updates to one file miss others',   'Single source of truth, referential integrity'),\n  (3, 'No concurrent access', 'File locks cause conflicts',         'Transactions with isolation levels'),\n  (4, 'No query language',    'Manual file parsing required',       'SQL: powerful declarative query language'),\n  (5, 'Security issues',      'OS-level file permissions only',     'Row/column-level access control'),\n  (6, 'No relationships',     'Data must be combined manually',     'Foreign keys and JOINs');\n\n-- Query 1: Select all limitations and their database solutions\n-- Query 2: Find limitations related to 'data' (in the limitation column)\n",
+      "instructions": [
+        "Query 1: SELECT limitation, database_solution FROM file_vs_db ORDER BY id.",
+        "Query 2: SELECT * FROM file_vs_db WHERE limitation ILIKE '%data%' (or LOWER(limitation) LIKE '%data%').",
+        "Label each query with a comment."
+      ],
+      "hint": "ILIKE is case-insensitive LIKE in PostgreSQL. For MySQL use LOWER(column) LIKE '%search%'.",
+      "expectedOutput": "Q1: 6 rows with limitation and database_solution\nQ2: Data redundancy (id=1) and Data inconsistency (id=2)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 30,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Spot the File System Problem",
+    "description": {
+      "task": "Three 'flat file' records show data inconsistency issues. Write SQL to detect and identify duplicated/inconsistent data.",
+      "language": "sql",
+      "context": "In a flat file system, the same data (e.g., a department name) is stored in multiple records. If you update one, others become stale — this is called update anomaly.",
+      "starterCode": "CREATE TABLE flat_file_records (\n  id INT,\n  student_name VARCHAR(50),\n  department_name VARCHAR(50),\n  department_head VARCHAR(50),\n  department_budget INT\n);\n\nINSERT INTO flat_file_records VALUES\n  (1, 'Alice',  'Computer Science', 'Dr. Smith',  500000),\n  (2, 'Bob',    'Computer Science', 'Dr. Jones',  500000),  -- inconsistency!\n  (3, 'Carol',  'Computer Science', 'Dr. Smith',  500000),\n  (4, 'Dave',   'Mathematics',      'Dr. Brown',  300000),\n  (5, 'Eve',    'Mathematics',      'Dr. Brown',  300000);\n\n-- Task 1: Find all distinct department_head values for 'Computer Science'\n-- (shows the inconsistency — two different heads for same dept)\n-- Task 2: Count how many records exist per department\n",
+      "instructions": [
+        "Query 1: SELECT DISTINCT department_head FROM flat_file_records WHERE department_name = 'Computer Science'.",
+        "Query 2: SELECT department_name, COUNT(*) as student_count FROM flat_file_records GROUP BY department_name.",
+        "Observe that Computer Science has 2 different department_heads — this is the update anomaly a database would prevent.",
+        "Add a comment explaining what a normalised database would do differently."
+      ],
+      "hint": "DISTINCT removes duplicate rows. GROUP BY + COUNT lets you see how many records share the same category value.",
+      "expectedOutput": "Q1: Dr. Smith AND Dr. Jones (shows inconsistency)\nQ2: Computer Science:3, Mathematics:2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 30,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Normalised vs Flat Data",
+    "description": {
+      "task": "Compare a flat (denormalised) table with a properly structured two-table design by querying both and observing the difference.",
+      "language": "sql",
+      "starterCode": "-- FLAT (File-System style)\nCREATE TABLE flat_orders (\n  order_id INT,\n  customer_name VARCHAR(50),\n  customer_email VARCHAR(60),\n  product_name VARCHAR(50),\n  product_price DECIMAL(8,2),\n  quantity INT\n);\n\nINSERT INTO flat_orders VALUES\n  (1, 'Alice', 'alice@mail.com', 'Laptop',  999.99, 1),\n  (2, 'Alice', 'alice@mail.com', 'Mouse',    25.00, 2),\n  (3, 'Bob',   'bob@mail.com',   'Keyboard', 75.00, 1),\n  (4, 'Alice', 'alice@mail.com', 'Monitor', 399.00, 1);\n\n-- Task 1: Notice Alice's email is repeated — how many times?\n-- Task 2: Total revenue per customer (quantity * product_price)\n-- Task 3: Identify the problem: what happens if Alice changes her email?\n",
+      "instructions": [
+        "Query 1: SELECT customer_name, COUNT(*) as order_count, MIN(customer_email) as email FROM flat_orders GROUP BY customer_name.",
+        "Query 2: SELECT customer_name, SUM(quantity * product_price) as total_spent FROM flat_orders GROUP BY customer_name ORDER BY total_spent DESC.",
+        "Add a comment explaining: if Alice changes her email, how many rows need updating? Why is this a problem?"
+      ],
+      "hint": "In a normalised design, Alice's email would be stored ONCE in a customers table. A JOIN would link orders to that single record, so updating the email takes only 1 UPDATE.",
+      "expectedOutput": "Q1: Alice appears 3 times, Bob 1 time\nQ2: Alice total = 999.99+50.00+399.00 = 1448.99, Bob = 75.00"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 10,
+    "subtopicId": 30,
+    "allowedSubmissionType": "TEXT"
+  }
+]

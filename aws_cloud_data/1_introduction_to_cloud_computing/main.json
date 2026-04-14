@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 189, "title": "What is Cloud Computing?", "dataType": "notes", "data": "what_is_cloud_computing.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 190, "title": "Cloud Service Models", "dataType": "notes", "data": "cloud_service_models.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 191, "title": "Cloud Deployment Models", "dataType": "notes", "data": "cloud_deployment_models.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 192, "title": "Benefits of Cloud Computing", "dataType": "notes", "data": "benefits_of_cloud.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 193, "title": "AWS Global Infrastructure", "dataType": "notes", "data": "aws_global_infrastructure.html", "displayOrder": 5, "verified": false}
+]

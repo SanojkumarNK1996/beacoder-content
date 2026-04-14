@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Stack LIFO Demonstration",
+    "description": {
+      "task": "Implement a SimpleStack class using an int array. The class should support push, pop, peek, isEmpty, and size operations. Demonstrate LIFO behavior by pushing a sequence and then popping until empty.",
+      "language": "java",
+      "starterCode": "public class SimpleStack {\n\n    private int[] data;\n    private int top;\n\n    public SimpleStack(int capacity) {\n        data = new int[capacity];\n        top = -1;\n    }\n\n    public void push(int val) {\n        // TODO: add val to top, throw RuntimeException if full\n    }\n\n    public int pop() {\n        // TODO: remove and return top element, throw RuntimeException if empty\n        return -1;\n    }\n\n    public int peek() {\n        if (top == -1) throw new RuntimeException(\"Stack is empty\");\n        return data[top];\n    }\n\n    public boolean isEmpty() { return top == -1; }\n    public int size() { return top + 1; }\n\n    public static void main(String[] args) {\n        SimpleStack stack = new SimpleStack(5);\n        stack.push(10);\n        stack.push(20);\n        stack.push(30);\n        System.out.println(\"Peek: \" + stack.peek());\n        System.out.println(\"Size: \" + stack.size());\n        while (!stack.isEmpty()) {\n            System.out.println(\"Pop: \" + stack.pop());\n        }\n        System.out.println(\"Empty: \" + stack.isEmpty());\n    }\n}",
+      "instructions": [
+        "push(val): if top == data.length-1 throw new RuntimeException('Stack overflow'); else data[++top]=val",
+        "pop(): if top == -1 throw new RuntimeException('Stack underflow'); else return data[top--]",
+        "peek() and isEmpty() and size() are already implemented",
+        "After push(10,20,30): peek=30, size=3",
+        "Popping yields 30, 20, 10 in that order (LIFO)"
+      ],
+      "hint": "push: if(top==data.length-1) throw new RuntimeException('Stack overflow'); data[++top]=val; pop: if(top==-1) throw new RuntimeException('Stack underflow'); return data[top--];",
+      "expectedOutput": "Peek: 30\nSize: 3\nPop: 30\nPop: 20\nPop: 10\nEmpty: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 141,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Min Stack",
+    "description": {
+      "task": "Implement a MinStack class that supports push, pop, peek, and getMin — all in O(1) time. Use an auxiliary stack to track the minimum at each level.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class MinStack {\n\n    private Deque<Integer> stack = new ArrayDeque<>();\n    private Deque<Integer> minStack = new ArrayDeque<>();\n\n    public void push(int val) {\n        stack.push(val);\n        // TODO: push to minStack: push Math.min(val, current min) or val if minStack empty\n    }\n\n    public void pop() {\n        stack.pop();\n        // TODO: pop from minStack too\n    }\n\n    public int peek() {\n        return stack.peek();\n    }\n\n    public int getMin() {\n        // TODO: return top of minStack\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        MinStack ms = new MinStack();\n        ms.push(5);\n        ms.push(3);\n        ms.push(7);\n        ms.push(2);\n        System.out.println(\"Min: \" + ms.getMin());\n        ms.pop();\n        System.out.println(\"Min after pop: \" + ms.getMin());\n        ms.pop();\n        System.out.println(\"Min after pop: \" + ms.getMin());\n        System.out.println(\"Peek: \" + ms.peek());\n    }\n}",
+      "instructions": [
+        "push: after pushing to main stack, push Math.min(val, minStack.isEmpty()?val:minStack.peek()) to minStack",
+        "pop: pop from both stack and minStack",
+        "getMin: return minStack.peek()",
+        "After push(5,3,7,2): getMin=2",
+        "After pop() (removes 2): getMin=3; after another pop() (removes 7): getMin=3; peek=3"
+      ],
+      "hint": "push minStack: int m = minStack.isEmpty() ? val : Math.min(val, minStack.peek()); minStack.push(m);",
+      "expectedOutput": "Min: 2\nMin after pop: 3\nMin after pop: 3\nPeek: 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 141,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Balanced Parentheses Checker",
+    "description": {
+      "task": "Implement a BalancedParentheses class that uses a stack to check if a string of brackets is balanced. Support three types: (), [], and {}. Return true if balanced, false otherwise.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BalancedParentheses {\n\n    public boolean isBalanced(String s) {\n        Deque<Character> stack = new ArrayDeque<>();\n        for (char c : s.toCharArray()) {\n            // TODO: push open brackets; on close bracket, check top matches\n        }\n        return stack.isEmpty();\n    }\n\n    private boolean isMatch(char open, char close) {\n        return (open == '(' && close == ')') ||\n               (open == '[' && close == ']') ||\n               (open == '{' && close == '}');\n    }\n\n    public static void main(String[] args) {\n        BalancedParentheses bp = new BalancedParentheses();\n        System.out.println(bp.isBalanced(\"([]{})\"));\n        System.out.println(bp.isBalanced(\"([)]\"));\n        System.out.println(bp.isBalanced(\"\"));\n        System.out.println(bp.isBalanced(\"(((\"));\n        System.out.println(bp.isBalanced(\"{[]}\"));\n    }\n}",
+      "instructions": [
+        "For each character: if '(', '[', or '{' push onto stack",
+        "If ')', ']', or '}': if stack is empty return false; pop top and check isMatch(top, c); if not match return false",
+        "After the loop, return stack.isEmpty()",
+        "isMatch() helper is provided",
+        "\"([]{})\"=true, \"([)]\"=false, \"\"=true, \"(((\"=false, \"{[]}\"=true"
+      ],
+      "hint": "if(c=='('||c=='['||c=='{') stack.push(c); else { if(stack.isEmpty()) return false; char top=stack.pop(); if(!isMatch(top,c)) return false; }",
+      "expectedOutput": "true\nfalse\ntrue\nfalse\ntrue"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 141,
+    "allowedSubmissionType": "TEXT"
+  }
+]

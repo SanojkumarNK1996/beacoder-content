@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Recursive Fibonacci with Memoization Cache",
+    "description": {
+      "task": "Build a top-down memoized solution for generating the first N Fibonacci numbers. Use an array cache to store computed values. Print each value and indicate whether it was retrieved from cache (cache hit) or computed fresh.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class MemoFibSequence {\n    private long[] cache;\n    private int hits, misses;\n\n    public long fib(int n) {\n        if (cache[n] != -1) {\n            hits++;\n            return cache[n];\n        }\n        misses++;\n        if (n <= 1) return cache[n] = n;\n        // TODO: cache[n] = fib(n-1) + fib(n-2); return cache[n];\n        return 0;\n    }\n\n    public void printSequence(int N) {\n        cache = new long[N];\n        Arrays.fill(cache, -1);\n        hits = 0; misses = 0;\n        System.out.print(\"Fib sequence: \");\n        for (int i = 0; i < N; i++) System.out.print(fib(i) + (i<N-1?\",\":\"\\n\"));\n        System.out.println(\"Cache hits: \" + hits + \", misses: \" + misses);\n    }\n\n    public static void main(String[] args) {\n        MemoFibSequence mfs = new MemoFibSequence();\n        mfs.printSequence(10);\n        mfs.printSequence(15);\n    }\n}",
+      "instructions": [
+        "cache[n] = fib(n-1) + fib(n-2); return cache[n];",
+        "First call to printSequence(10): calculates fib(0)..fib(9) in sequence; fib(1)..fib(7) each benefit from cached sub-calls",
+        "The first N=10 call: misses vary based on computed vs cached; hits grow as later calls reuse earlier results",
+        "The sequence: 0,1,1,2,3,5,8,13,21,34",
+        "Second call with N=15: fresh cache → sequence continues to fib(14)=377"
+      ],
+      "hint": "cache[n]=fib(n-1)+fib(n-2); return cache[n];",
+      "expectedOutput": "Fib sequence: 0,1,1,2,3,5,8,13,21,34\nCache hits: 7, misses: 10\nFib sequence: 0,1,1,2,3,5,8,13,21,34,55,89,144,233,377\nCache hits: 12, misses: 15"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 170,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Top-Down 0/1 Knapsack",
+    "description": {
+      "task": "Solve the 0/1 Knapsack problem using top-down memoization. Given items with weights and values, find the maximum total value that fits in a knapsack of given capacity. Each item can be taken at most once.",
+      "language": "java",
+      "starterCode": "import java.util.Arrays;\n\npublic class KnapsackMemo {\n    int[][] memo;\n\n    public int knapsack(int[] weights, int[] values, int capacity, int idx) {\n        if (idx < 0 || capacity <= 0) return 0;\n        if (memo[idx][capacity] != -1) return memo[idx][capacity];\n\n        // Option 1: skip item idx\n        int skip = knapsack(weights, values, capacity, idx - 1);\n\n        // Option 2: take item idx (only if it fits)\n        int take = 0;\n        if (weights[idx] <= capacity) {\n            // TODO: take = values[idx] + knapsack(weights, values, capacity - weights[idx], idx - 1)\n        }\n\n        // TODO: memo[idx][capacity] = Math.max(skip, take); return it\n        return 0;\n    }\n\n    public int solve(int[] weights, int[] values, int capacity) {\n        int n = weights.length;\n        memo = new int[n][capacity + 1];\n        for (int[] row : memo) Arrays.fill(row, -1);\n        return knapsack(weights, values, capacity, n - 1);\n    }\n\n    public static void main(String[] args) {\n        KnapsackMemo km = new KnapsackMemo();\n        int[] w = {1, 3, 4, 5};\n        int[] v = {1, 4, 5, 7};\n        System.out.println(\"Max value (cap=7): \" + km.solve(w, v, 7));\n        System.out.println(\"Max value (cap=5): \" + km.solve(w, v, 5));\n\n        int[] w2 = {2, 3, 4};\n        int[] v2 = {3, 4, 5};\n        System.out.println(\"Max value (cap=5): \" + km.solve(w2, v2, 5));\n    }\n}",
+      "instructions": [
+        "take = values[idx] + knapsack(weights, values, capacity - weights[idx], idx - 1);",
+        "memo[idx][capacity] = Math.max(skip, take); return memo[idx][capacity];",
+        "w={1,3,4,5}, v={1,4,5,7}, cap=7: choose items with w=3(v=4) and w=4(v=5) = 9",
+        "cap=5: choose w=1(v=1)+w=4(v=5)=6 OR w=5(v=7)=7 → max=7",
+        "w2={2,3,4}, v2={3,4,5}, cap=5: choose w=2+w=3 = v=3+4=7"
+      ],
+      "hint": "take=values[idx]+knapsack(weights,values,capacity-weights[idx],idx-1); memo[idx][capacity]=Math.max(skip,take); return memo[idx][capacity];",
+      "expectedOutput": "Max value (cap=7): 9\nMax value (cap=5): 7\nMax value (cap=5): 7"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 170,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Top-Down LCS (Longest Common Subsequence)",
+    "description": {
+      "task": "Implement the Longest Common Subsequence (LCS) problem using top-down memoization. Given two strings, find the length of their longest common subsequence. LCS characters don't need to be contiguous.",
+      "language": "java",
+      "starterCode": "import java.util.HashMap;\n\npublic class LCSMemo {\n    HashMap<String, Integer> memo = new HashMap<>();\n\n    public int lcs(String a, String b, int i, int j) {\n        if (i == a.length() || j == b.length()) return 0;\n        String key = i + \",\" + j;\n        if (memo.containsKey(key)) return memo.get(key);\n\n        int result;\n        if (a.charAt(i) == b.charAt(j)) {\n            // TODO: characters match — include in LCS; result = 1 + lcs(a,b,i+1,j+1)\n            result = 0; // replace\n        } else {\n            // TODO: skip one character from either string; result = max(lcs skip-a, lcs skip-b)\n            result = 0; // replace\n        }\n        memo.put(key, result);\n        return result;\n    }\n\n    public int solve(String a, String b) {\n        memo.clear();\n        return lcs(a, b, 0, 0);\n    }\n\n    public static void main(String[] args) {\n        LCSMemo lcs = new LCSMemo();\n        System.out.println(\"LCS ABCBDAB / BDCAB:   \" + lcs.solve(\"ABCBDAB\", \"BDCAB\"));\n        System.out.println(\"LCS AGGTAB / GXTXAYB:  \" + lcs.solve(\"AGGTAB\", \"GXTXAYB\"));\n        System.out.println(\"LCS abc / abc:          \" + lcs.solve(\"abc\", \"abc\"));\n        System.out.println(\"LCS abc / def:          \" + lcs.solve(\"abc\", \"def\"));\n    }\n}",
+      "instructions": [
+        "Match: result = 1 + lcs(a,b,i+1,j+1);",
+        "Mismatch: result = Math.max(lcs(a,b,i+1,j), lcs(a,b,i,j+1));",
+        "LCS of ABCBDAB and BDCAB = 4 (e.g., BCAB or BDAB)",
+        "LCS of AGGTAB and GXTXAYB = 4 (GTAB)",
+        "LCS of identical strings = length of string; LCS of disjoint = 0"
+      ],
+      "hint": "match: result=1+lcs(a,b,i+1,j+1); mismatch: result=Math.max(lcs(a,b,i+1,j),lcs(a,b,i,j+1));",
+      "expectedOutput": "LCS ABCBDAB / BDCAB:   4\nLCS AGGTAB / GXTXAYB:  4\nLCS abc / abc:          3\nLCS abc / def:          0"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 42,
+    "subtopicId": 170,
+    "allowedSubmissionType": "TEXT"
+  }
+]

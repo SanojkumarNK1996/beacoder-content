@@ -1,0 +1,123 @@
+<h1>🛂 Authorization</h1>
+
+<h2>🎯 What is Authorization?</h2>
+<p><strong>Authorization</strong> determines what an <strong>authenticated user</strong> is allowed to do:</p>
+<ul>
+  <li>Can they access a particular URL?</li>
+  <li>Can they call a specific method?</li>
+  <li>Do they have the required role/permission?</li>
+</ul>
+
+<h2>👥 Roles and Authorities</h2>
+
+<ul>
+  <li><strong>Roles</strong> – High-level groups of permissions (e.g., ROLE_USER, ROLE_ADMIN)</li>
+  <li><strong>Authorities</strong> – Fine-grained permissions (e.g., <code>ORDER_READ</code>, <code>ORDER_WRITE</code>)</li>
+</ul>
+
+<p>Spring Security works with <strong>GrantedAuthority</strong> objects, which can represent either roles or permissions.</p>
+
+<h2>🌐 URL-based Authorization</h2>
+
+<p>Configure which URLs require which roles:</p>
+
+<div class="code-example">
+  <pre>
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests(auth -&gt; auth
+            .requestMatchers("/public/**").permitAll()
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .requestMatchers("/api/orders/**").hasAnyRole("USER", "ADMIN")
+            .anyRequest().authenticated()
+        )
+        .httpBasic(Customizer.withDefaults());
+
+    return http.build();
+}
+  </pre>
+</div>
+
+<p>Note: By convention, roles are stored as <code>ROLE_ADMIN</code> internally, but you use <code>hasRole("ADMIN")</code> in configuration.</p>
+
+<h2>🔧 Method-level Security</h2>
+
+<p>Sometimes you want authorization checks directly on methods in your service layer.</p>
+
+<ul>
+  <li><strong>@PreAuthorize</strong> – Check before method execution</li>
+  <li><strong>@PostAuthorize</strong> – Check after method execution</li>
+  <li><strong>@Secured</strong> – Simpler role-based checks</li>
+</ul>
+
+<p>Enable method security:</p>
+
+<div class="code-example">
+  <pre>
+@Configuration
+@EnableMethodSecurity
+public class MethodSecurityConfig {
+}
+  </pre>
+</div>
+
+<p>Then use annotations:</p>
+
+<div class="code-example">
+  <pre>
+@Service
+public class OrderService {
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public void cancelOrder(Long orderId) {
+        // only admins can cancel orders
+    }
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public Order getOrder(Long orderId) {
+        // users and admins can view orders
+    }
+}
+  </pre>
+</div>
+
+<h2>📊 Expression-based Access Control</h2>
+
+<p>Spring Security&apos;s expression language allows powerful checks:</p>
+
+<ul>
+  <li><code>hasRole('ADMIN')</code></li>
+  <li><code>hasAuthority('ORDER_READ')</code></li>
+  <li><code>hasAnyAuthority('ORDER_READ','ORDER_WRITE')</code></li>
+  <li><code>principal.username == #username</code> (ownership checks)</li>
+</ul>
+
+<h2>🧪 Example: Ownership-based Authorization</h2>
+
+<div class="code-example">
+  <pre>
+@PreAuthorize("#userId == authentication.principal.id or hasRole('ADMIN')")
+public UserProfile getUserProfile(Long userId) {
+    // user can view own profile, or admins can view any profile
+}
+  </pre>
+</div>
+
+<h2>🛡️ Combining Authentication & Authorization</h2>
+
+<p>A typical flow:</p>
+<ol>
+  <li>User logs in and gets authenticated</li>
+  <li>Their roles/authorities are loaded and stored in the Authentication object</li>
+  <li>For each request, Spring Security checks URL or method rules to decide access</li>
+</ol>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Authorization controls <strong>what authenticated users can do</strong></li>
+  <li>Spring Security supports <strong>URL-based</strong> and <strong>method-level</strong> authorization</li>
+  <li>Use roles for coarse-grained access and authorities/expressions for fine-grained rules</li>
+</ul>
+
+<p>Next, you&apos;ll look at <strong>security best practices</strong> to harden your Java applications.</p>

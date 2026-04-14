@@ -1,67 +1,110 @@
-<main class="course-content">
-  <article id="strings">
-    <header>
-      <h1>7. Strings and String Methods</h1>
-      <p><strong>Goal:</strong> Learn how to create, manipulate, and use strings in Java.</p>
-    </header>
+<h1>📝 Strings in Java</h1>
 
-    <section>
-      <h2>What is a String?</h2>
-      <p>
-        A <strong>String</strong> in Java is a sequence of characters used to store and manipulate text. 
-        Strings are objects in Java, not primitive data types.
-      </p>
-    </section>
+<h2>1. 🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>Every real app uses text: <strong>names, cities, messages, OTPs</strong>.</li>
+  <li>IRCTC: passenger name, train name, source, destination.</li>
+  <li>Swiggy: restaurant name, item names, delivery address.</li>
+  <li>All this text is handled in Java using <strong>String</strong>.</li>
+</ul>
 
-    <section>
-      <h3>Creating Strings</h3>
-      <pre><code class="language-java">
-// Example: Creating strings
-public class StringExample {
+<h2>2. 📖 What Is a String?</h2>
+<ul>
+  <li>A <strong>String</strong> is a sequence of characters (text) like "Kochi", "Hello", "UPI123".</li>
+  <li>In Java, <code>String</code> is a <strong>class</strong>, not a primitive type.</li>
+  <li>Strings are <strong>immutable</strong> – once created, their value cannot be changed; operations create new objects.</li>
+</ul>
+
+<h2>3. 🧾 Syntax / Basic Structure ⭐</h2>
+<pre><code class="language-java">// Two common ways to create strings
+String city = "Bengaluru";              // string literal
+String greeting = new String("Hello"); // using constructor
+</code></pre>
+
+<p><strong>Basic string operations</strong></p>
+<pre><code class="language-java">String text = "Hello World";
+
+int len = text.length();                 // length of string
+String upper = text.toUpperCase();       // HELLO WORLD
+char ch = text.charAt(1);                // 'e'
+String part = text.substring(0, 5);      // "Hello"
+boolean hasWorld = text.contains("World");
+</code></pre>
+
+<h2>4. 🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<pre><code class="language-java">public class StringDemo {
     public static void main(String[] args) {
-        String name = "John";
-        String greeting = new String("Hello");
+        String name = "Rahul";                 // 1
+        System.out.println(name);               // 2
 
-        System.out.println(name);
-        System.out.println(greeting);
+        String welcome = "Welcome " + name;    // 3
+        System.out.println(welcome);            // 4
+
+        System.out.println(name.length());      // 5
+        System.out.println(name.toUpperCase()); // 6
     }
 }
-      </code></pre>
-    </section>
+</code></pre>
+<ol>
+  <li><strong>Line 3</strong> – A String object with value "Rahul" is created and <code>name</code> refers to it.</li>
+  <li><strong>Line 4</strong> – Prints "Rahul".</li>
+  <li><strong>Line 6</strong> – <code>"Welcome " + name</code> creates a <strong>new</strong> string "Welcome Rahul".</li>
+  <li><strong>Line 7</strong> – Prints "Welcome Rahul".</li>
+  <li><strong>Line 9</strong> – <code>length()</code> returns number of characters in "Rahul".</li>
+  <li><strong>Line 10</strong> – <code>toUpperCase()</code> returns "RAHUL" (original <code>name</code> is unchanged).</li>
+</ol>
 
-    <section>
-      <h3>Common String Methods</h3>
-      <pre><code class="language-java">
-// Example: String methods in Java
-public class StringMethods {
-    public static void main(String[] args) {
-        String text = "Hello World";
+<h2>5. ✅ When to Use Strings</h2>
+<ul>
+  <li>Whenever you work with <strong>text</strong>: names, messages, IDs, codes.</li>
+  <li>For building <strong>messages</strong> to show users or logs.</li>
+  <li>For processing input from the user (console, forms, files).</li>
+</ul>
 
-        System.out.println("Length: " + text.length());
-        System.out.println("Uppercase: " + text.toUpperCase());
-        System.out.println("Lowercase: " + text.toLowerCase());
-        System.out.println("Character at index 4: " + text.charAt(4));
-        System.out.println("Substring (0,5): " + text.substring(0, 5));
-        System.out.println("Contains 'World'? " + text.contains("World"));
-        System.out.println("Replace 'World' with 'Java': " + text.replace("World", "Java"));
-        System.out.println("Equals 'hello world'? " + text.equals("hello world"));
-    }
-}
-      </code></pre>
-    </section>
+<h2>6. ⛔ When NOT to Use Plain String</h2>
+<ul>
+  <li>When doing <strong>heavy modifications in a loop</strong> (e.g., concatenating in large loops) – prefer <code>StringBuilder</code>.</li>
+  <li>When you need <strong>binary data</strong> (images, PDFs) – use byte arrays/streams, not String.</li>
+</ul>
 
-    <section>
-      <h3>Key Points</h3>
-      <ul>
-        <li>Strings are immutable — once created, they cannot be changed.</li>
-        <li>Use methods like <code>substring()</code>, <code>toUpperCase()</code>, and <code>replace()</code> to manipulate text.</li>
-        <li>Use <code>equals()</code> instead of <code>==</code> to compare string values.</li>
-        <li>String operations are case-sensitive.</li>
-      </ul>
-    </section>
+<h2>7. 🧠 Minimum You MUST Remember</h2>
+<ul>
+  <li>Strings are <strong>immutable</strong>.</li>
+  <li>Use <code>equals()</code> to compare string values, <strong>not</strong> <code>==</code>.</li>
+  <li>Common methods: <code>length()</code>, <code>toUpperCase()</code>, <code>toLowerCase()</code>, <code>substring()</code>, <code>contains()</code>, <code>replace()</code>.</li>
+</ul>
 
-    <footer>
-      <p><strong>Next:</strong> Learn about StringBuilder and StringBuffer for efficient string manipulation.</p>
-    </footer>
-  </article>
-</main>
+<h2>8. ⚠️ Common Mistakes</h2>
+<ul>
+  <li>Using <code>==</code> for comparison: <code>if(name == "Rahul")</code> – may fail; use <code>name.equals("Rahul")</code>.</li>
+  <li>Ignoring case when comparing ("rahul" vs "Rahul"); consider <code>equalsIgnoreCase()</code>.</li>
+  <li>Assuming <code>toUpperCase()</code> changes original string – it returns a new one.</li>
+</ul>
+
+<h2>9. 🎤 Interviewer’s Perspective</h2>
+<ul>
+  <li>"What is String in Java? Is it primitive or object?"</li>
+  <li>"Why are Strings immutable?" (basic explanation).</li>
+  <li>"Difference between <code>==</code> and <code>equals()</code> for strings?"</li>
+</ul>
+
+<h2>10. 📝 Practice Questions ⭐</h2>
+<ol>
+  <li>
+    <strong>Very Easy:</strong>
+    <p>Create a String with your full name and print: (a) length, (b) in uppercase, (c) first 3 characters.</p>
+  </li>
+  <li>
+    <strong>Easy:</strong>
+    <p>Given a String representing a city name, check if it contains "pur" or "nagar" (common Indian city endings) and print a message.</p>
+  </li>
+  <li>
+    <strong>Medium:</strong>
+    <p>Ask user to enter a mobile number as String. Check length is 10 and all characters are digits; print valid/invalid accordingly.</p>
+  </li>
+  <li>
+    <strong>Medium (Thinking):</strong>
+    <p>In an IRCTC-like app, list 5 pieces of information you would store as String and why.</p>
+  </li>
+</ol>
+

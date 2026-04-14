@@ -1,0 +1,36 @@
+<h1>🏛️ Class Components</h1>
+<h2>🎯 Legacy but Important</h2>
+<p>Before React Hooks (pre-2019), all stateful components were <strong>class components</strong>. You'll still encounter them in older codebases.</p>
+<div class="code-example">
+  <pre>
+import { Component } from 'react';
+
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  render() {
+    return (
+      &lt;div&gt;
+        &lt;p&gt;Count: {this.state.count}&lt;/p&gt;
+        &lt;button onClick={() =&gt; this.setState({ count: this.state.count + 1 })}&gt;
+          Increment
+        &lt;/button&gt;
+      &lt;/div&gt;
+    );
+  }
+}
+  </pre>
+</div>
+<h2>📋 Lifecycle Methods</h2>
+<ul>
+  <li><code>componentDidMount()</code>: After component renders (API calls)</li>
+  <li><code>componentDidUpdate(prevProps, prevState)</code>: After re-render</li>
+  <li><code>componentWillUnmount()</code>: Before removal (cleanup)</li>
+</ul>
+<h2>🔄 Equivalent in Hooks</h2>
+<p>All lifecycle methods are replaced by <code>useEffect()</code> in functional components.</p>
+<h2>🎯 Summary</h2>
+<p>Don't write new class components. If you see them in existing code, understand their lifecycle methods, then consider migrating to functional components + hooks.</p>

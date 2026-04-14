@@ -1,27 +1,19 @@
 <h1>Creating and Using Views in SQL</h1>
-
-<p>A <strong>view</strong> in SQL is a virtual table based on the result of a query. It doesn’t store data physically — instead, it provides a way to look at data stored in one or more tables as if it were a single table. Views make it easier to read, reuse, and secure data.</p>
-
 <hr>
+<h2>1️⃣ Why Does This Topic Exist?</h2>
+<p>Views help you simplify complex queries, secure sensitive data, and present information in a user-friendly way. In Indian companies, views are often used to give different teams access to only the data they need, such as showing only sales data to the sales team.</p>
 
-<h2>1️⃣ What is a View?</h2>
+<h2>2️⃣ What Is a View?</h2>
+<p>A <strong>view</strong> is a virtual table created by saving a SQL query. It does not store data itself, but shows results from one or more tables as if it were a table. When you use a view, SQL runs the saved query and returns the result.</p>
 
-<p>A <strong>view</strong> is like a saved SQL query that you can treat as a table. When you query a view, SQL runs the query defined in that view and returns the result.</p>
-
-<p><strong>Example:</strong> Suppose we have a table named <code>Employees</code>:</p>
-
+<h2>3️⃣ Syntax/Structure</h2>
 <pre>
-+----+----------+----------+------------+-----------+
-| ID | Name     | Dept     | Salary     | Location  |
-+----+----------+----------+------------+-----------+
-| 1  | Alice    | HR       | 50000      | London    |
-| 2  | Bob      | IT       | 70000      | New York  |
-| 3  | Charlie  | Finance  | 60000      | Toronto   |
-+----+----------+----------+------------+-----------+
+CREATE VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
 </pre>
-
-<p>If you frequently want to see only employees from the IT department, you can create a view like this:</p>
-
+<p><strong>Example:</strong> Create a view for IT employees:</p>
 <pre>
 CREATE VIEW IT_Employees AS
 SELECT Name, Dept, Salary
@@ -29,75 +21,58 @@ FROM Employees
 WHERE Dept = 'IT';
 </pre>
 
-<p>Now, instead of writing that query again, you can simply do:</p>
+<h2>4️⃣ Step-by-Step Execution</h2>
+<ol>
+  <li>Write a SELECT query that gives the data you want.</li>
+  <li>Use <code>CREATE VIEW</code> to save that query as a view.</li>
+  <li>Query the view just like a table: <code>SELECT * FROM view_name;</code></li>
+  <li>To update the view, use <code>CREATE OR REPLACE VIEW</code> or <code>ALTER VIEW</code>.</li>
+  <li>To remove a view, use <code>DROP VIEW view_name;</code></li>
+</ol>
 
-<pre>
-SELECT * FROM IT_Employees;
-</pre>
-
-<p>This will show all employees from the IT department, using the saved query inside the view.</p>
-
-<hr>
-
-<h2>2️⃣ Why Use Views?</h2>
-
+<h2>5️⃣ When to Use</h2>
 <ul>
-  <li>To <strong>simplify complex queries</strong> — you can reuse them easily.</li>
-  <li>To <strong>restrict access</strong> to sensitive data (e.g., hide salary columns).</li>
-  <li>To <strong>improve readability</strong> — users can work with meaningful data instead of raw tables.</li>
-  <li>To <strong>provide abstraction</strong> — users can interact with data without knowing how it’s structured.</li>
+  <li>To simplify repeated complex queries (e.g., monthly sales reports).</li>
+  <li>To restrict access to sensitive columns (e.g., hiding salary in HR systems).</li>
+  <li>To present data in a specific format for different departments (e.g., sales, accounts).</li>
 </ul>
 
-<hr>
-
-<h2>3️⃣ Syntax for Creating a View</h2>
-
-<pre>
-CREATE VIEW view_name AS
-SELECT columns
-FROM table_name
-WHERE condition;
-</pre>
-
-<p><strong>Example:</strong></p>
-<pre>
-CREATE VIEW HighSalary AS
-SELECT Name, Dept, Salary
-FROM Employees
-WHERE Salary > 60000;
-</pre>
-
-<p>Now you can use it like a table:</p>
-<pre>
-SELECT * FROM HighSalary;
-</pre>
-
-<hr>
-
-<h2>4️⃣ Updating Data Through a View</h2>
-
-<p>In some cases, you can also <strong>update data</strong> using a view. However, not all views are updatable — it depends on how they are created.</p>
-
-<p><strong>Example:</strong></p>
-<pre>
-UPDATE IT_Employees
-SET Salary = 75000
-WHERE Name = 'Bob';
-</pre>
-
-<p>This will update the underlying <code>Employees</code> table, since the view is based on it directly.</p>
-
-<p><strong>Note:</strong> A view is <strong>not updatable</strong> if it includes joins, aggregation, or <code>GROUP BY</code>.</p>
-
-<hr>
-
-<h2>5️⃣ Modifying and Deleting Views</h2>
-
+<h2>6️⃣ When Not to Use</h2>
 <ul>
-  <li><strong>To modify</strong> a view:</li>
+  <li>When you need to update data through the view and the view is based on joins or aggregations (these are not updatable).</li>
+  <li>If the underlying tables change very frequently, as views may become outdated.</li>
 </ul>
 
-<pre>
+<h2>7️⃣ Minimum to Remember</h2>
+<ul>
+  <li>Views are virtual tables based on SELECT queries.</li>
+  <li>They help simplify queries and secure data.</li>
+  <li>Use <code>CREATE VIEW</code> and <code>DROP VIEW</code> to manage them.</li>
+</ul>
+
+<h2>8️⃣ Common Mistakes</h2>
+<ul>
+  <li>Trying to update data through a view that is not updatable (e.g., views with GROUP BY or JOIN).</li>
+  <li>Forgetting to update the view when the underlying table structure changes.</li>
+  <li>Assuming views store data—they do not.</li>
+</ul>
+
+<h2>9️⃣ Interviewer’s Perspective</h2>
+<ul>
+  <li>What is a view? How is it different from a table?</li>
+  <li>Can you update data through a view? When is it not possible?</li>
+  <li>How do views help in securing data?</li>
+  <li>Give a real-life example where you would use a view in an Indian business (e.g., showing only active customer accounts to the sales team).</li>
+</ul>
+
+<h2>🔟 Practice Questions</h2>
+<ol>
+  <li>Write a SQL statement to create a view showing all employees in the 'Finance' department.</li>
+  <li>How would you update a view to include a new column?</li>
+  <li>What happens if you drop a table that a view depends on?</li>
+  <li>Give an example of a non-updatable view.</li>
+  <li>How can views help in restricting access to sensitive data in a college database?</li>
+</ol>
 CREATE OR REPLACE VIEW IT_Employees AS
 SELECT Name, Dept, Salary, Location
 FROM Employees

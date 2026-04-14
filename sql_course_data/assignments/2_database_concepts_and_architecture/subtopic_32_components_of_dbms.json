@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Identify DBMS Components",
+    "description": {
+      "task": "Query a components table to match descriptions to the correct DBMS component, using filtering and pattern matching.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE dbms_components (\n  id INT PRIMARY KEY,\n  component VARCHAR(50),\n  description VARCHAR(150),\n  layer VARCHAR(20)\n);\n\nINSERT INTO dbms_components VALUES\n  (1, 'DB Engine',         'Core service that processes queries and manages storage',   'Core'),\n  (2, 'Database Schema',   'Blueprint defining tables, columns, types, and constraints', 'Metadata'),\n  (3, 'Query Processor',   'Parses SQL, creates execution plan, optimises and runs it',  'Processing'),\n  (4, 'Storage Manager',   'Translates logical data operations to physical disk I/O',    'Storage'),\n  (5, 'Buffer Cache',      'In-memory cache for frequently accessed data pages',          'Memory'),\n  (6, 'Transaction Log',   'Records all changes for recovery and replication',            'Durability'),\n  (7, 'Lock Manager',      'Controls concurrent access to prevent data conflicts',        'Concurrency');\n\n-- Query 1: Show all components in the 'Core' and 'Processing' layers\n-- Query 2: Show components related to memory or storage (by layer)\n-- Query 3: Count components per layer\n",
+      "instructions": [
+        "Query 1: SELECT component, description FROM dbms_components WHERE layer IN ('Core', 'Processing').",
+        "Query 2: SELECT component, layer FROM dbms_components WHERE layer IN ('Memory', 'Storage').",
+        "Query 3: SELECT layer, COUNT(*) as component_count FROM dbms_components GROUP BY layer ORDER BY component_count DESC."
+      ],
+      "hint": "The IN operator is a clean alternative to chaining multiple OR conditions: WHERE layer IN ('A', 'B') is equivalent to WHERE layer = 'A' OR layer = 'B'.",
+      "expectedOutput": "Q1: DB Engine and Query Processor\nQ2: Buffer Cache (Memory), Storage Manager (Storage)\nQ3: Each layer with its count"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 32,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Schema Exploration Queries",
+    "description": {
+      "task": "Use SQL to explore the structure and metadata of a database by querying the information_schema views.",
+      "language": "sql",
+      "context": "The information_schema is a standard read-only set of views available in most SQL databases that describes the database structure itself — tables, columns, data types, constraints.",
+      "starterCode": "-- Create a sample table for schema exploration\nCREATE TABLE order_items (\n  item_id INT PRIMARY KEY,\n  order_id INT NOT NULL,\n  product_name VARCHAR(100) NOT NULL,\n  unit_price DECIMAL(8,2) NOT NULL,\n  quantity INT DEFAULT 1,\n  discount_pct DECIMAL(4,2) DEFAULT 0.00\n);\n\n-- Task 1: Query information_schema to see columns of order_items\nSELECT column_name, data_type, is_nullable, column_default\nFROM information_schema.columns\nWHERE table_name = 'order_items'\nORDER BY ordinal_position;\n\n-- Task 2: Modify and run — change table_name to any table you created earlier\n-- Task 3: Query information_schema.tables to list all user tables in the current schema\n",
+      "instructions": [
+        "Run the provided Query 1 as-is to see the column definitions of order_items.",
+        "Query 2: Modify Query 1 to inspect the 'employees' table from the previous assignment.",
+        "Query 3: SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name. (PostgreSQL) or WHERE table_schema = DATABASE() (MySQL).",
+        "Label each query with a comment."
+      ],
+      "hint": "information_schema.columns shows column_name, data_type, is_nullable, column_default. information_schema.tables shows all tables. In PostgreSQL, table_schema = 'public'; in MySQL, use table_schema = DATABASE().",
+      "expectedOutput": "Q1: 6 rows — item_id, order_id, product_name, unit_price, quantity, discount_pct with their types"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 32,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Query Execution Plan",
+    "description": {
+      "task": "Use EXPLAIN to view the query execution plan for different queries and compare their cost.",
+      "language": "sql",
+      "context": "The Query Processor component parses SQL, generates candidate execution plans, and picks the lowest-cost one. EXPLAIN shows you what plan was chosen without running the query.",
+      "starterCode": "CREATE TABLE products (\n  id INT PRIMARY KEY,\n  name VARCHAR(100),\n  price DECIMAL(8,2),\n  category VARCHAR(50),\n  stock INT\n);\n\nINSERT INTO products VALUES\n  (1,  'Laptop',     999.99, 'Electronics', 50),\n  (2,  'Mouse',       25.00, 'Electronics', 200),\n  (3,  'Desk Chair', 299.00, 'Furniture',   30),\n  (4,  'Notebook',     4.99, 'Stationery',  500),\n  (5,  'Monitor',    399.00, 'Electronics', 75),\n  (6,  'Pen Set',      9.99, 'Stationery',  300),\n  (7,  'Standing Desk',450.00,'Furniture',  20),\n  (8,  'Keyboard',    75.00, 'Electronics', 150),\n  (9,  'Lamp',        49.99, 'Furniture',   80),\n  (10, 'Highlighters', 6.99, 'Stationery',  400);\n\n-- Query 1: Simple SELECT\nEXPLAIN SELECT * FROM products WHERE category = 'Electronics';\n\n-- Query 2: Look at actual data (without EXPLAIN)\nSELECT id, name, price FROM products WHERE category = 'Electronics' ORDER BY price DESC;\n\n-- Query 3: Aggregation\nSELECT category, COUNT(*) as count, AVG(price) as avg_price\nFROM products\nGROUP BY category;\n",
+      "instructions": [
+        "Run Query 1 with EXPLAIN to see the execution plan (note: Seq Scan or Index Scan).",
+        "Run Query 2 to see the actual filtered and sorted results.",
+        "Run Query 3 to see aggregated results per category.",
+        "In a comment, note: which operation does a 'Seq Scan' mean and when would an 'Index Scan' be faster?"
+      ],
+      "hint": "Seq Scan = reads every row in the table. Index Scan = uses a B-tree index to jump to relevant rows. Indexes are much faster when filtering a small % of rows from a large table.",
+      "expectedOutput": "Q2: Monitor(399), Laptop(999.99), Mouse(25), Keyboard(75) — ordered by price DESC\nQ3: Electronics:4, Furniture:3, Stationery:3 with average prices"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 32,
+    "allowedSubmissionType": "TEXT"
+  }
+]

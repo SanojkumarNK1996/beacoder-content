@@ -1,0 +1,29 @@
+<h1>🚀 Creating and Deploying Lambda Functions</h1>
+<h2>🛠️ Creating a Function (Console)</h2>
+<ol>
+  <li>Go to Lambda → Create Function</li>
+  <li>Choose runtime (Python, Node.js, Java, etc.)</li>
+  <li>Set execution role (IAM Role with needed permissions)</li>
+  <li>Write or upload your code</li>
+  <li>Set timeout, memory, environment variables</li>
+  <li>Test with a sample event</li>
+</ol>
+<h2>📦 Deployment Options</h2>
+<ul>
+  <li><strong>Console editor</strong>: Good for small functions and learning</li>
+  <li><strong>ZIP upload</strong>: For functions with dependencies</li>
+  <li><strong>Container image</strong>: Up to 10 GB, great for ML/complex dependencies</li>
+</ul>
+<div class="code-example">
+  <pre>
+# Python Lambda handler
+def lambda_handler(event, context):
+    name = event.get('name', 'World')
+    return {
+        'statusCode': 200,
+        'body': f'Hello, {name}!'
+    }
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>The <code>lambda_handler(event, context)</code> is your entry point. Event carries the trigger payload; context provides runtime info. Return a response dict for API Gateway integration.</p>

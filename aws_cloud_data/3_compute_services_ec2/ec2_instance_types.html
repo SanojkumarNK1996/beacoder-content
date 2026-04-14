@@ -1,0 +1,13 @@
+<h1>📊 EC2 Instance Types</h1>
+<h2>🎯 Instance Families</h2>
+<ul>
+  <li><strong>General Purpose</strong> (t3, m6i): Balanced compute, memory, networking. Good for web servers, development.</li>
+  <li><strong>Compute Optimized</strong> (c6i, c7g): High CPU. Good for batch processing, gaming, HPC.</li>
+  <li><strong>Memory Optimized</strong> (r6i, x2idn): Large RAM. Good for in-memory databases (Redis, SAP HANA).</li>
+  <li><strong>Storage Optimized</strong> (i3, d2): High I/O. Good for NoSQL databases, data warehousing.</li>
+  <li><strong>Accelerated Computing</strong> (p4, g5): GPU/FPGA. Good for ML training, video rendering.</li>
+</ul>
+<h2>📐 Naming Convention</h2>
+<p><code>m6i.xlarge</code>: m = instance family, 6 = generation, i = Intel, xlarge = size (2x = 2× resources of large)</p>
+<h2>🎯 Summary</h2>
+<p>Choose instance type based on your workload's bottleneck: CPU, memory, storage I/O, or GPU. Start with t3.micro for learning (free tier eligible).</p>

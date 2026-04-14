@@ -1,0 +1,21 @@
+<h1>💥 Collision Resolution</h1>
+<h2>🎯 What is a Collision?</h2>
+<p>A collision occurs when two different keys hash to the same bucket index.</p>
+<h2>📋 Resolution Strategies</h2>
+<h3>⛓️ Separate Chaining</h3>
+<p>Each bucket holds a linked list (or another structure). On collision, append to the list.</p>
+<ul>
+  <li>Simple to implement; never runs out of space</li>
+  <li>Performance degrades with long chains (bad hash function)</li>
+</ul>
+<h3>🔭 Open Addressing</h3>
+<p>On collision, probe for the next available bucket:</p>
+<ul>
+  <li><strong>Linear probing</strong>: Check bucket+1, bucket+2, ... (simple but causes clustering)</li>
+  <li><strong>Quadratic probing</strong>: Check bucket+1², bucket+2², ... (reduces clustering)</li>
+  <li><strong>Double hashing</strong>: Use a second hash function to determine step size (best distribution)</li>
+</ul>
+<h2>📌 Java's Strategy</h2>
+<p>Java's <code>HashMap</code> uses separate chaining. Since Java 8, chains that exceed 8 entries convert to a <strong>balanced tree</strong> (O(log n) worst case instead of O(n)).</p>
+<h2>🎯 Summary</h2>
+<p>Separate chaining is simpler; open addressing avoids pointer overhead. Java HashMap uses chaining with tree fallback.</p>

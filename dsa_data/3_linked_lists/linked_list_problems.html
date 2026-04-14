@@ -1,0 +1,38 @@
+<h1>🧩 Linked List Problems</h1>
+
+<h2>🔄 Reversing a Linked List</h2>
+<div class="code-example">
+  <pre>
+Node reverse(Node head) {
+    Node prev = null, cur = head;
+    while (cur != null) {
+        Node next = cur.next;
+        cur.next = prev;
+        prev = cur;
+        cur = next;
+    }
+    return prev;
+}
+  </pre>
+</div>
+
+<h2>🔁 Cycle Detection (Floyd's Algorithm)</h2>
+<div class="code-example">
+  <pre>
+boolean hasCycle(Node head) {
+    Node slow = head, fast = head;
+    while (fast != null &amp;&amp; fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if (slow == fast) return true;
+    }
+    return false;
+}
+  </pre>
+</div>
+
+<h2>🔀 Merging Two Sorted Lists</h2>
+<p>Compare heads, attach smaller, recurse/iterate until both lists are exhausted.</p>
+
+<h2>🎯 Summary</h2>
+<p>Key linked list patterns: reversal with three pointers, cycle detection with slow/fast pointers, merging by comparing heads.</p>

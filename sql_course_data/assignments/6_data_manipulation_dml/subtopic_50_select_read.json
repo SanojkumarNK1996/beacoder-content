@@ -1,0 +1,76 @@
+[
+  {
+    "title": "SELECT with WHERE and ORDER BY",
+    "description": {
+      "task": "Practice SELECT queries using various WHERE conditions and ORDER BY clauses to retrieve and sort data.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE employees (\n  emp_id     INT PRIMARY KEY,\n  name       VARCHAR(60),\n  department VARCHAR(40),\n  salary     DECIMAL(10,2),\n  hire_date  DATE,\n  active     BOOLEAN DEFAULT TRUE\n);\n\nINSERT INTO employees VALUES\n  (1,  'Alice',   'Engineering', 95000, '2020-01-15', TRUE),\n  (2,  'Bob',     'Marketing',   65000, '2021-03-20', TRUE),\n  (3,  'Carol',   'Engineering', 88000, '2019-06-10', TRUE),\n  (4,  'Dave',    'HR',          55000, '2022-08-01', TRUE),\n  (5,  'Eve',     'Engineering',105000, '2018-04-05', TRUE),\n  (6,  'Frank',   'Marketing',   70000, '2023-01-12', TRUE),\n  (7,  'Grace',   'HR',          58000, '2020-11-30', FALSE),\n  (8,  'Henry',   'Engineering', 91000, '2021-07-22', TRUE);\n\n-- Query 1: All active Engineering employees, ordered by salary desc\nSELECT name, salary, hire_date\nFROM employees\nWHERE department = 'Engineering' AND active = TRUE\nORDER BY salary DESC;\n\n-- Query 2: Employees hired between 2020 and 2022\nSELECT name, department, hire_date\nFROM employees\nWHERE hire_date BETWEEN '2020-01-01' AND '2022-12-31'\nORDER BY hire_date;\n\n-- Query 3: Employees with salary BETWEEN 60000 and 90000\nSELECT name, salary FROM employees\nWHERE salary BETWEEN 60000 AND 90000\nORDER BY salary;\n",
+      "instructions": [
+        "Run all INSERT and all three query statements.",
+        "Query 1: should return Eve(105000), Alice(95000), Henry(91000), Carol(88000).",
+        "Query 2: employees hired in 2020-2022 range.",
+        "Query 3: employees with salary 60k–90k.",
+        "Write a Query 4: find all inactive employees (active = FALSE)."
+      ],
+      "hint": "BETWEEN is inclusive on both ends. AND/OR can combine multiple conditions. Wrap OR conditions in parentheses when mixed with AND to avoid precedence issues.",
+      "expectedOutput": "Q1: Eve>Alice>Henry>Carol (Engineering)\nQ2: Alice(2020), Grace(2020), Carol... wait — filtered by 2020-2022\nQ3: Bob(65k), Frank(70k), Carol(88k)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 50,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SELECT with LIKE, IN, and NULL",
+    "description": {
+      "task": "Use LIKE for pattern matching, IN for multi-value filtering, and IS NULL / IS NOT NULL for null checks.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE customers (\n  customer_id INT PRIMARY KEY,\n  name        VARCHAR(60),\n  email       VARCHAR(80),\n  country     VARCHAR(40),\n  phone       VARCHAR(25)\n);\n\nINSERT INTO customers VALUES\n  (1,  'Alice Smith',    'alice@mail.com',  'USA',   '+1-555-0101'),\n  (2,  'Bob Johnson',   'bob@mail.com',    'UK',    '+44-7700-900001'),\n  (3,  'Carol Smith',   'carol@mail.com',  'USA',   NULL),          -- no phone\n  (4,  'Dave Williams', 'dave@mail.com',   'Canada','+1-416-555-0202'),\n  (5,  'Eve Brown',     'eve@mail.com',    'USA',   '+1-555-0303'),\n  (6,  'Frank Miller',  'frank@mail.com',  'AU',    NULL),          -- no phone\n  (7,  'Grace Wilson',  'grace@gmail.com', 'UK',    '+44-7700-900100'),\n  (8,  'Henry Moore',   'henry@mail.com',  'Canada','+1-416-555-0404');\n\n-- Query 1: Customers whose name contains 'Smith'\nSELECT name, email FROM customers WHERE name LIKE '%Smith%';\n\n-- Query 2: Customers from USA, UK, or Canada (using IN)\nSELECT name, country FROM customers\nWHERE country IN ('USA','UK','Canada')\nORDER BY country, name;\n\n-- Query 3: Customers with no phone number\nSELECT name, country FROM customers WHERE phone IS NULL;\n\n-- Query 4: Gmail users (email LIKE pattern)\nSELECT name, email FROM customers WHERE email LIKE '%@gmail.com';\n",
+      "instructions": [
+        "Run all INSERT and all four queries.",
+        "Q1: Alice Smith and Carol Smith.",
+        "Q2: All except Frank (AU excluded).",
+        "Q3: Carol and Frank (NULL phones).",
+        "Q4: Only Grace (Gmail address).",
+        "Write a Q5: customers WITH a phone number (IS NOT NULL) from USA."
+      ],
+      "hint": "IS NULL and IS NOT NULL are the only correct way to check for NULL — WHERE phone = NULL doesn't work because NULL != NULL. LIKE '_' matches any single character, '%' matches zero or more.",
+      "expectedOutput": "Q1: Alice Smith, Carol Smith\nQ2: 7 rows (all except Frank/AU)\nQ3: Carol(USA), Frank(AU)\nQ4: Grace Wilson"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 50,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "SELECT with DISTINCT and LIMIT",
+    "description": {
+      "task": "Use DISTINCT to eliminate duplicates, LIMIT to cap results, and OFFSET for simple pagination.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE orders (\n  order_id   INT PRIMARY KEY,\n  customer   VARCHAR(50),\n  product    VARCHAR(60),\n  category   VARCHAR(40),\n  amount     DECIMAL(8,2),\n  order_date DATE\n);\n\nINSERT INTO orders VALUES\n  (1,  'Alice', 'Laptop',      'Electronics', 999.99, '2026-01-05'),\n  (2,  'Bob',   'Mouse',       'Electronics',  19.99, '2026-01-06'),\n  (3,  'Alice', 'Keyboard',    'Electronics',  59.99, '2026-01-07'),\n  (4,  'Carol', 'Desk',        'Furniture',   250.00, '2026-01-08'),\n  (5,  'Bob',   'Monitor',     'Electronics', 299.99, '2026-01-09'),\n  (6,  'Dave',  'Notebook',    'Stationery',    5.99, '2026-01-10'),\n  (7,  'Alice', 'Office Chair','Furniture',   175.00, '2026-01-11'),\n  (8,  'Carol', 'Headphones',  'Electronics',  79.99, '2026-01-12'),\n  (9,  'Eve',   'Laptop',      'Electronics', 999.99, '2026-01-13'),\n  (10, 'Dave',  'Mouse',       'Electronics',  19.99, '2026-01-14');\n\n-- DISTINCT: unique customers who have placed orders\nSELECT DISTINCT customer FROM orders ORDER BY customer;\n\n-- DISTINCT: unique product categories\nSELECT DISTINCT category FROM orders ORDER BY category;\n\n-- LIMIT: top 3 most expensive orders\nSELECT order_id, customer, product, amount\nFROM orders\nORDER BY amount DESC\nLIMIT 3;\n\n-- Pagination: page 2, 3 items per page (offset 3 means skip first page)\nSELECT order_id, customer, product\nFROM orders\nORDER BY order_id\nLIMIT 3 OFFSET 3;\n",
+      "instructions": [
+        "Run all four queries.",
+        "DISTINCT customer: Alice, Bob, Carol, Dave, Eve (5 unique customers).",
+        "DISTINCT category: 3 unique categories.",
+        "LIMIT 3 by amount: Laptop(999.99), Laptop(999.99), Monitor(299.99).",
+        "Pagination: OFFSET 3 shows rows 4–6 (orders 4, 5, 6).",
+        "Add a comment on how OFFSET pagination performs on large tables."
+      ],
+      "hint": "OFFSET pagination is simple but slow on large tables because the DB must skip N rows each time. For high performance, use cursor-based pagination (WHERE id > last_seen_id LIMIT N).",
+      "expectedOutput": "Distinct customers: 5\nDistinct categories: Electronics, Furniture, Stationery\nTop 3: 2x Laptop + Monitor\nPage 2: orders 4,5,6"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 15,
+    "subtopicId": 50,
+    "allowedSubmissionType": "TEXT"
+  }
+]

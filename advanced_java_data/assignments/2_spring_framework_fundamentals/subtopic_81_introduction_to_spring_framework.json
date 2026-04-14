@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Explore Spring Core Modules",
+    "description": {
+      "task": "Write a Java program that documents the Spring Framework module hierarchy. Create a class that lists Spring's core modules and their purposes, then simulate which modules a web application would use.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SpringModuleRegistry {\n    private Map<String, String> modules = new LinkedHashMap<>();\n    \n    public void registerModules() {\n        // TODO: Add 6 Spring modules with name -> purpose\n        // e.g., \"spring-core\" -> \"Core utilities and IoC container\"\n        // Include: spring-core, spring-beans, spring-context, spring-web, spring-webmvc, spring-data\n    }\n    \n    public void listModules() {\n        // TODO: Print each module and its purpose\n    }\n    \n    public List<String> getWebAppModules() {\n        // TODO: Return list of modules used by a typical web app\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Use SpringModuleRegistry to list all and then web app modules\n    }\n}",
+      "instructions": [
+        "Register exactly these modules: spring-core, spring-beans, spring-context, spring-web, spring-webmvc, spring-data.",
+        "listModules() prints each as '- [module]: [purpose]'.",
+        "getWebAppModules() returns [spring-core, spring-context, spring-web, spring-webmvc].",
+        "In Main, list all modules, then print 'Web App uses: [module1, module2, ...]'."
+      ],
+      "hint": "Spring is modular — you only include the parts you need. spring-core and spring-beans form the foundation.",
+      "expectedOutput": "Spring Modules:\n- spring-core: Core utilities and IoC container\n- spring-beans: Bean factory and lifecycle management\n- spring-context: Application context and events\n- spring-web: Web MVC support\n- spring-webmvc: REST and web controllers\n- spring-data: Repository and ORM integration\nWeb App uses: [spring-core, spring-context, spring-web, spring-webmvc]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 81,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Spring Bean Lifecycle Simulation",
+    "description": {
+      "task": "Simulate the Spring Bean lifecycle by creating a Java class that implements lifecycle hook methods: initialization, usage, and destruction phases.",
+      "language": "java",
+      "starterCode": "public class DatabaseConnectionBean {\n    private String connectionUrl;\n    private boolean connected = false;\n    \n    // TODO: Constructor with connectionUrl\n    \n    // Simulates @PostConstruct\n    public void init() {\n        // TODO: Print initialization message and set connected=true\n    }\n    \n    public void queryDatabase(String sql) {\n        // TODO: Only execute if connected, else throw RuntimeException\n    }\n    \n    // Simulates @PreDestroy\n    public void destroy() {\n        // TODO: Print cleanup message and set connected=false\n    }\n}\n\npublic class BeanContainer {\n    public DatabaseConnectionBean createAndInit(String url) {\n        // TODO: Create bean and call init()\n    }\n    \n    public void destroyBean(DatabaseConnectionBean bean) {\n        // TODO: Call destroy()\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Simulate full bean lifecycle\n    }\n}",
+      "instructions": [
+        "init() prints 'Initializing connection to: [connectionUrl]' and sets connected=true.",
+        "queryDatabase() prints 'Executing: [sql]' if connected, throws RuntimeException with message 'Bean not initialized!' otherwise.",
+        "destroy() prints 'Closing connection to: [connectionUrl]' and sets connected=false.",
+        "In Main, create the bean via BeanContainer, run one query, then destroy it."
+      ],
+      "hint": "Spring manages bean lifecycle automatically. @PostConstruct runs after injection, @PreDestroy runs before removal from context.",
+      "expectedOutput": "Initializing connection to: jdbc:mysql://localhost/mydb\nExecuting: SELECT * FROM users\nClosing connection to: jdbc:mysql://localhost/mydb"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 81,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Why Use a Framework?",
+    "description": {
+      "task": "Write a Java program that demonstrates two scenarios: building functionality without a framework (manual) vs using framework patterns (structured). Count the lines of boilerplate code in each approach.",
+      "language": "java",
+      "context": "Spring Framework reduced enterprise Java development complexity drastically by providing infrastructure support, letting developers focus on business logic.",
+      "starterCode": "// WITHOUT framework helper: manual transaction handling\npublic class ManualTransactionService {\n    public void transferMoney(String from, String to, double amount) {\n        // TODO: Simulate manual begin transaction, execute, commit/rollback (8+ lines)\n    }\n}\n\n// WITH framework-style: infrastructure handled\npublic class FrameworkTransactionService {\n    // Pretend @Transactional handles begin/commit/rollback\n    public void transferMoney(String from, String to, double amount) {\n        // TODO: Just the business logic (2-3 lines)\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Run both and compare output\n    }\n}",
+      "instructions": [
+        "ManualTransactionService.transferMoney() prints: 'BEGIN TRANSACTION', the transfer message, 'COMMIT TRANSACTION'.",
+        "FrameworkTransactionService.transferMoney() prints only: 'Transferred [amount] from [from] to [to]' — no transaction management code.",
+        "In Main, call both services with (Alice, Bob, 500.0) and label the output.",
+        "After both outputs, print 'Manual: 3 lines | Framework: 1 line'."
+      ],
+      "hint": "Frameworks provide infrastructure support — transaction management, security, caching — so developers write only business logic.",
+      "expectedOutput": "--- Without Framework ---\nBEGIN TRANSACTION\nTransferred 500.0 from Alice to Bob\nCOMMIT TRANSACTION\n--- With Framework ---\nTransferred 500.0 from Alice to Bob\nManual: 3 lines | Framework: 1 line"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 23,
+    "subtopicId": 81,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,39 @@
+<h1>🔒 Protected Routes and Auth Guards</h1>
+<h2>🎯 What are Protected Routes?</h2>
+<p>Routes that require authentication — redirect to login if user is not logged in.</p>
+<div class="code-example">
+  <pre>
+import { Navigate, Outlet } from 'react-router-dom';
+
+// ProtectedRoute component
+function ProtectedRoute() {
+  const { user } = useAuth();  // From AuthContext
+  if (!user) return &lt;Navigate to="/login" replace /&gt;;
+  return &lt;Outlet /&gt;;           // Render children if authenticated
+}
+
+// Usage in routes:
+&lt;Routes&gt;
+  &lt;Route path="/login" element={&lt;LoginPage /&gt;} /&gt;
+
+  {/* Protected routes */}
+  &lt;Route element={&lt;ProtectedRoute /&gt;}&gt;
+    &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+    &lt;Route path="/profile" element={&lt;Profile /&gt;} /&gt;
+  &lt;/Route&gt;
+&lt;/Routes&gt;
+  </pre>
+</div>
+<h2>📌 Role-Based Protection</h2>
+<div class="code-example">
+  <pre>
+function AdminRoute() {
+  const { user } = useAuth();
+  if (!user) return &lt;Navigate to="/login" replace /&gt;;
+  if (user.role !== 'admin') return &lt;Navigate to="/forbidden" replace /&gt;;
+  return &lt;Outlet /&gt;;
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Create a <code>ProtectedRoute</code> wrapper component checking auth status. Wrap private routes in it. Use <code>&lt;Navigate replace&gt;</code> to redirect cleanly (no broken back-button history).</p>

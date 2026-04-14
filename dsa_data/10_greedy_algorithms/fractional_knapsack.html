@@ -1,0 +1,24 @@
+<h1>💰 Fractional Knapsack & Coin Change</h1>
+<h2>🎒 Fractional Knapsack</h2>
+<p>Unlike 0/1 knapsack, you can take <strong>fractions</strong> of items.</p>
+<p><strong>Greedy choice</strong>: Sort by value/weight ratio, take as much as possible of the highest-ratio item first.</p>
+<div class="code-example">
+  <pre>
+double fractionalKnapsack(int[] wt, int[] val, int W) {
+    Integer[] idx = IntStream.range(0, wt.length).boxed().toArray(Integer[]::new);
+    Arrays.sort(idx, (a, b) -> Double.compare((double)val[b]/wt[b], (double)val[a]/wt[a]));
+    double total = 0; int remaining = W;
+    for (int i : idx) {
+        if (remaining == 0) break;
+        int take = Math.min(remaining, wt[i]);
+        total += (double) take * val[i] / wt[i];
+        remaining -= take;
+    }
+    return total;
+}
+  </pre>
+</div>
+<h2>🪙 Coin Change (Greedy works for canonical systems)</h2>
+<p>For standard coin systems (e.g., {1, 5, 10, 25}), greedy works: always take the largest coin possible. For arbitrary denominations, use DP.</p>
+<h2>🎯 Summary</h2>
+<p>Fractional Knapsack is a clear greedy win. Coin change is a pitfall — greedy works only for canonical denominations; use DP for the general case.</p>

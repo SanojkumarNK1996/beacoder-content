@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Basic Transaction Write",
+    "description": {
+      "task": "Write a complete SQL transaction using BEGIN, multiple DML statements, and COMMIT to transfer points between two user accounts.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE user_points (\n  user_id INT PRIMARY KEY,\n  username VARCHAR(50),\n  points INT\n);\n\nINSERT INTO user_points VALUES\n  (1, 'alice', 500),\n  (2, 'bob',   300),\n  (3, 'carol', 750);\n\n-- Task: Transfer 100 points from alice to bob in a single transaction\n-- Step 1: BEGIN the transaction\n-- Step 2: Deduct 100 from alice (user_id=1)\n-- Step 3: Add 100 to bob (user_id=2)\n-- Step 4: COMMIT\n\n-- Verify the result\nSELECT user_id, username, points FROM user_points ORDER BY user_id;\n",
+      "instructions": [
+        "Write BEGIN;",
+        "Write UPDATE user_points SET points = points - 100 WHERE user_id = 1;",
+        "Write UPDATE user_points SET points = points + 100 WHERE user_id = 2;",
+        "Write COMMIT;",
+        "Run the final SELECT — verify alice has 400, bob has 400, carol unchanged at 750."
+      ],
+      "hint": "Always pair BEGIN with either COMMIT (success) or ROLLBACK (failure). Never leave a transaction open — it holds locks on the affected rows.",
+      "expectedOutput": "alice: 400, bob: 400, carol: 750"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 35,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Concurrent Update Scenario",
+    "description": {
+      "task": "Write two transaction blocks that would conflict if run concurrently, and explain which one would be blocked by the lock manager.",
+      "language": "sql",
+      "context": "Concurrency control prevents two transactions from simultaneously modifying the same row. The first transaction to acquire a row lock makes the second one wait until it commits or rolls back.",
+      "starterCode": "CREATE TABLE tickets (\n  event_id INT PRIMARY KEY,\n  event_name VARCHAR(80),\n  seats_available INT\n);\n\nINSERT INTO tickets VALUES\n  (1, 'Concert Night',   10),\n  (2, 'Tech Conference', 50),\n  (3, 'Art Exhibition',   5);\n\n-- Transaction A: User 1 tries to book 3 seats for event 1\n-- BEGIN; UPDATE tickets SET seats_available = seats_available - 3 WHERE event_id = 1; COMMIT;\n\n-- Transaction B: User 2 simultaneously tries to book 2 seats for event 1\n-- BEGIN; UPDATE tickets SET seats_available = seats_available - 2 WHERE event_id = 1; COMMIT;\n\n-- Run them sequentially here to simulate the end state\nBEGIN;\n  UPDATE tickets SET seats_available = seats_available - 3 WHERE event_id = 1;\nCOMMIT;\n\nBEGIN;\n  UPDATE tickets SET seats_available = seats_available - 2 WHERE event_id = 1;\nCOMMIT;\n\nSELECT * FROM tickets;\n",
+      "instructions": [
+        "Run both transactions sequentially as shown.",
+        "Verify event 1 now has 5 seats available (10 - 3 - 2 = 5).",
+        "Add a comment explaining: what would a pessimistic lock prevent here for truly concurrent access?",
+        "Add a second comment: what would happen if seats_available reached 0 and a check constraint was enforced?"
+      ],
+      "hint": "In true concurrency, the DBMS serialises conflicting transactions. Row-level locks (FOR UPDATE) ensure the second transaction waits for the first to commit before proceeding.",
+      "expectedOutput": "Event 1: seats_available = 5\nEvents 2 and 3: unchanged"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 35,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Transaction with Validation",
+    "description": {
+      "task": "Write a transaction that includes a validation check: if the check fails, ROLLBACK; otherwise COMMIT.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE wallet (\n  user_id INT PRIMARY KEY,\n  username VARCHAR(50),\n  balance DECIMAL(10,2),\n  CONSTRAINT chk_balance CHECK (balance >= 0)\n);\n\nINSERT INTO wallet VALUES\n  (1, 'alice', 200.00),\n  (2, 'bob',   50.00);\n\n-- Transaction 1: Valid transfer — alice sends 80 to bob\nBEGIN;\n  UPDATE wallet SET balance = balance - 80 WHERE user_id = 1;\n  UPDATE wallet SET balance = balance + 80 WHERE user_id = 2;\nCOMMIT;\n\nSELECT user_id, username, balance FROM wallet;\n\n-- Transaction 2: Invalid transfer — bob tries to send 200 (only has 130.00)\n-- The CHECK constraint will prevent balance going negative\nBEGIN;\n  UPDATE wallet SET balance = balance - 200 WHERE user_id = 2;\n  UPDATE wallet SET balance = balance + 200 WHERE user_id = 1;\n-- The first UPDATE violates CHECK(balance >= 0), database will error and rollback\nROLLBACK;\n\nSELECT user_id, username, balance FROM wallet;\n",
+      "instructions": [
+        "Run Transaction 1 and verify alice=120, bob=130.",
+        "Attempt Transaction 2 — the ROLLBACK ensures no change occurs.",
+        "Run the final SELECT to confirm alice=120, bob=130 still.",
+        "Add a comment explaining: how does a CHECK constraint enforce Consistency?"
+      ],
+      "hint": "A CHECK constraint is enforced at the row level. If balance - 200 would produce a negative value and CHECK(balance >= 0) exists, the UPDATE fails and the transaction must ROLLBACK.",
+      "expectedOutput": "After T1: alice=120.00, bob=130.00\nAfter T2 ROLLBACK: alice=120.00, bob=130.00 (unchanged)"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 11,
+    "subtopicId": 35,
+    "allowedSubmissionType": "TEXT"
+  }
+]

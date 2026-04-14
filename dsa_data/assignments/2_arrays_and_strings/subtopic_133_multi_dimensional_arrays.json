@@ -1,0 +1,74 @@
+[
+  {
+    "title": "2D Array Matrix Operations",
+    "description": {
+      "task": "Implement a MatrixOperations class that performs basic 2D array operations: create an n×n identity matrix, transpose a matrix in-place, and multiply two n×n matrices.",
+      "language": "java",
+      "starterCode": "public class MatrixOperations {\n\n    public int[][] identity(int n) {\n        // TODO: return n x n identity matrix (1s on diagonal, 0s elsewhere)\n        return null;\n    }\n\n    public int[][] transpose(int[][] matrix) {\n        int n = matrix.length;\n        int[][] result = new int[n][n];\n        // TODO: result[i][j] = matrix[j][i]\n        return result;\n    }\n\n    public int[][] multiply(int[][] a, int[][] b) {\n        int n = a.length;\n        int[][] result = new int[n][n];\n        // TODO: standard O(n^3) matrix multiplication\n        // result[i][j] = sum over k of a[i][k] * b[k][j]\n        return result;\n    }\n\n    public void printMatrix(int[][] m) {\n        for (int[] row : m) {\n            StringBuilder sb = new StringBuilder();\n            for (int i = 0; i < row.length; i++) {\n                if (i > 0) sb.append(\" \");\n                sb.append(row[i]);\n            }\n            System.out.println(sb);\n        }\n    }\n\n    public static void main(String[] args) {\n        MatrixOperations mo = new MatrixOperations();\n        System.out.println(\"Identity 3x3:\");\n        mo.printMatrix(mo.identity(3));\n        int[][] m = {{1,2},{3,4}};\n        System.out.println(\"Transposed:\");\n        mo.printMatrix(mo.transpose(m));\n        System.out.println(\"M * Identity:\");\n        mo.printMatrix(mo.multiply(m, mo.identity(2)));\n    }\n}",
+      "instructions": [
+        "identity(n): create int[n][n], set matrix[i][i]=1 for i in 0..n-1, return it",
+        "transpose(matrix): for each i and j, set result[i][j] = matrix[j][i]",
+        "multiply(a, b): triple nested loop — for i, for j, for k: result[i][j] += a[i][k] * b[k][j]",
+        "All three methods must be implemented",
+        "M * Identity must equal M; verify with a={{1,2},{3,4}}"
+      ],
+      "hint": "identity: int[][] id=new int[n][n]; for(int i=0;i<n;i++) id[i][i]=1; return id. multiply: 3 nested for loops adding a[i][k]*b[k][j] to result[i][j].",
+      "expectedOutput": "Identity 3x3:\n1 0 0\n0 1 0\n0 0 1\nTransposed:\n1 3\n2 4\nM * Identity:\n1 2\n3 4"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 133,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Spiral Matrix Traversal",
+    "description": {
+      "task": "Implement a SpiralTraversal class that traverses an m×n matrix in spiral order (top row → right column → bottom row → left column, repeat layers inward) and returns the elements in the order visited.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SpiralTraversal {\n\n    public List<Integer> spiralOrder(int[][] matrix) {\n        List<Integer> result = new ArrayList<>();\n        if (matrix == null || matrix.length == 0) return result;\n\n        int top = 0, bottom = matrix.length - 1;\n        int left = 0, right = matrix[0].length - 1;\n\n        while (top <= bottom && left <= right) {\n            // TODO: traverse top row left->right, right column top->bottom,\n            //       bottom row right->left (if top != bottom),\n            //       left column bottom->top (if left != right)\n            //       then shrink boundaries: top++, bottom--, left++, right--\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        SpiralTraversal st = new SpiralTraversal();\n        int[][] m3x3 = {{1,2,3},{4,5,6},{7,8,9}};\n        System.out.println(\"3x3: \" + st.spiralOrder(m3x3));\n        int[][] m2x4 = {{1,2,3,4},{5,6,7,8}};\n        System.out.println(\"2x4: \" + st.spiralOrder(m2x4));\n    }\n}",
+      "instructions": [
+        "Traverse the top row (left to right), then right column (top+1 to bottom), then bottom row (right-1 to left, only if top!=bottom), then left column (bottom-1 to top+1, only if left!=right)",
+        "After each layer, increment top and left, decrement bottom and right",
+        "Continue while top <= bottom and left <= right",
+        "3x3 spiral: [1,2,3,6,9,8,7,4,5]",
+        "2x4 spiral: [1,2,3,4,8,7,6,5]"
+      ],
+      "hint": "Add top-row loop, right-column loop, conditional bottom-row (reversed) loop, conditional left-column (reversed) loop, then top++; bottom--; left++; right--;",
+      "expectedOutput": "3x3: [1, 2, 3, 6, 9, 8, 7, 4, 5]\n2x4: [1, 2, 3, 4, 8, 7, 6, 5]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 133,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Diagonal Sum of a Matrix",
+    "description": {
+      "task": "Implement a DiagonalSum class with methods to compute the primary diagonal sum (top-left to bottom-right), secondary diagonal sum (top-right to bottom-left), and the difference between them for a square n×n matrix.",
+      "language": "java",
+      "starterCode": "public class DiagonalSum {\n\n    public int primaryDiagonalSum(int[][] matrix) {\n        // TODO: sum of matrix[i][i] for i in 0..n-1\n        return 0;\n    }\n\n    public int secondaryDiagonalSum(int[][] matrix) {\n        // TODO: sum of matrix[i][n-1-i] for i in 0..n-1\n        return 0;\n    }\n\n    public int diagonalDifference(int[][] matrix) {\n        // TODO: return Math.abs(primaryDiagonalSum - secondaryDiagonalSum)\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        DiagonalSum ds = new DiagonalSum();\n        int[][] m = {\n            {1, 2, 3},\n            {4, 5, 6},\n            {9, 8, 9}\n        };\n        System.out.println(\"Primary diagonal sum: \" + ds.primaryDiagonalSum(m));\n        System.out.println(\"Secondary diagonal sum: \" + ds.secondaryDiagonalSum(m));\n        System.out.println(\"Diagonal difference: \" + ds.diagonalDifference(m));\n    }\n}",
+      "instructions": [
+        "primaryDiagonalSum: loop i from 0 to n-1, sum matrix[i][i]",
+        "secondaryDiagonalSum: loop i from 0 to n-1, sum matrix[i][n-1-i]",
+        "diagonalDifference: return Math.abs(primary - secondary)",
+        "For the given matrix: primary = 1+5+9=15, secondary = 3+5+9=17, difference = 2",
+        "All three methods must be implemented"
+      ],
+      "hint": "int n = matrix.length; int sum=0; for(int i=0;i<n;i++) sum+=matrix[i][i]; return sum; — repeated similarly for secondary.",
+      "expectedOutput": "Primary diagonal sum: 15\nSecondary diagonal sum: 17\nDiagonal difference: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 133,
+    "allowedSubmissionType": "TEXT"
+  }
+]

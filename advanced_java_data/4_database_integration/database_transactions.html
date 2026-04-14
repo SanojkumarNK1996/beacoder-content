@@ -1,0 +1,210 @@
+<h1>🔐 Database Transactions</h1>
+
+<h2>🎯 What is a Transaction?</h2>
+<p>A <strong>transaction</strong> is a sequence of one or more database operations that are treated as a single logical unit of work. Either <strong>all operations succeed</strong>, or <strong>none of them are applied</strong>.</p>
+
+<div class="analogy-card">
+  <h3>🏦 Bank Transfer Analogy</h3>
+  <p>Transferring money between two accounts involves:</p>
+  <ol>
+    <li>💸 Deduct ₹1000 from Account A</li>
+    <li>💰 Add ₹1000 to Account B</li>
+  </ol>
+  <p>If step 1 succeeds but step 2 fails, your system must <strong>rollback</strong> so money doesn&apos;t disappear. That&apos;s exactly what transactions guarantee.</p>
+</div>
+
+<h2>🧬 ACID Properties</h2>
+<p>Transactions in relational databases follow the <strong>ACID</strong> properties:</p>
+
+<ul>
+  <li><strong>A – Atomicity</strong>: All or nothing</li>
+  <li><strong>C – Consistency</strong>: Move from one valid state to another</li>
+  <li><strong>I – Isolation</strong>: Concurrent transactions don&apos;t interfere incorrectly</li>
+  <li><strong>D – Durability</strong>: Once committed, changes survive crashes</li>
+</ul>
+
+<h2>🧱 Basic Transaction Operations</h2>
+
+<div class="code-example">
+  <pre>
+-- SQL level
+BEGIN;                -- Start transaction
+UPDATE accounts SET balance = balance - 1000 WHERE id = 1;
+UPDATE accounts SET balance = balance + 1000 WHERE id = 2;
+COMMIT;               -- Save all changes
+
+-- If something went wrong
+ROLLBACK;             -- Undo all changes
+  </pre>
+</div>
+
+<h2>⚙️ Transactions in Spring</h2>
+<p>Spring provides <strong>declarative transaction management</strong> via the <code>@Transactional</code> annotation.</p>
+
+<h3>1️⃣ Enabling Transactions</h3>
+<div class="code-example">
+  <pre>
+@Configuration
+@EnableTransactionManagement
+public class PersistenceConfig {
+    // DataSource, EntityManagerFactory, TransactionManager beans
+}
+  </pre>
+</div>
+
+<p>In Spring Boot with Spring Data JPA, transaction management is usually <strong>auto-configured</strong>. You just use <code>@Transactional</code>.</p>
+
+<h3>2️⃣ Using @Transactional</h3>
+
+<div class="code-example">
+  <pre>
+@Service
+public class BankService {
+
+    private final AccountRepository accountRepository;
+
+    public BankService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
+
+    @Transactional
+    public void transfer(Long fromId, Long toId, double amount) {
+        Account from = accountRepository.findById(fromId)
+            .orElseThrow(() -&gt; new IllegalArgumentException("Sender not found"));
+        Account to = accountRepository.findById(toId)
+            .orElseThrow(() -&gt; new IllegalArgumentException("Receiver not found"));
+
+        if (from.getBalance() &lt; amount) {
+            throw new IllegalStateException("Insufficient balance");
+        }
+
+        from.setBalance(from.getBalance() - amount);
+        to.setBalance(to.getBalance() + amount);
+
+        // Changes are automatically detected and flushed at commit time.
+        // If any exception occurs, the transaction is rolled back.
+    }
+}
+  </pre>
+</div>
+
+<h2>🔁 Transaction Propagation</h2>
+<p><strong>Propagation</strong> defines what happens when a transactional method is called inside another transaction.</p>
+
+<ul>
+  <li><code>REQUIRED</code> (default) – Join existing transaction or create a new one</li>
+  <li><code>REQUIRES_NEW</code> – Always start a new transaction, suspending existing</li>
+  <li><code>SUPPORTS</code> – Use transaction if exists, or run non-transactional</li>
+  <li><code>MANDATORY</code> – Must run within existing transaction</li>
+  <li><code>NEVER</code> – Must not run in a transaction</li>
+  <li><code>NOT_SUPPORTED</code> – Suspend any existing transaction</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public void logAuditEvent(AuditEvent event) {
+    // This runs in its own independent transaction
+    auditRepository.save(event);
+}
+  </pre>
+</div>
+
+<h2>🧱 Isolation Levels</h2>
+<p><strong>Isolation level</strong> controls how concurrent transactions see each other&apos;s data.</p>
+
+<ul>
+  <li><strong>READ_UNCOMMITTED</strong> – Can see uncommitted changes (dirty reads)</li>
+  <li><strong>READ_COMMITTED</strong> – Can only see committed data (default in many DBs)</li>
+  <li><strong>REPEATABLE_READ</strong> – Same query returns same rows within a transaction</li>
+  <li><strong>SERIALIZABLE</strong> – Highest isolation, like running sequentially</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+@Transactional(isolation = Isolation.REPEATABLE_READ)
+public Order getOrderWithStableView(Long orderId) {
+    return orderRepository.findById(orderId)
+        .orElseThrow(() -&gt; new IllegalArgumentException("Order not found"));
+}
+  </pre>
+</div>
+
+<h2>🚨 Rollback Rules</h2>
+<p>By default in Spring:</p>
+<ul>
+  <li>🔄 Transaction is rolled back on <strong>unchecked</strong> exceptions (<code>RuntimeException</code>, <code>Error</code>)</li>
+  <li>✅ Transaction is <strong>not</strong> rolled back on <strong>checked</strong> exceptions (like <code>IOException</code>) unless configured</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+@Transactional(rollbackFor = Exception.class)
+public void processOrder(Long orderId) throws Exception {
+    // Any exception (checked or unchecked) triggers rollback
+}
+  </pre>
+</div>
+
+<h2>🔍 Common Transaction Pitfalls</h2>
+
+<h3>1️⃣ @Transactional on Private / Internal Methods</h3>
+<p>Spring creates proxies around beans to apply transactions. Calls must go through the <strong>proxy</strong> for <code>@Transactional</code> to work.</p>
+
+<ul>
+  <li>❌ <strong>Won&apos;t work:</strong> Private methods, calls within same class</li>
+  <li>✅ <strong>Will work:</strong> Public methods called from another bean</li>
+</ul>
+
+<h3>2️⃣ Long-Running Transactions</h3>
+<p>Avoid keeping transactions open for a long time:</p>
+<ul>
+  <li>❌ Doing remote calls or heavy computations inside a transaction</li>
+  <li>✅ Keep transactions short and focused on <strong>database work</strong></li>
+</ul>
+
+<h3>3️⃣ Mixing Multiple DataSources</h3>
+<p>Distributed transactions across multiple databases require special configuration (JTA, XA transactions) and are more complex.</p>
+
+<h2>🧪 Example: Order Placement with Transaction</h2>
+
+<div class="code-example">
+  <pre>
+@Service
+public class CheckoutService {
+
+    private final OrderRepository orderRepository;
+    private final PaymentService paymentService;
+    private final InventoryService inventoryService;
+
+    public CheckoutService(OrderRepository orderRepository,
+                           PaymentService paymentService,
+                           InventoryService inventoryService) {
+        this.orderRepository = orderRepository;
+        this.paymentService = paymentService;
+        this.inventoryService = inventoryService;
+    }
+
+    @Transactional
+    public Order checkout(Cart cart) {
+        // 1. Reserve inventory
+        inventoryService.reserveItems(cart.getItems());
+
+        // 2. Create order
+        Order order = createOrderFromCart(cart);
+        Order savedOrder = orderRepository.save(order);
+
+        // 3. Process payment
+        paymentService.charge(savedOrder);
+
+        // If payment fails, inventory reservation and order creation are rolled back
+        return savedOrder;
+    }
+}
+  </pre>
+</div>
+
+<div class="key-takeaway">
+  <h3>🎯 Key Takeaway</h3>
+  <p><strong>Transactions</strong> protect your data from corruption in the presence of failures and concurrency. In Spring, <code>@Transactional</code> and proper configuration of propagation, isolation, and rollback rules give you powerful control over how and when data changes are committed. Understanding transactions is <strong>essential</strong> for building reliable enterprise applications.</p>
+</div>

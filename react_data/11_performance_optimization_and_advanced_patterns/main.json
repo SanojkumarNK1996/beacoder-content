@@ -1,0 +1,7 @@
+[
+  {"subtopicId": 309, "title": "React Performance Basics", "dataType": "notes", "data": "react_performance_basics.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 310, "title": "Code Splitting and Lazy Loading", "dataType": "notes", "data": "code_splitting_lazy_loading.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 311, "title": "React memo and useMemo Optimization", "dataType": "notes", "data": "memo_optimization.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 312, "title": "Higher Order Components and Render Props", "dataType": "notes", "data": "hoc_and_render_props.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 313, "title": "Error Boundaries and Suspense", "dataType": "notes", "data": "error_boundaries_suspense.html", "displayOrder": 5, "verified": false}
+]

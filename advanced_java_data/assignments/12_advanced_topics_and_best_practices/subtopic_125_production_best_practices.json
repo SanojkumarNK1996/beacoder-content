@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Graceful Shutdown Handler",
+    "description": {
+      "task": "Implement a GracefulShutdownHandler class that models how Spring Boot applications handle graceful shutdown. When shutdown is requested, stop accepting new requests, wait for in-flight requests to complete with a timeout, and execute registered cleanup hooks in reverse order.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class GracefulShutdownHandler {\n\n    private volatile boolean shuttingDown = false;\n    private int activeRequests = 0;\n    private final List<Runnable> shutdownHooks = new ArrayList<>();\n\n    public synchronized void onRequestStart() {\n        if (shuttingDown) {\n            throw new IllegalStateException(\"Server is shutting down\");\n        }\n        activeRequests++;\n    }\n\n    public synchronized void onRequestEnd() {\n        activeRequests--;\n    }\n\n    public void registerShutdownHook(Runnable hook) {\n        shutdownHooks.add(hook);\n    }\n\n    public ShutdownResult initiateShutdown(int timeoutMs) {\n        shuttingDown = true;\n        // Simulate waiting: poll activeRequests until 0 or timeout\n        long start = System.currentTimeMillis();\n        while (activeRequests > 0) {\n            if (System.currentTimeMillis() - start > timeoutMs) {\n                return runHooksAndReturn(false, activeRequests);\n            }\n            try { Thread.sleep(10); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }\n        }\n        return runHooksAndReturn(true, 0);\n    }\n\n    private ShutdownResult runHooksAndReturn(boolean graceful, int remainingRequests) {\n        // Run hooks in reverse registration order\n        List<String> executedHooks = new ArrayList<>();\n        // TODO: run shutdownHooks in reverse order, collecting hook toString or a label\n        return new ShutdownResult(graceful, remainingRequests, executedHooks);\n    }\n\n    public record ShutdownResult(boolean graceful, int remainingRequests, List<String> executedHooks) {}\n\n    public boolean isShuttingDown() { return shuttingDown; }\n\n    public static void main(String[] args) {\n        GracefulShutdownHandler handler = new GracefulShutdownHandler();\n        List<String> log = new ArrayList<>();\n\n        handler.registerShutdownHook(() -> log.add(\"Close DB connections\"));\n        handler.registerShutdownHook(() -> log.add(\"Flush message queue\"));\n        handler.registerShutdownHook(() -> log.add(\"Stop scheduled tasks\"));\n\n        handler.onRequestStart();\n        handler.onRequestEnd(); // all requests done\n\n        ShutdownResult result = handler.initiateShutdown(100);\n        System.out.println(\"Graceful: \" + result.graceful());\n        System.out.println(\"Hooks run: \" + log.size());\n        System.out.println(\"Order: \" + log); // reverse order expected\n\n        try {\n            handler.onRequestStart(); // should throw\n        } catch (IllegalStateException e) {\n            System.out.println(\"Rejected: \" + e.getMessage());\n        }\n    }\n}",
+      "instructions": [
+        "registerShutdownHook() appends a Runnable to the shutdownHooks list",
+        "runHooksAndReturn() iterates shutdownHooks in reverse order (from last to first) and calls each hook",
+        "Each hook should be executed — the method does not need to collect labels, just run the hooks",
+        "The executedHooks list in the result can be empty (hooks are executed via their Runnable.run())",
+        "onRequestStart() throws IllegalStateException when shuttingDown=true, which is already implemented"
+      ],
+      "hint": "In runHooksAndReturn(): for (int i = shutdownHooks.size() - 1; i >= 0; i--) { shutdownHooks.get(i).run(); } The hooks will add entries to the 'log' list in main() as a side effect.",
+      "expectedOutput": "Graceful: true\nHooks run: 3\nOrder: [Stop scheduled tasks, Flush message queue, Close DB connections]\nRejected: Server is shutting down"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 125,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Feature Flag Manager",
+    "description": {
+      "task": "Implement a FeatureFlagManager class that enables/disables features at runtime without redeployment. Features can be enabled globally, for specific user segments, or via percentage-based rollouts. Demonstrate safe feature toggling for production deployments.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class FeatureFlagManager {\n\n    public record FeatureFlag(\n        String name,\n        boolean globalEnabled,\n        Set<String> enabledForUsers,\n        int rolloutPercent\n    ) {}\n\n    private final Map<String, FeatureFlag> flags = new HashMap<>();\n\n    public void registerFlag(String name, boolean globalEnabled,\n                              Set<String> enabledForUsers, int rolloutPercent) {\n        flags.put(name, new FeatureFlag(name, globalEnabled,\n                                        new HashSet<>(enabledForUsers), rolloutPercent));\n    }\n\n    public boolean isEnabled(String featureName, String userId) {\n        FeatureFlag flag = flags.get(featureName);\n        if (flag == null) return false;\n\n        // Check in order:\n        // 1. Global flag\n        // 2. User-specific whitelist\n        // 3. Percentage rollout based on userId hash\n        if (flag.globalEnabled()) return true;\n        if (flag.enabledForUsers().contains(userId)) return true;\n\n        // Rollout: use abs(userId.hashCode()) % 100 < rolloutPercent\n        int bucket = Math.abs(userId.hashCode()) % 100;\n        return bucket < flag.rolloutPercent();\n    }\n\n    public List<String> enabledFeaturesFor(String userId) {\n        // Return names of all features enabled for the user\n        return new ArrayList<>(); // TODO\n    }\n\n    public static void main(String[] args) {\n        FeatureFlagManager manager = new FeatureFlagManager();\n\n        manager.registerFlag(\"new-checkout\", false, Set.of(\"beta-user-1\"), 0);\n        manager.registerFlag(\"dark-mode\", true, Set.of(), 0);\n        manager.registerFlag(\"ai-search\", false, Set.of(), 50);\n\n        System.out.println(\"beta-user-1 new-checkout: \" + manager.isEnabled(\"new-checkout\", \"beta-user-1\"));\n        System.out.println(\"regular-user new-checkout: \" + manager.isEnabled(\"new-checkout\", \"regular-user\"));\n        System.out.println(\"dark-mode: \" + manager.isEnabled(\"dark-mode\", \"anyone\"));\n        System.out.println(\"Known features for beta-user-1: \" + manager.enabledFeaturesFor(\"beta-user-1\").size());\n    }\n}",
+      "instructions": [
+        "registerFlag() stores the flag in the flags map",
+        "isEnabled() checks conditions in order: global → user whitelist → percentage rollout",
+        "enabledFeaturesFor() iterates all registered flags and returns names where isEnabled() returns true",
+        "The percentage rollout uses Math.abs(userId.hashCode()) % 100 < rolloutPercent (already shown)",
+        "Return false (not throw) for unknown feature names"
+      ],
+      "hint": "enabledFeaturesFor(): return flags.keySet().stream().filter(name -> isEnabled(name, userId)).collect(Collectors.toList()). This reuses the isEnabled() logic for each flag.",
+      "expectedOutput": "beta-user-1 new-checkout: true\nregular-user new-checkout: false\ndark-mode: true\nKnown features for beta-user-1: 2"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 125,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Retry Mechanism with Exponential Backoff",
+    "description": {
+      "task": "Build a RetryExecutor class that implements retry logic with exponential backoff and jitter. Execute an operation and retry on failure up to a maximum number of attempts. Calculate the delay before each retry using exponential backoff (2^attempt * baseDelayMs) with a configured cap.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.function.Supplier;\n\npublic class RetryExecutor {\n\n    private final int maxAttempts;\n    private final long baseDelayMs;\n    private final long maxDelayMs;\n\n    public RetryExecutor(int maxAttempts, long baseDelayMs, long maxDelayMs) {\n        this.maxAttempts = maxAttempts;\n        this.baseDelayMs = baseDelayMs;\n        this.maxDelayMs = maxDelayMs;\n    }\n\n    public long calculateDelay(int attemptNumber) {\n        // Exponential backoff: min(2^attemptNumber * baseDelayMs, maxDelayMs)\n        long delay = (long) Math.pow(2, attemptNumber) * baseDelayMs;\n        return Math.min(delay, maxDelayMs);\n    }\n\n    public <T> RetryResult<T> execute(Supplier<T> operation) {\n        List<String> errors = new ArrayList<>();\n        for (int attempt = 0; attempt < maxAttempts; attempt++) {\n            try {\n                T result = operation.get();\n                return new RetryResult<>(result, attempt + 1, errors, true);\n            } catch (Exception e) {\n                errors.add(\"Attempt \" + (attempt + 1) + \" failed: \" + e.getMessage());\n                // In a real implementation, we'd sleep here. Skip sleeping for testability.\n            }\n        }\n        return new RetryResult<>(null, maxAttempts, errors, false);\n    }\n\n    public record RetryResult<T>(\n        T value,\n        int attemptsUsed,\n        List<String> errors,\n        boolean succeeded\n    ) {}\n\n    public static void main(String[] args) {\n        RetryExecutor executor = new RetryExecutor(4, 100, 5000);\n\n        System.out.println(\"Delay attempt 0: \" + executor.calculateDelay(0) + \"ms\");\n        System.out.println(\"Delay attempt 3: \" + executor.calculateDelay(3) + \"ms\");\n        System.out.println(\"Delay attempt 10 (capped): \" + executor.calculateDelay(10) + \"ms\");\n\n        int[] callCount = {0};\n        RetryResult<String> result = executor.execute(() -> {\n            callCount[0]++;\n            if (callCount[0] < 3) throw new RuntimeException(\"Service unavailable\");\n            return \"Success on attempt \" + callCount[0];\n        });\n\n        System.out.println(\"Succeeded: \" + result.succeeded());\n        System.out.println(\"Attempts: \" + result.attemptsUsed());\n        System.out.println(\"Value: \" + result.value());\n    }\n}",
+      "instructions": [
+        "calculateDelay() computes (long)(Math.pow(2, attemptNumber) * baseDelayMs) and caps at maxDelayMs",
+        "execute() loops from attempt 0 to maxAttempts-1; on success returns a successful RetryResult",
+        "On exception, records the error message and continues to next attempt",
+        "After exhausting all attempts, returns a failed RetryResult with null value",
+        "attemptsUsed in the result is 1-based (attempt index + 1 on success, maxAttempts on total failure)"
+      ],
+      "hint": "calculateDelay() is straightforward: long delay = (long)(Math.pow(2, attemptNumber) * baseDelayMs); return Math.min(delay, maxDelayMs). The execute() loop structure is already in the skeleton.",
+      "expectedOutput": "Delay attempt 0: 100ms\nDelay attempt 3: 800ms\nDelay attempt 10 (capped): 5000ms\nSucceeded: true\nAttempts: 3\nValue: Success on attempt 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 125,
+    "allowedSubmissionType": "TEXT"
+  }
+]

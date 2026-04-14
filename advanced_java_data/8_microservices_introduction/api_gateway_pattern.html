@@ -1,0 +1,105 @@
+<h1>🚪 API Gateway Pattern</h1>
+
+<h2>🎯 What is an API Gateway?</h2>
+<p>An <strong>API Gateway</strong> is a server that sits between clients and microservices. It acts as a <strong>single entry point</strong> for all client requests.</p>
+
+<div class="analogy-card">
+  <h3>🏢 Front Desk Analogy</h3>
+  <p>Imagine a company building: instead of going directly to each department, visitors go to the <strong>front desk</strong>, which then contacts the right department. The API Gateway is that front desk.</p>
+</div>
+
+<h2>📌 Why Use an API Gateway?</h2>
+
+<ul>
+  <li>Hide the internal structure of microservices from clients</li>
+  <li>Provide a <strong>single, stable endpoint</strong> for clients</li>
+  <li>Handle cross-cutting concerns in one place:</li>
+</ul>
+
+<ul>
+  <li>🔐 Authentication & authorization</li>
+  <li>📊 Logging & monitoring</li>
+  <li>📈 Rate limiting & throttling</li>
+  <li>🔁 Load balancing & retries</li>
+</ul>
+
+<h2>🧭 Responsibilities of an API Gateway</h2>
+
+<ul>
+  <li><strong>Request routing</strong> – Route requests to the appropriate backend service</li>
+  <li><strong>Protocol translation</strong> – HTTP to gRPC, WebSocket, etc.</li>
+  <li><strong>Aggregation</strong> – Combine multiple service calls into a single response</li>
+  <li><strong>Security</strong> – Validate tokens (JWT, OAuth2), enforce access control</li>
+</ul>
+
+<h2>📍 Example: E‑Commerce Gateway</h2>
+
+<ul>
+  <li><code>/api/products/**</code> → Product Service</li>
+  <li><code>/api/orders/**</code> → Order Service</li>
+  <li><code>/api/payments/**</code> → Payment Service</li>
+</ul>
+
+<h2>⚙️ Spring Cloud Gateway</h2>
+<p><strong>Spring Cloud Gateway</strong> is Spring&apos;s API Gateway solution, built on Spring WebFlux (reactive).</p>
+
+<div class="code-example">
+  <pre>
+# application.yml example
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/orders/**
+  </pre>
+</div>
+
+<p>Here, <code>lb://</code> indicates load-balanced URLs resolved via service discovery (Eureka, etc.).</p>
+
+<h2>🧩 API Composition</h2>
+<p>The gateway can aggregate data from multiple services:</p>
+
+<ul>
+  <li>Client calls <code>/api/user-dashboard</code></li>
+  <li>Gateway calls <strong>User Service</strong>, <strong>Order Service</strong>, <strong>Notification Service</strong></li>
+  <li>Gateway merges results into a single response</li>
+</ul>
+
+<h2>📈 Pros and Cons</h2>
+
+<h3>Pros</h3>
+<ul>
+  <li>Single entry point for clients</li>
+  <li>Central place for cross-cutting concerns</li>
+  <li>Helps maintain <strong>backward compatibility</strong> for clients</li>
+</ul>
+
+<h3>Cons</h3>
+<ul>
+  <li>Can become a <strong>bottleneck</strong> or single point of failure if not designed properly</li>
+  <li>Logic in the gateway can become complex (avoid putting too much business logic there)</li>
+  <li>Adds an extra network hop</li>
+</ul>
+
+<h2>🛡️ API Gateway vs Load Balancer</h2>
+
+<ul>
+  <li><strong>Load balancer</strong> – Distributes traffic across instances of the <strong>same service</strong></li>
+  <li><strong>API Gateway</strong> – Routes traffic to <strong>different services</strong> and handles cross-cutting concerns</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>The API Gateway is a <strong>front door</strong> to your microservices</li>
+  <li>It centralizes routing, security, and other cross-cutting features</li>
+  <li>Spring Cloud Gateway is a powerful, Spring-based way to implement the API Gateway pattern</li>
+</ul>
+
+<p>With microservices architecture, service communication, Spring Cloud, and API gateways, you now have a solid overview of building distributed Java systems.</p>

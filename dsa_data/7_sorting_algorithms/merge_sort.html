@@ -1,0 +1,29 @@
+<h1>🔀 Merge Sort</h1>
+<h2>🎯 Concept</h2>
+<p>Merge Sort uses <strong>divide and conquer</strong>: split the array in half, recursively sort each half, then merge the sorted halves.</p>
+<h2>📐 Complexity</h2>
+<ul>
+  <li><strong>Time</strong>: O(n log n) — always (best, avg, worst)</li>
+  <li><strong>Space</strong>: O(n) extra — not in-place</li>
+  <li><strong>Stable</strong>: Yes</li>
+</ul>
+<div class="code-example">
+  <pre>
+void mergeSort(int[] arr, int left, int right) {
+    if (left &lt; right) {
+        int mid = (left + right) / 2;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+  </pre>
+</div>
+<h2>📌 Use Cases</h2>
+<ul>
+  <li>External sorting (data too large for memory)</li>
+  <li>Sorting linked lists (no random access needed)</li>
+  <li>When stability is required</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Merge Sort is reliable O(n log n) always and stable, but uses extra space. Preferred for linked lists and external sort scenarios.</p>

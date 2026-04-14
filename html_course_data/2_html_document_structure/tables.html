@@ -1,0 +1,76 @@
+<h1>HTML Tables</h1>
+
+<h2>🎯 Why This Exists (Indian Real-Life Example)</h2>
+<ul>
+  <li>IRCTC, bank statements, and college mark sheets all show data in rows and columns.</li>
+  <li>Such structured data is best represented using tables on the web.</li>
+</ul>
+
+<h2>📖 What Is This</h2>
+<ul>
+  <li>HTML tables arrange data into rows and columns using &lt;table&gt;, &lt;tr&gt;, &lt;th&gt;, and &lt;td&gt; tags.</li>
+  <li>They are ideal for tabular data like reports, schedules, and price lists.</li>
+</ul>
+
+<h3>🧾 Syntax / Basic Structure ⭐</h3>
+<pre><code>&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Item&lt;/th&gt;
+      &lt;th&gt;Price&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Idli&lt;/td&gt;
+      &lt;td&gt;₹30&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Dosa&lt;/td&gt;
+      &lt;td&gt;₹50&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</code></pre>
+
+<h2>🔍 How It Works (Step-by-Step Execution) ⭐</h2>
+<ol>
+  <li>&lt;table&gt; wraps the whole table.</li>
+  <li>&lt;tr&gt; defines a row; &lt;th&gt; defines header cells; &lt;td&gt; defines data cells.</li>
+  <li>&lt;thead&gt;, &lt;tbody&gt;, and &lt;tfoot&gt; group rows semantically.</li>
+</ol>
+
+<h2>When to Use</h2>
+<ul>
+  <li>For tabular data: price charts, statements, schedules, comparison tables.</li>
+</ul>
+
+<h2>When NOT to Use</h2>
+<ul>
+  <li>Don’t use tables for page layout; use CSS (flex/grid) instead.</li>
+  <li>Don’t put large paragraphs in multiple cells just to align them.</li>
+</ul>
+
+<h2>Minimum You MUST Remember</h2>
+<ul>
+  <li>Use &lt;th&gt; for header cells, &lt;td&gt; for normal cells.</li>
+  <li>Use CSS to style borders, spacing, and colors.</li>
+</ul>
+
+<h2>Common Mistakes</h2>
+<ul>
+  <li>Missing closing tags for &lt;tr&gt; or &lt;td&gt; causing layout issues.</li>
+  <li>Overusing tables for layout, which makes pages hard to maintain and less accessible.</li>
+</ul>
+
+<h2>Interviewer’s Perspective</h2>
+<ul>
+  <li>How do you create a table with headers and two rows?</li>
+  <li>Why is using tables for layout considered a bad practice?</li>
+</ul>
+
+<h2>Practice Questions</h2>
+<ol>
+  <li>Create a table of three products with columns: Name, Price, and Rating.</li>
+  <li>Add a header row and two data rows to practice.</li>
+</ol>

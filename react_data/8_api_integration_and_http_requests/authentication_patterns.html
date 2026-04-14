@@ -1,0 +1,33 @@
+<h1>🔐 Authentication Patterns: JWT and OAuth</h1>
+<h2>🎯 JWT (JSON Web Token) Auth</h2>
+<p>Most common pattern for SPAs. Server returns a signed JWT token after login; client sends it with every request.</p>
+<div class="code-example">
+  <pre>
+// Login → store token
+const login = async (credentials) =&gt; {
+  const { data } = await api.post('/auth/login', credentials);
+  localStorage.setItem('token', data.token);
+  setUser(data.user);
+};
+
+// Attach token to every request (Axios interceptor)
+api.interceptors.request.use(config =&gt; {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Auth Context for app-wide user state
+const AuthContext = createContext();
+function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  return &lt;AuthContext.Provider value={{ user, login, logout }}&gt;{children}&lt;/AuthContext.Provider&gt;;
+}
+  </pre>
+</div>
+<h2>🔑 OAuth / Social Login</h2>
+<p>Delegate auth to providers (Google, GitHub). Use libraries like <strong>Auth0</strong>, <strong>AWS Cognito</strong>, or <strong>Firebase Auth</strong> to avoid implementing OAuth yourself.</p>
+<h2>⚠️ Security Note</h2>
+<p>Store JWTs in <strong>httpOnly cookies</strong> (not localStorage) to protect against XSS attacks. Use short expiry + refresh tokens for security.</p>
+<h2>🎯 Summary</h2>
+<p>JWT + AuthContext + Axios interceptors is the standard React auth pattern. Use Auth0 or Cognito to avoid implementing auth security from scratch.</p>

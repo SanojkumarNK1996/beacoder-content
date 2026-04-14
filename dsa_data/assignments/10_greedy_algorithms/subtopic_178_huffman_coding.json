@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Build Huffman Tree",
+    "description": {
+      "task": "Implement Huffman coding tree construction. Given characters and their frequencies, use a min-heap to build the optimal prefix-free code tree. Print the final Huffman codes for each character.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class HuffmanCoding {\n\n    static class Node implements Comparable<Node> {\n        char ch; int freq;\n        Node left, right;\n        Node(char c, int f) { ch=c; freq=f; }\n        Node(int f, Node l, Node r) { ch='\\0'; freq=f; left=l; right=r; }\n        public int compareTo(Node o) { return this.freq - o.freq; }\n    }\n\n    public Node buildTree(char[] chars, int[] freqs) {\n        PriorityQueue<Node> pq = new PriorityQueue<>();\n        for (int i = 0; i < chars.length; i++)\n            pq.add(new Node(chars[i], freqs[i]));\n\n        while (pq.size() > 1) {\n            // TODO: poll two minimum nodes, merge them into a new node with combined frequency\n            //       add merged node back to pq\n        }\n        return pq.poll(); // root\n    }\n\n    public void printCodes(Node root, String code) {\n        if (root == null) return;\n        if (root.left == null && root.right == null) {\n            System.out.println(root.ch + \" -> \" + code);\n            return;\n        }\n        printCodes(root.left,  code + \"0\");\n        printCodes(root.right, code + \"1\");\n    }\n\n    public static void main(String[] args) {\n        HuffmanCoding hc = new HuffmanCoding();\n        char[] chars = {'a', 'b', 'c', 'd', 'e', 'f'};\n        int[]  freqs  = { 5,   9,  12,  13,  16,  45};\n        Node root = hc.buildTree(chars, freqs);\n        System.out.println(\"Huffman codes:\");\n        hc.printCodes(root, \"\");\n    }\n}",
+      "instructions": [
+        "Node a=pq.poll(); Node b=pq.poll(); pq.add(new Node(a.freq+b.freq,a,b));",
+        "Frequencies: a=5,b=9,c=12,d=13,e=16,f=45; merge smallest pairs repeatedly",
+        "f(45) gets the shortest code (0 or 1 depending on merge order); a(5) gets the longest",
+        "printCodes is already implemented — just build the tree correctly",
+        "Huffman encoding minimizes total bits = sum(freq[i] * codeLength[i])"
+      ],
+      "hint": "Node a=pq.poll();Node b=pq.poll();pq.add(new Node(a.freq+b.freq,a,b));",
+      "expectedOutput": "Huffman codes:\nf -> 0\nc -> 100\nd -> 101\na -> 1100\nb -> 1101\ne -> 111"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 178,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Huffman Encode and Decode",
+    "description": {
+      "task": "Extend Huffman coding with encode and decode functions. Build the code map from the Huffman tree, encode a message to a bit string, then decode the bit string back to the original message by traversing the tree.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class HuffmanCodec {\n\n    static class Node {\n        char ch; int freq; Node left, right;\n        Node(char c,int f){ch=c;freq=f;}\n        Node(int f,Node l,Node r){ch='\\0';freq=f;left=l;right=r;}\n    }\n\n    Node buildTree(char[] ch, int[] fr) {\n        PriorityQueue<Node> pq=new PriorityQueue<>(Comparator.comparingInt(n->n.freq));\n        for(int i=0;i<ch.length;i++) pq.add(new Node(ch[i],fr[i]));\n        while(pq.size()>1){Node a=pq.poll(),b=pq.poll();pq.add(new Node(a.freq+b.freq,a,b));}\n        return pq.poll();\n    }\n\n    void buildMap(Node root, String code, Map<Character,String> map) {\n        if(root==null) return;\n        if(root.left==null&&root.right==null){map.put(root.ch,code);return;}\n        buildMap(root.left,code+\"0\",map); buildMap(root.right,code+\"1\",map);\n    }\n\n    public String encode(String msg, Map<Character,String> map) {\n        // TODO: Build encoded string by replacing each character with its code\n        StringBuilder sb = new StringBuilder();\n        return sb.toString();\n    }\n\n    public String decode(String bits, Node root) {\n        StringBuilder sb = new StringBuilder();\n        // TODO: Traverse tree using bits (0=left, 1=right); when leaf reached, append char and reset to root\n        Node cur = root;\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        HuffmanCodec codec = new HuffmanCodec();\n        String msg = \"abracadabra\";\n        char[] ch = {'a','b','r','c','d'};\n        int[]  fr = { 5,  2,  2,  1,  1};\n        Node root = codec.buildTree(ch, fr);\n        Map<Character,String> map = new HashMap<>();\n        codec.buildMap(root, \"\", map);\n        System.out.println(\"Codes: \" + map);\n        String encoded = codec.encode(msg, map);\n        System.out.println(\"Encoded length: \" + encoded.length() + \" bits\");\n        System.out.println(\"Decoded: \" + codec.decode(encoded, root));\n        System.out.println(\"Match: \" + msg.equals(codec.decode(encoded, root)));\n    }\n}",
+      "instructions": [
+        "encode: for(char c:msg.toCharArray()) sb.append(map.get(c));",
+        "decode: for(char bit:bits.toCharArray()){cur=(bit=='0')?cur.left:cur.right;if(cur.left==null&&cur.right==null){sb.append(cur.ch);cur=root;}}",
+        "msg='abracadabra': 11 chars; with Huffman codes, much fewer bits than 8*11=88 bits",
+        "The decoded string must match the original message exactly",
+        "buildMap and buildTree are already provided — only encode and decode need implementation"
+      ],
+      "hint": "encode: for(char c:msg.toCharArray())sb.append(map.get(c)); decode: cur=(bit=='0')?cur.left:cur.right; if leaf: sb.append(cur.ch);cur=root;",
+      "expectedOutput": "Codes: {a=0, b=111, r=110, c=1000, d=1001}\nEncoded length: 23 bits\nDecoded: abracadabra\nMatch: true"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 178,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Huffman Compression Ratio",
+    "description": {
+      "task": "Calculate the compression ratio achieved by Huffman coding. Compare the number of bits required with Huffman vs fixed-width encoding (⌈log2(n)⌉ bits per symbol). Print the compression ratio and bits saved.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class HuffmanRatio {\n\n    static class Node {\n        char ch; int freq; Node left, right;\n        Node(char c,int f){ch=c;freq=f;}\n        Node(int f,Node l,Node r){ch='\\0';freq=f;left=l;right=r;}\n    }\n\n    void buildMap(Node r, String c, Map<Character,String> m) {\n        if(r==null)return;\n        if(r.left==null&&r.right==null){m.put(r.ch,c);return;}\n        buildMap(r.left,c+\"0\",m);buildMap(r.right,c+\"1\",m);\n    }\n\n    public void analyze(char[] chars, int[] freqs) {\n        PriorityQueue<Node> pq=new PriorityQueue<>(Comparator.comparingInt(n->n.freq));\n        for(int i=0;i<chars.length;i++) pq.add(new Node(chars[i],freqs[i]));\n        while(pq.size()>1){Node a=pq.poll(),b=pq.poll();pq.add(new Node(a.freq+b.freq,a,b));}\n        Map<Character,String> map=new HashMap<>();\n        buildMap(pq.poll(),\"\",map);\n\n        int total = 0; for(int f:freqs) total+=f;\n        int fixedBits = (int)Math.ceil(Math.log(chars.length)/Math.log(2));\n        int huffBits = 0;\n        for(int i=0;i<chars.length;i++) huffBits += freqs[i] * map.get(chars[i]).length();\n        int fixedTotal = total * fixedBits;\n\n        System.out.println(\"Total symbols: \" + total);\n        System.out.println(\"Fixed-width bits/symbol: \" + fixedBits);\n        System.out.println(\"Fixed-width total bits:  \" + fixedTotal);\n        System.out.println(\"Huffman total bits:      \" + huffBits);\n        // TODO: Print compression ratio as percentage: (huffBits * 100 / fixedTotal)%\n        // TODO: Print bits saved: fixedTotal - huffBits\n    }\n\n    public static void main(String[] args) {\n        HuffmanRatio hr = new HuffmanRatio();\n        char[] chars = {'a','b','c','d','e','f'};\n        int[]  freqs  = { 45, 13, 12, 16,  9,  5};\n        hr.analyze(chars, freqs);\n    }\n}",
+      "instructions": [
+        "System.out.println(\"Compression ratio: \"+(huffBits*100/fixedTotal)+\"%\");",
+        "System.out.println(\"Bits saved: \"+(fixedTotal-huffBits));",
+        "Total symbols=100, fixedBits=3 (ceil(log2(6))=3), fixedTotal=300",
+        "Huffman bits: compute using provided code lengths; typical result ~224",
+        "Compression ratio ≈ 74% of original size, saving about 76 bits"
+      ],
+      "hint": "System.out.println(\"Compression ratio: \"+(huffBits*100/fixedTotal)+\"%\"); System.out.println(\"Bits saved: \"+(fixedTotal-huffBits));",
+      "expectedOutput": "Total symbols: 100\nFixed-width bits/symbol: 3\nFixed-width total bits:  300\nHuffman total bits:      224\nCompression ratio: 74%\nBits saved: 76"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 43,
+    "subtopicId": 178,
+    "allowedSubmissionType": "TEXT"
+  }
+]

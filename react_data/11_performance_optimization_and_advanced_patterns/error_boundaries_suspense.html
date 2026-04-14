@@ -1,0 +1,42 @@
+<h1>🛡️ Error Boundaries and Suspense</h1>
+<h2>🎯 Error Boundaries</h2>
+<p>Error boundaries catch JavaScript errors in the component tree and display a fallback UI instead of crashing the whole app. They must be class components (no hook equivalent yet).</p>
+<div class="code-example">
+  <pre>
+class ErrorBoundary extends React.Component {
+  state = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    // Log to error tracking service (Sentry, etc.)
+    logError(error, info.componentStack);
+  }
+
+  render() {
+    if (this.state.hasError) return &lt;ErrorFallback error={this.state.error} /&gt;;
+    return this.props.children;
+  }
+}
+
+// Use react-error-boundary library for a cleaner API:
+import { ErrorBoundary } from 'react-error-boundary';
+&lt;ErrorBoundary FallbackComponent={ErrorFallback}&gt;
+  &lt;RiskyComponent /&gt;
+&lt;/ErrorBoundary&gt;
+  </pre>
+</div>
+<h2>⏸️ Suspense for Data Fetching (React 18+)</h2>
+<div class="code-example">
+  <pre>
+// With React 18 + React Query v5 or server components,
+// Suspense triggers automatically when data is loading:
+&lt;Suspense fallback={&lt;Skeleton /&gt;}&gt;
+  &lt;UserProfile userId={id} /&gt;  {/* Shows fallback while loading */}
+&lt;/Suspense&gt;
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Wrap feature sections in <code>ErrorBoundary</code> to isolate failures. Combine with Suspense for graceful loading states — this is the recommended React 18+ pattern.</p>

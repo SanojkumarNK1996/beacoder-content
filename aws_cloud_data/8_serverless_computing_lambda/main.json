@@ -1,0 +1,8 @@
+[
+  {"subtopicId": 227, "title": "Introduction to AWS Lambda", "dataType": "notes", "data": "intro_to_lambda.html", "displayOrder": 1, "verified": false},
+  {"subtopicId": 228, "title": "Creating and Deploying Lambda Functions", "dataType": "notes", "data": "creating_lambda_functions.html", "displayOrder": 2, "verified": false},
+  {"subtopicId": 229, "title": "Lambda Triggers and Event Sources", "dataType": "notes", "data": "lambda_triggers_and_events.html", "displayOrder": 3, "verified": false},
+  {"subtopicId": 230, "title": "API Gateway with Lambda", "dataType": "notes", "data": "api_gateway_with_lambda.html", "displayOrder": 4, "verified": false},
+  {"subtopicId": 231, "title": "AWS Step Functions", "dataType": "notes", "data": "step_functions.html", "displayOrder": 5, "verified": false},
+  {"subtopicId": 232, "title": "Serverless Architecture Patterns", "dataType": "notes", "data": "serverless_patterns.html", "displayOrder": 6, "verified": false}
+]

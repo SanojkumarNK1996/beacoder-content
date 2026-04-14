@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Operator Playground",
+    "description": {
+      "task": "Write a Java program that demonstrates arithmetic, relational, and logical operators using two integer variables x = 15 and y = 4.",
+      "language": "java",
+      "starterCode": "public class OperatorPlayground {\n    public static void main(String[] args) {\n        int x = 15;\n        int y = 4;\n\n        // Arithmetic operators\n        // Print sum, difference, product, quotient, remainder\n\n        // Relational operators\n        // Print result of: x > y  and  x == y\n\n        // Logical operators\n        // Print result of: (x > 10 && y > 2)  and  (x < 5 || y > 2)\n    }\n}",
+      "instructions": [
+        "Use x = 15 and y = 4 as provided.",
+        "Print the sum (x + y), difference (x - y), product (x * y), quotient (x / y), and remainder (x % y) each prefixed with a label.",
+        "Print the boolean result of the relational expressions: x > y and x == y.",
+        "Print the boolean result of the logical expressions: (x > 10 && y > 2) and (x < 5 || y > 2)."
+      ],
+      "hint": "Integer division in Java truncates the decimal part — 15 / 4 evaluates to 3, not 3.75.",
+      "expectedOutput": "Sum: 19\nDifference: 11\nProduct: 60\nQuotient: 3\nRemainder: 3\nx > y: true\nx == y: false\nx > 10 && y > 2: true\nx < 5 || y > 2: true"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 6,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "BMI Calculator",
+    "description": {
+      "task": "Write a Java program that calculates the Body Mass Index (BMI) given a weight of 70 kg and a height of 1.75 m, and prints the result.",
+      "language": "java",
+      "context": "BMI is a real-world use of arithmetic operators. It is calculated as weight divided by the square of height.",
+      "starterCode": "public class BMICalculator {\n    public static void main(String[] args) {\n        double weight = 70.0; // kg\n        double height = 1.75; // meters\n\n        // Calculate BMI: weight / (height * height)\n        double bmi;\n\n        System.out.println(\"Weight: \" + weight + \" kg\");\n        System.out.println(\"Height: \" + height + \" m\");\n        System.out.println(\"BMI: \" + bmi);\n    }\n}",
+      "instructions": [
+        "Use the given weight (70.0) and height (1.75) values.",
+        "Apply the formula: bmi = weight / (height * height).",
+        "Print all three lines in the exact format shown.",
+        "Do NOT round the result — print the full double value."
+      ],
+      "hint": "70.0 / (1.75 * 1.75) = 70.0 / 3.0625 ≈ 22.857142857142858",
+      "expectedOutput": "Weight: 70.0 kg\nHeight: 1.75 m\nBMI: 22.857142857142858"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 6,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Pre vs Post Increment",
+    "description": {
+      "task": "Write a Java program that demonstrates the difference between pre-increment (++x) and post-increment (x++) operators.",
+      "language": "java",
+      "context": "The position of ++ matters: pre-increment increments first then returns the new value; post-increment returns the current value and then increments.",
+      "starterCode": "public class IncrementDemo {\n    public static void main(String[] args) {\n        int a = 5;\n        int b = 5;\n\n        // Post-increment: use the value, then increment\n        int postResult = a++;\n        System.out.println(\"Post-increment result: \" + postResult);\n        System.out.println(\"a after a++: \" + a);\n\n        // Pre-increment: increment first, then use the value\n        int preResult = ++b;\n        System.out.println(\"Pre-increment result: \" + preResult);\n        System.out.println(\"b after ++b: \" + b);\n    }\n}",
+      "instructions": [
+        "Run the starter code as-is — do not change it.",
+        "Observe and verify the four output lines.",
+        "Add a comment block after the code explaining the difference in your own words.",
+        "Submit the code including your explanation comment."
+      ],
+      "hint": "int postResult = a++ means: first assign a (5) to postResult, then increment a to 6. int preResult = ++b means: first increment b to 6, then assign 6 to preResult.",
+      "expectedOutput": "Post-increment result: 5\na after a++: 6\nPre-increment result: 6\nb after ++b: 6"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 2,
+    "subtopicId": 6,
+    "allowedSubmissionType": "TEXT"
+  }
+]

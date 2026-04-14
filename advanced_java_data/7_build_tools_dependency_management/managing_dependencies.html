@@ -1,0 +1,193 @@
+<h1>🧩 Managing Dependencies</h1>
+
+<h2>🎯 Why Dependency Management Matters</h2>
+<p>Modern Java apps rely on <strong>dozens or hundreds</strong> of third-party libraries. Dependency management tools (Maven, Gradle) help you:</p>
+<ul>
+  <li>📦 Declare libraries you need</li>
+  <li>🔁 Resolve transitive dependencies (dependencies of dependencies)</li>
+  <li>⚠️ Detect and resolve version conflicts</li>
+  <li>📈 Keep versions consistent across modules</li>
+</ul>
+
+<h2>🧬 Transitive Dependencies</h2>
+<p>If your app depends on library A, and A depends on B, then B is a <strong>transitive dependency</strong>.</p>
+
+<div class="code-example">
+  <pre>
+Your app
+  └── Spring Boot Starter Web
+        ├── Spring Web
+        ├── Jackson
+        ├── Validation API
+        └── ... many others
+  </pre>
+</div>
+
+<p>Build tools automatically download these transitives for you.</p>
+
+<h2>📦 Declaring Dependencies (Maven)</h2>
+
+<div class="code-example">
+  <pre>
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+  &lt;/dependency&gt;
+
+  &lt;dependency&gt;
+    &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+    &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
+    &lt;version&gt;2.16.0&lt;/version&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+  </pre>
+</div>
+
+<h2>📦 Declaring Dependencies (Gradle)</h2>
+
+<div class="code-example">
+  <pre>
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
+}
+  </pre>
+</div>
+
+<h2>⚠️ Version Conflicts</h2>
+<p>Sometimes different dependencies bring <strong>different versions</strong> of the same library.</p>
+
+<ul>
+  <li>Library A needs <code>log4j:2.17.0</code></li>
+  <li>Library B needs <code>log4j:2.15.0</code></li>
+</ul>
+
+<p>The build tool must choose one version. This is where <strong>dependency resolution</strong> comes in.</p>
+
+<h3>Inspecting the Dependency Tree</h3>
+
+<div class="code-example">
+  <pre>
+# Maven
+a) mvn dependency:tree
+
+# Gradle
+b) ./gradlew dependencies --configuration implementation
+  </pre>
+</div>
+
+<h2>🧱 Dependency Management in Maven</h2>
+
+<p>Use the <strong>&lt;dependencyManagement&gt;</strong> block in a parent POM to define versions in one place.</p>
+
+<div class="code-example">
+  <pre>
+&lt;dependencyManagement&gt;
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-dependencies&lt;/artifactId&gt;
+      &lt;version&gt;3.2.0&lt;/version&gt;
+      &lt;type&gt;pom&lt;/type&gt;
+      &lt;scope&gt;import&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+  </pre>
+</div>
+
+<p>Then in child modules, you can omit the version:</p>
+
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<h2>🧱 Dependency Management in Gradle (with Spring)</h2>
+
+<p>Gradle uses the <strong>io.spring.dependency-management</strong> plugin or platform/BOM support.</p>
+
+<div class="code-example">
+  <pre>
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+  </pre>
+</div>
+
+<h2>🛡️ Excluding Problematic Transitive Dependencies</h2>
+
+<h3>Maven</h3>
+<div class="code-example">
+  <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+  &lt;exclusions&gt;
+    &lt;exclusion&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;
+    &lt;/exclusion&gt;
+  &lt;/exclusions&gt;
+&lt;/dependency&gt;
+  </pre>
+</div>
+
+<h3>Gradle</h3>
+<div class="code-example">
+  <pre>
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+  </pre>
+</div>
+
+<h2>🧪 Keeping Dependencies Up to Date</h2>
+
+<ul>
+  <li>Use plugins/tools to check for updates (e.g., <strong>Versions Maven Plugin</strong>, <strong>Gradle Versions Plugin</strong>)</li>
+  <li>Regularly review and update dependency versions</li>
+  <li>Watch for <strong>security advisories</strong> (log4j-style vulnerabilities)</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+# Maven: show available updates
+mvn versions:display-dependency-updates
+
+# Gradle: with versions plugin
+./gradlew dependencyUpdates
+  </pre>
+</div>
+
+<h2>🔐 Security Best Practices</h2>
+
+<ul>
+  <li>Remove unused dependencies</li>
+  <li>Prefer <strong>official repositories</strong> (Maven Central)</li>
+  <li>Keep dependencies <strong>patched and updated</strong></li>
+  <li>Use tools like OWASP Dependency-Check to find vulnerable libraries</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Dependency management is critical for keeping your project <strong>stable, secure, and maintainable</strong></li>
+  <li>Maven and Gradle both offer powerful tools to manage versions, resolve conflicts, and exclude unwanted libraries</li>
+  <li>Use <strong>dependency trees</strong>, <strong>BOMs</strong>, and <strong>plugins</strong> to control and monitor your dependency graph</li>
+</ul>
+
+<p>With solid understanding of build tools and dependency management, you&apos;re ready to work on large-scale, multi-module enterprise Java projects with confidence.</p>

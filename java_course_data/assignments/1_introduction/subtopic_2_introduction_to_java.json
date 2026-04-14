@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Java Profile: Five Key Features of Java",
+    "description": {
+      "task": "Write a Java program that prints 5 key features of the Java programming language, one feature per line.",
+      "language": "java",
+      "starterCode": "public class JavaFeatures {\n    public static void main(String[] args) {\n        // Print 5 features of Java\n        // Example format: System.out.println(\"1. Platform Independent\");\n    }\n}",
+      "instructions": [
+        "Print exactly 5 features of Java using System.out.println().",
+        "Number each feature starting from 1 (e.g., '1. Platform Independent').",
+        "Each feature should be on a new line.",
+        "Choose meaningful features such as: Platform Independent, Object-Oriented, Secure, Robust, Multithreaded."
+      ],
+      "hint": "Core Java features are: Platform Independence (Write Once Run Anywhere via JVM), Object-Oriented, Secure, Robust, and Multithreaded.",
+      "expectedOutput": "1. Platform Independent\n2. Object-Oriented\n3. Secure\n4. Robust\n5. Multithreaded"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 2,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "JVM vs JRE vs JDK Explainer",
+    "description": {
+      "task": "Write a Java program that prints a one-line description of JVM, JRE, and JDK — one per line.",
+      "language": "java",
+      "starterCode": "public class JavaPlatform {\n    public static void main(String[] args) {\n        // Print descriptions for JVM, JRE, JDK\n    }\n}",
+      "instructions": [
+        "Print exactly three lines, each starting with the acronym followed by a colon and a short description.",
+        "Format: 'JVM: <description>', 'JRE: <description>', 'JDK: <description>'.",
+        "Each description should be concise (one sentence).",
+        "Descriptions must be technically accurate."
+      ],
+      "hint": "JVM (Java Virtual Machine) executes bytecode. JRE (Java Runtime Environment) = JVM + libraries needed to run Java apps. JDK (Java Development Kit) = JRE + compiler (javac) + dev tools.",
+      "expectedOutput": "JVM: Executes Java bytecode and provides a runtime environment.\nJRE: Contains the JVM and libraries required to run Java programs.\nJDK: Includes the JRE plus development tools like the Java compiler (javac)."
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 2,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Java Compile and Run Steps",
+    "description": {
+      "task": "Write a Java program that prints the step-by-step process of compiling and running a Java program from the command line.",
+      "language": "java",
+      "context": "Understanding how Java source code becomes a running program is fundamental knowledge for every Java developer.",
+      "starterCode": "public class JavaProcess {\n    public static void main(String[] args) {\n        // Print the steps to compile and run a Java program\n        // Step 1: ...\n    }\n}",
+      "instructions": [
+        "Print at least 4 numbered steps.",
+        "Step 1 must mention writing a .java source file.",
+        "Step 2 must mention using 'javac' to compile.",
+        "Step 3 must mention the .class bytecode file being generated.",
+        "Step 4 must mention running with the 'java' command."
+      ],
+      "hint": "The flow is: Write source (.java) → Compile with javac → Bytecode (.class) → JVM runs it with java command.",
+      "expectedOutput": "Step 1: Write your Java code and save it as ClassName.java\nStep 2: Compile using: javac ClassName.java\nStep 3: A ClassName.class bytecode file is created\nStep 4: Run the program using: java ClassName"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 2,
+    "allowedSubmissionType": "TEXT"
+  }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "title": "Java Basics: Print Your First Message",
+    "description": {
+      "task": "Write a Java program that prints the message 'I am learning programming with Java!' to the console.",
+      "language": "java",
+      "starterCode": "public class HelloProgramming {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}",
+      "instructions": [
+        "Inside the main method, use System.out.println() to print the required message.",
+        "The message must be exactly: I am learning programming with Java!"
+      ],
+      "hint": "System.out.println() is the method used to print a line of text in Java. Every Java program starts execution from the main method.",
+      "expectedOutput": "I am learning programming with Java!"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 1,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Predict the Output",
+    "description": {
+      "task": "Read the Java code given in the starter and predict what will be printed to the console. Then run the code to verify your prediction.",
+      "language": "java",
+      "context": "Understanding what code will do before running it is a core programming skill called 'code tracing'.",
+      "starterCode": "public class PredictOutput {\n    public static void main(String[] args) {\n        System.out.println(\"Line 1\");\n        System.out.print(\"Line 2 \");\n        System.out.print(\"still Line 2\\n\");\n        System.out.println(\"Line 3\");\n    }\n}",
+      "instructions": [
+        "Before running: write down exactly what you expect to appear in the console.",
+        "Note the difference between System.out.println() and System.out.print().",
+        "Run the code and confirm your prediction.",
+        "In a comment at the top of your submission, write your predicted output."
+      ],
+      "hint": "println() adds a newline at the end; print() does NOT. The \\n inside a string is an escape sequence that inserts a newline character.",
+      "expectedOutput": "Line 1\nLine 2 still Line 2\nLine 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 1,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Real-World Programs List",
+    "description": {
+      "task": "Write a Java program that prints 5 real-world examples of software programs and the programming language each is primarily built with.",
+      "language": "java",
+      "starterCode": "public class RealWorldPrograms {\n    public static void main(String[] args) {\n        // Print 5 real-world programs and the language they use\n        // Format: \"1. <Program Name> - <Language>\"\n    }\n}",
+      "instructions": [
+        "Print exactly 5 software examples, numbered 1 to 5.",
+        "Use the format: '1. Android OS - Java/Kotlin'.",
+        "Choose programs from different categories (OS, app, web, game, tool).",
+        "Include at least one Java-based program."
+      ],
+      "hint": "Examples: Android (Java/Kotlin), Minecraft (Java), Gmail (JavaScript/Java backend), LinkedIn (Java), Twitter backend (Java/Scala).",
+      "expectedOutput": "1. Android OS - Java/Kotlin\n2. Minecraft - Java\n3. LinkedIn - Java\n4. Gmail (Backend) - Java\n5. Eclipse IDE - Java"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 1,
+    "topicId": 1,
+    "subtopicId": 1,
+    "allowedSubmissionType": "TEXT"
+  }
+]

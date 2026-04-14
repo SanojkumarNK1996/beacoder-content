@@ -1,0 +1,75 @@
+[
+  {
+    "title": "UNION and UNION ALL",
+    "description": {
+      "task": "Use UNION to combine results from two queries and understand the difference between UNION (deduplicates) and UNION ALL (keeps duplicates).",
+      "language": "sql",
+      "starterCode": "CREATE TABLE current_employees (\n  emp_id INT PRIMARY KEY,\n  name   VARCHAR(60),\n  dept   VARCHAR(40),\n  status VARCHAR(20) DEFAULT 'current'\n);\n\nCREATE TABLE former_employees (\n  emp_id INT PRIMARY KEY,\n  name   VARCHAR(60),\n  dept   VARCHAR(40),\n  status VARCHAR(20) DEFAULT 'former'\n);\n\nINSERT INTO current_employees VALUES\n  (1,'Alice','Engineering','current'),\n  (2,'Bob',  'Marketing',  'current'),\n  (3,'Carol','HR',         'current'),\n  (4,'Dave', 'Engineering','current');\n\nINSERT INTO former_employees VALUES\n  (101,'Alice','Engineering','former'),  -- Alice also in former (she rejoined)\n  (102,'Eve',  'Marketing',  'former'),\n  (103,'Frank','HR',         'former');\n\n-- UNION: combine all unique names across both tables\nSELECT name, dept, status FROM current_employees\nUNION\nSELECT name, dept, status FROM former_employees\nORDER BY name;\n\n-- UNION ALL: include ALL rows including duplicates\n-- Note: same person can appear twice with different status\nSELECT name, dept, status FROM current_employees\nUNION ALL\nSELECT name, dept, status FROM former_employees\nORDER BY name;\n\n-- Count difference\nSELECT 'UNION'     AS type, COUNT(*) AS rows FROM (\n  SELECT name,dept,status FROM current_employees UNION     SELECT name,dept,status FROM former_employees\n) u\nUNION ALL\nSELECT 'UNION ALL' AS type, COUNT(*) AS rows FROM (\n  SELECT name,dept,status FROM current_employees UNION ALL SELECT name,dept,status FROM former_employees\n) ua;\n",
+      "instructions": [
+        "Run all INSERT and all three queries.",
+        "UNION: 6 unique rows (Alice deduplicated — appears once from each table but status differs, so actually kept both).",
+        "UNION ALL: 7 rows (Alice appears twice).",
+        "Count query: UNION=6, UNION ALL=7.",
+        "Add a comment: UNION deduplicates based on ALL selected columns — why does Alice appear in both results?"
+      ],
+      "hint": "UNION deduplicates by comparing all selected columns. Alice's current and former rows have different 'status' values, so they are NOT identical rows — both are kept.",
+      "expectedOutput": "UNION: 6 rows (Alice kept twice — different status)\nUNION ALL: 7 rows (all rows from both tables)\nCount: UNION=6, UNION ALL=7"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 57,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "INTERSECT and EXCEPT",
+    "description": {
+      "task": "Use INTERSECT (common rows between two queries) and EXCEPT (rows in first but not in second) for set-based comparisons.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE enrolled_2025 (\n  student_id INT,\n  name       VARCHAR(50)\n);\n\nCREATE TABLE enrolled_2026 (\n  student_id INT,\n  name       VARCHAR(50)\n);\n\nINSERT INTO enrolled_2025 VALUES\n  (1,'Alice'),(2,'Bob'),(3,'Carol'),(4,'Dave'),(5,'Eve');\n\nINSERT INTO enrolled_2026 VALUES\n  (1,'Alice'),(3,'Carol'),(6,'Frank'),(7,'Grace'),(5,'Eve');\n\n-- INTERSECT: students enrolled in BOTH years (returning students)\nSELECT name FROM enrolled_2025\nINTERSECT\nSELECT name FROM enrolled_2026\nORDER BY name;\n\n-- EXCEPT: students from 2025 who did NOT return in 2026 (dropped out)\nSELECT name FROM enrolled_2025\nEXCEPT\nSELECT name FROM enrolled_2026\nORDER BY name;\n\n-- New students in 2026 who weren't in 2025\nSELECT name FROM enrolled_2026\nEXCEPT\nSELECT name FROM enrolled_2025\nORDER BY name;\n",
+      "instructions": [
+        "Run all INSERT and all three set operation queries.",
+        "INTERSECT: Alice, Carol, Eve (in both years) — 3 returning students.",
+        "EXCEPT (2025-2026): Bob, Dave (dropped out after 2025) — 2 students.",
+        "EXCEPT (2026-2025): Frank, Grace (new in 2026) — 2 students.",
+        "Add a comment: how would you achieve INTERSECT using a JOIN? And EXCEPT using NOT EXISTS?"
+      ],
+      "hint": "INTERSECT equivalent: SELECT a.name FROM enrolled_2025 a JOIN enrolled_2026 b ON a.name = b.name. EXCEPT equivalent: SELECT name FROM enrolled_2025 WHERE name NOT IN (SELECT name FROM enrolled_2026).",
+      "expectedOutput": "INTERSECT: Alice, Carol, Eve\nEXCEPT(2025-2026): Bob, Dave\nEXCEPT(2026-2025): Frank, Grace"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 57,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Combining Set Operations",
+    "description": {
+      "task": "Combine UNION, INTERSECT, and EXCEPT in a report that classifies customers across multiple time periods.",
+      "language": "sql",
+      "starterCode": "CREATE TABLE q1_customers (customer_id INT, name VARCHAR(50));\nCREATE TABLE q2_customers (customer_id INT, name VARCHAR(50));\nCREATE TABLE q3_customers (customer_id INT, name VARCHAR(50));\n\nINSERT INTO q1_customers VALUES (1,'Alice'),(2,'Bob'),(3,'Carol'),(4,'Dave');\nINSERT INTO q2_customers VALUES (1,'Alice'),(3,'Carol'),(5,'Eve'),(6,'Frank');\nINSERT INTO q3_customers VALUES (1,'Alice'),(2,'Bob'),(5,'Eve'),(7,'Grace');\n\n-- Loyal customers: in ALL 3 quarters\nSELECT name FROM q1_customers\nINTERSECT\nSELECT name FROM q2_customers\nINTERSECT\nSELECT name FROM q3_customers;\n\n-- Q1 churned: ordered in Q1 but not in Q2 or Q3\nSELECT name FROM q1_customers\nEXCEPT\n(\n  SELECT name FROM q2_customers\n  UNION\n  SELECT name FROM q3_customers\n);\n\n-- Total unique customers across all quarters\nSELECT COUNT(*) AS total_unique_customers FROM (\n  SELECT name FROM q1_customers\n  UNION\n  SELECT name FROM q2_customers\n  UNION\n  SELECT name FROM q3_customers\n) all_customers;\n",
+      "instructions": [
+        "Run all INSERT and all three set operation queries.",
+        "Loyal customers (in all 3): Alice only (appears in Q1, Q2, Q3).",
+        "Q1-only churned: Carol ordered in Q1, not in Q2 or Q3... check the data.",
+        "Wait — Carol appears in Q2 too. Re-check: Dave is in Q1 only, so Dave = churned.",
+        "Total unique: Alice, Bob, Carol, Dave, Eve, Frank, Grace = 7.",
+        "Add a comment: what does 'customer churn rate' mean in a business context?"
+      ],
+      "hint": "INTERSECT of 3 sets: start with Q1∩Q2, then ∩Q3. Alice is the only name in all three. Total unique via UNION: 7 unique customers across the year.",
+      "expectedOutput": "Loyal: Alice\nChurned after Q1: Dave (Dave in Q1, not Q2 or Q3)\nTotal unique: 7"
+    },
+    "maxMarks": 100,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 2,
+    "topicId": 16,
+    "subtopicId": 57,
+    "allowedSubmissionType": "TEXT"
+  }
+]

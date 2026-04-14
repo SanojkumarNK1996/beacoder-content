@@ -1,0 +1,28 @@
+<h1>✅ React Best Practices</h1>
+<h2>📁 Project Structure</h2>
+<div class="code-example">
+  <pre>
+src/
+├── components/    # Shared, reusable UI components
+├── pages/         # Route-level components
+├── hooks/         # Custom hooks
+├── services/      # API calls (api.js, userService.js)
+├── store/         # State management (Redux/Zustand)
+├── utils/         # Pure utility functions
+├── types/         # TypeScript interfaces (if using TS)
+└── assets/        # Images, fonts
+  </pre>
+</div>
+<h2>📋 Key Best Practices</h2>
+<ul>
+  <li><strong>Composition over inheritance</strong>: Build complex UIs by composing small components</li>
+  <li><strong>Single responsibility</strong>: Each component does one thing well</li>
+  <li><strong>Colocate related code</strong>: Component + its CSS + its tests in the same folder</li>
+  <li><strong>Use TypeScript</strong>: Catches errors at compile time, great DX, better refactoring</li>
+  <li><strong>Named exports over default exports</strong>: Easier to refactor, better autocomplete</li>
+  <li><strong>Avoid deeply nested state</strong>: Normalize complex state (separate arrays/objects)</li>
+  <li><strong>Don't store derived state</strong>: Compute from state on render, not in additional state</li>
+  <li><strong>Consistent naming</strong>: PascalCase for components, camelCase for functions, SCREAMING_SNAKE for constants</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>These practices accumulate into a codebase that's easy to read, test, and scale. The biggest wins: TypeScript, React Query for server state, and colocating related code.</p>

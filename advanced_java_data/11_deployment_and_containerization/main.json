@@ -1,0 +1,34 @@
+[
+  {
+    "subtopicId": 119,
+    "title": "Application Packaging",
+    "dataType": "notes",
+    "data": "application_packaging.html",
+    "displayOrder": 1,
+    "verified": false
+  },
+  {
+    "subtopicId": 120,
+    "title": "Docker Fundamentals",
+    "dataType": "notes",
+    "data": "docker_fundamentals.html",
+    "displayOrder": 2,
+    "verified": false
+  },
+  {
+    "subtopicId": 121,
+    "title": "Containerizing Spring Boot Apps",
+    "dataType": "notes",
+    "data": "containerizing_spring_boot_apps.html",
+    "displayOrder": 3,
+    "verified": false
+  },
+  {
+    "subtopicId": 122,
+    "title": "Cloud Deployment",
+    "dataType": "notes",
+    "data": "cloud_deployment.html",
+    "displayOrder": 4,
+    "verified": false
+  }
+]

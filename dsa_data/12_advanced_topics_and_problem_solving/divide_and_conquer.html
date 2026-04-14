@@ -1,0 +1,24 @@
+<h1>⚡ Divide and Conquer</h1>
+<h2>🎯 What is Divide and Conquer?</h2>
+<p><strong>Divide and Conquer</strong> solves a problem by:</p>
+<ol>
+  <li><strong>Divide</strong>: Split the problem into smaller subproblems</li>
+  <li><strong>Conquer</strong>: Solve subproblems recursively</li>
+  <li><strong>Combine</strong>: Merge the solutions</li>
+</ol>
+<h2>📋 Classic Examples</h2>
+<ul>
+  <li><strong>Merge Sort</strong>: Divide array in half, sort, merge</li>
+  <li><strong>Quick Sort</strong>: Partition around pivot, recurse</li>
+  <li><strong>Binary Search</strong>: Discard half the search space</li>
+  <li><strong>Matrix Multiplication (Strassen)</strong>: Reduces from O(n³) to O(n^2.81)</li>
+  <li><strong>Closest Pair of Points</strong>: O(n log n) geometric algorithm</li>
+</ul>
+<h2>📐 Master Theorem</h2>
+<p>Analyzes D&amp;C recurrences: <code>T(n) = aT(n/b) + f(n)</code></p>
+<ul>
+  <li>Merge Sort: T(n) = 2T(n/2) + O(n) → O(n log n)</li>
+  <li>Binary Search: T(n) = T(n/2) + O(1) → O(log n)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Divide and Conquer is the conceptual framework behind the most elegant algorithms. Many O(n log n) algorithms are D&amp;C at heart.</p>

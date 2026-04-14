@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Auto-Configuration Concept Demo",
+    "description": {
+      "task": "Simulate Spring Boot's auto-configuration mechanism in plain Java. Create a configuration detection system that automatically applies configurations based on what's 'on the classpath'.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class AutoConfigurator {\n    private Set<String> availableLibraries;\n    private Map<String, String> appliedConfigs = new LinkedHashMap<>();\n    \n    public AutoConfigurator(String... libraries) {\n        this.availableLibraries = new HashSet<>(Arrays.asList(libraries));\n    }\n    \n    public void configure() {\n        // TODO: If 'spring-web' is available, apply web config\n        // TODO: If 'spring-data-jpa' is available, apply JPA config\n        // TODO: If 'spring-security' is available, apply security config\n        // TODO: Always apply core config\n    }\n    \n    public void printConfigurations() {\n        System.out.println(\"Applied configurations:\");\n        appliedConfigs.forEach((k, v) -> System.out.println(\"  \" + k + \" -> \" + v));\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        AutoConfigurator config = new AutoConfigurator(\n            \"spring-web\", \"spring-data-jpa\", \"spring-security\"\n        );\n        config.configure();\n        config.printConfigurations();\n    }\n}",
+      "instructions": [
+        "In configure(), always add 'CoreAutoConfiguration' -> 'Configured Spring core context'.",
+        "If 'spring-web' is in availableLibraries, add 'WebMvcAutoConfiguration' -> 'Configured DispatcherServlet on port 8080'.",
+        "If 'spring-data-jpa' is present, add 'JpaAutoConfiguration' -> 'Configured EntityManagerFactory'.",
+        "If 'spring-security' is present, add 'SecurityAutoConfiguration' -> 'Configured Spring Security filters'."
+      ],
+      "hint": "Spring Boot uses @ConditionalOnClass to apply configurations only when certain classes are present. This is what makes it 'convention over configuration'.",
+      "expectedOutput": "Applied configurations:\n  CoreAutoConfiguration -> Configured Spring core context\n  WebMvcAutoConfiguration -> Configured DispatcherServlet on port 8080\n  JpaAutoConfiguration -> Configured EntityManagerFactory\n  SecurityAutoConfiguration -> Configured Spring Security filters"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 85,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Convention Over Configuration",
+    "description": {
+      "task": "Demonstrate the principle of Convention over Configuration by building a smart URL router that uses method naming conventions to automatically determine routes.",
+      "language": "java",
+      "starterCode": "import java.lang.reflect.*;\nimport java.util.*;\n\npublic class SmartRouter {\n    private Map<String, Method> routes = new LinkedHashMap<>();\n    private Object controller;\n    \n    public SmartRouter(Object controller) {\n        this.controller = controller;\n        discoverRoutes();\n    }\n    \n    private void discoverRoutes() {\n        // TODO: Scan controller methods starting with 'get', 'post', 'delete'\n        // Convert method name to URL by removing prefix and lowercasing\n        // e.g., getUsers -> GET /users, postUser -> POST /user\n    }\n    \n    public void handle(String method, String path) throws Exception {\n        // TODO: Find and invoke matching route, print result\n    }\n    \n    public void printRoutes() {\n        routes.forEach((route, m) -> System.out.println(\"Route: \" + route + \" -> \" + m.getName()));\n    }\n}\n\npublic class UserController {\n    public String getUsers() { return \"[User list]\"; }\n    public String postUser() { return \"User created\"; }\n    public String deleteUser() { return \"User deleted\"; }\n    public void helperMethod() {} // should NOT be a route\n}\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        SmartRouter router = new SmartRouter(new UserController());\n        router.printRoutes();\n        router.handle(\"GET\", \"/users\");\n    }\n}",
+      "instructions": [
+        "In discoverRoutes(), iterate all public methods. For methods starting with 'get', 'post', or 'delete', create a route key 'METHOD /path' where path is the rest of the name lowercased.",
+        "Ignore methods not starting with those prefixes.",
+        "In handle(), find the route 'METHOD /path' and invoke the method on controller, then print the result.",
+        "printRoutes() lists all discovered routes."
+      ],
+      "hint": "Spring MVC's @GetMapping, @PostMapping follow similar conventions. Spring Boot auto-detects @Controller classes in the package without configuration.",
+      "expectedOutput": "Route: GET /users -> getUsers\nRoute: POST /user -> postUser\nRoute: DELETE /user -> deleteUser\n[User list]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 85,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Spring Boot App Structure",
+    "description": {
+      "task": "Model and print the typical directory structure of a Spring Boot application. Then write code that validates whether a given structure follows Spring Boot conventions.",
+      "language": "java",
+      "context": "Understanding the standard Spring Boot project structure helps you navigate and organize large applications effectively.",
+      "starterCode": "import java.util.*;\n\npublic class ProjectStructureValidator {\n    private List<String> requiredPaths = Arrays.asList(\n        \"src/main/java\",\n        \"src/main/resources/application.properties\",\n        \"src/test/java\",\n        \"pom.xml\"\n    );\n    \n    public boolean validate(List<String> projectPaths) {\n        // TODO: Return true only if all required paths are present\n        return false;\n    }\n    \n    public List<String> getMissingPaths(List<String> projectPaths) {\n        // TODO: Return list of required paths that are missing\n        return new ArrayList<>();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ProjectStructureValidator validator = new ProjectStructureValidator();\n        \n        // Complete structure\n        List<String> complete = Arrays.asList(\n            \"src/main/java\", \"src/main/resources/application.properties\",\n            \"src/test/java\", \"pom.xml\", \"src/main/resources/static\"\n        );\n        \n        // Incomplete structure (missing pom.xml and tests)\n        List<String> incomplete = Arrays.asList(\n            \"src/main/java\", \"src/main/resources/application.properties\"\n        );\n        \n        // TODO: Validate and print results for both\n    }\n}",
+      "instructions": [
+        "Implement validate() using requiredPaths.stream().allMatch(p -> projectPaths.contains(p)).",
+        "Implement getMissingPaths() to filter required paths not in projectPaths.",
+        "In Main, print 'Complete structure valid: [true/false]' and 'Incomplete structure valid: [true/false]'.",
+        "For the incomplete structure, print 'Missing: [list of missing paths]'."
+      ],
+      "hint": "Spring Boot follows Maven Standard Directory Layout. The main class annotated with @SpringBootApplication should be at the root of your base package.",
+      "expectedOutput": "Complete structure valid: true\nIncomplete structure valid: false\nMissing: [src/test/java, pom.xml]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 24,
+    "subtopicId": 85,
+    "allowedSubmissionType": "TEXT"
+  }
+]

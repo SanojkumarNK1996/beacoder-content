@@ -1,0 +1,114 @@
+<h1>📦 Application Packaging</h1>
+
+<h2>🎯 Goal</h2>
+<p>Before deploying a Java application, you must <strong>package</strong> it into a distributable format. In the Java world, that usually means <strong>JAR</strong> or <strong>WAR</strong> files.</p>
+
+<h2>🧱 JAR vs WAR</h2>
+
+<ul>
+  <li><strong>JAR</strong> (Java ARchive)
+    <ul>
+      <li>Used for libraries or standalone applications</li>
+      <li>Can be made <strong>executable</strong> with a <code>Main-Class</code> entry</li>
+      <li>Spring Boot apps commonly use <strong>executable JARs</strong></li>
+    </ul>
+  </li>
+  <li><strong>WAR</strong> (Web Application Archive)
+    <ul>
+      <li>Used for web applications deployed to external app servers (Tomcat, JBoss, etc.)</li>
+      <li>Contains <code>WEB-INF</code>, web.xml (legacy), servlets, JSPs, etc.</li>
+      <li>More common in older Java EE deployments</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>🏃 Executable JARs (Spring Boot)</h2>
+<p>Spring Boot promotes <strong>executable JARs</strong> with an <strong>embedded server</strong> (Tomcat/Jetty/Undertow).</p>
+
+<ul>
+  <li>Simplifies deployment: <code>java -jar app.jar</code></li>
+  <li>No need to install and manage a separate app server</li>
+</ul>
+
+<h2>⚙️ Maven Packaging</h2>
+
+<p>In Maven, packaging type is defined in <code>pom.xml</code>:</p>
+
+<div class="code-example">
+  <pre>
+&lt;project&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;groupId&gt;com.example&lt;/groupId&gt;
+  &lt;artifactId&gt;my-app&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+  &lt;packaging&gt;jar&lt;/packaging&gt;
+&lt;/project&gt;
+  </pre>
+</div>
+
+<p>To build:</p>
+<div class="code-example">
+  <pre>
+mvn clean package
+  </pre>
+</div>
+
+<p>Maven creates a JAR (or WAR) under the <code>target/</code> directory.</p>
+
+<h2>🌱 Spring Boot Packaging with Maven</h2>
+
+<p>Spring Boot config typically includes the Spring Boot Maven plugin:</p>
+
+<div class="code-example">
+  <pre>
+&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;
+  </pre>
+</div>
+
+<p>Then build and run:</p>
+<div class="code-example">
+  <pre>
+mvn clean package
+java -jar target/my-app-1.0.0.jar
+  </pre>
+</div>
+
+<h2>⚙️ Gradle Packaging</h2>
+
+<p>With Gradle and Spring Boot plugin:</p>
+
+<div class="code-example">
+  <pre>
+plugins {
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+}
+
+// Build executable JAR
+./gradlew clean bootJar
+  </pre>
+</div>
+
+<h2>📁 Application Layout</h2>
+<p>Typical packaged Spring Boot JAR layout:</p>
+
+<ul>
+  <li>Your compiled classes</li>
+  <li>Dependency JARs (nested)</li>
+  <li>Bootstrap code for starting embedded server</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>JAR and WAR are standard Java packaging formats</li>
+  <li>Modern Spring apps usually use <strong>executable JARs with embedded servers</strong></li>
+  <li>Maven/Gradle plus Spring Boot plugins handle packaging details for you</li>
+</ul>

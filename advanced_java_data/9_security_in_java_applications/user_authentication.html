@@ -1,0 +1,123 @@
+<h1>👤 User Authentication</h1>
+
+<h2>🎯 Goal of Authentication</h2>
+<p><strong>Authentication</strong> verifies a user&apos;s identity. In web applications, this usually means:</p>
+<ul>
+  <li>Collecting credentials (username/password, token, etc.)</li>
+  <li>Verifying them against a user store (database, LDAP, OAuth2 provider)</li>
+  <li>Establishing a <strong>logged-in session</strong> or issuing a token</li>
+</ul>
+
+<h2>🧱 Authentication Flow with Spring Security</h2>
+
+<ol>
+  <li>User sends credentials (form login, HTTP Basic header, token)</li>
+  <li>Spring Security filters intercept the request</li>
+  <li>An <strong>AuthenticationManager</strong> delegates to one or more <strong>AuthenticationProvider</strong>s</li>
+  <li>On success, an <strong>Authentication</strong> object is stored in the SecurityContext</li>
+  <li>Subsequent requests reuse this identity (session, token, etc.)</li>
+</ol>
+
+<h2>📦 Built-in Authentication Mechanisms</h2>
+
+<ul>
+  <li><strong>HTTP Basic</strong> – Credentials sent in the Authorization header (Base64-encoded)</li>
+  <li><strong>Form Login</strong> – Standard login page with username/password</li>
+  <li><strong>Remember-me</strong> – Persistent login using cookies</li>
+  <li><strong>OAuth2 / OpenID Connect</strong> – Login with Google, GitHub, etc.</li>
+  <li><strong>JWT-based</strong> – Token-based stateless authentication (via custom configuration)</li>
+</ul>
+
+<h2>⚙️ Example: In-Memory Users (For Learning)</h2>
+
+<div class="code-example">
+  <pre>
+@Bean
+UserDetailsService userDetailsService() {
+    UserDetails user = User
+        .withUsername("user")
+        .password(passwordEncoder().encode("password"))
+        .roles("USER")
+        .build();
+
+    UserDetails admin = User
+        .withUsername("admin")
+        .password(passwordEncoder().encode("admin123"))
+        .roles("ADMIN")
+        .build();
+
+    return new InMemoryUserDetailsManager(user, admin);
+}
+
+@Bean
+PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+  </pre>
+</div>
+
+<p>This is useful for demos, but not for production.</p>
+
+<h2>💾 Database-backed Authentication</h2>
+<p>In real apps, you store users in a database.</p>
+
+<ul>
+  <li>Create a <strong>User</strong> entity/table with username, password hash, roles</li>
+  <li>Implement <strong>UserDetails</strong> and <strong>UserDetailsService</strong> to load users</li>
+  <li>Use a <strong>BCryptPasswordEncoder</strong> to store passwords securely</li>
+</ul>
+
+<h2>🔐 Password Hashing</h2>
+
+<p>Never store plain-text passwords.</p>
+<ul>
+  <li>Use strong hashing algorithms (e.g., BCrypt, Argon2, PBKDF2)</li>
+  <li>Spring Security&apos;s <code>BCryptPasswordEncoder</code> is a good default choice</li>
+</ul>
+
+<h2>🔑 Form Login Example</h2>
+
+<div class="code-example">
+  <pre>
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -&gt; csrf.disable())
+        .authorizeHttpRequests(auth -&gt; auth
+            .requestMatchers("/login", "/public/**").permitAll()
+            .anyRequest().authenticated()
+        )
+        .formLogin(form -&gt; form
+            .loginPage("/login")
+            .defaultSuccessUrl("/home", true)
+            .permitAll()
+        )
+        .logout(logout -&gt; logout.permitAll());
+
+    return http.build();
+}
+  </pre>
+</div>
+
+<p>Here you can customize the login page and success URL.</p>
+
+<h2>🧾 Token-based Authentication (JWT Overview)</h2>
+<p>For stateless APIs, you&apos;ll often use <strong>JSON Web Tokens (JWT)</strong>:</p>
+
+<ul>
+  <li>User logs in with credentials</li>
+  <li>Server issues a signed token (JWT) containing user identity and roles</li>
+  <li>Client sends token with each request (Authorization header)</li>
+  <li>Server validates token signature and extracts identity without server-side session</li>
+</ul>
+
+<p>Spring Security can be extended with custom filters to support JWT.</p>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Authentication confirms the user&apos;s identity</li>
+  <li>Spring Security provides multiple mechanisms: HTTP Basic, form login, OAuth2, JWT integration</li>
+  <li>Always store <strong>hashed passwords</strong> and prefer <strong>database-backed</strong> user stores in real applications</li>
+</ul>
+
+<p>Next, you&apos;ll see how <strong>authorization</strong> controls what authenticated users are allowed to do.</p>

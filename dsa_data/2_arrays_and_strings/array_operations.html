@@ -1,0 +1,31 @@
+<h1>⚙️ Array Operations</h1>
+
+<h2>🔍 Traversal – O(n)</h2>
+<div class="code-example">
+  <pre>
+for (int i = 0; i &lt; arr.length; i++) {
+    System.out.println(arr[i]);
+}
+  </pre>
+</div>
+
+<h2>➕ Insertion</h2>
+<ul>
+  <li>At end (if space): O(1)</li>
+  <li>At index i: O(n) — must shift elements right</li>
+</ul>
+
+<h2>❌ Deletion</h2>
+<ul>
+  <li>At end: O(1)</li>
+  <li>At index i: O(n) — must shift elements left</li>
+</ul>
+
+<h2>🔎 Search</h2>
+<ul>
+  <li>Unsorted array: O(n) linear search</li>
+  <li>Sorted array: O(log n) binary search</li>
+</ul>
+
+<h2>🎯 Summary</h2>
+<p>Arrays are fast for access, slow for mid-array inserts/deletes. Use <strong>ArrayList</strong> in Java for dynamic resizing.</p>

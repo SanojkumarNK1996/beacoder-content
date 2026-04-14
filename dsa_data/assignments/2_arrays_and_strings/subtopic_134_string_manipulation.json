@@ -1,0 +1,74 @@
+[
+  {
+    "title": "String Reversal and Palindrome Check",
+    "description": {
+      "task": "Implement a StringUtils class that provides three methods: reverseString() (without using StringBuilder.reverse()), isPalindrome() using the reversed string, and countVowels() by iterating the characters.",
+      "language": "java",
+      "starterCode": "public class StringUtils {\n\n    public String reverseString(String s) {\n        // TODO: reverse s using a char array or manual index approach\n        return \"\";\n    }\n\n    public boolean isPalindrome(String s) {\n        // TODO: compare s with its reverse (ignore case)\n        return false;\n    }\n\n    public int countVowels(String s) {\n        // TODO: count a, e, i, o, u (case-insensitive)\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        StringUtils su = new StringUtils();\n        System.out.println(su.reverseString(\"hello\"));\n        System.out.println(su.reverseString(\"Java\"));\n        System.out.println(su.isPalindrome(\"Racecar\"));\n        System.out.println(su.isPalindrome(\"hello\"));\n        System.out.println(su.countVowels(\"Hello World\"));\n    }\n}",
+      "instructions": [
+        "reverseString(s): convert to char[], swap from both ends meeting in middle, return new String",
+        "isPalindrome(s): return reverseString(s.toLowerCase()).equals(s.toLowerCase())",
+        "countVowels(s): iterate characters, count those in {a,e,i,o,u} (case-insensitive)",
+        "Do not use StringBuilder.reverse() in reverseString()",
+        "countVowels('Hello World') = 3 (e, o, o)"
+      ],
+      "hint": "reverseString: char[] arr=s.toCharArray(); int l=0,r=arr.length-1; while(l<r){char t=arr[l];arr[l++]=arr[r];arr[r--]=t;} return new String(arr);",
+      "expectedOutput": "olleh\naavJ\ntrue\nfalse\n3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 134,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Word Frequency Counter",
+    "description": {
+      "task": "Implement a WordFrequency class that counts the frequency of each word in a sentence (case-insensitive), finds the most frequent word, and returns a sorted list of words by frequency (descending, then alphabetically).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class WordFrequency {\n\n    public Map<String, Integer> countWords(String sentence) {\n        // TODO: split by whitespace, lowercase each word, count occurrences\n        return new HashMap<>();\n    }\n\n    public String mostFrequent(String sentence) {\n        // TODO: return word with highest count\n        return \"\";\n    }\n\n    public List<String> sortedByFrequency(String sentence) {\n        // TODO: return words sorted by count desc, ties broken alphabetically asc\n        return new ArrayList<>();\n    }\n\n    public static void main(String[] args) {\n        WordFrequency wf = new WordFrequency();\n        String text = \"the cat sat on the mat the cat\";\n        System.out.println(\"Counts: \" + wf.countWords(text));\n        System.out.println(\"Most frequent: \" + wf.mostFrequent(text));\n        System.out.println(\"Sorted: \" + wf.sortedByFrequency(text));\n    }\n}",
+      "instructions": [
+        "countWords: split sentence by \" +\" (regex), convert each token to lowercase, put into a HashMap incrementing count",
+        "mostFrequent: iterate countWords map, track max-count entry, return its key",
+        "sortedByFrequency: get countWords map, sort entries by value desc then key asc, collect keys to list",
+        "Input 'the cat sat on the mat the cat' → the=3, cat=2, sat=1, on=1, mat=1",
+        "sortedByFrequency → [the, cat, mat, on, sat]"
+      ],
+      "hint": "sortedByFrequency: List<Map.Entry> entries = new ArrayList<>(map.entrySet()); entries.sort((a,b)->b.getValue()-a.getValue()!=0?b.getValue()-a.getValue():a.getKey().compareTo(b.getKey())); then collect keys.",
+      "expectedOutput": "Counts: {cat=2, mat=1, on=1, sat=1, the=3}\nMost frequent: the\nSorted: [the, cat, mat, on, sat]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 134,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "String Pattern Matcher",
+    "description": {
+      "task": "Implement a PatternMatcher class with a naive pattern search that returns the starting index of the first match, a method to find all match positions, and a method to replace all occurrences without using String.replace().",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class PatternMatcher {\n\n    public int firstOccurrence(String text, String pattern) {\n        // TODO: naive O(n*m) search; return index of first match, -1 if none\n        return -1;\n    }\n\n    public List<Integer> allOccurrences(String text, String pattern) {\n        // TODO: return list of all start indices where pattern appears in text\n        return new ArrayList<>();\n    }\n\n    public String replaceAll(String text, String pattern, String replacement) {\n        // TODO: replace every occurrence of pattern with replacement\n        // Build result using allOccurrences() and string concatenation\n        return text;\n    }\n\n    public static void main(String[] args) {\n        PatternMatcher pm = new PatternMatcher();\n        String text = \"abcabcabc\";\n        System.out.println(\"First 'abc': \" + pm.firstOccurrence(text, \"abc\"));\n        System.out.println(\"All 'abc': \" + pm.allOccurrences(text, \"abc\"));\n        System.out.println(\"Replace: \" + pm.replaceAll(text, \"abc\", \"X\"));\n        System.out.println(\"First 'xyz': \" + pm.firstOccurrence(text, \"xyz\"));\n    }\n}",
+      "instructions": [
+        "firstOccurrence: slide a window of pattern.length() over text; use text.substring(i, i+m).equals(pattern) where m=pattern.length()",
+        "allOccurrences: same sliding window, collect every matching start index",
+        "replaceAll: use allOccurrences, then build result by copying non-pattern segments and inserting replacement at each match; handle overlapping by advancing past each match",
+        "For text='abcabcabc' and pattern='abc': firstOccurrence=0, allOccurrences=[0,3,6], replaceAll='XXX'",
+        "Do not use String.contains(), String.indexOf(), or String.replace()"
+      ],
+      "hint": "firstOccurrence: int m=pattern.length(); for(int i=0;i<=text.length()-m;i++) if(text.substring(i,i+m).equals(pattern)) return i; return -1;",
+      "expectedOutput": "First 'abc': 0\nAll 'abc': [0, 3, 6]\nReplace: XXX\nFirst 'xyz': -1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 35,
+    "subtopicId": 134,
+    "allowedSubmissionType": "TEXT"
+  }
+]

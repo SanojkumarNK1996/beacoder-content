@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Unit vs Integration Test Classification",
+    "description": {
+      "task": "Write a Java program that classifies and demonstrates the differences between unit tests and integration tests. Build a test catalog system that organizes tests by type and scope.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TestCase {\n    public enum Type { UNIT, INTEGRATION, END_TO_END }\n    \n    private String name;\n    private Type type;\n    private String scope;\n    private boolean dependsOnExternalSystem;\n    \n    public TestCase(String name, Type type, String scope, boolean dependsOnExternalSystem) {\n        this.name = name; this.type = type;\n        this.scope = scope; this.dependsOnExternalSystem = dependsOnExternalSystem;\n    }\n    \n    public Type getType() { return type; }\n    public boolean dependsOnExternal() { return dependsOnExternalSystem; }\n    \n    @Override\n    public String toString() {\n        return String.format(\"[%s] %s (scope: %s, external: %s)\", type, name, scope, dependsOnExternalSystem);\n    }\n}\n\npublic class TestSuite {\n    private List<TestCase> tests = new ArrayList<>();\n    \n    public void add(TestCase test) { tests.add(test); }\n    \n    public Map<TestCase.Type, List<TestCase>> groupByType() {\n        // TODO: Group tests by Type using a LinkedHashMap\n        return new LinkedHashMap<>();\n    }\n    \n    public double getTestPyramidHealth() {\n        // TODO: Return ratio: unit tests should be >= 60% for a healthy pyramid\n        // Return as percentage: e.g., 70.0 means 70%\n        return 0.0;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        TestSuite suite = new TestSuite();\n        \n        // Unit tests\n        suite.add(new TestCase(\"calculateTax_positiveAmount\", TestCase.Type.UNIT, \"TaxService\", false));\n        suite.add(new TestCase(\"calculateTax_zeroAmount\", TestCase.Type.UNIT, \"TaxService\", false));\n        suite.add(new TestCase(\"validateEmail_validFormat\", TestCase.Type.UNIT, \"Validator\", false));\n        suite.add(new TestCase(\"validateEmail_invalidFormat\", TestCase.Type.UNIT, \"Validator\", false));\n        \n        // Integration tests\n        suite.add(new TestCase(\"saveUser_persistsToDatabase\", TestCase.Type.INTEGRATION, \"UserRepository\", true));\n        suite.add(new TestCase(\"createOrder_updatesInventory\", TestCase.Type.INTEGRATION, \"OrderService\", true));\n        \n        // E2E tests\n        suite.add(new TestCase(\"checkoutFlow_completePurchase\", TestCase.Type.END_TO_END, \"Full Stack\", true));\n        \n        Map<TestCase.Type, List<TestCase>> grouped = suite.groupByType();\n        grouped.forEach((type, tests) -> {\n            System.out.println(type + \" tests (\" + tests.size() + \"): \");\n            tests.forEach(t -> System.out.println(\"  \" + t));\n        });\n        \n        double unitPercentage = suite.getTestPyramidHealth();\n        System.out.printf(\"Unit test percentage: %.1f%% (%s)%n\",\n            unitPercentage, unitPercentage >= 60 ? \"Healthy\" : \"Needs more unit tests\");\n    }\n}",
+      "instructions": [
+        "Implement groupByType() using stream().collect(Collectors.groupingBy()) or a manual loop with LinkedHashMap.",
+        "Implement getTestPyramidHealth() by counting unit tests and dividing by total tests * 100.",
+        "Run Main as-is.",
+        "Output shows grouped tests and pyramid health percentage."
+      ],
+      "hint": "The Test Pyramid: many unit tests (fast, isolated), fewer integration tests (slower, requires infrastructure), fewest E2E tests (slowest, full system). Spring Boot Test supports all three layers.",
+      "expectedOutput": "UNIT tests (4): \n  [UNIT] calculateTax_positiveAmount (scope: TaxService, external: false)\n  [UNIT] calculateTax_zeroAmount (scope: TaxService, external: false)\n  [UNIT] validateEmail_validFormat (scope: Validator, external: false)\n  [UNIT] validateEmail_invalidFormat (scope: Validator, external: false)\nINTEGRATION tests (2): \n  [INTEGRATION] saveUser_persistsToDatabase (scope: UserRepository, external: true)\n  [INTEGRATION] createOrder_updatesInventory (scope: OrderService, external: true)\nEND_TO_END tests (1): \n  [END_TO_END] checkoutFlow_completePurchase (scope: Full Stack, external: true)\nUnit test percentage: 57.1% (Needs more unit tests)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 99,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Write Unit Tests for a Calculator",
+    "description": {
+      "task": "Implement a Calculator class and write comprehensive unit tests for it. The tests should cover happy paths, edge cases, and error conditions.",
+      "language": "java",
+      "starterCode": "public class Calculator {\n    public double add(double a, double b) {\n        return a + b;\n    }\n    \n    public double subtract(double a, double b) {\n        return a - b;\n    }\n    \n    public double multiply(double a, double b) {\n        return a * b;\n    }\n    \n    public double divide(double a, double b) {\n        if (b == 0) throw new ArithmeticException(\"Division by zero is not allowed\");\n        return a / b;\n    }\n    \n    public double power(double base, int exponent) {\n        if (exponent < 0) throw new IllegalArgumentException(\"Negative exponents not supported\");\n        double result = 1;\n        for (int i = 0; i < exponent; i++) result *= base;\n        return result;\n    }\n    \n    public double squareRoot(double n) {\n        if (n < 0) throw new IllegalArgumentException(\"Cannot calculate square root of negative number\");\n        return Math.sqrt(n);\n    }\n}\n\n// Manual test framework\npublic class TestRunner {\n    private int passed = 0;\n    private int failed = 0;\n    \n    public void assertEquals(String testName, double expected, double actual, double delta) {\n        if (Math.abs(expected - actual) <= delta) {\n            System.out.println(\"PASS: \" + testName);\n            passed++;\n        } else {\n            System.out.println(\"FAIL: \" + testName + \" | Expected: \" + expected + \" | Actual: \" + actual);\n            failed++;\n        }\n    }\n    \n    public void assertThrows(String testName, Runnable action, Class<? extends Exception> expectedType) {\n        try {\n            action.run();\n            System.out.println(\"FAIL: \" + testName + \" | Expected exception was not thrown\");\n            failed++;\n        } catch (Exception e) {\n            if (expectedType.isInstance(e)) {\n                System.out.println(\"PASS: \" + testName);\n                passed++;\n            } else {\n                System.out.println(\"FAIL: \" + testName + \" | Wrong exception: \" + e.getClass().getSimpleName());\n                failed++;\n            }\n        }\n    }\n    \n    public void printSummary() {\n        System.out.println(\"\\nTest Results: \" + passed + \" passed, \" + failed + \" failed\");\n    }\n}\n\npublic class CalculatorTest {\n    private Calculator calc = new Calculator();\n    private TestRunner runner = new TestRunner();\n    \n    public void runAll() {\n        // TODO: Write at least 8 test cases covering all 6 methods\n        // Cover: normal cases, edge cases (zero, negative), exception cases\n        runner.printSummary();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new CalculatorTest().runAll();\n    }\n}",
+      "instructions": [
+        "In runAll(), write at least 8 assertions covering all 6 Calculator methods.",
+        "Include at least 2 exception tests (divide by zero, negative square root).",
+        "Include edge cases: multiply by 0, add negative numbers, power of 0.",
+        "All tests should PASS — the Calculator implementation is correct."
+      ],
+      "hint": "In JUnit 5: @Test void addPositiveNumbers() { assertEquals(5.0, calc.add(2.0, 3.0), 0.001); }. Use assertThrows() for exception tests. Each test method tests ONE thing.",
+      "expectedOutput": "PASS: add positive numbers\nPASS: add negative numbers\nPASS: subtract\nPASS: multiply\nPASS: multiply by zero\nPASS: divide\nPASS: divide by zero throws exception\nPASS: power of 2\nPASS: square root\nPASS: square root of negative throws exception\n\nTest Results: 10 passed, 0 failed"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 99,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Test Coverage Analysis",
+    "description": {
+      "task": "Implement a simple test coverage tracker that records which methods were invoked during tests and calculates line/method coverage percentages.",
+      "language": "java",
+      "context": "Code coverage tools like JaCoCo measure how much of your code is exercised by tests. Spring Boot projects typically target 80%+ coverage. Maven/Gradle integrate with JaCoCo automatically.",
+      "starterCode": "import java.util.*;\n\npublic class CoverageTracker {\n    private Set<String> coveredMethods = new HashSet<>();\n    private Set<String> allMethods = new LinkedHashSet<>();\n    \n    public void registerMethod(String className, String methodName) {\n        allMethods.add(className + \".\" + methodName);\n    }\n    \n    public void markCovered(String className, String methodName) {\n        String key = className + \".\" + methodName;\n        if (!allMethods.contains(key)) throw new RuntimeException(\"Unknown method: \" + key);\n        coveredMethods.add(key);\n    }\n    \n    public double getMethodCoverage() {\n        // TODO: Return percentage of covered methods\n        return 0.0;\n    }\n    \n    public List<String> getUncoveredMethods() {\n        // TODO: Return methods in allMethods but not in coveredMethods\n        return new ArrayList<>();\n    }\n    \n    public void printReport() {\n        System.out.printf(\"Method Coverage: %.1f%% (%d/%d methods)%n\",\n            getMethodCoverage(), coveredMethods.size(), allMethods.size());\n        List<String> uncovered = getUncoveredMethods();\n        if (!uncovered.isEmpty()) {\n            System.out.println(\"Uncovered methods:\");\n            uncovered.forEach(m -> System.out.println(\"  - \" + m));\n        } else {\n            System.out.println(\"Full coverage achieved!\");\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        CoverageTracker tracker = new CoverageTracker();\n        \n        // Register all methods in the class\n        String cls = \"UserService\";\n        tracker.registerMethod(cls, \"createUser\");\n        tracker.registerMethod(cls, \"findUser\");\n        tracker.registerMethod(cls, \"updateUser\");\n        tracker.registerMethod(cls, \"deleteUser\");\n        tracker.registerMethod(cls, \"validateUser\");\n        \n        // Simulate test execution covering some methods\n        tracker.markCovered(cls, \"createUser\");\n        tracker.markCovered(cls, \"findUser\");\n        tracker.markCovered(cls, \"validateUser\");\n        \n        tracker.printReport();\n        \n        // Cover remaining methods\n        tracker.markCovered(cls, \"updateUser\");\n        tracker.markCovered(cls, \"deleteUser\");\n        System.out.println(\"\\nAfter adding more tests:\");\n        tracker.printReport();\n    }\n}",
+      "instructions": [
+        "Implement getMethodCoverage() as (coveredMethods.size() / allMethods.size()) * 100.0.",
+        "Implement getUncoveredMethods() as allMethods stream filtered to not be in coveredMethods.",
+        "Run Main as-is.",
+        "First report shows partial coverage; second shows full coverage."
+      ],
+      "hint": "JaCoCo generates coverage reports during Maven build (mvn test). Add the jacoco-maven-plugin to pom.xml. Spring Boot Test with @SpringBootTest typically covers integration paths.",
+      "expectedOutput": "Method Coverage: 60.0% (3/5 methods)\nUncovered methods:\n  - UserService.updateUser\n  - UserService.deleteUser\n\nAfter adding more tests:\nMethod Coverage: 100.0% (5/5 methods)\nFull coverage achieved!"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 27,
+    "subtopicId": 99,
+    "allowedSubmissionType": "TEXT"
+  }
+]

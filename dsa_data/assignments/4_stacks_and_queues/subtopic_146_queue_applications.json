@@ -1,0 +1,74 @@
+[
+  {
+    "title": "BFS Level-Order Traversal",
+    "description": {
+      "task": "Implement a BFSTraversal class that uses a Queue to perform BFS on a graph represented as an adjacency list. Return nodes grouped by their BFS level (distance from source).",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BFSTraversal {\n\n    public List<List<Integer>> bfsLevels(Map<Integer, List<Integer>> graph, int start) {\n        List<List<Integer>> levels = new ArrayList<>();\n        Set<Integer> visited = new HashSet<>();\n        Queue<Integer> queue = new LinkedList<>();\n\n        queue.add(start);\n        visited.add(start);\n\n        while (!queue.isEmpty()) {\n            int levelSize = queue.size();\n            List<Integer> level = new ArrayList<>();\n            // TODO: process 'levelSize' nodes from queue, add neighbors\n            levels.add(level);\n        }\n        return levels;\n    }\n\n    public static void main(String[] args) {\n        Map<Integer, List<Integer>> graph = new LinkedHashMap<>();\n        graph.put(1, Arrays.asList(2, 3));\n        graph.put(2, Arrays.asList(4, 5));\n        graph.put(3, Arrays.asList(6));\n        graph.put(4, Collections.emptyList());\n        graph.put(5, Collections.emptyList());\n        graph.put(6, Collections.emptyList());\n\n        BFSTraversal bt = new BFSTraversal();\n        List<List<Integer>> levels = bt.bfsLevels(graph, 1);\n        for (int i = 0; i < levels.size(); i++) {\n            System.out.println(\"Level \" + i + \": \" + levels.get(i));\n        }\n    }\n}",
+      "instructions": [
+        "Inside the while loop, process exactly levelSize nodes from queue",
+        "For each dequeued node: add it to the current level list; for each unvisited neighbor: mark visited, enqueue",
+        "After processing levelSize nodes, add level to levels",
+        "BFS from node 1: Level 0=[1], Level 1=[2,3], Level 2=[4,5,6]",
+        "Use graph.getOrDefault(node, Collections.emptyList()) for neighbor lookup"
+      ],
+      "hint": "for(int i=0;i<levelSize;i++){int node=queue.poll(); level.add(node); for(int nb:graph.getOrDefault(node,Collections.emptyList())){if(!visited.contains(nb)){visited.add(nb);queue.add(nb);}}}",
+      "expectedOutput": "Level 0: [1]\nLevel 1: [2, 3]\nLevel 2: [4, 5, 6]"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 146,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Task Scheduler Simulation",
+    "description": {
+      "task": "Implement a TaskScheduler that simulates Round-Robin CPU scheduling. Each task has a name and burst time. The scheduler processes tasks in FIFO order, giving each up to 'quantum' time units per turn. Print when each task starts, preempts, and completes.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class TaskScheduler {\n\n    static class Task {\n        String name;\n        int burstTime;\n        Task(String name, int burst) { this.name = name; this.burstTime = burst; }\n    }\n\n    public void schedule(List<Task> tasks, int quantum) {\n        Queue<Task> queue = new LinkedList<>(tasks);\n        int time = 0;\n        while (!queue.isEmpty()) {\n            Task task = queue.poll();\n            int run = Math.min(task.burstTime, quantum);\n            System.out.printf(\"t=%d: %s runs for %d units%n\", time, task.name, run);\n            time += run;\n            task.burstTime -= run;\n            if (task.burstTime > 0) {\n                // TODO: re-enqueue because task is not finished\n            } else {\n                System.out.printf(\"t=%d: %s DONE%n\", time, task.name);\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        List<Task> tasks = Arrays.asList(\n            new Task(\"P1\", 10),\n            new Task(\"P2\", 4),\n            new Task(\"P3\", 6)\n        );\n        new TaskScheduler().schedule(tasks, 4);\n    }\n}",
+      "instructions": [
+        "When task.burstTime > 0 after running: re-enqueue the task with its remaining burst time",
+        "Add: queue.add(task); when burstTime > 0",
+        "The main scheduling loop logic and output prints are already provided",
+        "P1=10, P2=4, P3=6 with quantum=4: P1 runs twice (4+4+2), P2 once (4), P3 twice (4+2)",
+        "Round-robin order ensures fairness"
+      ],
+      "hint": "Inside the if(task.burstTime>0) block: queue.add(task);",
+      "expectedOutput": "t=0: P1 runs for 4 units\nt=4: P2 runs for 4 units\nt=8: P2 DONE\nt=8: P3 runs for 4 units\nt=12: P1 runs for 4 units\nt=16: P3 runs for 2 units\nt=18: P3 DONE\nt=18: P1 runs for 2 units\nt=20: P1 DONE"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 146,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Print Binary Numbers Using Queue",
+    "description": {
+      "task": "Implement a BinaryPrinter class that uses a Queue to generate binary representations of numbers from 1 to n. Start with '1'; for each dequeued string, append '0' for the left child and '1' for the right child, enqueue both.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class BinaryPrinter {\n\n    public List<String> generateBinaries(int n) {\n        List<String> result = new ArrayList<>();\n        Queue<String> queue = new LinkedList<>();\n        queue.add(\"1\");\n\n        while (result.size() < n) {\n            // TODO: dequeue front, add to result\n            // enqueue front+\"0\" and front+\"1\"\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        BinaryPrinter bp = new BinaryPrinter();\n        List<String> bins = bp.generateBinaries(10);\n        System.out.println(\"Binary numbers 1 to 10:\");\n        for (int i = 0; i < bins.size(); i++) {\n            System.out.println((i + 1) + \" -> \" + bins.get(i));\n        }\n    }\n}",
+      "instructions": [
+        "Dequeue front string, add to result list",
+        "Enqueue front+\"0\" (append zero) and front+\"1\" (append one)",
+        "Stop when result.size() == n",
+        "Binary sequence: 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010",
+        "This BFS-based approach generates binary strings level-order (shorter before longer)"
+      ],
+      "hint": "String front=queue.poll(); result.add(front); queue.add(front+\"0\"); queue.add(front+\"1\");",
+      "expectedOutput": "Binary numbers 1 to 10:\n1 -> 1\n2 -> 10\n3 -> 11\n4 -> 100\n5 -> 101\n6 -> 110\n7 -> 111\n8 -> 1000\n9 -> 1001\n10 -> 1010"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 4,
+    "topicId": 37,
+    "subtopicId": 146,
+    "allowedSubmissionType": "TEXT"
+  }
+]

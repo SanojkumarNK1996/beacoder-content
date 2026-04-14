@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Security Filter Chain Simulator",
+    "description": {
+      "task": "Create a SecurityFilterChain class that models Spring Security's filter chain concept. Filters are applied in order to incoming requests. Each filter can either pass the request to the next filter or reject it. Build a chain of authentication and authorization checks.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.function.Predicate;\n\npublic class SecurityFilterChain {\n\n    public record Request(String path, String token, String method) {}\n    public record FilterResult(boolean passed, String reason) {}\n\n    private final List<Map.Entry<String, Predicate<Request>>> filters = new ArrayList<>();\n\n    public void addFilter(String filterName, Predicate<Request> check) {\n        filters.add(Map.entry(filterName, check));\n    }\n\n    public FilterResult process(Request request) {\n        // Apply each filter in order\n        // Return first FilterResult that fails (passed=false)\n        // Return passed=true if all filters pass\n        return new FilterResult(true, \"OK\");\n    }\n\n    public static void main(String[] args) {\n        SecurityFilterChain chain = new SecurityFilterChain();\n\n        // Filter 1: reject requests without a token\n        chain.addFilter(\"AuthenticationFilter\",\n            req -> req.token() != null && !req.token().isBlank());\n\n        // Filter 2: only allow GET to /public paths\n        chain.addFilter(\"AuthorizationFilter\",\n            req -> req.path().startsWith(\"/public\") || req.token().startsWith(\"ADMIN\"));\n\n        FilterResult r1 = chain.process(new Request(\"/api/data\", \"ADMIN-xyz\", \"GET\"));\n        System.out.println(\"Admin access: \" + r1.passed());\n\n        FilterResult r2 = chain.process(new Request(\"/api/data\", null, \"GET\"));\n        System.out.println(\"No token: \" + r2.passed() + \" (\" + r2.reason() + \")\");\n\n        FilterResult r3 = chain.process(new Request(\"/api/secret\", \"user-token\", \"GET\"));\n        System.out.println(\"User restricted: \" + r3.passed());\n    }\n}",
+      "instructions": [
+        "addFilter() appends a named Predicate<Request> to the filter list",
+        "process() iterates through all filters in registration order",
+        "If a filter's predicate returns false, immediately return FilterResult(false, filterName)",
+        "If all filters pass, return FilterResult(true, 'OK')",
+        "Filters are applied in the exact order they were added"
+      ],
+      "hint": "In process(), use a for loop over filters. Call entry.getValue().test(request). On false, return new FilterResult(false, entry.getKey()). After the loop, return FilterResult(true, 'OK').",
+      "expectedOutput": "Admin access: true\nNo token: false (AuthenticationFilter)\nUser restricted: false (AuthorizationFilter)"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 111,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Security Configuration Builder",
+    "description": {
+      "task": "Implement a SecurityConfigBuilder class that models Spring Security's HttpSecurity configuration DSL. Build a configuration that specifies which URL patterns require authentication and which are publicly accessible.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class SecurityConfigBuilder {\n\n    private final List<String> permitAllPatterns = new ArrayList<>();\n    private final List<String> authenticatedPatterns = new ArrayList<>();\n    private boolean csrfEnabled = true;\n    private String loginPage = \"/login\";\n\n    public SecurityConfigBuilder permitAll(String... patterns) {\n        permitAllPatterns.addAll(List.of(patterns));\n        return this;\n    }\n\n    public SecurityConfigBuilder requireAuthentication(String... patterns) {\n        authenticatedPatterns.addAll(List.of(patterns));\n        return this;\n    }\n\n    public SecurityConfigBuilder disableCsrf() {\n        csrfEnabled = false;\n        return this;\n    }\n\n    public SecurityConfigBuilder loginPage(String path) {\n        this.loginPage = path;\n        return this;\n    }\n\n    public boolean isAccessible(String path, boolean authenticated) {\n        // Return true if: path matches a permitAll pattern OR (authenticated AND matches requireAuthentication)\n        // Wildcard support: pattern ending with /** matches any sub-path\n        return false;\n    }\n\n    public static void main(String[] args) {\n        SecurityConfigBuilder config = new SecurityConfigBuilder()\n            .permitAll(\"/login\", \"/register\", \"/public/**\")\n            .requireAuthentication(\"/api/**\", \"/admin/**\")\n            .disableCsrf();\n\n        System.out.println(config.isAccessible(\"/login\", false));        // true\n        System.out.println(config.isAccessible(\"/public/home\", false));  // true\n        System.out.println(config.isAccessible(\"/api/users\", false));    // false\n        System.out.println(config.isAccessible(\"/api/users\", true));     // true\n    }\n}",
+      "instructions": [
+        "permitAll() and requireAuthentication() add patterns to their respective lists and return 'this'",
+        "isAccessible() checks if the path matches any permitAll pattern — if so, return true regardless of authentication",
+        "If the path matches a requireAuthentication pattern, return true only if authenticated=true",
+        "Wildcard matching: a pattern ending in '/**' matches any path that starts with the prefix (e.g., '/public/**' matches '/public/home')",
+        "Exact patterns match only identical paths (e.g., '/login' matches only '/login')"
+      ],
+      "hint": "Create a helper pathMatches(String pattern, String path): if pattern ends with '/**', check path.startsWith(pattern.replace(\"/**\", \"\")); else check pattern.equals(path).",
+      "expectedOutput": "true\ntrue\nfalse\ntrue"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 111,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "CSRF Token Validator",
+    "description": {
+      "task": "Implement a CsrfTokenValidator class that simulates Spring Security's CSRF protection. The server generates a unique CSRF token per session, which clients must include in state-changing requests (POST, PUT, DELETE). Validate the token and report the result.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class CsrfTokenValidator {\n\n    private final Map<String, String> sessionTokens = new HashMap<>();\n    private static final Set<String> SAFE_METHODS = Set.of(\"GET\", \"HEAD\", \"OPTIONS\");\n\n    public String generateToken(String sessionId) {\n        // Generate and store a token for the session, return it\n        String token = UUID.randomUUID().toString();\n        sessionTokens.put(sessionId, token);\n        return token;\n    }\n\n    public boolean validate(String sessionId, String method, String submittedToken) {\n        // Safe methods (GET, HEAD, OPTIONS) always pass\n        // For other methods, the submittedToken must match the stored session token\n        return false;\n    }\n\n    public void invalidateSession(String sessionId) {\n        sessionTokens.remove(sessionId);\n    }\n\n    public static void main(String[] args) {\n        CsrfTokenValidator validator = new CsrfTokenValidator();\n\n        String token = validator.generateToken(\"session-1\");\n        System.out.println(\"GET allowed: \" + validator.validate(\"session-1\", \"GET\", null));\n        System.out.println(\"POST with valid token: \" + validator.validate(\"session-1\", \"POST\", token));\n        System.out.println(\"POST with bad token: \" + validator.validate(\"session-1\", \"POST\", \"hacked\"));\n        System.out.println(\"POST with no session: \" + validator.validate(\"unknown\", \"POST\", token));\n    }\n}",
+      "instructions": [
+        "generateToken() creates a UUID token, stores it in sessionTokens keyed by sessionId, and returns it",
+        "validate() returns true immediately for any method in SAFE_METHODS",
+        "For non-safe methods, look up the session's stored token; return true only if submittedToken equals it",
+        "Return false if the sessionId is not found in sessionTokens",
+        "Return false if submittedToken is null (for non-safe methods)"
+      ],
+      "hint": "In validate(), first check SAFE_METHODS.contains(method.toUpperCase()). Then get the stored token, and return storedToken != null && storedToken.equals(submittedToken).",
+      "expectedOutput": "GET allowed: true\nPOST with valid token: true\nPOST with bad token: false\nPOST with no session: false"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 30,
+    "subtopicId": 111,
+    "allowedSubmissionType": "TEXT"
+  }
+]

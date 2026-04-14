@@ -1,0 +1,16 @@
+<h1>🔧 Hash Function Design</h1>
+<h2>🎯 Properties of a Good Hash Function</h2>
+<ul>
+  <li><strong>Deterministic</strong>: Same input always produces same output</li>
+  <li><strong>Uniform distribution</strong>: Spreads keys evenly across buckets</li>
+  <li><strong>Fast to compute</strong>: O(1) or O(k) where k = key length</li>
+  <li><strong>Avalanche effect</strong>: Small change in input → large change in output</li>
+</ul>
+<h2>📐 Simple Integer Hash</h2>
+<p><code>hash(key) = key % tableSize</code> — use a prime table size to reduce collisions.</p>
+<h2>♻️ Java's hashCode()</h2>
+<p>Every Java object has a <code>hashCode()</code> method. For Strings, Java computes: <code>s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]</code></p>
+<h2>⚠️ Load Factor</h2>
+<p>When the ratio (number of entries / table size) exceeds ~0.75, the table is <strong>rehashed</strong> (size doubled, all entries re-inserted). Java's HashMap default load factor = 0.75.</p>
+<h2>🎯 Summary</h2>
+<p>Good hash functions distribute keys uniformly. Java's <code>hashCode()</code> contract requires that equal objects have equal hash codes — always override both <code>equals()</code> and <code>hashCode()</code> together.</p>

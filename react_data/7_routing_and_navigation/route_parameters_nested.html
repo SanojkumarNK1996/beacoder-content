@@ -1,0 +1,42 @@
+<h1>🔢 Route Parameters and Nested Routes</h1>
+<h2>🔑 Route Parameters</h2>
+<div class="code-example">
+  <pre>
+// Define route with parameter
+&lt;Route path="/users/:userId" element={&lt;UserProfile /&gt;} /&gt;
+&lt;Route path="/posts/:postId/comments/:commentId" element={&lt;Comment /&gt;} /&gt;
+
+// Access parameters in component
+import { useParams } from 'react-router-dom';
+
+function UserProfile() {
+  const { userId } = useParams();
+  // userId is the value from the URL: /users/42 → userId = '42'
+  return &lt;h1&gt;User ID: {userId}&lt;/h1&gt;;
+}
+  </pre>
+</div>
+<h2>🌳 Nested Routes</h2>
+<div class="code-example">
+  <pre>
+// Nested routes — shared layout
+&lt;Route path="/dashboard" element={&lt;DashboardLayout /&gt;}&gt;
+  &lt;Route index element={&lt;DashboardHome /&gt;} /&gt;      {/* /dashboard */}
+  &lt;Route path="settings" element={&lt;Settings /&gt;} /&gt;  {/* /dashboard/settings*/}
+  &lt;Route path="profile" element={&lt;Profile /&gt;} /&gt;    {/* /dashboard/profile */}
+&lt;/Route&gt;
+
+// DashboardLayout.jsx — renders child routes here:
+import { Outlet } from 'react-router-dom';
+function DashboardLayout() {
+  return (
+    &lt;div&gt;
+      &lt;Sidebar /&gt;
+      &lt;main&gt;&lt;Outlet /&gt;&lt;/main&gt;  {/* Child route renders here */}
+    &lt;/div&gt;
+  );
+}
+  </pre>
+</div>
+<h2>🎯 Summary</h2>
+<p>Route params via <code>:param</code> + <code>useParams()</code>. Nested routes with <code>&lt;Outlet /&gt;</code> for shared layouts (dashboard sidebar, app shell, etc.).</p>

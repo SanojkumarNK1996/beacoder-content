@@ -1,0 +1,74 @@
+[
+  {
+    "title": "JVM Memory Usage Analyzer",
+    "description": {
+      "task": "Implement a JvmMemoryAnalyzer class that simulates JVM memory monitoring. Track heap usage over time, detect potential memory leaks (steadily increasing usage without GC relief), and report GC efficiency based on pre/post-GC heap snapshots.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class JvmMemoryAnalyzer {\n\n    public record HeapSnapshot(long timestampMs, long usedMb, long totalMb, boolean afterGc) {}\n\n    private final List<HeapSnapshot> snapshots = new ArrayList<>();\n\n    public void recordSnapshot(long timestampMs, long usedMb, long totalMb, boolean afterGc) {\n        snapshots.add(new HeapSnapshot(timestampMs, usedMb, totalMb, afterGc));\n    }\n\n    public double averageUsagePercent() {\n        // Return average of (usedMb/totalMb*100) across all snapshots\n        if (snapshots.isEmpty()) return 0.0;\n        return snapshots.stream()\n            .mapToDouble(s -> (double) s.usedMb() / s.totalMb() * 100)\n            .average()\n            .orElse(0.0);\n    }\n\n    public boolean isPotentialMemoryLeak() {\n        // Return true if the last 3 non-GC snapshots show strictly increasing usedMb\n        return false; // TODO\n    }\n\n    public double gcEfficiency() {\n        // For each pair of (pre-GC, post-GC) consecutive snapshots,\n        // compute freedMb = preGC.usedMb - postGC.usedMb\n        // Return average freed percentage relative to pre-GC usedMb\n        return 0.0; // TODO\n    }\n\n    public static void main(String[] args) {\n        JvmMemoryAnalyzer analyzer = new JvmMemoryAnalyzer();\n        analyzer.recordSnapshot(0,    200, 512, false);\n        analyzer.recordSnapshot(1000, 380, 512, false);\n        analyzer.recordSnapshot(1100, 120, 512, true);  // after GC\n        analyzer.recordSnapshot(2000, 250, 512, false);\n        analyzer.recordSnapshot(3000, 310, 512, false);\n        analyzer.recordSnapshot(4000, 370, 512, false);\n\n        System.out.printf(\"Avg usage: %.1f%%%n\", analyzer.averageUsagePercent());\n        System.out.println(\"Leak detected: \" + analyzer.isPotentialMemoryLeak());\n        System.out.printf(\"GC efficiency: %.1f%%%n\", analyzer.gcEfficiency());\n    }\n}",
+      "instructions": [
+        "averageUsagePercent() is already implemented — do not change it",
+        "isPotentialMemoryLeak() finds the last 3 snapshots where afterGc=false and checks if usedMb is strictly increasing",
+        "isPotentialMemoryLeak() returns false if fewer than 3 non-GC snapshots exist",
+        "gcEfficiency() finds pairs where snapshot[i].afterGc=false and snapshot[i+1].afterGc=true",
+        "For each pair, compute (pre.usedMb - post.usedMb) / pre.usedMb * 100; return the average"
+      ],
+      "hint": "For isPotentialMemoryLeak(): filter non-GC snapshots, take last 3, check s[0].usedMb < s[1].usedMb && s[1].usedMb < s[2].usedMb. For gcEfficiency(): iterate consecutive pairs checking afterGc transitions.",
+      "expectedOutput": "Avg usage: 56.5%\nLeak detected: true\nGC efficiency: 68.4%"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 1,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 123,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Connection Pool Performance Monitor",
+    "description": {
+      "task": "Build a ConnectionPoolMonitor class that tracks database connection pool performance metrics. Monitor wait time for acquiring connections, active vs idle connection counts, and detect pool exhaustion scenarios where all connections are in use.",
+      "language": "java",
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class ConnectionPoolMonitor {\n\n    public record ConnectionEvent(\n        String connectionId,\n        long acquireTimeMs,\n        long releaseTimeMs,\n        long waitTimeMs\n    ) {}\n\n    private final int poolSize;\n    private final List<ConnectionEvent> events = new ArrayList<>();\n\n    public ConnectionPoolMonitor(int poolSize) {\n        this.poolSize = poolSize;\n    }\n\n    public void recordEvent(String connectionId, long acquireTimeMs,\n                            long releaseTimeMs, long waitTimeMs) {\n        events.add(new ConnectionEvent(connectionId, acquireTimeMs, releaseTimeMs, waitTimeMs));\n    }\n\n    public double averageWaitTimeMs() {\n        // Return average wait time across all events\n        return events.stream().mapToLong(ConnectionEvent::waitTimeMs).average().orElse(0.0);\n    }\n\n    public int activeConnectionsAt(long timestampMs) {\n        // Count connections that were active (acquired but not yet released) at the given time\n        return 0; // TODO\n    }\n\n    public List<ConnectionEvent> getSlowAcquisitions(long thresholdMs) {\n        // Return events where waitTime > thresholdMs, sorted by waitTime descending\n        return new ArrayList<>(); // TODO\n    }\n\n    public boolean wasPoolExhaustedAt(long timestampMs) {\n        // Return true if activeConnectionsAt(timestampMs) equals poolSize\n        return false; // TODO\n    }\n\n    public static void main(String[] args) {\n        ConnectionPoolMonitor monitor = new ConnectionPoolMonitor(3);\n        monitor.recordEvent(\"conn-1\", 100, 500, 5);\n        monitor.recordEvent(\"conn-2\", 100, 800, 5);\n        monitor.recordEvent(\"conn-3\", 100, 600, 10);\n        monitor.recordEvent(\"conn-4\", 120, 400, 250); // had to wait\n\n        System.out.printf(\"Avg wait: %.1fms%n\", monitor.averageWaitTimeMs());\n        System.out.println(\"Active at t=300: \" + monitor.activeConnectionsAt(300));\n        System.out.println(\"Pool exhausted at t=200: \" + monitor.wasPoolExhaustedAt(200));\n        System.out.println(\"Slow (>20ms): \" + monitor.getSlowAcquisitions(20).size());\n    }\n}",
+      "instructions": [
+        "averageWaitTimeMs() is already implemented — do not change it",
+        "activeConnectionsAt() counts events where acquireTimeMs <= timestampMs < releaseTimeMs",
+        "wasPoolExhaustedAt() returns true when activeConnectionsAt(timestampMs) == poolSize",
+        "getSlowAcquisitions() filters events where waitTimeMs > thresholdMs and sorts by waitTimeMs descending",
+        "All methods must work correctly on an empty events list"
+      ],
+      "hint": "activeConnectionsAt(): events.stream().filter(e -> e.acquireTimeMs() <= ts && ts < e.releaseTimeMs()).count(). getSlowAcquisitions(): filter waitTimeMs > threshold, sort with Comparator.comparingLong(ConnectionEvent::waitTimeMs).reversed().",
+      "expectedOutput": "Avg wait: 67.5ms\nActive at t=300: 3\nPool exhausted at t=200: true\nSlow (>20ms): 1"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 2,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 123,
+    "allowedSubmissionType": "TEXT"
+  },
+  {
+    "title": "Cache Hit Rate Optimizer",
+    "description": {
+      "task": "Implement an LruCache class (Least Recently Used eviction) that tracks cache hit rates. The cache has a fixed capacity; when full, it evicts the least recently accessed entry. Report hit/miss statistics and identify the most accessed keys.",
+      "language": "java",
+      "starterCode": "import java.util.*;\n\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final LinkedHashMap<K, V> cache;\n    private int hits = 0;\n    private int misses = 0;\n\n    public LruCache(int capacity) {\n        this.capacity = capacity;\n        // LinkedHashMap with access order (true) evicts LRU on removeEldestEntry\n        this.cache = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        cache.put(key, value);\n    }\n\n    public V get(K key) {\n        V value = cache.get(key);\n        if (value != null) hits++;\n        else misses++;\n        return value;\n    }\n\n    public double hitRate() {\n        int total = hits + misses;\n        return total == 0 ? 0.0 : (double) hits / total * 100;\n    }\n\n    public int size() { return cache.size(); }\n\n    public boolean containsKey(K key) {\n        // Check without affecting LRU order or hit/miss counts\n        return cache.containsKey(key);\n    }\n\n    public static void main(String[] args) {\n        LruCache<String, Integer> cache = new LruCache<>(3);\n        cache.put(\"a\", 1);\n        cache.put(\"b\", 2);\n        cache.put(\"c\", 3);\n\n        cache.get(\"a\"); // hit\n        cache.get(\"a\"); // hit\n        cache.get(\"d\"); // miss\n\n        cache.put(\"e\", 5); // evicts LRU (b, since a was accessed last and c is more recent than b)\n\n        System.out.printf(\"Hit rate: %.1f%%%n\", cache.hitRate());\n        System.out.println(\"Contains b: \" + cache.containsKey(\"b\"));\n        System.out.println(\"Contains a: \" + cache.containsKey(\"a\"));\n        System.out.println(\"Size: \" + cache.size());\n    }\n}",
+      "instructions": [
+        "The LinkedHashMap with accessOrder=true and removeEldestEntry override is already set up",
+        "put() uses standard LinkedHashMap.put()",
+        "get() increments hits when key exists (returns non-null), misses otherwise",
+        "hitRate() returns hits / (hits + misses) * 100.0, returning 0.0 when no accesses have occurred",
+        "containsKey() checks presence without affecting hits/misses counters"
+      ],
+      "hint": "The LRU eviction policy is handled by the LinkedHashMap subclass. get() just needs: V value = cache.get(key); if (value != null) hits++; else misses++; return value. The LinkedHashMap access order automatically promotes accessed keys.",
+      "expectedOutput": "Hit rate: 66.7%\nContains b: false\nContains a: true\nSize: 3"
+    },
+    "maxMarks": 50,
+    "dueDate": null,
+    "displayOrder": 3,
+    "courseId": 3,
+    "topicId": 33,
+    "subtopicId": 123,
+    "allowedSubmissionType": "TEXT"
+  }
+]

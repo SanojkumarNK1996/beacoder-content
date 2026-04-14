@@ -1,0 +1,23 @@
+<h1>📈 CloudWatch Metrics, Alarms, and Logs</h1>
+<h2>📊 Metrics</h2>
+<p>A metric is a time-ordered set of data points (e.g., EC2 CPUUtilization measured every 5 minutes). Namespace organizes metrics: <code>AWS/EC2</code>, <code>AWS/RDS</code>, etc.</p>
+<h2>🔔 Alarms</h2>
+<p>Set alarms on metrics to trigger notifications or automated actions.</p>
+<div class="code-example">
+  <pre>
+Example Alarm:
+- Metric: EC2 CPUUtilization
+- Threshold: > 80% for 5 consecutive minutes
+- Action: Send SNS notification → Email alert
+- Action: EC2 Auto Scaling → Add instances
+  </pre>
+</div>
+<h2>📝 CloudWatch Logs</h2>
+<ul>
+  <li><strong>Log Group</strong>: Container for log streams (e.g., /aws/lambda/my-function)</li>
+  <li><strong>Log Stream</strong>: Sequence of log events from one source</li>
+  <li><strong>Log Insights</strong>: Query language to search and analyze logs</li>
+  <li><strong>Metric Filters</strong>: Extract metrics from log data (count ERROR occurrences)</li>
+</ul>
+<h2>🎯 Summary</h2>
+<p>Set billing alarms first (avoid surprises). Then add CPU, error rate, and latency alarms for all production services.</p>

@@ -1,0 +1,88 @@
+<h1>📦 Containerizing Spring Boot Apps</h1>
+
+<h2>🎯 Goal</h2>
+<p>Turn a Spring Boot application into a <strong>Docker container</strong> that can run the same way in any environment.</p>
+
+<h2>🧱 Prerequisites</h2>
+<ul>
+  <li>Spring Boot app packaged as an executable JAR (e.g., <code>app.jar</code>)</li>
+  <li>Docker installed locally</li>
+</ul>
+
+<h2>📄 Basic Dockerfile for Spring Boot</h2>
+
+<div class="code-example">
+  <pre>
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+
+COPY target/app.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+  </pre>
+</div>
+
+<h2>🏗️ Building and Running</h2>
+<div class="code-example">
+  <pre>
+# Build JAR
+mvn clean package
+
+# Build Docker image
+docker build -t my-spring-app:1.0 .
+
+# Run container
+docker run -p 8080:8080 my-spring-app:1.0
+  </pre>
+</div>
+
+<h2>🚀 Multi-stage Docker Builds</h2>
+<p>Multi-stage builds let you build and run your app in <strong>one Dockerfile</strong> while keeping the final image small.</p>
+
+<div class="code-example">
+  <pre>
+# Stage 1: Build
+FROM eclipse-temurin:17-jdk AS builder
+WORKDIR /build
+COPY . .
+RUN ./mvnw clean package -DskipTests
+
+# Stage 2: Run
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=builder /build/target/app.jar app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+  </pre>
+</div>
+
+<h2>⚙️ Externalizing Configuration</h2>
+<p>Avoid baking environment-specific settings into the image:</p>
+
+<ul>
+  <li>Use <strong>environment variables</strong> for DB URLs, credentials, etc.</li>
+  <li>Mount <strong>external config files</strong> if needed</li>
+</ul>
+
+<div class="code-example">
+  <pre>
+# Set Spring profile and DB URL
+docker run -e "SPRING_PROFILES_ACTIVE=prod" \
+           -e "SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/app" \
+           -p 8080:8080 my-spring-app:1.0
+  </pre>
+</div>
+
+<h2>📊 Health Checks</h2>
+<p>Expose health endpoints (e.g., Spring Boot Actuator <code>/actuator/health</code>) so orchestrators (Kubernetes, ECS) can monitor container health.</p>
+
+<h2>🎯 Summary</h2>
+<ul>
+  <li>Package Spring Boot as an executable JAR, then create a Docker image around it</li>
+  <li>Use <strong>multi-stage builds</strong> for smaller, cleaner images</li>
+  <li>Externalize configuration so the same image can be used in multiple environments</li>
+</ul>
