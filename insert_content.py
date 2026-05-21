@@ -15,7 +15,8 @@ BASE_FOLDERS = [
     "react_data",            # path containing React JS topics
     "html_course_data",      # path containing HTML course topics
     "css_course_data",       # path containing CSS course topics
-    "javascript_course_data" # path containing JavaScript course topics
+    "javascript_course_data",# path containing JavaScript course topics
+    "programming_foundations_data" # path containing Programming Foundations topics
 ]
 START_ID = 1              # starting id for ContentBlocks
 DB_CONFIG = {

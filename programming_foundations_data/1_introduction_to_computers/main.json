@@ -1,0 +1,74 @@
+[
+  {
+    "subtopicId": 352,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "What is a Computer?",
+    "data": "what_is_a_computer.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 353,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Types of Computers",
+    "data": "types_of_computers.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 354,
+    "dataType": "notes",
+    "displayOrder": 4,
+    "title": "Hardware vs Software",
+    "data": "hardware_vs_software.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 355,
+    "dataType": "notes",
+    "displayOrder": 5,
+    "title": "Input / Output Devices",
+    "data": "input_output_devices.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 356,
+    "dataType": "notes",
+    "displayOrder": 6,
+    "title": "CPU, Memory, Storage",
+    "data": "cpu_memory_storage.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 357,
+    "dataType": "notes",
+    "displayOrder": 7,
+    "title": "Operating Systems Basics",
+    "data": "operating_systems_basics.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 358,
+    "dataType": "notes",
+    "displayOrder": 8,
+    "title": "Files and Folders",
+    "data": "files_and_folders.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 359,
+    "dataType": "notes",
+    "displayOrder": 9,
+    "title": "Internet Basics",
+    "data": "internet_basics.html",
+    "verified": false,
+    "priority": 1
+  }
+]
