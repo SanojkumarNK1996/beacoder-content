@@ -22,7 +22,7 @@ DB_CONFIG = {
     "host": "localhost",
     "port": 5432,
     "dbname": "beacoder",  # Use default postgres database first
-    "user": "sanojkumar.narayanankutty",  # Your system username
+    "user": "postgres",  # Your system username
     # "password": "beacoder_password"  # Try without password first
 }
 
@@ -69,7 +69,11 @@ def insert_content_block(conn, record_id, record, json_data):
         sql = """
         INSERT INTO public."ContentBlocks"
         (id, "displayOrder", "dataType", "title", "data", "isActive", "createdAt", "updatedAt", "subtopicId")
-        VALUES (%s, %s, %s, %s, %s::jsonb, true, current_timestamp, current_timestamp, %s);
+        VALUES (%s, %s, %s, %s, %s::jsonb, true, current_timestamp, current_timestamp, %s)
+        ON CONFLICT (id) DO UPDATE SET
+            "title" = EXCLUDED."title",
+            "data" = EXCLUDED."data",
+            "updatedAt" = current_timestamp;
         """
 
         cur.execute(sql, (
