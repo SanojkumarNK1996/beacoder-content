@@ -24,7 +24,7 @@ DB_CONFIG = {
     "host": "localhost",
     "port": 5432,
     "dbname": "beacoder",
-    "user": "sanojkumar.narayanankutty",
+    "user": "postgres",
     # "password": "beacoder_password"  # Uncomment if password is required
 }
 
