@@ -1,0 +1,128 @@
+[
+  {
+    "subtopicId": 360,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Percentages",
+    "data": "percentages.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 361,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Ratio & Proportion",
+    "data": "ratio_proportion.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 362,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Profit & Loss",
+    "data": "profit_loss.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 363,
+    "dataType": "notes",
+    "displayOrder": 4,
+    "title": "Time & Work",
+    "data": "time_work.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 364,
+    "dataType": "notes",
+    "displayOrder": 5,
+    "title": "Speed, Distance & Time",
+    "data": "speed_distance_time.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 365,
+    "dataType": "notes",
+    "displayOrder": 6,
+    "title": "Averages",
+    "data": "averages.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 366,
+    "dataType": "notes",
+    "displayOrder": 7,
+    "title": "Number Series",
+    "data": "number_series.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 367,
+    "dataType": "notes",
+    "displayOrder": 8,
+    "title": "Blood Relations",
+    "data": "blood_relations.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 368,
+    "dataType": "notes",
+    "displayOrder": 9,
+    "title": "Seating Arrangement",
+    "data": "seating_arrangement.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 369,
+    "dataType": "notes",
+    "displayOrder": 10,
+    "title": "Coding-Decoding",
+    "data": "coding_decoding.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 370,
+    "dataType": "notes",
+    "displayOrder": 11,
+    "title": "Logical Puzzles",
+    "data": "logical_puzzles.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 371,
+    "dataType": "notes",
+    "displayOrder": 12,
+    "title": "Pattern Recognition",
+    "data": "pattern_recognition.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 372,
+    "dataType": "notes",
+    "displayOrder": 13,
+    "title": "Decision Making",
+    "data": "decision_making.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 373,
+    "dataType": "notes",
+    "displayOrder": 14,
+    "title": "Critical Thinking",
+    "data": "critical_thinking.html",
+    "verified": false,
+    "priority": 1
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "subtopicId": 383,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Installing Software",
+    "data": "installing_software.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 384,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Using VS Code",
+    "data": "using_vs_code.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 385,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Basic Terminal Commands",
+    "data": "basic_terminal_commands.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 386,
+    "dataType": "notes",
+    "displayOrder": 4,
+    "title": "Creating Files/Folders",
+    "data": "creating_files_folders.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 387,
+    "dataType": "notes",
+    "displayOrder": 5,
+    "title": "Browser Developer Tools",
+    "data": "browser_developer_tools.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 388,
+    "dataType": "notes",
+    "displayOrder": 6,
+    "title": "Internet Research Skills",
+    "data": "internet_research_skills.html",
+    "verified": false,
+    "priority": 1
+  }
+]

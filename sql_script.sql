@@ -150,6 +150,21 @@ VALUES
         current_timestamp,
         current_timestamp,
         NULL
+    ),
+
+    -- 10. Programming Foundations
+    (
+        10,
+        'PREP101',
+        'Programming Foundations',
+        'Build strong fundamentals in computer basics, flowcharts, aptitude, logical reasoning, developer tools, and professional skills.',
+        'programming-foundations.png',
+        'easy',
+        30,
+        true,
+        current_timestamp,
+        current_timestamp,
+        NULL
     )
 ON CONFLICT ("courseCode") DO NOTHING;
 
@@ -266,7 +281,14 @@ VALUES
 (81, 'Variables and Data Types', 'Goal: Learn about variables, data types, and operators.', 2, true, current_timestamp, current_timestamp, 9),
 (82, 'Control Flow and Functions', 'Goal: Use conditionals, loops, and functions.', 3, true, current_timestamp, current_timestamp, 9),
 (83, 'DOM Manipulation', 'Goal: Interact with and modify web pages using the DOM.', 4, true, current_timestamp, current_timestamp, 9),
-(84, 'Events and Interactivity', 'Goal: Handle user events and create interactive experiences.', 5, true, current_timestamp, current_timestamp, 9)
+(84, 'Events and Interactivity', 'Goal: Handle user events and create interactive experiences.', 5, true, current_timestamp, current_timestamp, 9),
+
+-- Programming Foundations Course Topics (Course 10)
+(85, 'Introduction to Computers', 'Goal: Understand computer fundamentals and digital systems.', 1, true, current_timestamp, current_timestamp, 10),
+(86, 'Basic Aptitude & Logical Reasoning', 'Goal: Improve logical thinking, quantitative aptitude, and analytical reasoning.', 2, true, current_timestamp, current_timestamp, 10),
+(87, 'Flowcharts', 'Goal: Learn visual representation of logic and algorithms.', 3, true, current_timestamp, current_timestamp, 10),
+(88, 'Developer Tools & Environment', 'Goal: Learn essential developer tools and working environment setup.', 4, true, current_timestamp, current_timestamp, 10),
+(89, 'Communication & Professional Skills', 'Goal: Build communication and workplace collaboration skills.', 5, true, current_timestamp, current_timestamp, 10)
 ON CONFLICT ("title", "courseId") DO NOTHING;
 
 -- ============================================
@@ -777,5 +799,57 @@ VALUES
 ('348', 'Functions', 'Function declaration, expression, arrow functions.', 3, true, current_timestamp, current_timestamp, 82),
 ('349', 'DOM Basics', 'Selecting and modifying elements.', 1, true, current_timestamp, current_timestamp, 83),
 ('350', 'Event Handling', 'addEventListener, event object, common events.', 1, true, current_timestamp, current_timestamp, 84),
-('351', 'Form Interactivity', 'Validating and submitting forms with JS.', 2, true, current_timestamp, current_timestamp, 84)
+('351', 'Form Interactivity', 'Validating and submitting forms with JS.', 2, true, current_timestamp, current_timestamp, 84),
+
+-- Topic 85: Introduction to Computers
+(352, 'What is a Computer?', 'Definition, characteristics, and uses of computers.', 1, true, current_timestamp, current_timestamp, 10),
+(353, 'Types of Computers', 'Desktop, laptop, server, supercomputer, and embedded systems.', 2, true, current_timestamp, current_timestamp, 10),
+(354, 'Hardware vs Software', 'Difference between physical components and software programs.', 3, true, current_timestamp, current_timestamp, 10),
+(355, 'Input / Output Devices', 'Keyboard, mouse, monitor, printer, scanner, and other peripherals.', 4, true, current_timestamp, current_timestamp, 85),
+(356, 'CPU, Memory, Storage', 'Processor basics, RAM, ROM, HDD, SSD, and storage concepts.', 5, true, current_timestamp, current_timestamp, 85),
+(357, 'Operating Systems Basics', 'Introduction to Windows, Linux, macOS, and OS functionalities.', 6, true, current_timestamp, current_timestamp, 85),
+(358, 'Files and Folders', 'File management, folder structure, naming conventions.', 7, true, current_timestamp, current_timestamp, 85),
+(359, 'Internet Basics', 'Introduction to browsers, websites, search engines, and internet safety.', 8, true, current_timestamp, current_timestamp, 85),
+
+-- Topic 86: Basic Aptitude & Logical Reasoning
+(360, 'Percentages', 'Basics of percentages and real-world applications.', 1, true, current_timestamp, current_timestamp, 86),
+(361, 'Ratio & Proportion', 'Understanding ratios, proportions, and comparisons.', 2, true, current_timestamp, current_timestamp, 86),
+(362, 'Profit & Loss', 'Calculating profit, loss, discount, and selling price.', 3, true, current_timestamp, current_timestamp, 86),
+(363, 'Time & Work', 'Work efficiency and time calculation problems.', 4, true, current_timestamp, current_timestamp, 86),
+(364, 'Speed, Distance & Time', 'Motion-related aptitude concepts and formulas.', 5, true, current_timestamp, current_timestamp, 86),
+(365, 'Averages', 'Mean, average calculations, and applications.', 6, true, current_timestamp, current_timestamp, 86),
+(366, 'Number Series', 'Identify numerical patterns and sequences.', 7, true, current_timestamp, current_timestamp, 86),
+(367, 'Blood Relations', 'Logical reasoning based on family relationships.', 8, true, current_timestamp, current_timestamp, 86),
+(368, 'Seating Arrangement', 'Arrangement-based logical reasoning problems.', 9, true, current_timestamp, current_timestamp, 86),
+(369, 'Coding-Decoding', 'Pattern-based coding and decoding techniques.', 10, true, current_timestamp, current_timestamp, 86),
+(370, 'Logical Puzzles', 'Critical thinking and puzzle-solving exercises.', 11, true, current_timestamp, current_timestamp, 86),
+(371, 'Pattern Recognition', 'Identify trends, visual patterns, and logical sequences.', 12, true, current_timestamp, current_timestamp, 86),
+(372, 'Decision Making', 'Analytical decision-making scenarios and approaches.', 13, true, current_timestamp, current_timestamp, 86),
+(373, 'Critical Thinking', 'Logical analysis and reasoning skills development.', 14, true, current_timestamp, current_timestamp, 86),
+
+-- Topic 87: Flowcharts
+(374, 'What is a Flowchart?', 'Introduction to flowcharts and their purpose.', 1, true, current_timestamp, current_timestamp, 87),
+(375, 'Flowchart Symbols', 'Common symbols used in flowchart diagrams.', 2, true, current_timestamp, current_timestamp, 87),
+(376, 'Start / End', 'Terminal symbols representing start and end points.', 3, true, current_timestamp, current_timestamp, 87),
+(377, 'Process', 'Representing operations and actions in flowcharts.', 4, true, current_timestamp, current_timestamp, 87),
+(378, 'Decision', 'Conditional branching and logical decision making.', 5, true, current_timestamp, current_timestamp, 87),
+(379, 'Input / Output', 'Representing input and output operations.', 6, true, current_timestamp, current_timestamp, 87),
+(380, 'Connectors', 'Using connectors for linking flowchart sections.', 7, true, current_timestamp, current_timestamp, 87),
+(381, 'Flowchart Rules', 'Best practices and standards for creating flowcharts.', 8, true, current_timestamp, current_timestamp, 87),
+(382, 'Drawing Flowcharts', 'Creating flowcharts for simple problems and processes.', 9, true, current_timestamp, current_timestamp, 87),
+
+-- Topic 88: Developer Tools & Environment
+(383, 'Installing Software', 'Installing applications, IDEs, and development tools.', 1, true, current_timestamp, current_timestamp, 88),
+(384, 'Using VS Code', 'Introduction to Visual Studio Code and its features.', 2, true, current_timestamp, current_timestamp, 88),
+(385, 'Basic Terminal Commands', 'Common command line operations and navigation.', 3, true, current_timestamp, current_timestamp, 88),
+(386, 'Creating Files/Folders', 'Managing files and folders using GUI and terminal.', 4, true, current_timestamp, current_timestamp, 88),
+(387, 'Browser Developer Tools', 'Inspecting webpages and debugging using browser tools.', 5, true, current_timestamp, current_timestamp, 88),
+(388, 'Internet Research Skills', 'Effective online searching and learning techniques.', 6, true, current_timestamp, current_timestamp, 88),
+
+-- Topic 89: Communication & Professional Skills
+(389, 'Technical Communication', 'Communicating technical ideas clearly and effectively.', 1, true, current_timestamp, current_timestamp, 89),
+(390, 'Email Etiquette', 'Writing professional emails and communication standards.', 2, true, current_timestamp, current_timestamp, 89),
+(391, 'Asking Questions Properly', 'How to ask clear and effective technical questions.', 3, true, current_timestamp, current_timestamp, 89),
+(392, 'Documentation Reading', 'Understanding and using technical documentation effectively.', 4, true, current_timestamp, current_timestamp, 89),
+(393, 'Team Collaboration Basics', 'Working effectively in teams and collaborative environments.', 5, true, current_timestamp, current_timestamp, 89)
 ON CONFLICT ("title", "topicId") DO NOTHING;

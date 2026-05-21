@@ -1,0 +1,47 @@
+[
+  {
+    "subtopicId": 389,
+    "dataType": "notes",
+    "displayOrder": 1,
+    "title": "Technical Communication",
+    "data": "technical_communication.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 390,
+    "dataType": "notes",
+    "displayOrder": 2,
+    "title": "Email Etiquette",
+    "data": "email_etiquette.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 391,
+    "dataType": "notes",
+    "displayOrder": 3,
+    "title": "Asking Questions Properly",
+    "data": "asking_questions_properly.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 392,
+    "dataType": "notes",
+    "displayOrder": 4,
+    "title": "Documentation Reading",
+    "data": "documentation_reading.html",
+    "verified": false,
+    "priority": 1
+  },
+  {
+    "subtopicId": 393,
+    "dataType": "notes",
+    "displayOrder": 5,
+    "title": "Team Collaboration Basics",
+    "data": "team_collaboration_basics.html",
+    "verified": false,
+    "priority": 1
+  }
+]
